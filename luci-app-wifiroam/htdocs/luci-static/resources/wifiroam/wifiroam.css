@@ -214,6 +214,38 @@
 	font-weight: 600;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
+/* 网络管理顶部页签（首页 / 网络拓扑 / 客户端 / 无线设置 / 高级设置） */
+.wr-navtabs {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 0;
+	margin: 0 0 1em;
+	border-bottom: 1px solid #cfd8dc;
+}
+.wr-navtab {
+	display: block;
+	margin-bottom: -1px;
+	padding: 0.55em 1.15em;
+	border: 1px solid transparent;
+	border-bottom: 0;
+	border-radius: 6px 6px 0 0;
+	color: #555;
+	font-size: 14px;
+	line-height: 1.25;
+	text-decoration: none;
+}
+.wr-navtab:hover {
+	background: #f1f8e9;
+	color: #2e7d32;
+	text-decoration: none;
+}
+.wr-navtab.active {
+	background: #e8f5e9;
+	border-color: #2e7d32;
+	color: #1b5e20;
+	font-weight: 600;
+}
 .wr-chart { display: block; width: 100%; max-width: 460px; height: auto; margin-top: 0.4em; }
 .wr-chart text { font-size: 9.5px; fill: #90a4ae; }
 

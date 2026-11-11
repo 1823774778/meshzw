@@ -1,38 +1,17 @@
-// wifiroam wireless settings view (Wi-Fi, guest, pairing) + advanced entry
+// wifiroam wireless settings view (Wi-Fi, guest, pairing)
 'use strict';
 'require view';
-'require ui';
 'require poll';
 'require dom';
-'require rpc';
 'require wifiroam.common as wr';
-
-/* 服务状态与起停：走 LuCI 标准的 service/rc ubus 对象 */
-var callServiceList = rpc.declare({
-	object: 'service', method: 'list', params: [ 'name' ], expect: { '': {} },
-});
-var callRcList = rpc.declare({
-	object: 'rc', method: 'list', expect: { '': {} },
-});
-var callRcInit = rpc.declare({
-	object: 'rc', method: 'init', params: [ 'name', 'action' ],
-});
-
-/* 必须与 wifiroamd.uc 的 DAEMON_VERSION 一致；
-   运行中的旧进程版本不一致时，「重启」会自动 stop + start 修复 */
-var REQUIRED_VERSION = 3;
 
 return view.extend({
 	pre: undefined,
 	st: null,
-	svc: null,
-	rclist: null,
 	busy: false,
 	actionBusy: false,
 
 	load: function() {
-		/* 首屏只等必要数据；服务列表放到 hydrate 异步补齐，
-		   避免 apk 等命令拖慢整页加载 */
 		return Promise.all([
 			wr.safeCall('status'),
 			wr.safeCall('offload_status'),
@@ -605,196 +584,8 @@ return view.extend({
 		]);
 	},
 
-	/* 首屏之后补齐服务状态面板 */
-	hydrate: function() {
-		var self = this;
-
-		return Promise.all([
-			callServiceList('wifiroam').catch(function() { return null; }),
-			callRcList().catch(function() { return null; }),
-		]).then(function(res) {
-			self.svc = res[0];
-			self.rclist = res[1];
-
-			var svc = document.getElementById('wr-svc');
-			if (svc) dom.content(svc, self.renderServicePanel());
-		}).catch(function() { /* 单项失败已在 safeCall 内消化 */ });
-	},
-
 	isCap: function() {
 		return !!(this.st && this.st.role === 'cap');
-	},
-
-	/* 运行中的守护进程版本落后（旧进程）→ 重启可自动修复 */
-	versionStale: function() {
-		var st = this.st;
-		return !!(st && st.role && st.version !== REQUIRED_VERSION);
-	},
-
-	/* ------------------------------------------------------ service control */
-	svcRunning: function() {
-		var s = this.svc && this.svc.wifiroam;
-		var inst = (s && s.instances) || {};
-		for (var k in inst)
-			if (inst[k] && inst[k].running) return true;
-		return false;
-	},
-
-	svcEnabled: function() {
-		var r = this.rclist && this.rclist.wifiroam;
-		return !!(r && r.enabled);
-	},
-
-	refreshService: function() {
-		var self = this;
-		return Promise.all([
-			callServiceList('wifiroam').catch(function() { return null; }),
-			callRcList().catch(function() { return null; }),
-		]).then(function(res) {
-			self.svc = res[0];
-			self.rclist = res[1];
-
-			var box = document.getElementById('wr-svc');
-			if (box) dom.content(box, self.renderServicePanel());
-		});
-	},
-
-	serviceAction: function(action) {
-		var self = this;
-		var btn = this.svcBtns ? this.svcBtns[action] : null;
-
-		wr.setBusy(btn, true, _('Working...'));
-
-		return callRcInit('wifiroam', action).then(function(rc) {
-			if (rc)
-				throw new Error(_('Command failed'));
-
-			if (action !== 'restart')
-				return null;
-
-			/* 重启后校验运行版本：旧进程未被替换时自动 stop + start */
-			return self.repairIfStale();
-		}).then(function(repaired) {
-			if (repaired === true)
-				wr.notify('warning',
-					_('The running version was outdated and has been repaired automatically.'));
-			else if (repaired === false)
-				wr.notify('danger',
-					_('Version mismatch persists after repair. Please update the plugin packages.'));
-			else
-				wr.notify('success', _('Service action applied') + ': ' + action);
-
-			/* 起停/重启会重建 ubus 对象，等 procd 稳定后整页刷新最可靠 */
-			return new Promise(function(resolve) {
-				window.setTimeout(resolve, 1500);
-			}).then(function() {
-				window.location.reload();
-			});
-		}).catch(function(e) {
-			wr.notify('danger',
-				_('Service action failed') + ': ' + (e && e.message ? e.message : action));
-			wr.setBusy(btn, false);
-			return self.refreshService();
-		});
-	},
-
-	/* 重启后轮询 status：版本正确则无需处理；否则执行 stop + start。
-	   返回 Promise<null|boolean>：null = 无需修复，true = 已修复，false = 修复失败 */
-	repairIfStale: function() {
-		function ready() {
-			return wr.safeCall('status').then(function(st) {
-				return !!(st && st.version === REQUIRED_VERSION);
-			});
-		}
-
-		return wr.pollUntil(ready, 1000, 12000).then(function(ok) {
-			if (ok) return null;
-
-			return callRcInit('wifiroam', 'stop').catch(function() { return null; })
-				.then(function() {
-					return new Promise(function(resolve) {
-						window.setTimeout(resolve, 800);
-					});
-				})
-				.then(function() {
-					return callRcInit('wifiroam', 'start').catch(function() { return null; });
-				})
-				.then(function() {
-					return wr.pollUntil(ready, 1000, 15000);
-				})
-				.then(function(ok2) {
-					return !!ok2;
-				});
-		});
-	},
-
-	toggleAutostart: function(on) {
-		var self = this;
-
-		return callRcInit('wifiroam', on ? 'enable' : 'disable').then(function(rc) {
-			if (rc)
-				throw new Error(_('Command failed'));
-
-			wr.notify('info',
-				on ? _('Service will start automatically on boot')
-				   : _('Service autostart disabled'));
-			return self.refreshService();
-		}).catch(function() {
-			wr.notify('danger', _('Service action failed'));
-			return self.refreshService();
-		});
-	},
-
-	renderServicePanel: function() {
-		var self = this;
-		var running = this.svcRunning();
-		var enabled = this.svcEnabled();
-
-		var btns = {};
-		function actBtn(action, label, cls) {
-			var attrs = {
-				'class': 'btn ' + cls,
-				click: function() { self.serviceAction(action); },
-			};
-			/* 只在确实不可用时加 disabled；传 false 会生成 disabled="false"
-			   这一布尔属性，浏览器仍视为禁用（三个按钮会一起变灰） */
-			if ((action === 'start' && running) || (action === 'stop' && !running))
-				attrs.disabled = 'disabled';
-
-			var b = E('button', attrs, label);
-			btns[action] = b;
-			return b;
-		}
-
-		this.svcBtns = btns;
-
-		var auto = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
-		auto.checked = enabled;
-		auto.addEventListener('change', function() {
-			self.toggleAutostart(auto.checked).then(function() {
-				if (!self.rclist)
-					return;
-				auto.checked = self.svcEnabled();
-			});
-		});
-
-		return E('div', { 'class': 'cbi-section' }, [
-			E('h3', {}, _('Plugin Service')),
-			E('div', { 'class': 'wr-svc-row' }, [
-				E('span', { 'class': 'wr-badge ' + (running ? 'wr-badge-on' : 'wr-badge-off') },
-					running ? _('Running') : _('Stopped')),
-				E('span', { 'class': 'wr-hint' },
-					_('wifiroamd is the daemon that discovers APs and applies roaming configuration.')),
-			]),
-			E('div', { 'class': 'wr-toolbar' }, [
-				actBtn('start', _('Start'), 'cbi-button-positive'),
-				actBtn('stop', _('Stop'), 'cbi-button-negative'),
-				actBtn('restart', _('Restart'), 'cbi-button-action'),
-				E('label', { 'class': 'wr-svc-auto' }, [
-					auto, ' ', _('Start automatically on boot'),
-				]),
-			]),
-		]);
 	},
 
 	/* ---------------------------------------------------------- 组网管理 */
@@ -1108,42 +899,23 @@ return view.extend({
 		this.disc = data[4];
 		this.topo = data[5];
 
-		/* 服务面板先占位，render 返回后立即异步补齐 */
-		window.setTimeout(L.bind(this.hydrate, this), 0);
-
 		poll.add(L.bind(this.refresh, this), 10);
 
 		if (!this.st || !this.st.role) {
 			return E('div', {}, [
 				wr.css(),
-				E('h2', {}, _('Network Management') + ' - ' + _('Wireless Settings')),
+				wr.navTabs('settings'),
+				E('h2', {}, _('无线设置')),
 				E('div', { class: 'alert-message danger' },
-					_('Cannot reach wifiroamd. Start the service above, then reload this page.')),
+					_('无法连接 wifiroamd，请先在首页启动插件服务，然后刷新本页。')),
 			]);
 		}
 
-		var verWarn = null;
-		if (this.versionStale())
-			verWarn = E('div', { 'class': 'alert-message warning' },
-				_('The running wifiroamd version does not match this LuCI app. Click Restart to repair automatically.'));
-
-		var advLink = E('div', { 'class': 'wr-toolbar' }, [
-			E('a', {
-				'class': 'btn cbi-button cbi-button-action',
-				href: L.url('admin/wifiroam/advanced'),
-			}, _('Advanced Settings')),
-			E('div', { 'class': 'wr-hint' },
-				_('Pre-flight checks, member AP details, 802.11k/v/r seamless roaming and wireless backhaul are in Advanced Settings.')),
-		]);
-
 		return E('div', { id: 'wr-set' }, [
 			wr.css(),
-			E('h2', {}, _('Network Management') + ' - ' + _('Wireless Settings')),
-			advLink,
+			wr.navTabs('settings'),
+			E('h2', {}, _('无线设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
-			verWarn,
-			E('div', { id: 'wr-svc' },
-				E('div', { 'class': 'wr-hint' }, _('Loading service status...'))),
 			this.renderWifiPanel(),
 			this.renderGuestPanel(),
 			this.renderOffload(),

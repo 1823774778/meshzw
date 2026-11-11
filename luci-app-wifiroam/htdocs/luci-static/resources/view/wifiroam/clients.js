@@ -184,7 +184,8 @@ return view.extend({
 
 		var body = [
 			wr.css(),
-			E('h2', {}, _('Network Management') + ' - ' + _('Clients')),
+			wr.navTabs('clients'),
+			E('h2', {}, _('客户端')),
 		];
 
 		if (!data)

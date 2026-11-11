@@ -619,21 +619,13 @@ return view.extend({
 		/* 次要面板先占位，render 返回后立即异步补齐 */
 		window.setTimeout(L.bind(this.hydrate, this), 0);
 
-		var back = E('div', { 'class': 'wr-toolbar' }, [
-			E('a', {
-				'class': 'btn cbi-button cbi-button-action',
-				href: L.url('admin/wifiroam/settings'),
-			}, _('Back to Wireless Settings')),
-			E('div', { 'class': 'wr-hint' },
-				_('Pre-flight checks and roaming settings are only needed for advanced multi-AP tuning.')),
-		]);
-
 		if (!this.cfg) {
 			return E('div', {}, [
 				wr.css(),
-				E('h2', {}, _('Wireless Settings') + ' - ' + _('Advanced Settings')),
+				wr.navTabs('advanced'),
+				E('h2', {}, _('高级设置')),
 				E('div', { 'class': 'alert-message danger' },
-					_('Cannot reach wifiroamd. Start the service on the Wireless Settings page, then reload this page.')),
+					_('无法连接 wifiroamd，请先在首页启动插件服务，然后刷新本页。')),
 			]);
 		}
 
@@ -787,8 +779,8 @@ return view.extend({
 
 		return E('div', { id: 'wr-adv' }, [
 			wr.css(),
-			E('h2', {}, _('Wireless Settings') + ' - ' + _('Advanced Settings')),
-			back,
+			wr.navTabs('advanced'),
+			E('h2', {}, _('高级设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
 			notice,
 			E('div', { id: 'wr-pre' }, this.renderChecklist()),

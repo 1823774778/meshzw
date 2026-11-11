@@ -1616,8 +1616,9 @@ return view.extend({
 
 		return E('div', {}, [
 			wr.css(),
+			wr.navTabs('topology'),
 			E('h2', {}, [
-				_('Network Management') + ' - ' + _('Network Topology'),
+				_('网络拓扑'),
 				E('a', {
 					'class': 'wr-donate-btn',
 					click: L.bind(this.openDonate, this)

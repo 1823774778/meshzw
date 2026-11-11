@@ -14,7 +14,30 @@ return baseclass.extend({
 		});
 	},
 
-	CSS_VER: '20261031g',
+	CSS_VER: '20261112a',
+
+	/* 网络管理页签：所有页面共用同一组导航，当前页高亮 */
+	navTabs: function(active) {
+		var items = [
+			[ 'home',     _('首页'),     'admin/mesh/management' ],
+			[ 'topology', _('网络拓扑'), 'admin/mesh/management/topology' ],
+			[ 'clients',  _('客户端'),   'admin/mesh/management/clients' ],
+			[ 'settings', _('无线设置'), 'admin/mesh/management/settings' ],
+			[ 'advanced', _('高级设置'), 'admin/mesh/management/advanced' ]
+		];
+
+		return E('div', { 'class': 'wr-navtabs' }, items.map(function(it) {
+			var attrs = {
+				'class': 'wr-navtab' + (active === it[0] ? ' active' : ''),
+				href: L.url(it[2])
+			};
+
+			if (active === it[0])
+				attrs['aria-current'] = 'page';
+
+			return E('a', attrs, it[1]);
+		}));
+	},
 
 	/* LuCI 上游无 ubus.js，统一经 rpc.declare 调 /ubus 端点 */
 	call: function(method, args) {
