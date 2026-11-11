@@ -219,6 +219,7 @@ let state = {
 	guest_tc_devs: [],  // 已挂了 qdisc 的访客 netdev（桥不参与桥转发路径，必须挂到 vif）
 	_guest_nft_sig: "",  // 访客 nft 表（隔离 + 子AP SNAT）的签名，避免每轮重建
 	_guest_zone_migrated: false, // 访客区是否已从 option network 迁移到 device+subnet
+	_guest_bridged: null, // 访客出口是否走 lan + SNAT（桥接上行），null = 尚未判定
 	client_seen: {},    // macnorm -> first seen ts
 	client_bytes: {},   // macnorm -> 站点字节计数采样 { ts, rx, tx }（算实时速率）
 	bytes_cache: {},    // ifname -> { ts, map }：1s 内复用，避免同一轮重复调用 iw
@@ -1449,6 +1450,25 @@ function ipv4_cidr(ipmask, mask) {
 }
 
 function guest_lan_info() {
+	/* lan 可能由上游 DHCP 获取地址（中继 AP 模式下 router-tool 会把 lan
+	   改成 proto dhcp 并清掉 ipaddr/netmask），UCI 里没有地址时旧逻辑会
+	   退到 192.168.0.1，子 AP 的访客 SNAT 到一个不存在的地址后回程流量
+	   全部丢失——表现就是访客能连上 Wi-Fi 但上不了网。这里优先读 netifd
+	   运行态，读不到再退回 UCI。 */
+	let st = ubusc.call("network.interface.lan", "status");
+	let a = st?.["ipv4-address"]?.[0];
+	if (a?.address != null) {
+		let prefix = int(a.mask ?? 24);
+		if (prefix < 0) prefix = 0;
+		if (prefix > 32) prefix = 32;
+		return {
+			cidr: ipv4_cidr(a.address, "" + prefix),
+			ip: a.address,
+			gw: state.self.ip,
+			dev: st?.device ?? state.brdev,
+		};
+	}
+
 	let cur = uci.cursor();
 	cur.load("network");
 	/* lan 的 ipaddr 可能是 list（本机即 list ipaddr），get() 会返回数组。
@@ -1465,7 +1485,20 @@ function guest_lan_info() {
 		cidr: ipv4_cidr(ip, nm),
 		ip: split(ip, "/")[0],
 		gw: gw != null ? split(gw, "/")[0] : state.self.ip,
+		dev: state.brdev,
 	};
+}
+
+// WAN 是否可作为访客出口。中继 AP 模式下 router-tool 会把 wan 置为
+// proto none 并禁用，此时设备本质是二层桥接 AP，访客只能走 guest→lan + SNAT。
+function guest_wan_uplink() {
+	let cur = uci.cursor();
+	cur.load("network");
+	if (cur.get("network", "wan") == null) return false;
+	let proto = cur.get("network", "wan", "proto");
+	if (proto == null || proto == "" || proto == "none") return false;
+	if (cur.get("network", "wan", "disabled") == "1") return false;
+	return true;
 }
 
 // 已配置的访客 BSS 内核接口名（如 phy0-ap1）。netdev 名不固定，必须按
@@ -1619,11 +1652,12 @@ function guest_write_infra(cfg) {
 		fc.set("firewall", r.sec, "enabled", "1");
 	}
 
-	let is_sap = state.cfg.role == "sap";
-	/* 主AP 走 wan 出口；子AP 是二层桥接 AP，没有自己的 wan，改由
-	   guest→lan 转发 + SNAT。不用的 forwarding 直接删除，避免 fw4 每次
-	   reload 报「section is disabled」 */
-	if (!is_sap) {
+	/* 有可用 WAN 时访客走 wan 出口；子 AP 或处于中继 AP 模式（wan 已禁用）
+	   的设备本质是二层桥接 AP，改由 guest→lan 转发 + SNAT。不用的
+	   forwarding 直接删除，避免 fw4 每次 reload 报「section is disabled」 */
+	let bridged = state.cfg.role == "sap" || !guest_wan_uplink();
+	state._guest_bridged = bridged;
+	if (!bridged) {
 		if (fc.get("firewall", GUEST_FWD_WAN) == null)
 			fc.set("firewall", GUEST_FWD_WAN, "forwarding");
 		fc.set("firewall", GUEST_FWD_WAN, "src", "guest");
@@ -1633,7 +1667,7 @@ function guest_write_infra(cfg) {
 		fc.delete("firewall", GUEST_FWD_WAN);
 	}
 
-	if (is_sap || cfg.allow_lan) {
+	if (bridged || cfg.allow_lan) {
 		if (fc.get("firewall", GUEST_FWD_LAN) == null)
 			fc.set("firewall", GUEST_FWD_LAN, "forwarding");
 		fc.set("firewall", GUEST_FWD_LAN, "src", "guest");
@@ -1658,8 +1692,9 @@ function guest_write_infra(cfg) {
 function guest_nft_apply(cfg) {
 	let info = guest_lan_info();
 	let snat_ip = info.ip != "" ? info.ip : state.self.ip;
+	let bridged = state.cfg.role == "sap" || !guest_wan_uplink();
 	let sig = (cfg.enabled ? "1" : "0") + "|" + (cfg.allow_lan ? "1" : "0") + "|" +
-	          (state.cfg.role ?? "") + "|" + snat_ip + "|" + info.cidr;
+	          (bridged ? "1" : "0") + "|" + snat_ip + "|" + info.cidr;
 	if (sig == state._guest_nft_sig) return;
 	state._guest_nft_sig = sig;
 
@@ -1667,15 +1702,16 @@ function guest_nft_apply(cfg) {
 	if (!cfg.enabled) return;
 	cmd_output(sprintf("nft add table inet %s 2>/dev/null", GUEST_NFT_TABLE));
 
-	/* 子AP 没有独立 wan：访客流量经 br-lan 送主AP，必须在本机 SNAT 成 lan
-	   地址，主AP 才能把回包按访客子网送回。fw4 的 nat 段按出接口归 zone，
-	   覆盖不到这个方向，所以放在自建表里做。 */
-	if (state.cfg.role == "sap" && snat_ip != "") {
+	/* 桥接上行（子AP / 中继AP 模式）没有自己的 wan：访客流量经 br-lan
+	   送上游网关，必须在本机 SNAT 成 lan 地址，上游才能把回包按访客
+	   子网送回。fw4 的 nat 段按出接口归 zone，覆盖不到这个方向，所以
+	   放在自建表里做。 */
+	if (bridged && snat_ip != "") {
 		cmd_output(sprintf(
 			"nft add chain inet %s nat '{ type nat hook postrouting priority srcnat; policy accept; }' 2>/dev/null",
 			GUEST_NFT_TABLE));
 		cmd_output(sprintf("nft add rule inet %s nat ip saddr %s oifname %s snat ip to %s 2>/dev/null",
-			GUEST_NFT_TABLE, GUEST_NET, state.brdev, snat_ip));
+			GUEST_NFT_TABLE, GUEST_NET, info.dev ?? state.brdev, snat_ip));
 	}
 
 	if (cfg.allow_lan) return;
@@ -1886,6 +1922,26 @@ guest_tick = function() {
 			cmd_output("/etc/init.d/firewall reload 2>/dev/null");
 			state._guest_nft_sig = "";
 		}
+	}
+	/* 访客出口取决于 wan 是否可用：router-tool 切到中继 AP 模式会禁用
+	   wan，此时必须把转发从 guest→wan 换成 guest→lan + SNAT，否则访客
+	   能连上 Wi-Fi 但没有回程路由，表现为无法上网 */
+	let bridged = state.cfg.role == "sap" || !guest_wan_uplink();
+	if (state._guest_bridged == null) {
+		let fc = uci.cursor();
+		fc.load("firewall");
+		let fw_wan = fc.get("firewall", GUEST_FWD_WAN) != null;
+		state._guest_bridged = bridged;
+		if (fw_wan == bridged) {
+			guest_write_infra(g);
+			cmd_output("/etc/init.d/firewall reload 2>/dev/null");
+			state._guest_nft_sig = "";
+		}
+	}
+	else if (state._guest_bridged != bridged) {
+		guest_write_infra(g);
+		cmd_output("/etc/init.d/firewall reload 2>/dev/null");
+		state._guest_nft_sig = "";
 	}
 	/* 进程重启后内核里的 nft 表可能丢失（设备重启），按需补建/清理 */
 	guest_nft_apply(g);
