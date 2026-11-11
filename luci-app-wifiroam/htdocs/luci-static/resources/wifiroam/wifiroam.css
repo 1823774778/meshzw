@@ -496,3 +496,167 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	.wr-toast { animation: none; }
 	.wr-topo-wrap.wr-flash { animation: none; }
 }
+
+/* ------------------------------------------------------------- dark mode */
+/* LuCI 在 <html data-darkmode="true"> 上切换深色模式；这里覆盖插件自己
+   写死的浅色文字、边框和浅色 tab，主题自带的页面不需要重复覆盖。 */
+[data-darkmode="true"] .wr-hint,
+[data-darkmode="true"] .wr-legend,
+[data-darkmode="true"] .wr-dev-info,
+[data-darkmode="true"] .wr-dev-online .wr-cap,
+[data-darkmode="true"] .wr-app-dur .wr-total,
+[data-darkmode="true"] .wr-appctl-tip,
+[data-darkmode="true"] .wr-log-count,
+[data-darkmode="true"] .wr-form-row .wr-hint,
+[data-darkmode="true"] .wr-cat,
+[data-darkmode="true"] .wr-donate-body p {
+	color: #b0bec5;
+}
+
+[data-darkmode="true"] .wr-appctl,
+[data-darkmode="true"] .wr-dev-rates,
+[data-darkmode="true"] .wr-dev-online,
+[data-darkmode="true"] .wr-stats,
+[data-darkmode="true"] .wr-app-row,
+[data-darkmode="true"] .wr-app-other,
+[data-darkmode="true"] .wr-ssid-group,
+[data-darkmode="true"] .wr-navtabs,
+[data-darkmode="true"] .wr-log-scroll,
+[data-darkmode="true"] .wr-band-group,
+[data-darkmode="true"] .wr-guest-row {
+	border-color: #3a4148;
+}
+
+[data-darkmode="true"] .wr-tabs {
+	background: #2a3036;
+}
+[data-darkmode="true"] .wr-tab {
+	color: #b0bec5;
+}
+[data-darkmode="true"] .wr-tab.active {
+	background: #3a4148;
+	color: #eceff1;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+[data-darkmode="true"] .wr-navtab {
+	color: #b0bec5;
+}
+[data-darkmode="true"] .wr-navtab:hover {
+	background: rgba(76, 175, 80, 0.12);
+	color: #a5d6a7;
+}
+[data-darkmode="true"] .wr-navtab.active {
+	background: rgba(76, 175, 80, 0.18);
+	border-color: #66bb6a;
+	color: #c8e6c9;
+}
+
+[data-darkmode="true"] .wr-kvr-on {
+	background: rgba(76, 175, 80, 0.16);
+	border-color: #388e3c;
+	color: #a5d6a7;
+}
+[data-darkmode="true"] .wr-kvr-off {
+	background: rgba(244, 67, 54, 0.16);
+	border-color: #b71c1c;
+	color: #ef9a9a;
+}
+
+[data-darkmode="true"] .wr-check-ok,
+[data-darkmode="true"] .wr-apply-ok {
+	color: #81c784;
+}
+[data-darkmode="true"] .wr-check-fail,
+[data-darkmode="true"] .wr-apply-fail {
+	color: #ef9a9a;
+}
+[data-darkmode="true"] .wr-apply-pending {
+	color: #ffb74d;
+}
+[data-darkmode="true"] .wr-check-info,
+[data-darkmode="true"] .wr-dev-edit,
+[data-darkmode="true"] .wr-dev-up {
+	color: #64b5f6;
+}
+[data-darkmode="true"] .wr-dev-down {
+	color: #81c784;
+}
+
+[data-darkmode="true"] input.wr-switch-input {
+	background-color: #4a5057 !important;
+	background-image: radial-gradient(circle at 11px 11px,
+		#e6e6e6 0 8.8px, rgba(0, 0, 0, 0.45) 9px 10.2px, transparent 10.4px) !important;
+}
+[data-darkmode="true"] input.wr-switch-input:checked {
+	background-color: #34c759 !important;
+}
+
+[data-darkmode="true"] .wr-topo-wrap {
+	background-image: radial-gradient(#37474f 1px, transparent 1px);
+}
+[data-darkmode="true"] .wr-link.wr-aplink {
+	stroke: #b0bec5;
+}
+[data-darkmode="true"] .wr-legend .wr-lg-wired::before {
+	border-top-color: #b0bec5;
+}
+
+/* 拓扑图本身是浅色插图；深色模式下把节点、文字和图标一起换成深色版本 */
+[data-darkmode="true"] #wrGAp stop:first-child,
+[data-darkmode="true"] #wrGCap stop:first-child {
+	stop-color: #2a3036;
+}
+[data-darkmode="true"] #wrGAp stop:last-child {
+	stop-color: #1f2c38;
+}
+[data-darkmode="true"] #wrGCap stop:last-child {
+	stop-color: #1f3327;
+}
+[data-darkmode="true"] .wr-ap-gloss {
+	fill: rgba(255, 255, 255, 0.10);
+}
+[data-darkmode="true"] .wr-client-box {
+	fill: #232830;
+}
+[data-darkmode="true"] .wr-node .wr-label {
+	fill: #eceff1;
+	stroke: #20252b;
+}
+[data-darkmode="true"] .wr-node .wr-sub {
+	fill: #b0bec5;
+}
+[data-darkmode="true"] .wr-node:hover .wr-label {
+	fill: #64b5f6;
+}
+[data-darkmode="true"] .wr-pencil rect {
+	fill: #2a3036;
+	stroke: #90a4ae;
+}
+[data-darkmode="true"] .wr-pencil line {
+	stroke: #b0bec5;
+}
+[data-darkmode="true"] .wr-pencil path {
+	fill: #b0bec5;
+	stroke: none;
+}
+[data-darkmode="true"] .wr-pencil:hover rect {
+	fill: #1e3a5f;
+	stroke: #64b5f6;
+}
+[data-darkmode="true"] .wr-pencil:hover line {
+	stroke: #64b5f6;
+}
+[data-darkmode="true"] .wr-pencil:hover path {
+	fill: #64b5f6;
+}
+[data-darkmode="true"] .wr-toggle > circle:first-child {
+	fill: #2a3036;
+	stroke: #90a4ae;
+}
+[data-darkmode="true"] .wr-toggle line {
+	stroke: #b0bec5;
+}
+[data-darkmode="true"] .wr-chart line {
+	stroke: #3a4148;
+}

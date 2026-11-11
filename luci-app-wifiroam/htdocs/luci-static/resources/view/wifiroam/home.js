@@ -23,16 +23,54 @@ return view.extend({
 	st: null,
 	svc: null,
 	rclist: null,
+	loaded: false,
+	rcLoaded: false,
 	busy: false,
+	actionStarted: false,
 	svcBtns: null,
 	autoCb: null,
 
+	/* Render immediately; status/service RPCs can be slow (rc.list scans
+	   every init script), so they are filled in after the first paint. */
 	load: function() {
-		return Promise.all([
-			wr.safeCall('status'),
-			callServiceList('wifiroam').catch(function() { return null; }),
-			callRcList().catch(function() { return null; }),
-		]);
+		return null;
+	},
+
+	hydrate: function() {
+		var self = this;
+
+		/* 三个来源分开返回：service.list 先到就先点亮服务面板，
+		   rc.list 较慢只影响开机自启勾选，不阻塞状态显示。 */
+		var serviceP = callServiceList('wifiroam').catch(function() { return null; })
+			.then(function(svc) {
+				if (self.actionStarted)
+					return;
+				self.svc = svc;
+				self.loaded = true;
+				self.applyServiceState();
+				self.updateVersionDom();
+			});
+
+		var statusP = wr.safeCall('status').then(function(st) {
+			if (self.actionStarted)
+				return;
+			self.st = st || {};
+			self.updateStatusDom();
+			self.updateVersionDom();
+		});
+
+		var rcP = callRcList().catch(function() { return null; })
+			.then(function(rc) {
+				if (self.actionStarted)
+					return;
+				self.rclist = rc;
+				self.rcLoaded = true;
+				self.applyServiceState();
+			});
+
+		poll.add(function() { return self.refreshService(false); }, 15);
+
+		return Promise.all([ serviceP, statusP, rcP ]);
 	},
 
 	/* ------------------------------------------------------ service state */
@@ -56,8 +94,28 @@ return view.extend({
 		return !!(this.st && this.st.role && this.st.version !== REQUIRED_VERSION);
 	},
 
+	versionText: function() {
+		if (!this.loaded)
+			return _('正在读取服务状态...');
+
+		var ver = this.st && this.st.version;
+		var text = ver != null ? _('守护进程版本') + ': ' + ver : '';
+
+		if (this.versionStale())
+			text = text ? text + ' · ' + _('与前端不一致，点击重启可修复')
+			            : _('与前端不一致，点击重启可修复');
+
+		return text;
+	},
+
+	updateVersionDom: function() {
+		var el = document.getElementById('wr-svc-version');
+		if (el)
+			el.textContent = this.versionText();
+	},
+
 	applyServiceState: function() {
-		if (this.busy)
+		if (!this.loaded || this.busy)
 			return;
 
 		var running = this.svcRunning();
@@ -74,8 +132,10 @@ return view.extend({
 			if (this.svcBtns.restart) this.svcBtns.restart.disabled = false;
 		}
 
-		if (this.autoCb)
+		if (this.autoCb) {
+			this.autoCb.disabled = !this.rcLoaded;
 			this.autoCb.checked = this.svcEnabled();
+		}
 	},
 
 	refreshService: function(full) {
@@ -89,8 +149,10 @@ return view.extend({
 
 		return Promise.all(jobs).then(function(res) {
 			self.svc = res[0];
-			if (full !== false)
+			if (full !== false) {
 				self.rclist = res[1];
+				self.rcLoaded = true;
+			}
 			self.applyServiceState();
 		});
 	},
@@ -150,11 +212,14 @@ return view.extend({
 	afterServiceChange: function(repaired, action) {
 		var self = this;
 
+		this.loaded = true;
+
 		return self.refreshService().then(function() {
 			return wr.safeCall('status');
 		}).then(function(st) {
 			self.st = st || {};
 			self.updateStatusDom();
+			self.updateVersionDom();
 
 			if (repaired === false)
 				wr.notify('danger', _('版本不一致，自动修复失败，请重新安装插件包。'));
@@ -172,6 +237,7 @@ return view.extend({
 			return Promise.resolve();
 
 		this.busy = true;
+		this.actionStarted = true;
 
 		var btn = this.svcBtns ? this.svcBtns[action] : null;
 		wr.setBusy(btn, true, _('处理中...'));
@@ -239,25 +305,25 @@ return view.extend({
 
 		var auto = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
 		auto.checked = this.svcEnabled();
+		auto.disabled = !this.loaded;
 		auto.addEventListener('change', function() {
 			self.toggleAutostart(auto.checked);
 		});
 		this.autoCb = auto;
 
-		var ver = this.st && this.st.version;
-		var verText = ver != null ? _('守护进程版本') + ': ' + ver : '';
-
-		if (this.versionStale())
-			verText = verText ? verText + ' · ' + _('与前端不一致，点击重启可修复')
-			                  : _('与前端不一致，点击重启可修复');
+		var running = this.loaded && this.svcRunning();
+		var badgeCls = !this.loaded ? 'wr-badge-unconfigured'
+		                              : (running ? 'wr-badge-on' : 'wr-badge-off');
+		var badgeText = !this.loaded ? _('读取中...')
+		                             : (running ? _('运行中') : _('已停止'));
 
 		var panel = E('div', { id: 'wr-svc', 'class': 'cbi-section' }, [
 			E('h3', {}, _('插件服务')),
 			E('div', { 'class': 'wr-svc-row' }, [
 				E('span', {
 					id: 'wr-svc-badge',
-					'class': 'wr-badge ' + (this.svcRunning() ? 'wr-badge-on' : 'wr-badge-off'),
-				}, this.svcRunning() ? _('运行中') : _('已停止')),
+					'class': 'wr-badge ' + badgeCls,
+				}, badgeText),
 				E('span', { 'class': 'wr-hint' },
 					_('wifiroamd 负责发现 AP 并下发漫游配置。')),
 			]),
@@ -269,34 +335,43 @@ return view.extend({
 					auto, ' ', _('开机自动启动'),
 				]),
 			]),
-			E('div', { 'class': 'wr-hint', id: 'wr-svc-version' }, verText),
+			E('div', { 'class': 'wr-hint', id: 'wr-svc-version' }, this.versionText()),
 		]);
 
 		this.applyServiceState();
+
+		/* 服务状态还没回来时至少让「启动」可点，避免页面看似卡死 */
+		if (!this.loaded) {
+			btns.start.disabled = false;
+			btns.stop.disabled = true;
+			btns.restart.disabled = false;
+		}
+
 		return panel;
 	},
 
-	render: function(data) {
-		var self = this;
-
-		this.st = data[0] || {};
-		this.svc = data[1];
-		this.rclist = data[2];
+	render: function() {
+		this.st = {};
+		this.svc = null;
+		this.rclist = null;
+		this.loaded = false;
+		this.rcLoaded = false;
 		this.busy = false;
+		this.actionStarted = false;
 
-		poll.add(function() { return self.refreshService(false); }, 15);
-
-		var reachable = !!(this.st && this.st.role);
+		/* 先把页面画出来，状态类 RPC 在首屏后异步补齐 */
+		window.setTimeout(L.bind(this.hydrate, this), 0);
 
 		return E('div', { id: 'wr-home' }, [
 			wr.css(),
 			wr.navTabs('home'),
 			E('h2', {}, _('首页')),
-			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
+			E('div', { id: 'wr-status' },
+				E('div', { 'class': 'wr-hint' }, _('正在读取网络状态...'))),
 			E('div', {
 				id: 'wr-home-warn',
 				'class': 'alert-message warning',
-				style: reachable ? 'display:none' : '',
+				style: 'display:none',
 			}, _('无法连接 wifiroamd。请使用下方插件服务控制启动它。')),
 			this.renderServicePanel(),
 		]);

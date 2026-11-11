@@ -381,6 +381,7 @@ return view.extend({
 		}));
 		g.appendChild(svg('rect', {
 			x: p.x - w / 2 + 2, y: p.y - h / 2 + 2, width: w - 4, height: 13, rx: 4,
+			'class': 'wr-ap-gloss',
 			fill: '#ffffff', opacity: '0.55', stroke: 'none'
 		}));
 		g.appendChild(svg('rect', {
@@ -861,6 +862,7 @@ return view.extend({
 
 			g.appendChild(svg('rect', {
 				x: p.x - 17, y: p.y - 17, width: 34, height: 34, rx: 5,
+				'class': 'wr-client-box',
 				fill: '#ffffff',
 				stroke: wifi ? signalColor(c.conn.rssi) : '#cfd8dc',
 				'stroke-width': 2, filter: 'url(#wrShadow)'
