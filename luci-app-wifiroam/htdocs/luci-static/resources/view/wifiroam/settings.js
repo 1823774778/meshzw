@@ -804,6 +804,18 @@ return view.extend({
 					_('Resetting clears the network token; member APs must be paired again.')),
 			]));
 		}
+		else if (st.role === 'sap') {
+			var resetSapBtn = E('button', {
+				'class': 'btn cbi-button-negative',
+				click: function() { return self.setRole('unconfigured', resetSapBtn); },
+			}, _('重置为未配置'));
+
+			roleCard.appendChild(E('div', { style: 'margin-top:0.8em' }, [
+				resetSapBtn,
+				E('div', { 'class': 'wr-hint' },
+					_('重置会清除配对信息，之后需要由主 AP 重新配对。')),
+			]));
+		}
 
 		frag.appendChild(roleCard);
 
@@ -840,7 +852,7 @@ return view.extend({
 		].concat(discRows.length ? discRows : [
 			E('tr', { 'class': 'tr placeholder' }, [
 				E('td', { colspan: 6 },
-					_('No new devices found. Factory-reset / flash a device with wifiroam and connect it to the LAN.')),
+					_('未发现新设备。请确认对端已安装插件、插件服务正在运行，并与本机处于同一网段；若对端已配对过，请先在对端重置角色。')),
 			]),
 		]));
 

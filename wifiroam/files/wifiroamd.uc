@@ -1184,7 +1184,8 @@ function detect_self() {
 		ifaces: local_iface_macs(),
 	};
 	state.self.name = state.cfg.name != "" ? state.cfg.name : state.self.hostname;
-	log(sprintf("self: %s %s %s", state.self.mac, state.self.ip ?? "?", state.self.name));
+	log(sprintf("self: %s %s %s bcast=%s", state.self.mac,
+		state.self.ip ?? "?", state.self.name, state.bcast));
 }
 
 // 无线回程检测：优先看本插件托管的 STA 接口，其次看其它已关联的 STA。
@@ -2264,8 +2265,13 @@ function udp_rx() {
 		if (length(mn) != 12 || mn == macnorm(state.self.mac)) continue;
 
 		if (msg.role == "unconfigured") {
+			let dip = msg.ip ?? peer.address;
+			let old = state.discovered[mn];
+			if (!old || old.ip != dip)
+				log(sprintf("discovery: %s at %s name=%s",
+					msg.mac, dip ?? "?", msg.name ?? "?"));
 			state.discovered[mn] = {
-				mac: uc(msg.mac), ip: msg.ip ?? peer.address,
+				mac: uc(msg.mac), ip: dip,
 				name: msg.name, model: msg.model,
 				nonce: msg.nonce, last_seen: time(),
 			};
@@ -2313,6 +2319,7 @@ function setup_udp() {
 		udp_sock.close(); udp_sock = null;
 		exit(1);   // 传输不可用 = 守护进程无意义，fail-fast 交 procd 处置
 	}
+	log(sprintf("discovery udp %d bcast=%s", UDP_PORT, state.bcast ?? "?"));
 	uloop.handle(udp_sock.fileno(), udp_rx, uloop.ULOOP_READ);
 }
 
