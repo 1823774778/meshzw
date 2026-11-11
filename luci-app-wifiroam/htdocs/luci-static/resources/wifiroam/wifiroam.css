@@ -214,46 +214,47 @@
 	font-weight: 600;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
-/* 网络管理顶部页签（首页 / 网络拓扑 / 客户端 / 无线设置 / 高级设置） */
+/* 网络管理顶部页签：与 Vantage 的 .cbi-tabmenu 同一套分段控件外观 */
 .wr-navtabs {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: flex-end;
-	gap: 0;
-	margin: 0 0 1em;
-	border-bottom: 1px solid var(--line, var(--border-color, #cfd8dc));
+	align-items: stretch;
+	width: fit-content;
+	max-width: 100%;
+	min-height: var(--ctl-h, 36px);
+	margin: 0 0 var(--sp-5, 1.25em);
+	padding: 0;
+	list-style: none;
+	background: var(--seg-bg, var(--s3, var(--surface-inset, var(--background-color-medium, #f5f5f5))));
+	border-radius: var(--r-lg, 8px);
+	box-shadow: inset 0 0 0 1px var(--line, var(--border-color, var(--border-color-medium, #ddd)));
 }
 .wr-navtab {
-	display: block;
-	margin-bottom: -1px;
-	padding: 0.55em 1.15em;
-	border: 1px solid transparent;
-	border-bottom: 0;
-	border-radius: 6px 6px 0 0;
-	color: var(--text-3, var(--muted-text, #555));
+	flex: 1 1 auto;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-height: var(--ctl-h, 36px);
+	padding: 0 10px;
+	border: 3px solid transparent;
+	background-clip: padding-box;
+	border-radius: calc(var(--r, 6px) + 3px);
+	color: var(--text-2, var(--text-3, var(--muted-text, var(--text-color-medium, #555))));
 	font-size: 14px;
+	font-weight: 500;
 	line-height: 1.25;
+	white-space: nowrap;
 	text-decoration: none;
 }
 .wr-navtab:hover {
-	background: #f1f8e9;
-	background: color-mix(in srgb,
-		var(--accent, var(--primary, #2e7d32)) 10%,
-		var(--s2, var(--surface-raised, var(--background-color-high, #fff))));
-	color: #2e7d32;
-	color: var(--accent-text, var(--primary, #2e7d32));
+	color: var(--text, var(--text-2, var(--text-color-high, #222)));
 	text-decoration: none;
 }
 .wr-navtab.active {
-	background: #e8f5e9;
-	background: color-mix(in srgb,
-		var(--accent, var(--primary, #2e7d32)) 18%,
-		var(--s2, var(--surface-raised, var(--background-color-high, #fff))));
-	border-color: #2e7d32;
-	border-color: var(--accent-line, var(--primary, #2e7d32));
-	color: #1b5e20;
-	color: var(--accent-text, var(--text, var(--text-strong, var(--text-color-high, #1b5e20))));
+	background-color: var(--seg-on, var(--s2, var(--surface-raised, var(--background-color-high, #fff))));
+	color: var(--accent-text, var(--text, var(--text-color-high, #1b5e20)));
 	font-weight: 600;
+	box-shadow: var(--seg-on-ring, inset 0 0 0 1px var(--accent-line, var(--primary, #2e7d32)));
 }
 .wr-chart { display: block; width: 100%; max-width: 460px; height: auto; margin-top: 0.4em; }
 .wr-chart text { font-size: 9.5px; fill: #90a4ae; }
@@ -546,23 +547,6 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	background: var(--s2, #3a4148);
 	color: var(--text, #eceff1);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-}
-
-[data-darkmode="true"] .wr-navtab {
-	color: var(--text-3, #b0bec5);
-}
-[data-darkmode="true"] .wr-navtab:hover {
-	background: color-mix(in srgb,
-		var(--accent, #4caf50) 10%,
-		var(--s2, #20252b));
-	color: var(--accent-text, #a5d6a7);
-}
-[data-darkmode="true"] .wr-navtab.active {
-	background: color-mix(in srgb,
-		var(--accent, #4caf50) 18%,
-		var(--s2, #20252b));
-	border-color: var(--accent-line, #66bb6a);
-	color: var(--accent-text, #c8e6c9);
 }
 
 [data-darkmode="true"] .wr-kvr-on {
