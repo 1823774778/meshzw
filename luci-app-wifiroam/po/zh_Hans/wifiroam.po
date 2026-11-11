@@ -358,9 +358,6 @@ msgstr "配对请求已发送至 "
 msgid "Pair failed"
 msgstr "配对失败"
 
-msgid "Member APs"
-msgstr "成员 AP"
-
 msgid "No member APs yet"
 msgstr "暂无成员 AP"
 
@@ -432,9 +429,6 @@ msgstr "部分 AP 应用漫游配置失败"
 
 msgid "request rejected"
 msgstr "请求被拒绝"
-
-msgid "Failed"
-msgstr "失败"
 
 msgid "Plugin Service"
 msgstr "插件服务"
