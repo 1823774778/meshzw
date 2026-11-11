@@ -23,73 +23,57 @@ jobs:
       matrix:
         include:
           - name: x86_64
-            sdk_url: https://downloads.openwrt.org/releases/25.12.6/targets/x86/64/openwrt-sdk-25.12.6-x86-64_gcc-14.3.0_musl.Linux-x86_64.tar.zst
+            image: ghcr.io/openwrt/sdk:x86_64-25.12.6
           - name: mediatek-filogic
-            sdk_url: https://downloads.openwrt.org/releases/25.12.6/targets/mediatek/filogic/openwrt-sdk-25.12.6-mediatek-filogic_gcc-14.3.0_musl.Linux-x86_64.tar.zst
+            image: ghcr.io/openwrt/sdk:mediatek-filogic-25.12.6
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            bc build-essential bison clang file flex g++ gawk gcc-multilib \
-            g++-multilib gettext git libelf-dev libncurses-dev libssl-dev \
-            python3 rsync unzip wget zlib1g-dev zstd
-
-      - name: Download and extract OpenWrt SDK
-        run: |
-          curl -fL --retry 3 --retry-delay 5 -o /tmp/sdk.tar.zst "${{ matrix.sdk_url }}"
-          mkdir -p "$RUNNER_TEMP/sdk"
-          tar --zstd -xf /tmp/sdk.tar.zst -C "$RUNNER_TEMP/sdk" --strip-components=1
-          echo "SDK_DIR=$RUNNER_TEMP/sdk" >> "$GITHUB_ENV"
-          du -sh "$RUNNER_TEMP/sdk"
-
-      - name: Add local package feed
-        run: |
-          cd "$SDK_DIR"
-          # Use GitHub mirrors first; git.openwrt.org can be slow/unstable on runners.
-          sed -i \
-            -e 's#https://git.openwrt.org/feed/#https://github.com/openwrt/#' \
-            -e 's#https://git.openwrt.org/openwrt/#https://github.com/openwrt/#' \
-            -e 's#https://git.openwrt.org/project/#https://github.com/openwrt/#' \
-            feeds.conf.default
-          echo "src-link meshzw $GITHUB_WORKSPACE" >> feeds.conf.default
-          cat feeds.conf.default
-
-      - name: Update and install feeds
-        run: |
-          cd "$SDK_DIR"
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-
-      - name: Configure SDK
-        run: |
-          cd "$SDK_DIR"
-          make defconfig
-
-      - name: Build wifiroam daemon
-        run: |
-          cd "$SDK_DIR"
-          make package/wifiroam/compile V=s -j"$(nproc)"
-
-      - name: Build LuCI application
-        run: |
-          cd "$SDK_DIR"
-          make package/luci-app-wifiroam/compile V=s -j"$(nproc)"
-
-      - name: Build Simplified Chinese translation
-        run: |
-          cd "$SDK_DIR"
-          make package/luci-i18n-wifiroam-zh-cn/compile V=s -j"$(nproc)"
-
-      - name: Collect APK packages
+      - name: Build APK packages in the OpenWrt SDK container
         run: |
           mkdir -p "$GITHUB_WORKSPACE/artifacts"
-          find "$SDK_DIR/bin/packages" -type f -name '*.apk' -path '*/meshzw/*' \
-            -exec cp -v {} "$GITHUB_WORKSPACE/artifacts/" \;
+          chmod 0777 "$GITHUB_WORKSPACE/artifacts"
+
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/feed:ro" \
+            --volume "$GITHUB_WORKSPACE/artifacts:/artifacts" \
+            --env GIT_CONFIG_COUNT=1 \
+            --env GIT_CONFIG_KEY_0=safe.directory \
+            --env GIT_CONFIG_VALUE_0='*' \
+            "${{ matrix.image }}" \
+            bash -lc '
+              set -euo pipefail
+
+              # Release images normally ship the SDK unpacked; snapshots use setup.sh.
+              if [ ! -d ./scripts ]; then
+                bash setup.sh
+              fi
+
+              # Use GitHub mirrors first; git.openwrt.org can be slow/unstable on runners.
+              sed -i \
+                -e "s#https://git.openwrt.org/feed/#https://github.com/openwrt/#" \
+                -e "s#https://git.openwrt.org/openwrt/#https://github.com/openwrt/#" \
+                -e "s#https://git.openwrt.org/project/#https://github.com/openwrt/#" \
+                feeds.conf.default
+              echo "src-link meshzw /feed" >> feeds.conf.default
+              cat feeds.conf.default
+
+              ./scripts/feeds update -a
+              ./scripts/feeds install -a
+              make defconfig
+
+              make package/wifiroam/compile V=s -j"$(nproc)"
+              make package/luci-app-wifiroam/compile V=s -j"$(nproc)"
+              make package/luci-i18n-wifiroam-zh-cn/compile V=s -j"$(nproc)"
+
+              find bin/packages -type f -name "*.apk" -path "*/meshzw/*" \
+                -exec cp -v {} /artifacts/ \;
+            '
+
+      - name: List APK packages
+        run: |
           ls -lh "$GITHUB_WORKSPACE/artifacts"
           test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name '*.apk' -print -quit)"
 
