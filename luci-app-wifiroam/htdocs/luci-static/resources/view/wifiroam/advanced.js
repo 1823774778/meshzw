@@ -634,10 +634,16 @@ return view.extend({
 		var self = this;
 
 		var notice = null;
-		if (!isCap)
+		if (!isCap) {
+			var roleNames = {
+				cap: _('主路由（CAP）'),
+				sap: _('子路由（SAP）'),
+				unconfigured: _('未组网'),
+			};
 			notice = E('div', { 'class': 'alert-message warning' },
-				_('Roaming can only be configured on the main AP (CAP). This device has role: ') +
-				(this.st.role || '-'));
+				_('漫游只能在主路由（CAP）上配置。当前设备角色：') +
+				(roleNames[this.st.role] || this.st.role || '-'));
+		}
 
 		// ---- form widgets ----
 		var enableCb = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });

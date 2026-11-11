@@ -1077,7 +1077,7 @@ return view.extend({
 		ui.showModal('用得爽，打个赏', [
 			E('div', { 'class': 'wr-donate-body' }, [
 				E('img', { src: L.resource('wifiroam/donate-qr.png'), alt: 'donate qr' }),
-				E('p', {}, '感谢您的认可，打赏用户有任何需求可发送至邮箱 475662846@qq.com')
+				E('p', {}, '感谢您的认可，打赏用户有任何需求可发送至邮箱 1823774778@qq.com')
 			]),
 			E('div', { 'class': 'right' }, [
 				E('button', {

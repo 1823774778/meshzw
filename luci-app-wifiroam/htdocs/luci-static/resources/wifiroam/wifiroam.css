@@ -6,7 +6,7 @@
 	flex-wrap: wrap;
 	padding: 0.6em 0.8em;
 	margin-bottom: 0.8em;
-	background: var(--background-color-medium, #f5f5f5);
+	background: var(--surface-inset, var(--background-color-medium, #f5f5f5));
 	border-radius: 4px;
 	font-size: 0.95em;
 }
@@ -28,10 +28,10 @@
 /* ---------------------------------------------------------------- topology */
 .wr-topo-wrap {
 	overflow: auto;
-	border: 1px solid var(--border-color-medium, #ddd);
+	border: 1px solid var(--border-color, var(--border-color-medium, #ddd));
 	border-radius: 6px;
-	background-color: var(--background-color-high, #fff);
-	background-image: radial-gradient(#e6ebf0 1px, transparent 1px);
+	background-color: var(--surface-raised, var(--background-color-high, #fff));
+	background-image: radial-gradient(var(--border-color, #e6ebf0) 1px, transparent 1px);
 	background-size: 22px 22px;
 }
 .wr-topo-wrap svg { display: block; width: 100%; height: auto; }
@@ -39,11 +39,11 @@
 .wr-empty {
 	padding: 3em 1em;
 	text-align: center;
-	color: #90a4ae;
+	color: var(--muted-text, #90a4ae);
 }
 
 .wr-node { cursor: pointer; }
-.wr-node text { fill: var(--text-color-high, #222); text-anchor: middle; }
+.wr-node text { fill: var(--text-strong, var(--text-color-high, #222)); text-anchor: middle; }
 .wr-node .wr-label {
 	font-size: 12.5px;
 	font-weight: 600;
@@ -63,7 +63,7 @@
 	stroke-linecap: round;
 	fill: none;
 }
-.wr-link.wr-aplink { stroke-width: 3.5; stroke: #546e7a; opacity: 0.85; }
+.wr-link.wr-aplink { stroke-width: 3.5; stroke: var(--muted-text, #546e7a); opacity: 0.85; }
 .wr-link.wr-clink { stroke-width: 2; opacity: 0.8; }
 .wr-link.wr-wireless { stroke-dasharray: 2 7; animation: wr-dashflow 1.4s linear infinite; }
 .wr-link.wr-sig-good { stroke: #43a047; }
@@ -82,7 +82,7 @@
 	gap: 1.2em;
 	flex-wrap: wrap;
 	font-size: 0.85em;
-	color: #666;
+	color: var(--muted-text, #666);
 	padding: 0.4em 0.2em;
 }
 .wr-legend span::before {
@@ -90,11 +90,11 @@
 	display: inline-block;
 	width: 1.6em;
 	height: 0;
-	border-top: 3px solid #546e7a;
+	border-top: 3px solid var(--muted-text, #546e7a);
 	margin-right: 0.35em;
 	vertical-align: middle;
 }
-.wr-legend .wr-lg-wifi::before { border-top-style: dashed; border-top-width: 2px; border-color: #607d8b; }
+.wr-legend .wr-lg-wifi::before { border-top-style: dashed; border-top-width: 2px; border-color: var(--muted-text, #607d8b); }
 .wr-legend .wr-lg-good::before { border-color: #43a047; border-top-width: 2px; }
 .wr-legend .wr-lg-mid::before { border-color: #fb8c00; border-top-width: 2px; }
 .wr-legend .wr-lg-bad::before { border-color: #e53935; border-top-width: 2px; }
@@ -113,7 +113,7 @@
 	100% { box-shadow: 0 0 0 14px rgba(21, 101, 192, 0); }
 }
 
-.wr-hint { color: #777; font-size: 0.85em; }
+.wr-hint { color: var(--muted-text, #777); font-size: 0.85em; }
 
 /* 成员 AP 的 K/V/R 生效状态 */
 .wr-kvr {
@@ -139,8 +139,8 @@
 .wr-detail-table td { padding: 0.3em 0.6em; }
 
 /* 设备详情：应用使用时长与访问控制 */
-.wr-muted { color: #90a4ae; }
-.wr-appctl { margin-top: 1em; border-top: 1px solid #e0e0e0; padding-top: 0.8em; }
+.wr-muted { color: var(--muted-text, #90a4ae); }
+.wr-appctl { margin-top: 1em; border-top: 1px solid var(--border-color, #e0e0e0); padding-top: 0.8em; }
 .wr-appctl-head {
 	display: flex;
 	align-items: center;
@@ -169,25 +169,25 @@
 	white-space: nowrap;
 }
 .wr-dev-edit:hover { text-decoration: underline; }
-.wr-dev-info { margin-top: 0.6em; color: #666; font-size: 12.5px; line-height: 1.75; }
+.wr-dev-info { margin-top: 0.6em; color: var(--muted-text, #666); font-size: 12.5px; line-height: 1.75; }
 .wr-dev-nameedit { margin-top: 0.6em; display: flex; gap: 0.5em; align-items: center; }
 .wr-dev-rates {
 	display: flex;
 	gap: 2.4em;
 	margin-top: 0.8em;
 	padding: 0.65em 0.1em;
-	border-top: 1px solid #eee;
+	border-top: 1px solid var(--border-color, #eee);
 	font-size: 16px;
 	font-weight: 600;
 }
 .wr-dev-up { color: #1e88e5; }
 .wr-dev-down { color: #43a047; }
-.wr-dev-online { margin-top: 0.1em; padding-top: 0.65em; border-top: 1px solid #eee; }
-.wr-dev-online .wr-cap { color: #777; font-size: 12.5px; }
+.wr-dev-online { margin-top: 0.1em; padding-top: 0.65em; border-top: 1px solid var(--border-color, #eee); }
+.wr-dev-online .wr-cap { color: var(--muted-text, #777); font-size: 12.5px; }
 .wr-dev-online .wr-big { font-size: 26px; font-weight: 600; margin-top: 0.1em; }
 
 /* 上网统计：页签 + 7 天柱状图 */
-.wr-stats { margin-top: 0.8em; border-top: 1px solid #eee; padding-top: 0.7em; }
+.wr-stats { margin-top: 0.8em; border-top: 1px solid var(--border-color, #eee); padding-top: 0.7em; }
 .wr-stats-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5em; }
 .wr-stats-online { border-top: none; padding-top: 0.4em; display: flex; gap: 2.4em; flex-wrap: wrap; }
 .wr-tabs {
@@ -204,13 +204,13 @@
 	background: transparent;
 	padding: 0.35em 0;
 	font-size: 12.5px;
-	color: #666;
+	color: var(--muted-text, #666);
 	border-radius: 5px;
 	cursor: pointer;
 }
 .wr-tab.active {
-	background: #fff;
-	color: #222;
+	background: var(--surface-raised, #fff);
+	color: var(--text-strong, #222);
 	font-weight: 600;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
@@ -221,7 +221,7 @@
 	align-items: flex-end;
 	gap: 0;
 	margin: 0 0 1em;
-	border-bottom: 1px solid #cfd8dc;
+	border-bottom: 1px solid var(--border-color, #cfd8dc);
 }
 .wr-navtab {
 	display: block;
@@ -230,20 +230,29 @@
 	border: 1px solid transparent;
 	border-bottom: 0;
 	border-radius: 6px 6px 0 0;
-	color: #555;
+	color: var(--muted-text, #555);
 	font-size: 14px;
 	line-height: 1.25;
 	text-decoration: none;
 }
 .wr-navtab:hover {
 	background: #f1f8e9;
+	background: color-mix(in srgb,
+		var(--primary, #2e7d32) 10%,
+		var(--surface-raised, var(--background-color-high, #fff)));
 	color: #2e7d32;
+	color: var(--primary, #2e7d32);
 	text-decoration: none;
 }
 .wr-navtab.active {
 	background: #e8f5e9;
+	background: color-mix(in srgb,
+		var(--primary, #2e7d32) 18%,
+		var(--surface-raised, var(--background-color-high, #fff)));
 	border-color: #2e7d32;
+	border-color: var(--primary, #2e7d32);
 	color: #1b5e20;
+	color: var(--text-strong, var(--text-color-high, #1b5e20));
 	font-weight: 600;
 }
 .wr-chart { display: block; width: 100%; max-width: 460px; height: auto; margin-top: 0.4em; }
@@ -256,12 +265,12 @@
 	align-items: center;
 	gap: 0.7em;
 	padding: 0.4em 0.1em;
-	border-bottom: 1px solid #f0f0f0;
+	border-bottom: 1px solid var(--border-color, #f0f0f0);
 }
 .wr-app-row .wr-app-cell { flex: 1 1 auto; min-width: 0; }
 .wr-app-row .wr-app-name { overflow: hidden; text-overflow: ellipsis; }
 .wr-app-dur { text-align: right; white-space: nowrap; line-height: 1.3; }
-.wr-app-dur .wr-total { display: block; font-size: 11px; color: #90a4ae; }
+.wr-app-dur .wr-total { display: block; font-size: 11px; color: var(--muted-text, #90a4ae); }
 /* 功能开关：TP-Link / iOS 风格的绿色滑块（替代原生复选框）
    关闭为浅灰底 + 左侧白圆，开启为绿底 + 右侧白圆。
    用 appearance:none 重绘原生 checkbox，保留其 checked/change 语义。 */
@@ -277,7 +286,7 @@ input.wr-switch-input {
 	border: none !important;
 	border-radius: 11px;
 	/* 主题会给选中态上强调色（如 #0086bf），这里用 !important 固定灰/绿两态 */
-	background-color: #d5dce1 !important;
+	background-color: var(--border-strong, #d5dce1) !important;
 	/* <input> 是替换元素，Chromium 不渲染它的 ::after，
 	   所以白圆用径向渐变画进背景：圆心 11px，直径 18px，带一圈淡阴影 */
 	background-image: radial-gradient(circle at 11px 11px,
@@ -303,10 +312,10 @@ input.wr-switch-input:focus { outline: none; }
 input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* 应用类别小标题（列表按类别分组） */
-.wr-cat { margin: 0.6em 0 0.1em; font-size: 11.5px; color: #78909c; letter-spacing: 0.3px; }
+.wr-cat { margin: 0.6em 0 0.1em; font-size: 11.5px; color: var(--muted-text, #78909c); letter-spacing: 0.3px; }
 /* 未识别流量行：灰色弱化，不参与管控 */
-.wr-app-other { border-top: 1px dashed #eceff1; }
-.wr-app-other .wr-app-name { color: #90a4ae; }
+.wr-app-other { border-top: 1px dashed var(--border-color, #eceff1); }
+.wr-app-other .wr-app-name { color: var(--muted-text, #90a4ae); }
 /* 图标与名称水平排列：flex 行内布局，确保任何主题下都不会上下堆叠 */
 .wr-app-cell {
 	display: flex;
@@ -337,7 +346,7 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	margin-top: 0.5em;
 	font-size: 11.5px;
 	line-height: 1.5;
-	color: #90a4ae;
+	color: var(--muted-text, #90a4ae);
 }
 
 .wr-check-ok { color: #2e7d32; }
@@ -348,21 +357,21 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 
 .wr-form-row { margin-bottom: 0.9em; }
 .wr-form-row > label { display: block; font-weight: bold; margin-bottom: 0.25em; }
-.wr-form-row .wr-hint { color: #777; font-size: 0.85em; margin-top: 0.2em; }
+.wr-form-row .wr-hint { color: var(--muted-text, #777); font-size: 0.85em; margin-top: 0.2em; }
 
 /* Wi-Fi 设置的频段分组（多频合一开启时只有「主人网络」一组） */
 .wr-band-group {
 	margin: 0.2em 0 1em;
 	padding-top: 0.6em;
-	border-top: 1px solid var(--border-color-medium, #e3e8ee);
+	border-top: 1px solid var(--border-color, var(--border-color-medium, #e3e8ee));
 }
 .wr-band-group h4 {
 	margin: 0 0 0.6em;
 	font-size: 1em;
 	font-weight: 600;
-	color: var(--text-color-high, #263238);
+	color: var(--text-strong, var(--text-color-high, #263238));
 }
-.wr-ssid-group { border: 1px solid #ddd; border-radius: 4px; padding: 0.5em 0.8em; margin-bottom: 0.4em; }
+.wr-ssid-group { border: 1px solid var(--border-color, #ddd); border-radius: 4px; padding: 0.5em 0.8em; margin-bottom: 0.4em; }
 
 /* 访客网络：TP-Link 风格「标签左 / 值右」列表行 */
 .wr-guest-row {
@@ -372,7 +381,7 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	justify-content: space-between;
 	gap: 0.4em 0.8em;
 	padding: 0.7em 0.1em;
-	border-bottom: 1px solid var(--border-color-medium, #e3e8ee);
+	border-bottom: 1px solid var(--border-color, var(--border-color-medium, #e3e8ee));
 }
 .wr-guest-row label { flex: 1 1 auto; margin: 0; font-weight: normal; }
 .wr-guest-row .wr-guest-ctrl {
@@ -395,15 +404,15 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 .wr-log-scroll {
 	max-height: 22em;
 	overflow-y: auto;
-	border: 1px solid var(--border-color-medium, #ddd);
+	border: 1px solid var(--border-color, var(--border-color-medium, #ddd));
 	border-radius: 4px;
 }
 .wr-log-scroll .table-titles th {
 	position: sticky;
 	top: 0;
 	z-index: 1;
-	background: var(--background-color-medium, #f5f5f5);
-	box-shadow: 0 1px 0 var(--border-color-medium, #ddd);
+	background: var(--surface-inset, var(--background-color-medium, #f5f5f5));
+	box-shadow: 0 1px 0 var(--border-color, var(--border-color-medium, #ddd));
 }
 
 .wr-apply-ok { color: #2e7d32; }
@@ -461,7 +470,7 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	font-size: 12.5px;
 }
 .wr-log-filter .btn { padding: 0.28em 0.9em; font-size: 12.5px; }
-.wr-log-count { color: #90a4ae; font-size: 12px; margin-bottom: 0.35em; }
+.wr-log-count { color: var(--muted-text, #90a4ae); font-size: 12px; margin-bottom: 0.35em; }
 
 /* 打赏入口：标题旁的绿色胶囊按钮 + 弹窗内容居中 */
 .wr-donate-btn {
@@ -480,7 +489,7 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 .wr-donate-btn:hover { background: #06ad56; color: #fff; text-decoration: none; }
 .wr-donate-body { text-align: center; }
 .wr-donate-body img { display: block; margin: 0 auto; max-width: 280px; width: 100%; border-radius: 6px; }
-.wr-donate-body p { margin: 0.9em 0 0.2em; line-height: 1.7; color: #555; }
+.wr-donate-body p { margin: 0.9em 0 0.2em; line-height: 1.7; color: var(--muted-text, #555); }
 
 /* 拓扑节点名称过长：裁剪窗固定，内容单向匀速循环滚动（双份文字首尾相接） */
 .wr-node .wr-scroll-anim {
