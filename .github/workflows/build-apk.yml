@@ -22,10 +22,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: x86_64
-            image: ghcr.io/openwrt/sdk:x86_64-25.12.6
-          - name: mediatek-filogic
-            image: ghcr.io/openwrt/sdk:mediatek-filogic-25.12.6
+          # ARM64 Cortex-A53 (qualcommax/ipq807x package architecture).
+          - name: arm64-cortex-a53
+            image: ghcr.io/openwrt/sdk:qualcommax-ipq807x-25.12.6
 
     steps:
       - name: Checkout
@@ -67,7 +66,8 @@ jobs:
               make package/wifiroam/compile V=s -j"$(nproc)"
               make package/luci-app-wifiroam/compile V=s -j"$(nproc)"
 
-              find bin/packages -type f -name "*.apk" -path "*/meshzw/*" \
+              find bin/packages -type f -name "*.apk" \
+                \( -path "*/meshzw/*" -o -name "ucode-mod-socket-*.apk" \) \
                 -exec cp -v {} /artifacts/ \;
             '
 
