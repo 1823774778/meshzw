@@ -1,0 +1,18 @@
+{
+	"luci-app-wifiroam": {
+		"description": "Grant access to wifiroam seamless roaming management",
+		"read": {
+			"ubus": {
+				"wifiroam": [ "status", "topology", "client_detail", "get_roam", "precheck", "discover", "roam_log", "get_backhaul", "appctl_status", "offload_status", "get_wifi", "get_guest" ],
+				"service": [ "list" ],
+				"rc": [ "list" ]
+			}
+		},
+		"write": {
+			"ubus": {
+				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "pair", "unpair", "set_appctl", "set_app_policy", "set_offload", "set_wifi", "set_guest" ],
+				"rc": [ "init" ]
+			}
+		}
+	}
+}

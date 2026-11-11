@@ -1,0 +1,466 @@
+/* wifiroam topology & pages */
+
+.wr-statusbar {
+	display: flex;
+	gap: 1.5em;
+	flex-wrap: wrap;
+	padding: 0.6em 0.8em;
+	margin-bottom: 0.8em;
+	background: var(--background-color-medium, #f5f5f5);
+	border-radius: 4px;
+	font-size: 0.95em;
+}
+.wr-statusbar .wr-item b { margin-left: 0.3em; }
+
+.wr-badge {
+	display: inline-block;
+	padding: 0.05em 0.55em;
+	border-radius: 3px;
+	color: #fff;
+	font-size: 0.85em;
+}
+.wr-badge-cap { background: #2e7d32; }
+.wr-badge-sap { background: #1565c0; }
+.wr-badge-unconfigured { background: #757575; }
+.wr-badge-on { background: #2e7d32; }
+.wr-badge-off { background: #9e9e9e; }
+
+/* ---------------------------------------------------------------- topology */
+.wr-topo-wrap {
+	overflow: auto;
+	border: 1px solid var(--border-color-medium, #ddd);
+	border-radius: 6px;
+	background-color: var(--background-color-high, #fff);
+	background-image: radial-gradient(#e6ebf0 1px, transparent 1px);
+	background-size: 22px 22px;
+}
+.wr-topo-wrap svg { display: block; width: 100%; height: auto; }
+
+.wr-empty {
+	padding: 3em 1em;
+	text-align: center;
+	color: #90a4ae;
+}
+
+.wr-node { cursor: pointer; }
+.wr-node text { fill: var(--text-color-high, #222); text-anchor: middle; }
+.wr-node .wr-label {
+	font-size: 12.5px;
+	font-weight: 600;
+	fill: #263238;
+	paint-order: stroke;
+	stroke: #fff;
+	stroke-width: 3.5px;
+	stroke-linejoin: round;
+}
+.wr-node .wr-sub { font-size: 10.5px; fill: #90a4ae; }
+.wr-node:hover .wr-label { fill: #1565c0; }
+
+/* 连线：有线实线 / 无线流动虚线 / 按信号着色 */
+.wr-link {
+	stroke: #90a4ae;
+	stroke-width: 2;
+	stroke-linecap: round;
+	fill: none;
+}
+.wr-link.wr-aplink { stroke-width: 3.5; stroke: #546e7a; opacity: 0.85; }
+.wr-link.wr-clink { stroke-width: 2; opacity: 0.8; }
+.wr-link.wr-wireless { stroke-dasharray: 2 7; animation: wr-dashflow 1.4s linear infinite; }
+.wr-link.wr-sig-good { stroke: #43a047; }
+.wr-link.wr-sig-mid { stroke: #fb8c00; }
+.wr-link.wr-sig-bad { stroke: #e53935; }
+
+@keyframes wr-dashflow { to { stroke-dashoffset: -18; } }
+
+/* 尊重系统的“减少动画”偏好 */
+@media (prefers-reduced-motion: reduce) {
+	.wr-link.wr-wireless { animation: none; }
+}
+
+.wr-legend {
+	display: flex;
+	gap: 1.2em;
+	flex-wrap: wrap;
+	font-size: 0.85em;
+	color: #666;
+	padding: 0.4em 0.2em;
+}
+.wr-legend span::before {
+	content: "";
+	display: inline-block;
+	width: 1.6em;
+	height: 0;
+	border-top: 3px solid #546e7a;
+	margin-right: 0.35em;
+	vertical-align: middle;
+}
+.wr-legend .wr-lg-wifi::before { border-top-style: dashed; border-top-width: 2px; border-color: #607d8b; }
+.wr-legend .wr-lg-good::before { border-color: #43a047; border-top-width: 2px; }
+.wr-legend .wr-lg-mid::before { border-color: #fb8c00; border-top-width: 2px; }
+.wr-legend .wr-lg-bad::before { border-color: #e53935; border-top-width: 2px; }
+
+/* 拓扑节点上的铅笔入口：常显，避免依赖 hover（触屏无 hover） */
+.wr-pencil { cursor: pointer; }
+.wr-pencil rect { transition: fill 0.15s, stroke 0.15s; }
+.wr-pencil:hover rect { fill: #e3f2fd; stroke: #1565c0; }
+.wr-pencil:hover line, .wr-pencil:hover path { stroke: #1565c0; }
+.wr-pencil:hover path { fill: #1565c0; }
+
+/* 手动刷新后的感知反馈：拓扑块外扩高亮一次 */
+.wr-topo-wrap.wr-flash { animation: wr-flash 0.9s ease-out; }
+@keyframes wr-flash {
+	0%   { box-shadow: 0 0 0 0 rgba(21, 101, 192, 0.55); }
+	100% { box-shadow: 0 0 0 14px rgba(21, 101, 192, 0); }
+}
+
+.wr-hint { color: #777; font-size: 0.85em; }
+
+/* 成员 AP 的 K/V/R 生效状态 */
+.wr-kvr {
+	display: inline-block;
+	min-width: 1.15em;
+	padding: 0 0.22em;
+	margin-right: 0.12em;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 0.85em;
+	font-weight: 600;
+	line-height: 1.45;
+}
+.wr-kvr-on { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.wr-kvr-off { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+/* ---------------------------------------------------------------- modal */
+.wr-detail-table td:first-child {
+	font-weight: bold;
+	width: 8em;
+	white-space: nowrap;
+}
+.wr-detail-table td { padding: 0.3em 0.6em; }
+
+/* 设备详情：应用使用时长与访问控制 */
+.wr-muted { color: #90a4ae; }
+.wr-appctl { margin-top: 1em; border-top: 1px solid #e0e0e0; padding-top: 0.8em; }
+.wr-appctl-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0.5em;
+}
+.wr-appctl-switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35em;
+	font-size: 13px;
+	font-weight: normal;
+	cursor: pointer;
+}
+/* 设备详情（TP-Link 风格）：头部大名称、灰色信息行、速率行、在线时间大数字 */
+.wr-dev-head { display: flex; align-items: center; gap: 0.6em; }
+.wr-dev-head svg { flex: none; }
+.wr-dev-title { font-size: 18px; font-weight: 600; word-break: break-all; }
+.wr-dev-edit {
+	margin-left: auto;
+	flex: none;
+	font-size: 12.5px;
+	color: #1565c0;
+	cursor: pointer;
+	white-space: nowrap;
+}
+.wr-dev-edit:hover { text-decoration: underline; }
+.wr-dev-info { margin-top: 0.6em; color: #666; font-size: 12.5px; line-height: 1.75; }
+.wr-dev-nameedit { margin-top: 0.6em; display: flex; gap: 0.5em; align-items: center; }
+.wr-dev-rates {
+	display: flex;
+	gap: 2.4em;
+	margin-top: 0.8em;
+	padding: 0.65em 0.1em;
+	border-top: 1px solid #eee;
+	font-size: 16px;
+	font-weight: 600;
+}
+.wr-dev-up { color: #1e88e5; }
+.wr-dev-down { color: #43a047; }
+.wr-dev-online { margin-top: 0.1em; padding-top: 0.65em; border-top: 1px solid #eee; }
+.wr-dev-online .wr-cap { color: #777; font-size: 12.5px; }
+.wr-dev-online .wr-big { font-size: 26px; font-weight: 600; margin-top: 0.1em; }
+
+/* 上网统计：页签 + 7 天柱状图 */
+.wr-stats { margin-top: 0.8em; border-top: 1px solid #eee; padding-top: 0.7em; }
+.wr-stats-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5em; }
+.wr-stats-online { border-top: none; padding-top: 0.4em; display: flex; gap: 2.4em; flex-wrap: wrap; }
+.wr-tabs {
+	display: flex;
+	flex: 1 1 100%;
+	margin-top: 0.5em;
+	padding: 3px;
+	background: #f5f5f5;
+	border-radius: 6px;
+}
+.wr-tab {
+	flex: 1;
+	border: 0;
+	background: transparent;
+	padding: 0.35em 0;
+	font-size: 12.5px;
+	color: #666;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.wr-tab.active {
+	background: #fff;
+	color: #222;
+	font-weight: 600;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.wr-chart { display: block; width: 100%; max-width: 460px; height: auto; margin-top: 0.4em; }
+.wr-chart text { font-size: 9.5px; fill: #90a4ae; }
+
+/* 应用时长行列表（替代原表格）：图标+名称 ｜ 时长 ｜ 控制 */
+.wr-app-rows { margin-top: 0.4em; }
+.wr-app-row {
+	display: flex;
+	align-items: center;
+	gap: 0.7em;
+	padding: 0.4em 0.1em;
+	border-bottom: 1px solid #f0f0f0;
+}
+.wr-app-row .wr-app-cell { flex: 1 1 auto; min-width: 0; }
+.wr-app-row .wr-app-name { overflow: hidden; text-overflow: ellipsis; }
+.wr-app-dur { text-align: right; white-space: nowrap; line-height: 1.3; }
+.wr-app-dur .wr-total { display: block; font-size: 11px; color: #90a4ae; }
+/* 功能开关：TP-Link / iOS 风格的绿色滑块（替代原生复选框）
+   关闭为浅灰底 + 左侧白圆，开启为绿底 + 右侧白圆。
+   用 appearance:none 重绘原生 checkbox，保留其 checked/change 语义。 */
+input.wr-switch-input {
+	-webkit-appearance: none;
+	appearance: none;
+	display: inline-block;
+	box-sizing: content-box;
+	width: 38px;
+	height: 22px;
+	margin: 0 0.35em 0 0;
+	padding: 0;
+	border: none !important;
+	border-radius: 11px;
+	/* 主题会给选中态上强调色（如 #0086bf），这里用 !important 固定灰/绿两态 */
+	background-color: #d5dce1 !important;
+	/* <input> 是替换元素，Chromium 不渲染它的 ::after，
+	   所以白圆用径向渐变画进背景：圆心 11px，直径 18px，带一圈淡阴影 */
+	background-image: radial-gradient(circle at 11px 11px,
+		#ffffff 0 8.8px, rgba(0, 0, 0, 0.14) 9px 10.2px, transparent 10.4px) !important;
+	background-repeat: no-repeat !important;
+	background-size: 38px 22px !important;
+	background-position: 0 0;
+	box-shadow: none;
+	position: relative;
+	vertical-align: middle;
+	cursor: pointer;
+	flex: none;
+	transition: background-color 0.18s ease, background-position 0.18s ease;
+}
+/* 部分主题用小圆点/对勾画伪元素，需清掉避免与我们画的滑块叠加 */
+input.wr-switch-input::before,
+input.wr-switch-input::after { content: none !important; display: none !important; }
+input.wr-switch-input:checked {
+	background-color: #34c759 !important;
+	background-position: 16px 0;   /* 圆心移到 27px（右侧） */
+}
+input.wr-switch-input:focus { outline: none; }
+input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* 应用类别小标题（列表按类别分组） */
+.wr-cat { margin: 0.6em 0 0.1em; font-size: 11.5px; color: #78909c; letter-spacing: 0.3px; }
+/* 未识别流量行：灰色弱化，不参与管控 */
+.wr-app-other { border-top: 1px dashed #eceff1; }
+.wr-app-other .wr-app-name { color: #90a4ae; }
+/* 图标与名称水平排列：flex 行内布局，确保任何主题下都不会上下堆叠 */
+.wr-app-cell {
+	display: flex;
+	align-items: center;
+	gap: 0.45em;
+	white-space: nowrap;
+}
+.wr-app-ico {
+	width: 18px;
+	height: 18px;
+	border-radius: 4px;
+	object-fit: contain;
+	flex: none;
+}
+.wr-app-name { line-height: 1.35; }
+.wr-app-sel { min-width: 6em; padding: 0.15em 0.4em; font-size: 12.5px; }
+.wr-app-live {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	margin-right: 0;
+	border-radius: 50%;
+	background: #07c160;
+	box-shadow: 0 0 0 2px rgba(7, 193, 96, 0.2);
+	flex: none;
+}
+.wr-appctl-tip {
+	margin-top: 0.5em;
+	font-size: 11.5px;
+	line-height: 1.5;
+	color: #90a4ae;
+}
+
+.wr-check-ok { color: #2e7d32; }
+.wr-check-fail { color: #c62828; }
+.wr-check-info { color: #1565c0; margin: 0.3em 0; }
+
+.wr-toolbar { margin-bottom: 0.8em; display: flex; gap: 0.6em; align-items: center; flex-wrap: wrap; }
+
+.wr-form-row { margin-bottom: 0.9em; }
+.wr-form-row > label { display: block; font-weight: bold; margin-bottom: 0.25em; }
+.wr-form-row .wr-hint { color: #777; font-size: 0.85em; margin-top: 0.2em; }
+
+/* Wi-Fi 设置的频段分组（多频合一开启时只有「主人网络」一组） */
+.wr-band-group {
+	margin: 0.2em 0 1em;
+	padding-top: 0.6em;
+	border-top: 1px solid var(--border-color-medium, #e3e8ee);
+}
+.wr-band-group h4 {
+	margin: 0 0 0.6em;
+	font-size: 1em;
+	font-weight: 600;
+	color: var(--text-color-high, #263238);
+}
+.wr-ssid-group { border: 1px solid #ddd; border-radius: 4px; padding: 0.5em 0.8em; margin-bottom: 0.4em; }
+
+/* 访客网络：TP-Link 风格「标签左 / 值右」列表行 */
+.wr-guest-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.4em 0.8em;
+	padding: 0.7em 0.1em;
+	border-bottom: 1px solid var(--border-color-medium, #e3e8ee);
+}
+.wr-guest-row label { flex: 1 1 auto; margin: 0; font-weight: normal; }
+.wr-guest-row .wr-guest-ctrl {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	flex: none;
+}
+.wr-guest-row .wr-hint { flex: 1 1 100%; margin-top: 0; }
+.wr-guest-head label { font-weight: 600; }
+.wr-guest-row input[type="time"] { width: auto; }
+
+.wr-rssi-row { display: flex; align-items: center; gap: 0.5em; flex-wrap: wrap; }
+.wr-svc-row { display: flex; align-items: center; gap: 0.8em; flex-wrap: wrap; margin-bottom: 0.4em; }
+.wr-svc-auto { margin-left: auto; white-space: nowrap; }
+.wr-ap-table { margin-top: 1em; }
+.wr-ap-table h4 { margin-bottom: 0.4em; }
+
+/* 事件日志：超过固定高度后内部滚动，页头表头吸顶 */
+.wr-log-scroll {
+	max-height: 22em;
+	overflow-y: auto;
+	border: 1px solid var(--border-color-medium, #ddd);
+	border-radius: 4px;
+}
+.wr-log-scroll .table-titles th {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	background: var(--background-color-medium, #f5f5f5);
+	box-shadow: 0 1px 0 var(--border-color-medium, #ddd);
+}
+
+.wr-apply-ok { color: #2e7d32; }
+.wr-apply-pending { color: #fb8c00; }
+.wr-apply-fail { color: #c62828; }
+
+/* 浮动提示：固定在右上角，不占用页面布局 */
+.wr-toast-host {
+	position: fixed;
+	top: 4.2em;
+	right: 1.2em;
+	z-index: 1100;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+	pointer-events: none;
+}
+.wr-toast {
+	pointer-events: auto;
+	cursor: pointer;
+	max-width: 28em;
+	padding: 0.55em 0.9em;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 0.92em;
+	line-height: 1.4;
+	word-break: break-word;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+	animation: wr-toast-in 0.18s ease-out;
+}
+.wr-toast-info { background: #1565c0; }
+.wr-toast-success { background: #2e7d32; }
+.wr-toast-warning { background: #ef6c00; }
+.wr-toast-danger { background: #c62828; }
+.wr-toast-out { opacity: 0; transition: opacity 0.22s ease-in; }
+
+@keyframes wr-toast-in {
+	from { opacity: 0; transform: translateX(1.2em); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+/* 漫游事件日志：字段过滤栏 + 匹配计数 */
+.wr-log-filter {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	align-items: center;
+	margin-bottom: 0.6em;
+}
+.wr-log-filter .cbi-input-text,
+.wr-log-filter .cbi-input-select {
+	width: auto;
+	min-width: 8.5em;
+	padding: 0.28em 0.6em;
+	font-size: 12.5px;
+}
+.wr-log-filter .btn { padding: 0.28em 0.9em; font-size: 12.5px; }
+.wr-log-count { color: #90a4ae; font-size: 12px; margin-bottom: 0.35em; }
+
+/* 打赏入口：标题旁的绿色胶囊按钮 + 弹窗内容居中 */
+.wr-donate-btn {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 0.8em;
+	padding: 0.12em 0.75em;
+	font-size: 12.5px;
+	font-weight: 600;
+	line-height: 1.7;
+	color: #fff;
+	background: #07c160;
+	border-radius: 999px;
+	cursor: pointer;
+}
+.wr-donate-btn:hover { background: #06ad56; color: #fff; text-decoration: none; }
+.wr-donate-body { text-align: center; }
+.wr-donate-body img { display: block; margin: 0 auto; max-width: 280px; width: 100%; border-radius: 6px; }
+.wr-donate-body p { margin: 0.9em 0 0.2em; line-height: 1.7; color: #555; }
+
+/* 拓扑节点名称过长：裁剪窗固定，内容单向匀速循环滚动（双份文字首尾相接） */
+.wr-node .wr-scroll-anim {
+	animation: wr-marquee var(--wr-dur, 8s) linear infinite;
+}
+@keyframes wr-marquee {
+	from { transform: translateX(0); }
+	to { transform: translateX(var(--wr-shift, -60px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wr-node .wr-scroll-anim { animation: none; }
+	.wr-toast { animation: none; }
+	.wr-topo-wrap.wr-flash { animation: none; }
+}

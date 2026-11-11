@@ -1,0 +1,879 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: luci-app-wifiroam\n"
+"PO-Revision-Date: 2026-10-23\n"
+"Last-Translator: wifiroam\n"
+"Language-Team: Chinese\n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Network Management"
+msgstr "网络管理"
+
+msgid "Seamless Roaming"
+msgstr "无缝漫游"
+
+msgid "Network Topology"
+msgstr "网络拓扑"
+
+msgid "Clients"
+msgstr "终端设备"
+
+msgid "Roaming Settings"
+msgstr "漫游设置"
+
+msgid "Mesh Setup"
+msgstr "组网管理"
+
+msgid "Main AP"
+msgstr "主路由"
+
+msgid "Sub AP"
+msgstr "子路由"
+
+msgid "Unconfigured"
+msgstr "未组网"
+
+msgid "Role"
+msgstr "角色"
+
+msgid "Device"
+msgstr "设备"
+
+msgid "Device Name"
+msgstr "设备名称"
+
+msgid "IP"
+msgstr "IP 地址"
+
+msgid "IP Address"
+msgstr "IP 地址"
+
+msgid "MAC"
+msgstr "MAC 地址"
+
+msgid "MAC Address"
+msgstr "MAC 地址"
+
+msgid "Member APs"
+msgstr "成员 AP"
+
+msgid "Seamless roaming enabled"
+msgstr "无缝漫游已开启"
+
+msgid "Enabled"
+msgstr "已启用"
+
+msgid "Disabled"
+msgstr "已禁用"
+
+msgid "Refresh"
+msgstr "刷新"
+
+msgid "Wired backhaul"
+msgstr "有线回程"
+
+msgid "Wireless link"
+msgstr "无线链路"
+
+msgid "Signal good"
+msgstr "信号好"
+
+msgid "Signal fair"
+msgstr "信号一般"
+
+msgid "Signal weak"
+msgstr "信号弱"
+
+msgid "This device is a sub AP. Visit the main AP to see the full network topology."
+msgstr "本设备为子路由，请访问主路由查看完整网络拓扑。"
+
+msgid "Model"
+msgstr "型号"
+
+msgid "Firmware"
+msgstr "固件"
+
+msgid "Uptime"
+msgstr "运行时长"
+
+msgid "Backhaul"
+msgstr "回程链路"
+
+msgid "Wired"
+msgstr "有线"
+
+msgid "Wireless"
+msgstr "无线"
+
+msgid "Hostname"
+msgstr "主机名"
+
+msgid "Connection"
+msgstr "连接方式"
+
+msgid "Signal"
+msgstr "信号"
+
+msgid "TX Rate (uplink)"
+msgstr "发送速率（上行）"
+
+msgid "RX Rate (downlink)"
+msgstr "接收速率（下行）"
+
+msgid "Connected Since"
+msgstr "接入时间"
+
+msgid "Online time"
+msgstr "在线时间"
+
+msgid "Edit name"
+msgstr "编辑名称"
+
+msgid "Usage stats"
+msgstr "上网统计"
+
+msgid "Yesterday"
+msgstr "昨日"
+
+msgid "Last 7 days"
+msgstr "过去七天"
+
+msgid "%dh"
+msgstr "%d小时"
+
+msgid "No app usage yet"
+msgstr "暂无应用使用记录"
+
+msgid "Traffic"
+msgstr "流量"
+
+msgid "Other apps"
+msgstr "其他应用（未识别）"
+
+msgid "Video"
+msgstr "视频"
+
+msgid "Live"
+msgstr "直播"
+
+msgid "Social"
+msgstr "社交"
+
+msgid "Shopping"
+msgstr "购物"
+
+msgid "Music"
+msgstr "音乐"
+
+msgid "News"
+msgstr "资讯"
+
+msgid "Office"
+msgstr "办公"
+
+msgid "Games"
+msgstr "游戏"
+
+msgid "Web"
+msgstr "浏览"
+
+msgid "Note"
+msgstr "备注"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Custom name"
+msgstr "自定义名称"
+
+msgid "Custom Name"
+msgstr "自定义名称"
+
+msgid "Save Name"
+msgstr "保存名称"
+
+msgid "Name saved"
+msgstr "名称已保存"
+
+msgid "Name"
+msgstr "名称"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Attached AP"
+msgstr "所属 AP"
+
+msgid "No clients found"
+msgstr "未发现终端设备"
+
+msgid "All APs"
+msgstr "全部 AP"
+
+msgid "Search name / IP / MAC"
+msgstr "搜索 名称 / IP / MAC"
+
+msgid "Pre-flight Checks"
+msgstr "开启前检查"
+
+msgid "Full wpad (802.11r capable)"
+msgstr "完整版 wpad（支持 802.11r）"
+
+msgid "SSID groups present on 2+ APs"
+msgstr "同名 SSID 覆盖 2 台以上 AP"
+
+msgid "Encryption consistent"
+msgstr "加密方式一致"
+
+msgid "FT-capable encryption (WPA2-PSK/WPA3-SAE)"
+msgstr "加密方式支持 FT（WPA2-PSK/WPA3-SAE）"
+
+msgid "This device is the main AP (CAP)"
+msgstr "本设备为主路由（CAP）"
+
+msgid "Roaming can only be configured on the main AP (CAP). This device has role: "
+msgstr "漫游只能在主路由（CAP）上配置。本设备角色："
+
+msgid "802.11k/v/r Seamless Roaming"
+msgstr "802.11k/v/r 无缝漫游"
+
+msgid "Enable seamless roaming"
+msgstr "启用无缝漫游"
+
+msgid "Same SSID + same password must exist on all member APs. Wired backhaul between APs is recommended."
+msgstr "所有成员 AP 需配置同名同密码的 SSID，AP 之间建议使用有线回程。"
+
+msgid "Roaming SSID groups"
+msgstr "漫游 SSID 组"
+
+msgid "No AP interfaces found. Configure Wi-Fi SSIDs first."
+msgstr "未发现 AP 无线接口，请先配置 Wi-Fi。"
+
+msgid "APs"
+msgstr "AP 数"
+
+msgid "Bands"
+msgstr "频段"
+
+msgid "Encryption"
+msgstr "加密方式"
+
+msgid "inconsistent!"
+msgstr "不一致！"
+
+msgid "FT mode"
+msgstr "FT 模式"
+
+msgid "Simple (local key derivation, WPA2-PSK)"
+msgstr "简易模式（本地派生密钥，WPA2-PSK）"
+
+msgid "Expert (sync r0kh/r1kh, supports WPA3/EAP)"
+msgstr "专家模式（同步 r0kh/r1kh，支持 WPA3/EAP）"
+
+msgid "Simple needs no key sync. Expert mode distributes FT keys to all member APs automatically."
+msgstr "简易模式无需同步密钥；专家模式自动向成员 AP 分发 FT 密钥。"
+
+msgid "FT over DS (recommended with wired backhaul)"
+msgstr "FT over DS（有线回程推荐）"
+
+msgid "802.11k neighbor report"
+msgstr "802.11k 邻居报告"
+
+msgid "802.11k beacon report"
+msgstr "802.11k 信标报告"
+
+msgid "802.11v BSS transition management"
+msgstr "802.11v BSS 切换管理"
+
+msgid "Save & Apply"
+msgstr "保存并应用"
+
+msgid "Applying"
+msgstr "应用中"
+
+msgid "Applying roaming configuration to all APs..."
+msgstr "正在向所有 AP 下发漫游配置……"
+
+msgid "Roaming configuration applied"
+msgstr "漫游配置已应用"
+
+msgid "Apply failed"
+msgstr "应用失败"
+
+msgid "Last Apply Result"
+msgstr "最近应用结果"
+
+msgid "AP"
+msgstr "AP"
+
+msgid "Result"
+msgstr "结果"
+
+msgid "Pending"
+msgstr "待确认"
+
+msgid "OK"
+msgstr "成功"
+
+msgid "Failed"
+msgstr "失败"
+
+msgid "This Device"
+msgstr "本设备"
+
+msgid "Set as Main AP (CAP)"
+msgstr "设为主路由（CAP）"
+
+msgid "Or keep it unconfigured and pair it from an existing main AP."
+msgstr "或保持未组网状态，在已有主路由上发起配对。"
+
+msgid "Reset this device to unconfigured state?"
+msgstr "确定将本设备重置为未组网状态？"
+
+msgid "Reset Role"
+msgstr "重置角色"
+
+msgid "This device is now the main AP (CAP)"
+msgstr "本设备已设为主路由（CAP）"
+
+msgid "Pairing and member management are done on the main AP (CAP)."
+msgstr "配对与成员管理请在主路由（CAP）上操作。"
+
+msgid "Discovered New Devices"
+msgstr "发现新设备"
+
+msgid "No new devices found. Factory-reset / flash a device with wifiroam and connect it to the LAN."
+msgstr "未发现新设备。请将安装了 wifiroam 的设备恢复出厂/刷机后接入局域网。"
+
+msgid "Pair"
+msgstr "配对"
+
+msgid "Pairing request sent to "
+msgstr "配对请求已发送至 "
+
+msgid "Pair failed"
+msgstr "配对失败"
+
+msgid "Member APs"
+msgstr "成员 AP"
+
+msgid "No member APs yet"
+msgstr "暂无成员 AP"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Remove this AP from the network?"
+msgstr "确定将该 AP 移出网络？"
+
+msgid "AP removed"
+msgstr "AP 已移除"
+
+msgid "Roaming Event Log"
+msgstr "漫游事件日志"
+
+msgid "Time"
+msgstr "时间"
+
+msgid "Event"
+msgstr "事件"
+
+msgid "Detail"
+msgstr "详情"
+
+msgid "No events yet"
+msgstr "暂无事件"
+
+msgid "Client joined"
+msgstr "终端接入"
+
+msgid "Client left"
+msgstr "终端离开"
+
+msgid "Roamed"
+msgstr "发生漫游"
+
+msgid "Vendor"
+msgstr "厂商"
+
+msgid "Randomized MAC"
+msgstr "随机 MAC"
+
+msgid "AP online"
+msgstr "AP 上线"
+
+msgid "AP offline"
+msgstr "AP 离线"
+
+msgid "Paired"
+msgstr "已配对"
+
+msgid "Unpaired"
+msgstr "已解除配对"
+
+msgid "Roaming applied"
+msgstr "漫游配置已下发"
+
+msgid "Connected to main AP"
+msgstr "已连接主 AP"
+
+msgid "Peer event"
+msgstr "对端事件"
+
+msgid "Cannot reach wifiroamd. Make sure the service is running."
+msgstr "无法连接 wifiroamd，请确认服务已启动。"
+
+msgid "Some APs failed to apply roaming config"
+msgstr "部分 AP 应用漫游配置失败"
+
+msgid "request rejected"
+msgstr "请求被拒绝"
+
+msgid "Failed"
+msgstr "失败"
+
+msgid "Plugin Service"
+msgstr "插件服务"
+
+msgid "Running"
+msgstr "运行中"
+
+msgid "Stopped"
+msgstr "已停止"
+
+msgid "Start"
+msgstr "启动"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Restart"
+msgstr "重启"
+
+msgid "Working..."
+msgstr "处理中……"
+
+msgid "Service action applied"
+msgstr "服务操作已执行"
+
+msgid "Service action failed"
+msgstr "服务操作失败"
+
+msgid "Command failed"
+msgstr "命令执行失败"
+
+msgid "Service will start automatically on boot"
+msgstr "服务将随设备启动自动运行"
+
+msgid "Service autostart disabled"
+msgstr "已关闭服务开机自启"
+
+msgid "Start automatically on boot"
+msgstr "开机自动启动"
+
+msgid "wifiroamd is the daemon that discovers APs and applies roaming configuration."
+msgstr "wifiroamd 负责发现成员 AP 并下发漫游配置。"
+
+msgid "Cannot reach wifiroamd. Start the service above, then reload this page."
+msgstr "无法连接 wifiroamd，请先在上方启动服务，然后刷新本页。"
+
+msgid "Pre-flight checks unavailable (wifiroamd not reachable)."
+msgstr "开启前检查不可用（无法连接 wifiroamd）。"
+
+msgid "No checks available"
+msgstr "暂无检查项"
+
+msgid "This device is not the main AP. Run pre-flight checks and roaming settings on the CAP."
+msgstr "本设备不是主路由，请在主路由（CAP）上执行开启前检查与漫游设置。"
+
+msgid "(this device)"
+msgstr "（本设备）"
+
+msgid "Online"
+msgstr "在线"
+
+msgid "Offline"
+msgstr "离线"
+
+msgid "SSIDs"
+msgstr "SSID"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "%d AP(s) still pending"
+msgstr "还有 %d 台 AP 待确认"
+
+msgid "Roaming trigger threshold (RSSI)"
+msgstr "漫游触发阈值（信号强度）"
+
+msgid "When a client signal drops below this level, 802.11v BSS Transition asks it to move to a better AP."
+msgstr "当终端信号低于该值时，插件通过 802.11v BSS Transition 引导其切换到更合适的 AP。"
+
+msgid "Aggressive"
+msgstr "积极"
+
+msgid "Balanced"
+msgstr "均衡"
+
+msgid "Conservative"
+msgstr "保守"
+
+msgid "Custom"
+msgstr "自定义"
+
+msgid "Wireless Backhaul"
+msgstr "无线回程"
+
+msgid "Creates a hidden WDS backhaul SSID on the main AP and a client uplink on sub APs. Sub APs with a working cable automatically pause the wireless uplink to avoid L2 loops. Saving restarts Wi-Fi briefly."
+msgstr "在主路由上创建一个隐藏的 WDS 回程 SSID，子路由以其作为上行客户端。插着网线的子路由会自动暂停无线回程以避免二层环路。保存后 Wi-Fi 会短暂重启。"
+
+msgid "Enable wireless backhaul"
+msgstr "启用无线回程"
+
+msgid "Backhaul SSID"
+msgstr "回程 SSID"
+
+msgid "Backhaul key"
+msgstr "回程密钥"
+
+msgid "Backhaul radio"
+msgstr "回程射频"
+
+msgid "Leave empty to generate automatically"
+msgstr "留空则自动生成"
+
+msgid "Auto (prefer 5 GHz)"
+msgstr "自动（优先 5GHz）"
+
+msgid "Backhaul Apply Result"
+msgstr "回程应用结果"
+
+msgid "Backhaul SSID must not be empty."
+msgstr "回程 SSID 不能为空。"
+
+msgid "Backhaul configuration sent, waiting for member APs to confirm..."
+msgstr "回程配置已下发，正在等待成员 AP 确认……"
+
+msgid "Some APs did not confirm in time. Check the result table below."
+msgstr "部分 AP 未及时确认，请查看下方结果表。"
+
+msgid "Some APs failed to apply backhaul config"
+msgstr "部分 AP 应用回程配置失败"
+
+msgid "Wireless backhaul applied to all APs"
+msgstr "无线回程已应用到所有 AP"
+
+msgid "Steering requested"
+msgstr "已请求引导切换"
+
+msgid "Backhaul applied"
+msgstr "回程配置已下发"
+
+msgid "Backhaul link changed"
+msgstr "回程链路变更"
+
+msgid "Click to dismiss"
+msgstr "点击关闭"
+
+msgid "802.11r fast transition (R)"
+msgstr "802.11r 快速切换（R）"
+
+msgid "When disabled, only 802.11k neighbor reports and 802.11v steering are used (no FT handover)."
+msgstr "关闭后仅使用 802.11k 邻居报告与 802.11v 引导，不再做快速切换（FT）。"
+
+msgid "R / K / V"
+msgstr "R / K / V"
+
+msgid "Effective"
+msgstr "已生效"
+
+msgid "Not effective"
+msgstr "未生效"
+
+msgid "Refreshing..."
+msgstr "刷新中……"
+
+msgid "Topology refreshed"
+msgstr "拓扑已刷新"
+
+msgid "Refresh failed"
+msgstr "刷新失败"
+
+msgid "Updated"
+msgstr "更新于"
+
+msgid "Rename"
+msgstr "重命名"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Leave empty to use the detected name."
+msgstr "留空则使用自动识别的名称。"
+
+msgid "Loading service status..."
+msgstr "正在加载服务状态……"
+
+msgid "Loading pre-flight checks..."
+msgstr "正在加载开启前检查……"
+
+msgid "Loading wireless backhaul settings..."
+msgstr "正在加载无线回程设置……"
+
+msgid "The running version was outdated and has been repaired automatically."
+msgstr "运行中的版本落后，已自动完成修复。"
+
+msgid "The running wifiroamd version does not match this LuCI app. Click Restart to repair automatically."
+msgstr "运行中的 wifiroamd 版本与当前界面不一致，点击「重启」可自动修复。"
+
+msgid "Version mismatch persists after repair. Please update the plugin packages."
+msgstr "自动修复后版本仍不一致，请更新插件软件包。"
+
+msgid "App Usage & Access Control"
+msgstr "应用使用与访问控制"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Application"
+msgstr "应用"
+
+msgid "Today"
+msgstr "今日"
+
+msgid "Total"
+msgstr "累计"
+
+msgid "Access"
+msgstr "访问"
+
+msgid "Allowed"
+msgstr "允许"
+
+msgid "Blocked"
+msgstr "禁止"
+
+msgid "In use"
+msgstr "正在使用"
+
+msgid "Saved"
+msgstr "已保存"
+
+msgid "unknown"
+msgstr "未知错误"
+
+msgid "Configure app control on the main AP"
+msgstr "请在主 AP 上配置应用访问控制"
+
+msgid "Cannot reach wifiroamd"
+msgstr "无法连接 wifiroamd 服务"
+
+msgid "Turn on app control to collect usage and enforce rules"
+msgstr "开启应用控制后才会统计使用时长并执行规则"
+
+msgid "Identified by DNS lookups; encrypted DNS may bypass detection."
+msgstr "基于 DNS 解析识别，使用加密 DNS 的应用可能漏统计或拦截无效。"
+
+msgid "Hardware Acceleration (flow offloading)"
+msgstr "硬件加速（flow offloading）"
+
+msgid "Enable flow offloading"
+msgstr "启用 flow offloading"
+
+msgid "When enabled, established connections bypass the firewall rules used for app detection, so app usage statistics and per-app access control may be incomplete. Turn it off if app detection matters more than forwarding throughput."
+msgstr "开启后，已建立的连接会被 flowtable 接管，数据包绕过应用识别所用的防火墙规则，应用使用时长统计和访问控制可能不完整。若更看重应用识别，请关闭此功能。"
+
+msgid "Applies to all paired APs."
+msgstr "对所有已配对的 AP 生效。"
+
+msgid "Currently on"
+msgstr "当前已开启"
+
+msgid "Currently off"
+msgstr "当前已关闭"
+
+msgid "Hardware acceleration enabled"
+msgstr "已开启硬件加速"
+
+msgid "Hardware acceleration disabled"
+msgstr "已关闭硬件加速"
+
+msgid "Expand"
+msgstr "展开"
+
+msgid "Collapse"
+msgstr "收起"
+
+msgid "Wireless Settings"
+msgstr "无线设置"
+
+msgid "Wi-Fi Settings"
+msgstr "Wi-Fi 设置"
+
+msgid "Wi-Fi Name (SSID)"
+msgstr "Wi-Fi 名称（SSID）"
+
+msgid "Wi-Fi Password"
+msgstr "Wi-Fi 密码"
+
+msgid "Leave blank to keep current password"
+msgstr "留空则保持当前密码"
+
+msgid "At least 8 characters. Leave blank to keep the current password."
+msgstr "至少 8 个字符；留空则保持当前密码。"
+
+msgid "Save Wi-Fi"
+msgstr "保存 Wi-Fi"
+
+msgid "Wi-Fi settings can only be changed on the main AP."
+msgstr "Wi-Fi 设置只能在主路由上修改。"
+
+msgid "Applies to all paired APs. Radios restart after saving, clients will reconnect."
+msgstr "对所有已配对的 AP 生效；保存后无线会重启，终端需要重新连接。"
+
+msgid "Last result"
+msgstr "最近结果"
+
+msgid "SSID must be 1-32 characters"
+msgstr "SSID 长度需为 1–32 个字符"
+
+msgid "Password must be at least 8 characters"
+msgstr "密码至少需要 8 个字符"
+
+msgid "Only the main AP can change Wi-Fi settings"
+msgstr "仅主路由可以修改 Wi-Fi 设置"
+
+msgid "Wi-Fi updated. Radios restart in a few seconds, clients will reconnect."
+msgstr "Wi-Fi 已更新，无线将在几秒后重启，终端需要重新连接。"
+
+msgid "Applying..."
+msgstr "应用中……"
+
+msgid "Multi-band unified"
+msgstr "多频合一"
+
+msgid "Main Network"
+msgstr "主人网络"
+
+msgid "2.4G and 5G networks use the same name and password; clients automatically connect to the best band."
+msgstr "2.4G 和 5G 无线网络使用相同的名称和密码，终端连接时会自动选择最佳频段。"
+
+msgid "Clients will not automatically switch to the best of the 2.4G and 5G networks."
+msgstr "上网设备不会自动加入 2.4G、5G 中最优的无线网络。"
+
+msgid "Guest Network"
+msgstr "访客网络"
+
+msgid "Speed Limit"
+msgstr "网速限制"
+
+msgid "Allowed Time"
+msgstr "开放时间"
+
+msgid "Allow access to internal network"
+msgstr "允许访客访问内网资源"
+
+msgid "Unlimited"
+msgstr "不限制"
+
+msgid "All day"
+msgstr "全天"
+
+msgid "Custom time window"
+msgstr "指定时段"
+
+msgid "Downstream limit for each guest device."
+msgstr "每台访客设备的下行速度上限。"
+
+msgid "The guest SSID is turned off outside this window."
+msgstr "开放时间之外，访客 Wi-Fi 会自动关闭。"
+
+msgid "Off by default: guests can access the internet only."
+msgstr "默认关闭：访客只能访问互联网，无法访问内网设备。"
+
+msgid "Guest network is currently closed (outside the allowed time window)."
+msgstr "访客网络当前已关闭（不在开放时间内）。"
+
+msgid "Save Guest Network"
+msgstr "保存访客网络"
+
+msgid "Guest network can only be changed on the main AP."
+msgstr "访客网络只能在主路由上修改。"
+
+msgid "Applies to all paired APs. The guest SSID restarts after saving."
+msgstr "对所有已配对的 AP 生效；保存后访客 Wi-Fi 会重启。"
+
+msgid "Please set a Wi-Fi password for the guest network"
+msgstr "请为访客网络设置 Wi-Fi 密码"
+
+msgid "Only the main AP can change guest network settings"
+msgstr "仅主路由可以修改访客网络设置"
+
+msgid "Invalid time window"
+msgstr "开放时间段无效"
+
+msgid "Guest network updated. The guest SSID restarts in a few seconds."
+msgstr "访客网络已更新，访客 Wi-Fi 将在几秒后重启。"
+
+msgid "Advanced Settings"
+msgstr "高级设置"
+
+msgid "Back to Wireless Settings"
+msgstr "返回无线设置"
+
+msgid "Pre-flight checks, member APs, 802.11k/v/r seamless roaming and wireless backhaul are in Advanced Settings."
+msgstr "开启前检查、成员 AP、802.11k/v/r 无缝漫游与无线回程已移至高级设置。"
+
+msgid "Pre-flight checks and roaming settings are only needed for advanced multi-AP tuning."
+msgstr "开启前检查与漫游参数仅在多 AP 高级调优时需要修改。"
+
+msgid "Cannot reach wifiroamd. Start the service on the Wireless Settings page, then reload this page."
+msgstr "无法连接 wifiroamd，请先在无线设置页启动服务，然后刷新本页。"
+
+msgid "Send"
+msgstr "发送"
+
+msgid "Receive"
+msgstr "接收"
+
+msgid "Real-time send speed"
+msgstr "实时发送速度"
+
+msgid "Real-time receive speed"
+msgstr "实时接收速度"
+
+
+msgid "Open (no password)"
+msgstr "开放网络（无密码）"
+
+msgid "No password (open network)"
+msgstr "无密码（开放网络）"
+
+msgid "Please set a Wi-Fi password, or tick \"Open (no password)\""
+msgstr "请设置 Wi-Fi 密码，或勾选「开放网络（无密码）」"
+
+msgid "App Recognition & Statistics"
+msgstr "应用识别与统计"
+
+msgid "Precise mode (recommended)"
+msgstr "精准模式（推荐）"
+
+msgid "Locks DNS egress to this router so apps cannot bypass recognition via built-in HTTPDNS/DoH/DoT; counts usage time only when a window has real traffic (idle keep-alives ignored); expires DNS-to-app mapping in 30 minutes to avoid stale CDN attribution; suspends hardware flow offload while enabled so traffic counters stay complete (restored on disable)."
+msgstr "锁定 DNS 出口到本路由器，防止应用通过内置 HTTPDNS/DoH/DoT 绕过识别；仅在窗口内有真实流量时才计使用时长（锁屏保活不计）；DNS 与应用映射 30 分钟过期，避免 CDN 复用后仍误归属；开启期间挂起硬件流量卸载以保证计数完整（关闭后恢复）。"
+
+msgid "Precise mode enabled. Hardware flow offload was suspended to keep counters complete."
+msgstr "精准模式已开启。硬件流量卸载已挂起以保证计数完整。"
+
+msgid "Precise mode disabled. Reverted to the lenient mode."
+msgstr "精准模式已关闭，已恢复为宽松模式。"
+
+msgid "App recognition can only be configured on the main AP."
+msgstr "应用识别只能在主路由（CAP）上配置。"
+
+msgid "Enable \"App Usage & Access Control\" on the Clients page first."
+msgstr "请先在「设备」页开启「应用使用与访问控制」。"
