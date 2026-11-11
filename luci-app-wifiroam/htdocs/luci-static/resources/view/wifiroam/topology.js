@@ -1595,7 +1595,10 @@ return view.extend({
 
 		return E('div', {}, [
 			wr.css(),
-			wr.navTabs('topology'),
+			wr.navTabs('topology', {
+				running: !!(this.status && this.status.role),
+				role: (this.status && this.status.role) || (this.topo && this.topo.role),
+			}),
 			E('h2', {}, _('网络拓扑')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.status || {})),
 			hint,

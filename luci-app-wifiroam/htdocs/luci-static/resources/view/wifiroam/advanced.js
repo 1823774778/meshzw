@@ -622,7 +622,10 @@ return view.extend({
 		if (!this.cfg) {
 			return E('div', {}, [
 				wr.css(),
-				wr.navTabs('advanced'),
+				wr.navTabs('advanced', {
+					running: !!(this.st && this.st.role),
+					role: this.st && this.st.role,
+				}),
 				E('h2', {}, _('高级设置')),
 				E('div', { 'class': 'alert-message danger' },
 					_('无法连接 wifiroamd，请先在首页启动插件服务，然后刷新本页。')),
@@ -785,7 +788,10 @@ return view.extend({
 
 		return E('div', { id: 'wr-adv' }, [
 			wr.css(),
-			wr.navTabs('advanced'),
+			wr.navTabs('advanced', {
+				running: !!(this.st && this.st.role),
+				role: this.st && this.st.role,
+			}),
 			E('h2', {}, _('高级设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
 			notice,

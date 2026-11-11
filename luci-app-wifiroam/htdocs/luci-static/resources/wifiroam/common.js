@@ -16,15 +16,27 @@ return baseclass.extend({
 
 	CSS_VER: '20261112a',
 
-	/* 网络管理页签：所有页面共用同一组导航，当前页高亮 */
-	navTabs: function(active) {
-		var items = [
-			[ 'home',     _('首页'),     'admin/mesh/management' ],
-			[ 'topology', _('网络拓扑'), 'admin/mesh/management/topology' ],
-			[ 'clients',  _('客户端'),   'admin/mesh/management/clients' ],
-			[ 'settings', _('无线设置'), 'admin/mesh/management/settings' ],
-			[ 'advanced', _('高级设置'), 'admin/mesh/management/advanced' ]
-		];
+	/* 网络管理页签：未启动时只保留首页；SAP 只保留首页和无线设置 */
+	navTabs: function(active, opts) {
+		opts = opts || {};
+
+		var running = (opts.running !== false);
+		var role = opts.role || '';
+		var items = [];
+
+		if (running) {
+			items.push([ 'home',     _('首页'),     'admin/mesh/management' ]);
+			if (role !== 'sap') {
+				items.push([ 'topology', _('网络拓扑'), 'admin/mesh/management/topology' ]);
+				items.push([ 'clients',  _('客户端'),   'admin/mesh/management/clients' ]);
+			}
+			items.push([ 'settings', _('无线设置'), 'admin/mesh/management/settings' ]);
+			if (role !== 'sap')
+				items.push([ 'advanced', _('高级设置'), 'admin/mesh/management/advanced' ]);
+		}
+		else {
+			items.push([ 'home', _('首页'), 'admin/mesh/management' ]);
+		}
 
 		return E('div', { 'class': 'wr-navtabs' }, items.map(function(it) {
 			var attrs = {

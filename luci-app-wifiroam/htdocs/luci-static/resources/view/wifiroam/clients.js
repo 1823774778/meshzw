@@ -184,7 +184,10 @@ return view.extend({
 
 		var body = [
 			wr.css(),
-			wr.navTabs('clients'),
+			wr.navTabs('clients', {
+				running: !!(this.topo && this.topo.role),
+				role: this.topo && this.topo.role,
+			}),
 			E('h2', {}, _('客户端')),
 		];
 

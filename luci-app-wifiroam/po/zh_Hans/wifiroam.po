@@ -871,3 +871,72 @@ msgstr "应用识别只能在主路由（CAP）上配置。"
 
 msgid "Enable \"App Usage & Access Control\" on the Clients page first."
 msgstr "请先在「设备」页开启「应用使用与访问控制」。"
+
+msgid "%d clients"
+msgstr "%d 台终端"
+
+msgid "Configuration sent, waiting for member APs to confirm..."
+msgstr "配置已下发，正在等待成员 AP 确认..."
+
+msgid "Device did not join in time. Make sure it is powered on and connected to the same LAN."
+msgstr "设备未在规定时间内加入，请确认已开机并连接到同一局域网。"
+
+msgid "Device paired successfully"
+msgstr "设备配对成功"
+
+msgid "Last Seen"
+msgstr "最近出现"
+
+msgid "No configuration has been applied yet."
+msgstr "还没有应用过配置。"
+
+msgid "Pairing request sent to"
+msgstr "配对请求已发送至"
+
+msgid "Pairing..."
+msgstr "配对中..."
+
+msgid "Remove failed"
+msgstr "移除失败"
+
+msgid "Removing..."
+msgstr "正在移除..."
+
+msgid "Resetting clears the network token; member APs must be paired again."
+msgstr "重置会清除网络令牌，成员 AP 需要重新配对。"
+
+msgid "Roaming configuration applied to all APs"
+msgstr "漫游配置已应用到所有 AP"
+
+msgid "Saving..."
+msgstr "正在保存..."
+
+msgid "Select at least one roaming SSID group."
+msgstr "至少选择一个漫游 SSID 组。"
+
+msgid "This device is now unconfigured"
+msgstr "此设备已设为未配置状态"
+
+msgid "cannot open control connection to the device"
+msgstr "无法建立到设备的控制连接"
+
+msgid "device has no IP address yet"
+msgstr "设备还没有 IP 地址"
+
+msgid "device not found (it may have gone offline)"
+msgstr "找不到设备（可能已离线）"
+
+msgid "invalid MAC address"
+msgstr "MAC 地址无效"
+
+msgid "sub APs must be added by pairing from the main AP"
+msgstr "子 AP 必须由主路由发起配对添加"
+
+msgid "this device is not the main AP"
+msgstr "此设备不是主路由"
+
+msgid "timed out"
+msgstr "超时"
+
+msgid "waiting for the device to join..."
+msgstr "正在等待设备加入..."

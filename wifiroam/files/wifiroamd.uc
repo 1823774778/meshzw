@@ -213,6 +213,7 @@ let state = {
 	last_backhaul: null, // last wireless-backhaul push result summary
 	last_wifi: null,    // last Wi-Fi rename push result summary
 	last_guest: null,   // last guest-network push result summary
+	cap_offload: null,  // SAP: last flow offload state pushed by CAP
 	guest_open: null,   // 访客网络当前是否在开放时段内（null = 未知）
 	guest_tc_sig: "",   // 访客限速 tc 规则的签名，避免每次 tick 重建
 	guest_tc_devs: [],  // 已挂了 qdisc 的访客 netdev（桥不参与桥转发路径，必须挂到 vif）
@@ -1109,20 +1110,6 @@ function offload_apply(on) {
 	cur.commit("firewall");
 	// reload 会重建 flowtable，已 offload 的旧流随之清空，避免规则长期不生效
 	cmd_output("/etc/init.d/firewall reload >/dev/null 2>&1");
-	return true;
-}
-
-// SAP 侧：转发不在本机，开关必须交由 CAP 统一执行，再由 CAP 广播回全部子 AP
-function offload_request_cap(on) {
-	let link = state.link;
-	if (!link?.authed) return false;
-	try {
-		link.chan.defer({
-			method: "set_offload",
-			data: { enabled: on ? true : false },
-			data_cb: function() {}, cb: function() {},
-		});
-	} catch (e) { return false; }
 	return true;
 }
 
@@ -2899,6 +2886,7 @@ function sap_rx(req) {
 	case "push_offload": {
 		// CAP 广播下来的 flow offload 开关：SAP 本地落盘并重建自己的 flowtable
 		let on = req.args.enabled ? true : false;
+		state.cap_offload = on;
 		req.reply({ ok: offload_apply(on), enabled: on });
 		break;
 	}
@@ -3131,6 +3119,15 @@ function srv_rx(conn, req) {
 		let ga = guest_cfg();
 		if (state.cfg.role == "cap" && p.guest_ver < ga.ver)
 			push_guest_to(mn, ga);
+		/* flow offload 可能在防火墙页面被直接改动，主 AP 发现与已下发值
+		   不一致时补推，保证子 AP 的开关状态与主路由一致 */
+		if (state.cfg.role == "cap") {
+			let fc = uci.cursor();
+			fc.load("firewall");
+			let cl = fc.get("firewall", "@defaults[0]", "flow_offloading") == "1";
+			if (cl !== p.offload_last)
+				push_offload_to(mn);
+		}
 		req.reply({ ok: true, alias_ver: state.aliases.ver,
 		            roam_ver: roam.config_ver, backhaul_ver: bh.config_ver,
 		            names: state.cfg.role == "cap" ? client_names() : {},
@@ -3401,6 +3398,7 @@ push_offload_to = function(mn) {
 	let cur = uci.cursor();
 	cur.load("firewall");
 	let on = cur.get("firewall", "@defaults[0]", "flow_offloading") == "1";
+	p.offload_last = on;
 	try {
 		p.chan.defer({
 			method: "push_offload",
@@ -3955,20 +3953,19 @@ let api_obj = {
 			let hw = cur.get("firewall", "@defaults[0]", "flow_offloading_hw") == "1";
 			let active = index(cmd_output("nft list chain inet fw4 forward 2>/dev/null"),
 				"flow add") >= 0;
-			return { enabled: sw, hw: hw, active: active };
+			let managed = state.cfg.role == "sap";
+			if (managed && state.cap_offload != null)
+				sw = state.cap_offload;
+			return { enabled: sw, hw: hw, active: active, managed: managed };
 		},
 	},
 	set_offload: {
 		args: { ubus_rpc_session: "", enabled: false },
 		call: function(req) {
 			let on = req.args.enabled ? true : false;
-			// 子 AP 的转发不发生在本地：本地先落盘保持一致，再通知 CAP 统一执行，
-			// CAP 改完会把最终状态广播回所有子 AP（含本机）
-			if (state.cfg.role == "sap") {
-				offload_apply(on);
-				offload_request_cap(on);
-				return { ok: true, enabled: on };
-			}
+			// 子 AP 的转发不在本机，开关由主 AP 统一控制，避免两端状态分叉
+			if (state.cfg.role == "sap")
+				return { ok: false, error: "cap_controlled" };
 			if (!offload_apply(on))
 				return { ok: false, error: "no_firewall_defaults" };
 			for (let mn, p in state.peers)

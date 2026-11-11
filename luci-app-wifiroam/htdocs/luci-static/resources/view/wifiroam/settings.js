@@ -532,13 +532,19 @@ return view.extend({
 	   开启时 fw4 的 flowtable 会接管已建立连接，后续数据包绕过 wifiroam 的
 	   counter / drop 规则，应用统计与访问控制随之失真，因此单独给一个开关。 */
 	renderOffload: function() {
+		var self = this;
 		var off = this.offload || {};
-		var now = E('span', { 'class': 'wr-hint' },
+		var managed = (this.st && this.st.role === 'sap') || off.managed === true;
+		var now = E('span', { id: 'wr-offload-now', 'class': 'wr-hint' },
 			off.enabled ? _('Currently on') : _('Currently off'));
 
 		var cb = E('input', {
+			id: 'wr-offload-cb',
 			type: 'checkbox', 'class': 'wr-switch-input',
 			change: function(ev) {
+				if (managed)
+					return;
+
 				var want = ev.target.checked;
 				ev.target.disabled = true;
 
@@ -546,7 +552,7 @@ return view.extend({
 					if (!res || !res.ok) {
 						ev.target.checked = !want;
 						wr.notify('danger', _('Failed') + ': ' +
-							((res && res.error) || 'unknown'));
+							((res && res.error) || _('unknown')));
 						return;
 					}
 					wr.notify('success', want
@@ -554,6 +560,7 @@ return view.extend({
 						: _('Hardware acceleration disabled'));
 					/* 以服务端实际状态为准回填，避免界面与内核 flowtable 不一致 */
 					return wr.safeCall('offload_status').then(function(st) {
+						if (st) self.offload = st;
 						cb.checked = st ? !!st.enabled : want;
 						dom.content(now, (st && st.enabled)
 							? _('Currently on') : _('Currently off'));
@@ -562,7 +569,7 @@ return view.extend({
 					ev.target.checked = !want;
 					wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
 				}).then(function() {
-					ev.target.disabled = false;
+					ev.target.disabled = managed;
 				});
 			},
 		});
@@ -570,18 +577,35 @@ return view.extend({
 		/* LuCI 的 E() 把布尔属性按字符串写入 DOM（checked:false 会变成
 		   checked="false"，浏览器仍视为勾选），所以必须在创建后设置 property */
 		cb.checked = !!off.enabled;
+		cb.disabled = managed;
+		this.offloadEls = { cb: cb, now: now };
 
 		return E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Hardware Acceleration (flow offloading)')),
 			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, [ cb, ' ', _('Enable flow offloading') ]),
+				E('label', {}, [ cb, ' ',
+					managed ? _('由主路由控制') : _('Enable flow offloading') ]),
 				E('div', { 'class': 'wr-hint' },
-					_('When enabled, established connections bypass the firewall rules used for app detection, so app usage statistics and per-app access control may be incomplete. Turn it off if app detection matters more than forwarding throughput.')),
+					managed
+						? _('硬件加速由主路由统一控制，子路由会跟随主路由状态。')
+						: _('When enabled, established connections bypass the firewall rules used for app detection, so app usage statistics and per-app access control may be incomplete. Turn it off if app detection matters more than forwarding throughput.')),
 				E('div', { 'class': 'wr-hint' }, [
 					_('Applies to all paired APs.'), ' ', now,
 				]),
 			]),
 		]);
+	},
+
+	refreshOffload: function() {
+		var off = this.offload || {};
+		if (!this.offloadEls)
+			return;
+
+		var managed = (this.st && this.st.role === 'sap') || off.managed === true;
+		this.offloadEls.cb.checked = !!off.enabled;
+		this.offloadEls.cb.disabled = managed;
+		dom.content(this.offloadEls.now,
+			off.enabled ? _('Currently on') : _('Currently off'));
 	},
 
 	isCap: function() {
@@ -618,14 +642,18 @@ return view.extend({
 			wr.safeCall('status'),
 			wr.safeCall('discover'),
 			wr.safeCall('topology'),
+			wr.safeCall('offload_status'),
 		]).then(function(res) {
 			if (res[0]) self.st = res[0];
 			if (res[1]) self.disc = res[1];
 			if (res[2]) self.topo = res[2];
+			if (res[3]) self.offload = res[3];
 
 			var sb = document.getElementById('wr-status');
 			if (sb && self.st)
 				dom.content(sb, wr.statusBar(self.st));
+
+			self.refreshOffload();
 
 			if (render !== false && !self.actionBusy)
 				self.renderBody();
@@ -653,6 +681,9 @@ return view.extend({
 		case 'sap_via_pairing':   return _('sub APs must be added by pairing from the main AP');
 		case 'invalid_mac':       return _('invalid MAC address');
 		case 'timeout':           return _('timed out');
+		case 'cap_controlled':    return _('硬件加速由主路由控制');
+		case 'no_firewall_defaults': return _('没有找到防火墙配置');
+		case 'unknown':           return _('未知错误');
 		}
 		return code || _('request rejected');
 	},
@@ -916,7 +947,10 @@ return view.extend({
 		if (!this.st || !this.st.role) {
 			return E('div', {}, [
 				wr.css(),
-				wr.navTabs('settings'),
+				wr.navTabs('settings', {
+					running: !!(this.st && this.st.role),
+					role: this.st && this.st.role,
+				}),
 				E('h2', {}, _('无线设置')),
 				E('div', { class: 'alert-message danger' },
 					_('无法连接 wifiroamd，请先在首页启动插件服务，然后刷新本页。')),
@@ -925,7 +959,10 @@ return view.extend({
 
 		return E('div', { id: 'wr-set' }, [
 			wr.css(),
-			wr.navTabs('settings'),
+			wr.navTabs('settings', {
+				running: !!(this.st && this.st.role),
+				role: this.st && this.st.role,
+			}),
 			E('h2', {}, _('无线设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
 			this.renderWifiPanel(),

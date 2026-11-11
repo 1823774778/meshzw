@@ -200,6 +200,24 @@ return view.extend({
 		});
 	},
 
+	navOptions: function() {
+		return {
+			running: !!(this.st && this.st.role),
+			role: (this.st && this.st.role) || '',
+		};
+	},
+
+	updateNavTabs: function() {
+		var box = document.getElementById('wr-navtabs');
+		var o = this.navOptions();
+		var sig = (o.running ? '1' : '0') + ':' + o.role;
+		/* 轮询每次都重绘会让页签闪烁，仅在可见项变化时更新 */
+		if (!box || sig === this.navSig)
+			return;
+		this.navSig = sig;
+		dom.content(box, wr.navTabs('home', o));
+	},
+
 	updateStatusDom: function() {
 		var sb = document.getElementById('wr-status');
 		if (sb)
@@ -208,6 +226,8 @@ return view.extend({
 		var warn = document.getElementById('wr-home-warn');
 		if (warn)
 			warn.style.display = (this.st && this.st.role) ? 'none' : '';
+
+		this.updateNavTabs();
 	},
 
 	afterServiceChange: function(repaired, action) {
@@ -381,7 +401,8 @@ return view.extend({
 
 		return E('div', { id: 'wr-home' }, [
 			wr.css(),
-			wr.navTabs('home'),
+			E('div', { id: 'wr-navtabs' },
+				wr.navTabs('home', { running: false })),
 			E('h2', {}, [
 				_('首页'),
 				E('a', {
