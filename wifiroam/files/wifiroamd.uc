@@ -338,6 +338,27 @@ function save_config() {
 	cur.commit("wifiroam");
 }
 
+// 被主 AP 配对成子路由后，如果 luci-app-router-tool 已安装并提供了
+// 「网络 → 接口 → 全局网络选项 → 中继 AP 模式」，就打开它。
+// 该选项由 router-tool 的 LuCI 页面提供，实际保存在
+// /etc/config/router-tool 的 main.ap_mode；没有这个配置时完全不动。
+function enable_relay_ap_mode() {
+	let cur = uci.cursor();
+	cur.load("router-tool");
+
+	// 没装 router-tool：没有 main 段，直接无视
+	if (cur.get("router-tool", "main") == null)
+		return false;
+
+	if (cur.get("router-tool", "main", "ap_mode") == "1")
+		return false;
+
+	cur.set("router-tool", "main", "ap_mode", "1");
+	cur.commit("router-tool");
+	log("relay AP mode enabled (router-tool.main.ap_mode)");
+	return true;
+}
+
 function rssi_preset(profile) {
 	return { aggressive: -62, balanced: -70, conservative: -78 }[profile] ?? -70;
 }
@@ -3012,6 +3033,7 @@ function srv_rx(conn, req) {
 			state.cfg.cap_ip = args.cap_ip ?? "";
 			state.cfg.role = "sap";
 			save_config();
+			enable_relay_ap_mode();
 			req.reply({ ok: true });
 			push_event("paired", "", args.cap_ip ?? "");
 			uloop.timer(300, reconfigure);
@@ -4077,6 +4099,8 @@ ensure_token = function() {
 
 reconfigure = function() {
 	load_config();
+	if (state.cfg.role == "sap")
+		enable_relay_ap_mode();
 	state.self.name = state.cfg.name != "" ? state.cfg.name : state.self.hostname;
 	sap_disconnect();
 	state.peers = {};
@@ -4133,6 +4157,8 @@ function main() {
 	}
 
 	load_config();
+	if (state.cfg.role == "sap")
+		enable_relay_ap_mode();
 	alias_load();
 	detect_self();
 	// 建规则要用到本机接口/网桥信息，必须放在 detect_self 之后

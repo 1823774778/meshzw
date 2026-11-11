@@ -1069,29 +1069,6 @@ return view.extend({
 			dlg.addEventListener('hide', function() { self.modalOpen = false; });
 	},
 
-	/* 打赏入口弹窗：微信支付二维码 + 联系方式 */
-	openDonate: function() {
-		var self = this;
-		this.modalOpen = true;
-
-		ui.showModal('用得爽，打个赏', [
-			E('div', { 'class': 'wr-donate-body' }, [
-				E('img', { src: L.resource('wifiroam/donate-qr.png'), alt: 'donate qr' }),
-				E('p', {}, '感谢您的认可，打赏用户有任何需求可发送至邮箱 1823774778@qq.com')
-			]),
-			E('div', { 'class': 'right' }, [
-				E('button', {
-					'class': 'btn',
-					click: function() { self.modalOpen = false; ui.hideModal(); }
-				}, '关闭')
-			])
-		]);
-
-		var dlg = document.querySelector('.modal');
-		if (dlg)
-			dlg.addEventListener('hide', function() { self.modalOpen = false; });
-	},
-
 	/* ---------------------------------------- 上网统计（页签 + 柱状图） */
 	dayStr: function(offset) {
 		var base = (this.appctl && this.appctl.day)
@@ -1619,13 +1596,7 @@ return view.extend({
 		return E('div', {}, [
 			wr.css(),
 			wr.navTabs('topology'),
-			E('h2', {}, [
-				_('网络拓扑'),
-				E('a', {
-					'class': 'wr-donate-btn',
-					click: L.bind(this.openDonate, this)
-				}, '用得爽，打个赏')
-			]),
+			E('h2', {}, _('网络拓扑')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.status || {})),
 			hint,
 			failed,

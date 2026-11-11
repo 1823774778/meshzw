@@ -1,6 +1,7 @@
 // wifiroam home view: network overview and plugin service control
 'use strict';
 'require view';
+'require ui';
 'require poll';
 'require dom';
 'require rpc';
@@ -287,6 +288,22 @@ return view.extend({
 	},
 
 	/* -------------------------------------------------------- service UI */
+	/* 打赏入口弹窗：微信支付二维码 + 联系方式 */
+	openDonate: function() {
+		ui.showModal('用得爽，打个赏', [
+			E('div', { 'class': 'wr-donate-body' }, [
+				E('img', { src: L.resource('wifiroam/donate-qr.png'), alt: 'donate qr' }),
+				E('p', {}, '感谢您的认可，打赏用户有任何需求可发送至邮箱 1823774778@qq.com')
+			]),
+			E('div', { 'class': 'right' }, [
+				E('button', {
+					'class': 'btn',
+					click: function() { ui.hideModal(); }
+				}, '关闭')
+			])
+		]);
+	},
+
 	renderServicePanel: function() {
 		var self = this;
 		var btns = {};
@@ -365,7 +382,13 @@ return view.extend({
 		return E('div', { id: 'wr-home' }, [
 			wr.css(),
 			wr.navTabs('home'),
-			E('h2', {}, _('首页')),
+			E('h2', {}, [
+				_('首页'),
+				E('a', {
+					'class': 'wr-donate-btn',
+					click: L.bind(this.openDonate, this)
+				}, '用得爽，打个赏')
+			]),
 			E('div', { id: 'wr-status' },
 				E('div', { 'class': 'wr-hint' }, _('正在读取网络状态...'))),
 			E('div', {
