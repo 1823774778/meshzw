@@ -14,7 +14,7 @@ return baseclass.extend({
 		});
 	},
 
-	CSS_VER: '20261112a',
+	CSS_VER: '20261112b',
 
 	/* 网络管理页签：未启动时只保留首页；SAP 只保留首页和无线设置 */
 	navTabs: function(active, opts) {
