@@ -528,6 +528,16 @@ return view.extend({
 		window.setTimeout(tick, 2500);
 	},
 
+	offloadGuestNotice: function(off) {
+		switch (off.guest_guard) {
+		case 'protected': return _('访客流量已排除在防火墙转发加速之外。');
+		case 'unsupported': return _('当前防火墙版本未适配访客限速。开启加速时，访客可能绕过限速。');
+		case 'apply_failed': return _('未能应用访客卸载排除，请检查系统日志。全局加速设置未被自动关闭。');
+		case 'pending': return _('正在确认访客限速的卸载排除状态。');
+		default: return '';
+		}
+	},
+
 	/* 硬件加速（flow offloading）开关：本机实时生效。
 	   开启时 fw4 的 flowtable 会接管已建立连接，后续数据包绕过 wifiroam 的
 	   counter / drop 规则，应用统计与访问控制随之失真，因此单独给一个开关。 */
@@ -537,6 +547,8 @@ return view.extend({
 		var managed = (this.st && this.st.role === 'sap') || off.managed === true;
 		var now = E('span', { id: 'wr-offload-now', 'class': 'wr-hint' },
 			off.enabled ? _('Currently on') : _('Currently off'));
+		const guestNotice = E('div', { 'class': 'wr-hint', 'aria-live': 'polite' },
+			this.offloadGuestNotice(off));
 
 		var cb = E('input', {
 			id: 'wr-offload-cb',
@@ -562,8 +574,7 @@ return view.extend({
 					return wr.safeCall('offload_status').then(function(st) {
 						if (st) self.offload = st;
 						cb.checked = st ? !!st.enabled : want;
-						dom.content(now, (st && st.enabled)
-							? _('Currently on') : _('Currently off'));
+						if (st) self.refreshOffload();
 					});
 				}).catch(function() {
 					ev.target.checked = !want;
@@ -578,7 +589,7 @@ return view.extend({
 		   checked="false"，浏览器仍视为勾选），所以必须在创建后设置 property */
 		cb.checked = !!off.enabled;
 		cb.disabled = managed;
-		this.offloadEls = { cb: cb, now: now };
+		this.offloadEls = { cb, now, guestNotice };
 
 		return E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Hardware Acceleration (flow offloading)')),
@@ -592,6 +603,7 @@ return view.extend({
 				E('div', { 'class': 'wr-hint' }, [
 					_('Applies to all paired APs.'), ' ', now,
 				]),
+				guestNotice,
 			]),
 		]);
 	},
@@ -606,6 +618,10 @@ return view.extend({
 		this.offloadEls.cb.disabled = managed;
 		dom.content(this.offloadEls.now,
 			off.enabled ? _('Currently on') : _('Currently off'));
+		const notice = this.offloadGuestNotice(off);
+		if (this.offloadEls.guestNotice.textContent !== notice) {
+			dom.content(this.offloadEls.guestNotice, notice);
+		}
 	},
 
 	isCap: function() {

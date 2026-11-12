@@ -163,20 +163,30 @@ return view.extend({
 		return null;
 	},
 
-	kvrCell: function(k) {
-		if (!k || !k.seen)
+	kvrTags: function(k) {
+		if (!k?.seen) {
 			return E('span', { 'class': 'wr-hint' }, '-');
-
-		function tag(on, label) {
-			return E('span', {
-				'class': 'wr-kvr ' + (on ? 'wr-kvr-on' : 'wr-kvr-off'),
-				title: on ? _('Effective') : _('Not effective'),
-			}, label);
 		}
 
-		return E('span', {}, [
-			tag(k.r, 'R'), ' ', tag(k.k, 'K'), ' ', tag(k.v, 'V'),
-		]);
+		const tag = (on, label) => E('span', {
+			'class': `wr-kvr ${on ? 'wr-kvr-on' : 'wr-kvr-off'}`,
+			title: on ? _('Effective') : _('Not effective'),
+		}, label);
+
+		return E('span', {}, [tag(k.r, 'R'), ' ', tag(k.k, 'K'), ' ', tag(k.v, 'V')]);
+	},
+
+	kvrCell: function(k) {
+		const main = this.kvrTags(k);
+		if (!this.cfg?.guest?.enabled || !this.cfg?.roam?.guest_selected || !this.cfg.roam.enabled) {
+			return main;
+		}
+
+		let guest = _('成员尚未上报');
+		if (k?.guest) {
+			guest = k.guest.seen ? this.kvrTags(k.guest) : _('未开放或尚未应用');
+		}
+		return E('div', {}, [main, E('div', { 'class': 'wr-hint' }, [_('访客'), '：', guest])]);
 	},
 
 	/* 单条结果的状态文案 / 颜色 */
@@ -469,19 +479,20 @@ return view.extend({
 
 		if (this.busy) return;
 
-		var e = this.els;
-		var ssids = this.collectSsids();
+		const e = this.els;
+		const ssids = this.collectSsids();
+		const guestSelected = Boolean(e.guestCb?.checked);
 
-		if (e.enableCb.checked && ssids.length === 0) {
+		if (e.enableCb.checked && ssids.length === 0 && !guestSelected) {
 			wr.notify('warning', _('Select at least one roaming SSID group.'));
 			return;
 		}
 
 		this.setBusy(true);
 
-		return wr.call('set_roam', {
+		const request = {
 			enabled: e.enableCb.checked,
-			ssids: ssids,
+			ssids,
 			r_fast: e.rFast.checked,
 			ft_mode: e.ftSel.value,
 			ft_over_ds: e.ftDs.checked,
@@ -490,7 +501,12 @@ return view.extend({
 			v_bss_transition: e.vB.checked,
 			rssi_profile: e.rssiSel.value,
 			rssi_threshold: parseInt(e.rssiVal.value, 10) || 0,
-		}).then(function(res) {
+		};
+		if (this.cfg.guest) {
+			request.guest_selected = guestSelected;
+		}
+
+		return wr.call('set_roam', request).then(function(res) {
 			if (!res || !res.ok) {
 				wr.notify('danger',
 					_('Apply failed') + ': ' + ((res && res.error) || _('request rejected')));
@@ -499,6 +515,10 @@ return view.extend({
 
 			self.st = self.st || {};
 			self.st.last_apply = { ver: res.ver, results: res.results };
+			self.cfg.roam.enabled = request.enabled;
+			if (self.cfg.guest) {
+				self.cfg.roam.guest_selected = guestSelected;
+			}
 			self.renderApply();
 
 			if (res.results && res.results.some(function(r) {
@@ -653,6 +673,8 @@ return view.extend({
 		enableCb.checked = !!roam.enabled;
 
 		var ssidChecks = [];
+		const guest = this.cfg.guest;
+		const guestCb = guest ? E('input', { type: 'checkbox', 'class': 'cbi-input-checkbox' }) : null;
 		var ssidBoxes = groups.map(function(g) {
 			var cb = E('input', { type: 'checkbox', 'class': 'cbi-input-checkbox',
 			                      'data-ssid': g.ssid });
@@ -668,6 +690,19 @@ return view.extend({
 					(g.consistent ? '' : ' (' + _('inconsistent!') + ')')),
 			]);
 		});
+		if (guestCb) {
+			guestCb.checked = Boolean(roam.guest_selected);
+			let hint = _('访客网络未启用；启用后将使用这里的漫游设置。');
+			if (guest.enabled) {
+				hint = guest.has_key
+					? _('启用 802.11r 时，访客使用 WPA2 本地密钥派生和空口快速切换。')
+					: _('开放访客网络仅支持 802.11k/v，不使用 802.11r。');
+			}
+			ssidBoxes.push(E('div', { 'class': 'wr-ssid-group' }, [
+				E('label', {}, [guestCb, ' ', E('b', {}, _('访客网络') + '：' + guest.ssid)]),
+				E('div', { 'class': 'wr-hint' }, hint),
+			]));
+		}
 		if (!ssidBoxes.length)
 			ssidBoxes = [ E('div', { 'class': 'wr-hint' },
 				_('No AP interfaces found. Configure Wi-Fi SSIDs first.')) ];
@@ -775,7 +810,7 @@ return view.extend({
 		]);
 
 		this.els = {
-			form: form, saveBtn: saveBtn, enableCb: enableCb, ssidChecks: ssidChecks,
+			form: form, saveBtn: saveBtn, enableCb: enableCb, ssidChecks: ssidChecks, guestCb,
 			rFast: rFast, ftSel: ftSel, ftDs: ftDs, kN: kN, kB: kB, vB: vB,
 			rssiSel: rssiSel, rssiVal: rssiVal,
 		};

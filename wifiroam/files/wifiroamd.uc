@@ -48,13 +48,21 @@ const GUEST_NET = "172.16.10.0/24";
 const GUEST_DEFAULT_SSID = "Guest";
 const GUEST_SEC_PREFIX = "wifiroam_guest_";
 const GUEST_NFT_TABLE = "wifiroam_guest";
+const GUEST_TC_HANDLE = "57:";
+const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
+// OpenWrt 25.12.6, firewall4 2025.03.17~b6e51575-r2（官方 x86/64 与 Cortex-A53 模板一致）。
+const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c87584813fb325805b";
+const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
+const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
 const DAEMON_VERSION = 3;
 
-const ROAM_KEYS = [
+const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
 	"nas_identifier", "pmk_r1_push", "r0kh", "r1kh", "reassociation_deadline",
-	"ieee80211k", "rrm_neighbor_report", "rrm_beacon_report",
+];
+const ROAM_KEYS = [
+	...ROAM_FT_KEYS, "ieee80211k", "rrm_neighbor_report", "rrm_beacon_report",
 	"ieee80211v", "bss_transition",
 ];
 
@@ -195,7 +203,8 @@ let tcp_srv;            // sync listen socket
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
-let guest_port_sync, guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
+let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
+let write_roam_iface, guest_fw4_sync;
 // 需要 local_clients()，只能在它之后绑定
 let appctl_track_macs, online_sample;
 
@@ -215,8 +224,11 @@ let state = {
 	last_guest: null,   // last guest-network push result summary
 	cap_offload: null,  // SAP: last flow offload state pushed by CAP
 	guest_open: null,   // 访客网络当前是否在开放时段内（null = 未知）
-	guest_tc_sig: "",   // 访客限速 tc 规则的签名，避免每次 tick 重建
-	guest_tc_devs: [],  // 已挂了 qdisc 的访客 netdev（桥不参与桥转发路径，必须挂到 vif）
+	guest_tc_devs: {},  // 访客无线接口 → 已成功安装的限速规则签名
+	guest_tc_error: "",
+	guest_fw4_error: null,
+	guest_fw4_failed: null,
+	guest_fw4_retry_at: 0,
 	_guest_nft_sig: "",  // 访客 nft 表（隔离 + 子AP SNAT）的签名，避免每轮重建
 	_guest_zone_migrated: false, // 访客区是否已从 option network 迁移到 device+subnet
 	_guest_bridged: null, // 访客出口是否走 lan + SNAT（桥接上行），null = 尚未判定
@@ -382,6 +394,7 @@ function current_roam_cfg() {
 	return {
 		enabled: cur.get("wifiroam", "roam", "enabled") == "1",
 		ssids,
+		guest_selected: cur.get("wifiroam", "roam", "guest_selected") == "1",
 		r_fast: cur.get("wifiroam", "roam", "r_fast") != "0",
 		ft_mode: cur.get("wifiroam", "roam", "ft_mode") ?? "simple",
 		ft_over_ds: cur.get("wifiroam", "roam", "ft_over_ds") != "0",
@@ -396,13 +409,15 @@ function current_roam_cfg() {
 
 // 漫游配置内容签名：SAP 上报本地已落盘配置的签名，CAP 据此判断是否与主 AP 一致。
 // 只比 ver 无法发现历史遗留的不一致（旧版 SAP 只落盘 ver/enabled，其他字段仍是默认值）。
-function roam_sig(r) {
-	return sha256(sprintf("%d|%s|%d|%s|%d|%d|%d|%d|%s|%d",
+function roam_sig(r, guest_supported) {
+	let sig = sprintf("%d|%s|%d|%s|%d|%d|%d|%d|%s|%d",
 		r.enabled ? 1 : 0, join(",", r.ssids ?? []), r.r_fast ? 1 : 0,
 		r.ft_mode ?? "simple",
 		r.ft_over_ds ? 1 : 0, r.k_neighbor ? 1 : 0, r.k_beacon ? 1 : 0,
 		r.v_bss_transition ? 1 : 0, r.rssi_profile ?? "balanced",
-		r.rssi_threshold ?? rssi_preset(r.rssi_profile)));
+		r.rssi_threshold ?? rssi_preset(r.rssi_profile));
+	// 旧 SAP 不保存访客选项；对它继续用原签名，避免每轮重复下发并重载无线。
+	return sha256(sig + (guest_supported !== false && r.guest_selected ? "|guest" : ""));
 }
 
 function current_backhaul_cfg() {
@@ -1103,14 +1118,14 @@ function offload_apply(on) {
 	cur.load("firewall");
 	if (cur.get("firewall", "@defaults[0]") == null) return false;
 	let want = on ? "1" : "0";
-	if (cur.get("firewall", "@defaults[0]", "flow_offloading") == want &&
-	    cur.get("firewall", "@defaults[0]", "flow_offloading_hw") == want)
-		return true;
-	cur.set("firewall", "@defaults[0]", "flow_offloading", want);
-	cur.set("firewall", "@defaults[0]", "flow_offloading_hw", want);
-	cur.commit("firewall");
-	// reload 会重建 flowtable，已 offload 的旧流随之清空，避免规则长期不生效
-	cmd_output("/etc/init.d/firewall reload >/dev/null 2>&1");
+	let changed = cur.get("firewall", "@defaults[0]", "flow_offloading") != want ||
+	              cur.get("firewall", "@defaults[0]", "flow_offloading_hw") != want;
+	if (changed) {
+		cur.set("firewall", "@defaults[0]", "flow_offloading", want);
+		cur.set("firewall", "@defaults[0]", "flow_offloading_hw", want);
+		cur.commit("firewall");
+	}
+	guest_fw4_sync(null, changed);
 	return true;
 }
 
@@ -1382,6 +1397,94 @@ function guest_cfg() {
 	};
 }
 
+// 同时检查入、出方向；WAN 回程也能命中 flowtable，不能只从 devices 去掉访客桥。
+function fw4_forward_state() {
+	let proc = fs.popen("nft list chain inet fw4 forward 2>/dev/null", "r");
+	if (!proc) return null;
+	let rules = proc.read("all") ?? "";
+	if (proc.close() != 0) return null;
+	let active = false, guarded = true;
+	for (let line in split(rules, "\n")) {
+		let m = match(line, /^(.*?)\s*flow\s+(add|offload)\s+@ft(\s|;|$)/);
+		if (!m) continue;
+		active = true;
+		if (!match(m[1], /(^|\s)iifname\s+!=\s+"?br-guest"?(\s|$)/) ||
+		    !match(m[1], /(^|\s)oifname\s+!=\s+"?br-guest"?(\s|$)/)) guarded = false;
+	}
+	return { active, guarded: active && guarded };
+}
+
+function fw4_replace_template(expected, body) {
+	let stat = fs.lstat(FW4_TEMPLATE);
+	if (stat?.type != "file" || stat.uid != 0 || stat.gid != 0) return false;
+	let dir = fs.mkdtemp(FW4_TEMPLATE + ".wifiroam-XXXXXX");
+	if (!dir) return false;
+	let file = dir + "/ruleset.uc";
+	let ok = fs.writefile(file, body) == length(body) && fs.chmod(file, stat.mode & 0777) &&
+	         fs.readfile(FW4_TEMPLATE) == expected && fs.rename(file, FW4_TEMPLATE);
+	if (!ok) fs.unlink(file);
+	fs.rmdir(dir);
+	return ok;
+}
+
+function guest_fw4_status(error) {
+	if (error && state.guest_fw4_error != error) log("guest flow offload protection: " + error);
+	state.guest_fw4_error = error;
+}
+
+guest_fw4_sync = function(cfg, reload) {
+	cfg = cfg ?? guest_cfg();
+	let protect = cfg.enabled && cfg.bandwidth > 0;
+	let source = fs.readfile(FW4_TEMPLATE) ?? "";
+	let patched = index(source, FW4_GUEST_FLOW_RULE) >= 0;
+	let original = patched ? replace(source, FW4_GUEST_FLOW_RULE, FW4_FLOW_RULE) : source;
+	let supported = (protect || patched) && sha256(original) == FW4_TEMPLATE_SHA256 &&
+	                length(split(original, FW4_FLOW_RULE)) == 2;
+	if (protect && !patched && !match(fs.readfile("/etc/openwrt_release") ?? "", /(^|\n)DISTRIB_RELEASE='25\.12\.6'(\n|$)/))
+		supported = false;
+	if (!supported) {
+		guest_fw4_status(protect || patched ? "unsupported" : null);
+		if (reload) system("/sbin/fw4 reload >/dev/null 2>&1");
+		return !protect && !patched;
+	}
+
+	let desired = protect ? replace(original, FW4_FLOW_RULE, FW4_GUEST_FLOW_RULE) : original;
+	let changed = desired != source;
+	let live = protect ? fw4_forward_state() : null;
+	if (!reload && protect && !live) {
+		guest_fw4_status("pending");
+		return false;
+	}
+	if (!changed && !reload && (!live?.active || live.guarded)) {
+		guest_fw4_status(null);
+		state.guest_fw4_failed = null;
+		return true;
+	}
+
+	let attempt = (protect ? "protect:" : "restore:") + sha256(source);
+	if (!reload && state.guest_fw4_failed == attempt && time() < state.guest_fw4_retry_at) return false;
+	let written = changed && fw4_replace_template(source, desired);
+	let ok = (!changed || written) && (!changed || system("/sbin/fw4 -q check") == 0) &&
+	         system("/sbin/fw4 reload >/dev/null 2>&1") == 0;
+	if (ok) {
+		live = fw4_forward_state();
+		ok = live && (!live.active || live.guarded === protect);
+	}
+	if (!ok) {
+		// 只回滚自己的改动；不覆盖被软件包更新或手动编辑过的模板。
+		if (written && !fw4_replace_template(desired, source)) log("guest firewall template rollback failed");
+		if (written || (reload && changed)) system("/sbin/fw4 reload >/dev/null 2>&1");
+		state.guest_fw4_failed = attempt;
+		state.guest_fw4_retry_at = time() + 60;
+		guest_fw4_status("apply_failed");
+		return false;
+	}
+
+	state.guest_fw4_failed = null;
+	guest_fw4_status(null);
+	return true;
+};
+
 // 开放时段判断：start <= end 为当天区间，否则视为跨零点（如 22:00-07:00）
 function guest_open_now(cfg) {
 	if (!cfg.enabled) return false;
@@ -1501,24 +1604,38 @@ function guest_wan_uplink() {
 	return true;
 }
 
-// 已配置的访客 BSS 内核接口名（如 phy0-ap1）。netdev 名不固定，必须按
-// SSID 反查，不能假定是 ap1。
-function guest_netdevs(ssid) {
-	let out = [], cur = null;
-	let data = cmd_output("iw dev 2>/dev/null");
-	for (let line in split(data, "\n")) {
-		let mi = match(line, /^\s*Interface ([^\s]+)/);
-		if (mi) { cur = mi[1]; continue; }
-		if (cur == null) continue;
-		let ms = match(line, /^\s*ssid (.+)$/);
-		if (ms && trim(ms[1]) == ssid) push(out, cur);
+function guest_network_only(network) {
+	return network == GUEST_IFACE ||
+	       (type(network) == "array" && length(network) == 1 && network[0] == GUEST_IFACE);
+}
+
+function is_guest_iface(s) {
+	return s?.wifiroam_guest == "1" && s.mode == "ap" && guest_network_only(s.network);
+}
+
+function guest_netdevs() {
+	let cur = uci.cursor(), sections = {}, ports = {};
+	cur.load("wireless");
+	cur.foreach("wireless", "wifi-iface", function(s) {
+		if (is_guest_iface(s) && s.disabled != "1") sections[s[".name"]] = true;
+	});
+	let radios = ubusc.call("network.wireless", "status");
+	for (let name, radio in radios ?? {}) {
+		if (!radio.up || radio.pending) continue;
+		for (let vif in radio.interfaces ?? []) {
+			let dev = vif.ifname;
+			if (vif.section && sections[vif.section] && vif.config?.mode == "ap" && guest_network_only(vif.config.network) &&
+			    dev && match(dev, /^[a-zA-Z0-9_.:-]+$/) && fs.access(`/sys/class/net/${dev}`))
+				ports[dev] = true;
+		}
 	}
-	return out;
+	return sort(keys(ports));
 }
 
 // 把访客 SSID/密码/开关写入本机 wireless；时段外保持 disabled
 function guest_write_wireless(cfg) {
 	let open = guest_open_now(cfg);
+	let roam = current_roam_cfg();
 	let wc = uci.cursor();
 	wc.load("wireless");
 	let keep = {};
@@ -1544,6 +1661,9 @@ function guest_write_wireless(cfg) {
 		wc.set("wireless", sid, "network", GUEST_IFACE);
 		wc.set("wireless", sid, "wifiroam_guest", "1");
 		wc.set("wireless", sid, "disabled", (cfg.enabled && open) ? "0" : "1");
+		// 访客配置可晚于漫游配置到达；用当前配置补齐新建、改名或变更加密的 BSS。
+		write_roam_iface(wc, wc.get_all("wireless", sid), roam, [],
+			cfg.enabled && roam.enabled && roam.guest_selected, true);
 	}
 	let stale = [];
 	wc.foreach("wireless", "wifi-iface", function(s) {
@@ -1581,7 +1701,7 @@ function guest_remove_infra() {
 	fc.commit("firewall");
 }
 
-// 访客桥 / 接口 / DHCP / 防火墙。桥本身固定 br-guest，端口由 guest_port_sync 填。
+// 无线配置通过 network=wifiroam_guest 交给 netifd 动态挂桥，不固化无线口名。
 function guest_write_infra(cfg) {
 	let nc = uci.cursor();
 	nc.load("network");
@@ -1589,6 +1709,8 @@ function guest_write_infra(cfg) {
 		nc.set("network", GUEST_DEV, "device");
 	nc.set("network", GUEST_DEV, "type", "bridge");
 	nc.set("network", GUEST_DEV, "name", GUEST_BRIDGE);
+	nc.set("network", GUEST_DEV, "bridge_empty", "1");
+	nc.delete("network", GUEST_DEV, "ports");
 	if (nc.get("network", GUEST_IFACE) == null)
 		nc.set("network", GUEST_IFACE, "interface");
 	nc.set("network", GUEST_IFACE, "proto", "static");
@@ -1724,147 +1846,116 @@ function guest_nft_apply(cfg) {
 }
 
 function guest_client_ips() {
-	let out = [], seen = {};
-	let netprefix = split(GUEST_NET, "/")[0];
-	netprefix = substr(netprefix, 0, length(netprefix) - length(split(netprefix, ".")[3]) - 1) + ".";
+	let ips = {};
+	let prefix = replace(GUEST_IP, /[0-9]+$/, "");
+	let add = function(ip) {
+		if (index(ip, prefix) != 0 || ip == GUEST_IP) return;
+		let host = substr(ip, length(prefix));
+		if (match(host, /^[1-9][0-9]{0,2}$/) && int(host) < 255)
+			ips[ip] = true;
+	};
 	let data = fs.readfile("/tmp/dhcp.leases") ?? "";
 	for (let line in split(data, "\n")) {
-		let f = split(trim(line), " ");
-		if (length(f) < 4) continue;
-		let ip = f[2];
-		if (index(ip, netprefix) != 0 || ip == GUEST_IP || seen[ip]) continue;
-		seen[ip] = true; push(out, ip);
+		let fields = split(trim(line), /\s+/);
+		if (fields[2]) add(fields[2]);
 	}
-	let neigh = cmd_output("ip neigh show dev " + GUEST_BRIDGE + " 2>/dev/null");
+	let neigh = cmd_output("ip -4 neigh show dev " + GUEST_BRIDGE + " 2>/dev/null");
 	for (let line in split(neigh, "\n")) {
 		let m = match(line, /^([0-9.]+)\s/);
-		if (!m) continue;
-		let ip = m[1];
-		if (index(ip, netprefix) != 0 || ip == GUEST_IP || seen[ip]) continue;
-		seen[ip] = true; push(out, ip);
+		if (m) add(m[1]);
 	}
-	return out;
+	return sort(keys(ips));
 }
 
-// 清理已不需要 qdisc 的访客 netdev；桥上的旧 qdisc 一并删除（历史版本挂在桥上）
-function guest_tc_cleanup(keep) {
-	for (let d in state.guest_tc_devs) {
-		if (keep != null && index(keep, d) >= 0) continue;
-		cmd_output("tc qdisc del dev " + d + " root 2>/dev/null");
-	}
-	cmd_output("tc qdisc del dev " + GUEST_BRIDGE + " root 2>/dev/null");
-	state.guest_tc_devs = keep ?? [];
+function guest_tc_remove(dev, handle) {
+	cmd_output(sprintf("tc qdisc del dev %s root handle %s 2>/dev/null", dev, handle));
 }
 
-// 每台访客设备下行限速：qdisc 必须挂在具体的访客 netdev 上。
-// 挂在 br-guest 上的方案实测无效——桥转发（br_dev_xmit）发出的报文不经过
-// 桥设备自身的根 qdisc，桥端口才是真正的出队点，所以限制完全不生效。
+// 下行整形挂在访客桥的实际无线出口，不依赖 SSID 或无线接口命名。
 function guest_tc_apply(cfg) {
 	let bw = cfg.bandwidth ?? 0;
-	let ports = (cfg.enabled && bw > 0) ? guest_netdevs(cfg.ssid) : [];
-
-	if (length(ports) == 0) {
-		// 关闭/时段外/无线还没起来：清掉旧规则，等下一轮再建
-		if (length(state.guest_tc_devs) > 0 ||
-		    match(cmd_output("tc qdisc show dev " + GUEST_BRIDGE + " 2>/dev/null"), /htb/)) {
-			state.guest_tc_sig = "";
-			guest_tc_cleanup([]);
-		}
-		return;
+	let active = bw > 0 && guest_open_now(cfg);
+	let ports = [];
+	for (let path in fs.glob(`/sys/class/net/${GUEST_BRIDGE}/brif/*`)) {
+		let dev = fs.basename(path);
+		if (match(dev, /^[a-zA-Z0-9_.:-]+$/) && fs.access(`/sys/class/net/${dev}/phy80211`))
+			push(ports, dev);
+	}
+	for (let dev in keys(state.guest_tc_devs)) {
+		if (index(ports, dev) >= 0) continue;
+		guest_tc_remove(dev, GUEST_TC_HANDLE);
+		delete state.guest_tc_devs[dev];
 	}
 
-	let ips = guest_client_ips();
-	let sig = "" + bw;
-	for (let p in ports) sig += "|d" + p;
-	for (let ip in ips) sig += "|" + ip;
-
-	let have = true;
-	for (let p in ports) {
-		if (index(cmd_output("tc qdisc show dev " + p + " 2>/dev/null"), "htb") < 0) {
-			have = false;
-			break;
+	let guest_ports = active && length(ports) ? guest_netdevs() : [];
+	let ips = length(guest_ports) ? guest_client_ips() : [];
+	let sig = bw + "|" + join(",", ips);
+	let errors = [];
+	for (let dev in ports) {
+		let qdisc = cmd_output(`tc qdisc show dev ${dev} 2>/dev/null`);
+		let installed = index(qdisc, `qdisc htb ${GUEST_TC_HANDLE} root`) >= 0;
+		if (!active) {
+			if (installed) guest_tc_remove(dev, GUEST_TC_HANDLE);
+			else if (index(qdisc, "qdisc htb 1: root") >= 0 && index(qdisc, "default 0x20") >= 0)
+				guest_tc_remove(dev, "1:"); // 上一版本的访客限速队列
+			delete state.guest_tc_devs[dev];
+			continue;
 		}
-	}
-	if (sig == state.guest_tc_sig && have) return;
-	state.guest_tc_sig = sig;
-	guest_tc_cleanup(ports);
+		if (index(guest_ports, dev) < 0) continue;
+		if (installed && state.guest_tc_devs[dev] == sig) continue;
+		if (installed) guest_tc_remove(dev, GUEST_TC_HANDLE);
 
-	for (let p in ports) {
-		cmd_output(sprintf("tc qdisc add dev %s root handle 1: htb default 20 2>/dev/null", p));
-		// 默认类同样按限速值：拿不到终端 IP（静态 IP、租约未落盘、刚入网）时
-		// 流量会落到这里，若仍给 2Gbit 就等于完全不限
-		cmd_output(sprintf("tc class add dev %s parent 1: classid 1:20 htb rate %dkbit ceil %dkbit 2>/dev/null",
-			p, bw * 1000, bw * 1000));
-		let i = 20;
+		let rate = (bw * 1000) + "kbit";
+		let cls = `class add dev ${dev} parent ${GUEST_TC_HANDLE}`;
+		let batch = `qdisc replace dev ${dev} root handle ${GUEST_TC_HANDLE} htb default 20\n` +
+		            `${cls} classid ${GUEST_TC_HANDLE}20 htb rate ${rate} ceil ${rate}\n`;
+		// 新入网、还未读到地址的终端也先使用限速的默认类。
+		let i = 0x20;
 		for (let ip in ips) {
-			i++;
-			let cid = "1:" + i;
-			cmd_output(sprintf("tc class add dev %s parent 1: classid %s htb rate %dkbit ceil %dkbit 2>/dev/null",
-				p, cid, bw * 1000, bw * 1000));
-			cmd_output(sprintf("tc filter add dev %s parent 1: protocol ip prio 1 u32 match ip dst %s/32 flowid %s 2>/dev/null",
-				p, ip, cid));
+			let cid = GUEST_TC_HANDLE + sprintf("%x", ++i);
+			batch += `${cls} classid ${cid} htb rate ${rate} ceil ${rate}\n` +
+			         `filter add dev ${dev} parent ${GUEST_TC_HANDLE} protocol ip prio 1 u32 match ip dst ${ip}/32 flowid ${cid}\n`;
+		}
+		let proc = fs.popen("tc -batch - 2>&1 <<'WIFIROAM_TC'\n" + batch + "WIFIROAM_TC", "r");
+		let output = proc ? trim(proc.read("all") ?? "") : "";
+		if (proc && proc.close() == 0) {
+			state.guest_tc_devs[dev] = sig;
+		} else {
+			guest_tc_remove(dev, GUEST_TC_HANDLE);
+			delete state.guest_tc_devs[dev];
+			push(errors, dev + ": " + (output || "tc failed"));
 		}
 	}
+	let error = join("; ", errors);
+	if (error && error != state.guest_tc_error)
+		log("guest bandwidth limit failed: " + error);
+	state.guest_tc_error = error;
 }
 
-// 无线重启后 netdev 才会出现，先按 SSID 找到接口再挂到 br-guest
-guest_port_sync = function(cfg, cb, tries) {
-	tries = tries ?? 0;
-	let open = guest_open_now(cfg);
-	if (!cfg.enabled) {
-		let nc = uci.cursor();
-		nc.load("network");
-		nc.delete("network", GUEST_DEV);
-		nc.commit("network");
-		if (cb) cb();
-		return;
-	}
-	let ports = (cfg.enabled && open) ? guest_netdevs(cfg.ssid) : [];
-	if (length(ports) == 0 && cfg.enabled && open && tries < 10) {
-		uloop.timer(1000, function() { guest_port_sync(cfg, cb, tries + 1); });
-		return;
-	}
-	let nc = uci.cursor();
-	nc.load("network");
-	if (nc.get("network", GUEST_DEV) == null)
-		nc.set("network", GUEST_DEV, "device");
-	nc.set("network", GUEST_DEV, "type", "bridge");
-	nc.set("network", GUEST_DEV, "name", GUEST_BRIDGE);
-	if (length(ports) > 0)
-		nc.set("network", GUEST_DEV, "ports", ports);
-	else
-		nc.delete("network", GUEST_DEV, "ports");
-	nc.commit("network");
-	if (cb) cb();
+guest_after_reload = function() {
+	let cfg = guest_cfg();
+	uloop.process("/etc/init.d/dnsmasq", [ "reload" ], null, function() {});
+	guest_fw4_sync(cfg, true);
+	guest_nft_apply(cfg);
+	guest_tc_apply(cfg);
 };
 
-guest_after_reload = function(cfg) {
-	uloop.process("/etc/init.d/dnsmasq", [ "reload" ], null,
-		function() {});
-	uloop.process("/etc/init.d/firewall", [ "reload" ], null, function() {
-		guest_nft_apply(cfg);
-		state.guest_tc_sig = "";
-		guest_tc_apply(cfg);
-	});
-};
-
-// 本机落地：写 wireless / network / dhcp / firewall，再异步重启无线并补齐桥端口
+// 本机落地：先加载访客接口和防火墙，再重载无线，端口由 netifd 绑定。
 apply_guest_local = function(cfg) {
 	state.guest_open = guest_open_now(cfg);
+	if (cfg.enabled && cfg.bandwidth > 0) guest_fw4_sync(cfg, false);
 	guest_write_wireless(cfg);
 	if (cfg.enabled)
 		guest_write_infra(cfg);
 	else
 		guest_remove_infra();
 
-	uloop.process("/etc/init.d/network", [ "reload" ], null, function() {});
-	uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
-		log("guest wifi reload rc=" + res);
-		guest_port_sync(cfg, function() {
-			uloop.process("/etc/init.d/network", [ "reload" ], null, function() {
-				guest_after_reload(cfg);
-			});
-		}, 0);
+	uloop.process("/etc/init.d/network", [ "reload" ], null, function() {
+		guest_after_reload();
+		uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
+			log("guest wifi reload rc=" + res);
+			guest_tc_apply(guest_cfg());
+		});
 	});
 	return { ok: true };
 };
@@ -1904,7 +1995,8 @@ guest_tick = function() {
 	let g = guest_cfg();
 	if (!g.enabled) {
 		state.guest_open = false;
-		state.guest_tc_sig = "";
+		guest_fw4_sync(g, false);
+		guest_tc_apply(g);
 		guest_nft_apply(g);
 		return;
 	}
@@ -1913,13 +2005,20 @@ guest_tick = function() {
 	   进程升级后做一次性迁移 */
 	if (state._guest_zone_migrated != true) {
 		let mc = uci.cursor();
+		mc.load("network");
 		mc.load("firewall");
 		state._guest_zone_migrated = true;
+		// 清除旧版按 SSID 写入的桥端口，后续完全由 netifd 管理。
+		if (mc.get("network", GUEST_DEV, "ports") != null ||
+		    mc.get("network", GUEST_DEV, "bridge_empty") != "1") {
+			apply_guest_local(g);
+			return;
+		}
 		if (mc.get("firewall", GUEST_ZONE, "network") != null ||
 		    mc.get("firewall", GUEST_ZONE, "subnet") != null ||
 		    (state.cfg.role == "sap" && mc.get("firewall", GUEST_SNAT) != null)) {
 			guest_write_infra(g);
-			cmd_output("/etc/init.d/firewall reload 2>/dev/null");
+			guest_fw4_sync(g, true);
 			state._guest_nft_sig = "";
 		}
 	}
@@ -1934,36 +2033,41 @@ guest_tick = function() {
 		state._guest_bridged = bridged;
 		if (fw_wan == bridged) {
 			guest_write_infra(g);
-			cmd_output("/etc/init.d/firewall reload 2>/dev/null");
+			guest_fw4_sync(g, true);
 			state._guest_nft_sig = "";
 		}
 	}
 	else if (state._guest_bridged != bridged) {
 		guest_write_infra(g);
-		cmd_output("/etc/init.d/firewall reload 2>/dev/null");
+		guest_fw4_sync(g, true);
 		state._guest_nft_sig = "";
 	}
+	guest_fw4_sync(g, false);
 	/* 进程重启后内核里的 nft 表可能丢失（设备重启），按需补建/清理 */
 	guest_nft_apply(g);
 	let open = guest_open_now(g);
-	if (state.guest_open == null) { state.guest_open = open; return; }
-	if (open == state.guest_open) { guest_tc_apply(g); return; }
+	if (open == state.guest_open) {
+		guest_tc_apply(g);
+		return;
+	}
+	let was_open = state.guest_open;
 	state.guest_open = open;
 
-	let wc = uci.cursor();
+	let wc = uci.cursor(), changed = false;
 	wc.load("wireless");
 	wc.foreach("wireless", "wifi-iface", function(s) {
-		if (s.wifiroam_guest != "1") return;
+		if (!is_guest_iface(s) || (s.disabled != "1") == open) return;
 		wc.set("wireless", s[".name"], "disabled", open ? "0" : "1");
+		changed = true;
 	});
+	if (!changed) {
+		guest_tc_apply(g);
+		return;
+	}
 	wc.commit("wireless");
-	push_event("guest_schedule", "", open ? "open" : "closed");
+	if (was_open != null) push_event("guest_schedule", "", open ? "open" : "closed");
 	uloop.process("/sbin/wifi", [ "reload" ], null, function() {
-		guest_port_sync(g, function() {
-			uloop.process("/etc/init.d/network", [ "reload" ], null, function() {
-				guest_after_reload(g);
-			});
-		}, 0);
+		guest_tc_apply(guest_cfg());
 	});
 };
 
@@ -2108,7 +2212,7 @@ function local_clients() {
 		let band = r.config?.band;
 		for (let ifc in r.interfaces ?? []) {
 			if (ifc.ifname)
-				ifmap[ifc.ifname] = { ssid: ifc.config?.ssid, band };
+				ifmap[ifc.ifname] = { ssid: ifc.config?.ssid, band, guest: guest_network_only(ifc.config?.network) };
 		}
 	}
 	// hostapd ubus 对象名为 hostapd.<ifname>；ubus list(pattern) 在本平台
@@ -2122,7 +2226,7 @@ function local_clients() {
 			if (excl[mn]) continue;   // AP 自身接口，不是终端
 			clients[mn] = {
 				mac: uc(mac), type: "wifi", ifname,
-				ssid: ifmap[ifname]?.ssid,
+				ssid: ifmap[ifname]?.ssid, guest: ifmap[ifname]?.guest,
 				band: ifmap[ifname]?.band ?? freq_band(res.freq),
 				rssi: ci.signal ?? null,
 				connected_time: ci.connected_time ?? null,
@@ -2503,63 +2607,64 @@ function member_list() {
 	return members;
 }
 
+write_roam_iface = function(cur, s, roam, members, selected, guest) {
+	let sid = s[".name"];
+	if (!selected) {
+		if (guest || s.ieee80211r != null || s.ieee80211k != null || s.ieee80211v != null)
+			for (let k in ROAM_KEYS) cur.delete("wireless", sid, k);
+		return;
+	}
+
+	if (roam.r_fast && (!guest || s.encryption == "psk2")) {
+		let md = roam_md(s.ssid);
+		// 同名主人和访客 BSS 也不能共用 FT 移动域。
+		if (guest) md = sprintf("%04x", int(md, 16) ^ 0x8000);
+		cur.set("wireless", sid, "ieee80211r", "1");
+		cur.set("wireless", sid, "mobility_domain", md);
+		// 访客桥不跨 AP 互通，访客 FT 必须经空口完成。
+		cur.set("wireless", sid, "ft_over_ds", !guest && roam.ft_over_ds ? "1" : "0");
+		cur.set("wireless", sid, "reassociation_deadline", "2000");
+		if (!guest && roam.ft_mode == "explicit") {
+			cur.set("wireless", sid, "ft_psk_generate_local", "0");
+			cur.set("wireless", sid, "nas_identifier", uc(macnorm(state.self.mac)) + "-" + s.ssid);
+			cur.set("wireless", sid, "pmk_r1_push", "1");
+			let r0 = [], r1 = [];
+			for (let m in members) {
+				let mm = m.mac;
+				push(r0, sprintf("%s,%s-%s,%s", mm, uc(macnorm(mm)), s.ssid, roam_key0(mm)));
+				push(r1, sprintf("%s,%s,%s", mm, mm, roam_key1(mm)));
+			}
+			cur.set("wireless", sid, "r0kh", r0);
+			cur.set("wireless", sid, "r1kh", r1);
+		} else {
+			cur.set("wireless", sid, "ft_psk_generate_local", "1");
+			for (let k in [ "nas_identifier", "pmk_r1_push", "r0kh", "r1kh" ])
+				cur.delete("wireless", sid, k);
+		}
+	} else {
+		for (let k in ROAM_FT_KEYS) cur.delete("wireless", sid, k);
+	}
+	cur.set("wireless", sid, "ieee80211k", "1");
+	cur.set("wireless", sid, "rrm_neighbor_report", roam.k_neighbor ? "1" : "0");
+	cur.set("wireless", sid, "rrm_beacon_report", roam.k_beacon ? "1" : "0");
+	cur.set("wireless", sid, "ieee80211v", "1");
+	cur.set("wireless", sid, "bss_transition", roam.v_bss_transition ? "1" : "0");
+};
+
 function apply_roam_local(roam, members) {
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let touched = [];
-	let self_nasid = uc(macnorm(state.self.mac));
-
+	let guest_enabled = guest_cfg().enabled;
 	cur.foreach("wireless", "wifi-iface", function(s) {
 		if (s.mode && s.mode != "ap") return;
-		if (s.wifiroam_guest == "1") return;
-		let sid = s[".name"];
-		let in_group = roam.enabled && index(roam.ssids ?? [], s.ssid) >= 0;
-
-		if (in_group) {
-			// R（802.11r）可单独关闭：关闭时移除全部 FT 相关键，只保留 K/V
-			if (roam.r_fast) {
-				cur.set("wireless", sid, "ieee80211r", "1");
-				cur.set("wireless", sid, "mobility_domain", roam_md(s.ssid));
-				cur.set("wireless", sid, "ft_over_ds", roam.ft_over_ds ? "1" : "0");
-				cur.set("wireless", sid, "reassociation_deadline", "2000");
-				if (roam.ft_mode == "explicit") {
-					cur.set("wireless", sid, "ft_psk_generate_local", "0");
-					cur.set("wireless", sid, "nas_identifier", self_nasid + "-" + s.ssid);
-					cur.set("wireless", sid, "pmk_r1_push", "1");
-					let r0 = [], r1 = [];
-					for (let m in members) {
-						let mm = m.mac;
-						push(r0, sprintf("%s,%s-%s,%s", mm, uc(macnorm(mm)), s.ssid, roam_key0(mm)));
-						push(r1, sprintf("%s,%s,%s", mm, mm, roam_key1(mm)));
-					}
-					cur.set("wireless", sid, "r0kh", r0);
-					cur.set("wireless", sid, "r1kh", r1);
-				} else {
-					cur.set("wireless", sid, "ft_psk_generate_local", "1");
-					for (let k in [ "nas_identifier", "pmk_r1_push", "r0kh", "r1kh" ])
-						cur.delete("wireless", sid, k);
-				}
-			} else {
-				for (let k in [ "ieee80211r", "mobility_domain", "ft_over_ds",
-				                "ft_psk_generate_local", "reassociation_deadline",
-				                "nas_identifier", "pmk_r1_push", "r0kh", "r1kh" ])
-					cur.delete("wireless", sid, k);
-			}
-			cur.set("wireless", sid, "ieee80211k", "1");
-			cur.set("wireless", sid, "rrm_neighbor_report", roam.k_neighbor ? "1" : "0");
-			cur.set("wireless", sid, "rrm_beacon_report", roam.k_beacon ? "1" : "0");
-			cur.set("wireless", sid, "ieee80211v", "1");
-			cur.set("wireless", sid, "bss_transition", roam.v_bss_transition ? "1" : "0");
-			push(touched, s.ssid);
-		} else {
-			// only strip keys we manage, and only if present
-			if (cur.get("wireless", sid, "ieee80211r") != null ||
-			    cur.get("wireless", sid, "ieee80211k") != null ||
-			    cur.get("wireless", sid, "ieee80211v") != null) {
-				for (let k in ROAM_KEYS)
-					cur.delete("wireless", sid, k);
-			}
-		}
+		let guest = is_guest_iface(s);
+		if (!guest && s.wifiroam_guest == "1") return;
+		let selected = roam.enabled && (guest
+			? guest_enabled && roam.guest_selected
+			: index(roam.ssids ?? [], s.ssid) >= 0);
+		write_roam_iface(cur, s, roam, members, selected, guest);
+		if (selected) push(touched, s.ssid);
 	});
 
 	cur.commit("wireless");
@@ -2575,6 +2680,7 @@ function apply_roam_local(roam, members) {
 	if (type(cur_ssids) != "array") cur_ssids = cur_ssids == "" ? [] : [ cur_ssids ];
 	let want = {
 		enabled: roam.enabled ? "1" : "0",
+		guest_selected: roam.guest_selected ? "1" : "0",
 		r_fast: roam.r_fast ? "1" : "0",
 		ft_mode: roam.ft_mode == "explicit" ? "explicit" : "simple",
 		ft_over_ds: roam.ft_over_ds ? "1" : "0",
@@ -2586,7 +2692,8 @@ function apply_roam_local(roam, members) {
 		config_ver: "" + state.roam_ver_applied,
 	};
 	if (join("\n", cur_ssids) != join("\n", want_ssids)) {
-		wc.set("wifiroam", "roam", "ssids", want_ssids);
+		if (length(want_ssids)) wc.set("wifiroam", "roam", "ssids", want_ssids);
+		else wc.delete("wifiroam", "roam", "ssids");
 		dirty = true;
 	}
 	for (let k, v in want) {
@@ -2596,29 +2703,40 @@ function apply_roam_local(roam, members) {
 		}
 	}
 	if (dirty) wc.commit("wifiroam");
-	uloop.process("/sbin/wifi", [ "reload" ], null,
-		function(res) { log("wifi reload rc=" + res); });
+	uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
+		log("wifi reload rc=" + res);
+		guest_tc_apply(guest_cfg());
+	});
 	push_event("roam_apply", "",
 		sprintf("ver=%d ssids=%d", roam.config_ver ?? 0, length(touched)));
 	return { ok: true, touched, ver: state.roam_ver_applied };
 }
 
 // 本机实际落盘的 K/V/R：随 push_roam_config 回执上报，主AP可显示各 AP 生效状态
-function applied_kvr(ssids) {
-	let r = true, k = true, v = true, seen = 0;
+function applied_kvr(roam) {
+	let main = { seen: 0, r: true, k: true, v: true };
+	let guest = { seen: 0, r: true, k: true, v: true, ssid: null };
 	let cur = uci.cursor();
 	cur.load("wireless");
 	cur.foreach("wireless", "wifi-iface", function(s) {
-		if (s.mode && s.mode != "ap") return;
-		if (s.disabled == "1") return;
-		if (s.wifiroam_guest == "1") return;
-		if (index(ssids ?? [], s.ssid) < 0) return;
-		seen++;
-		if (s.ieee80211r != "1" || (s.mobility_domain ?? "") == "") r = false;
-		if (s.ieee80211k != "1" || (s.rrm_neighbor_report ?? "0") != "1") k = false;
-		if (s.ieee80211v != "1" || (s.bss_transition ?? "0") != "1") v = false;
+		if ((s.mode && s.mode != "ap") || s.disabled == "1") return;
+		let target = main;
+		if (s.wifiroam_guest == "1") {
+			if (!is_guest_iface(s) || cur.get("wireless", s.device, "disabled") == "1") return;
+			guest.ssid = s.ssid;
+			if (!roam.enabled || !roam.guest_selected) return;
+			target = guest;
+		} else if (index(roam.ssids ?? [], s.ssid) < 0) {
+			return;
+		}
+		target.seen++;
+		if (s.ieee80211r != "1" || (s.mobility_domain ?? "") == "") target.r = false;
+		if (s.ieee80211k != "1" || (s.rrm_neighbor_report ?? "0") != "1") target.k = false;
+		if (s.ieee80211v != "1" || (s.bss_transition ?? "0") != "1") target.v = false;
 	});
-	return { r: seen > 0 && r, k: seen > 0 && k, v: seen > 0 && v, seen };
+	for (let target in [ main, guest ])
+		if (!target.seen) target.r = target.k = target.v = false;
+	return { ...main, guest };
 }
 
 // ----------------------------------------------------- wireless backhaul
@@ -2771,7 +2889,7 @@ function ap_overview() {
 		ip: state.self.ip, online: true, self: true,
 		ssids: map(wifi_ifaces(), function(w) { return w.ssid; }),
 		// 本机实际落盘的 K/V/R，便于主 AP 与子 AP 看到一致的生效状态
-		kvr: applied_kvr(current_roam_cfg().ssids),
+		kvr: applied_kvr(current_roam_cfg()),
 	} ];
 	for (let mn, p in state.peers) {
 		let list = [];
@@ -2806,6 +2924,9 @@ function precheck() {
 	let groups = overview.groups;
 	let n_multi = 0;
 	for (let g in groups) if (g.ap_count >= 2) n_multi++;
+	let guest = guest_cfg();
+	if (guest.enabled && length(filter(overview.aps, a => a.online && a.kvr?.guest?.ssid == guest.ssid)) >= 2)
+		n_multi++;
 	push(checks, { id: "ssid_group", ok: n_multi > 0,
 		info: sprintf("%d", n_multi) });
 
@@ -2849,6 +2970,7 @@ function sap_rx(req) {
 					alias_ver: state.aliases.ver,
 					roam_ver: state.roam_ver_applied,
 					roam_sig: roam_sig(current_roam_cfg()),
+					guest_roaming: true,
 					backhaul_ver: state.backhaul_ver_applied,
 					guest_ver: guest_cfg().ver,
 				},
@@ -2887,7 +3009,7 @@ function sap_rx(req) {
 	case "push_roam_config": {
 		let r = apply_roam_local(req.args.roam, req.args.members ?? []);
 		req.reply({ ok: r.ok, ver: r.ver,
-		            kvr: applied_kvr(req.args.roam?.ssids ?? []) });
+		            kvr: applied_kvr(req.args.roam) });
 		break;
 	}
 	case "push_aliases": {
@@ -3031,10 +3153,11 @@ sap_report = function() {
 				alias_ver: state.aliases.ver,
 				roam_ver: state.roam_ver_applied,
 				roam_sig: roam_sig(current_roam_cfg()),
+				guest_roaming: true,
 				backhaul_ver: state.backhaul_ver_applied,
 				guest_ver: guest_cfg().ver,
 				// 本机落盘的 K/V/R 生效状态，CAP 汇总后展示给用户
-				kvr: applied_kvr(current_roam_cfg().ssids),
+				kvr: applied_kvr(current_roam_cfg()),
 			},
 			data_cb: function(m) {
 				link.last_pong = time();
@@ -3105,6 +3228,7 @@ function srv_rx(conn, req) {
 			p.mac = conn.mac;
 			if (args.name) p.name = args.name;
 			p.authed = true;
+			p.guest_roaming = args.guest_roaming === true;
 			p.last_seen = time();
 			p.chan = conn.chan;   // 存 channel 本体，conn 仅用于关闭时清理
 			p.conn = conn;
@@ -3122,7 +3246,7 @@ function srv_rx(conn, req) {
 			if ((args.alias_ver ?? 0) < state.aliases.ver)
 				push_aliases_to(mn);
 			let roam = current_roam_cfg();
-			let rsig = roam_sig(roam);
+			let rsig = roam_sig(roam, p.guest_roaming);
 			// ver 落后或内容签名不一致都重新下发：后者用于修复历史遗留的
 			// SAP 本地配置与主 AP 不一致（例如只同步了 enabled/ver）
 			if (state.cfg.role == "cap" &&
@@ -3156,6 +3280,7 @@ function srv_rx(conn, req) {
 		p.alias_ver = args.alias_ver ?? 0;
 		p.roam_ver = args.roam_ver ?? 0;
 		p.roam_sig = args.roam_sig ?? "";
+		p.guest_roaming = args.guest_roaming === true;
 		p.backhaul_ver = args.backhaul_ver ?? 0;
 		p.guest_ver = args.guest_ver ?? 0;
 		p.kvr = args.kvr ?? null;
@@ -3167,7 +3292,7 @@ function srv_rx(conn, req) {
 			push_aliases_to(mn);
 		let roam = current_roam_cfg();
 		if (p.roam_ver < roam.config_ver ||
-		    (p.roam_sig != "" && p.roam_sig != roam_sig(roam)))
+		    (p.roam_sig != "" && p.roam_sig != roam_sig(roam, p.guest_roaming)))
 			push_roam_to(mn);
 		let bh = current_backhaul_cfg();
 		if (bh.enabled && p.backhaul_ver < bh.config_ver)
@@ -3296,6 +3421,8 @@ push_roam_to = function(mn) {
 	if (!p?.authed || !p.chan) return false;
 	if (p.roam_pushing) return true; // 推送在途，避免 auth+report 竞争重复下发
 	let roam = current_roam_cfg();
+	// 旧 SAP 用 UCI set 写数组，空数组无法清除已有 SSID，空字符串占位的签名相同。
+	if (!p.guest_roaming && !length(roam.ssids)) roam.ssids = [ "" ];
 	let name = p.info?.name ?? p.name ?? mn;
 	p.roam_pushing = true;
 	try {
@@ -3516,7 +3643,7 @@ let api_obj = {
 			return {
 				version: DAEMON_VERSION,
 				daemon_started: daemon_started,
-				kvr: applied_kvr(current_roam_cfg().ssids),
+				kvr: applied_kvr(current_roam_cfg()),
 				role: state.cfg.role, name: state.self.name,
 				mac: state.self.mac, ip: state.self.ip,
 				cap_ip: state.cfg.cap_ip != "" ? state.cfg.cap_ip : state.cap_learned,
@@ -3603,18 +3730,20 @@ let api_obj = {
 				for (let a in state.roster.aps)
 					push(members, { mac: maccolon(a.id), name: a.name ?? a.id });
 			}
+			let roam = current_roam_cfg(), guest = guest_cfg();
 			return {
-				roam: current_roam_cfg(),
+				roam,
 				groups: use_roster ? state.roster.groups : ssid_groups(),
+				guest: { enabled: guest.enabled, ssid: guest.ssid, has_key: guest.key != "" },
 				members,
-				kvr: applied_kvr(current_roam_cfg().ssids),
+				kvr: applied_kvr(roam),
 			};
 		},
 	},
 	set_roam: {
 		args: {
 			ubus_rpc_session: "",
-			enabled: false, ssids: [], r_fast: true, ft_mode: "",
+			enabled: false, ssids: [], guest_selected: false, r_fast: true, ft_mode: "",
 			ft_over_ds: false, k_neighbor: false,
 			k_beacon: false, v_bss_transition: false,
 			rssi_profile: "", rssi_threshold: 0,
@@ -3635,7 +3764,10 @@ let api_obj = {
 			cur.load("wifiroam");
 			let ver = int(cur.get("wifiroam", "roam", "config_ver") ?? "0") + 1;
 			cur.set("wifiroam", "roam", "enabled", a.enabled ? "1" : "0");
-			cur.set("wifiroam", "roam", "ssids", a.ssids ?? []);
+			if (length(a.ssids ?? [])) cur.set("wifiroam", "roam", "ssids", a.ssids);
+			else cur.delete("wifiroam", "roam", "ssids");
+			if (a.guest_selected != null)
+				cur.set("wifiroam", "roam", "guest_selected", a.guest_selected ? "1" : "0");
 			cur.set("wifiroam", "roam", "r_fast", a.r_fast ? "1" : "0");
 			cur.set("wifiroam", "roam", "ft_mode",
 				a.ft_mode == "explicit" ? "explicit" : "simple");
@@ -3654,7 +3786,7 @@ let api_obj = {
 			let results = [];
 			let lr = apply_roam_local(roam, members);
 			push(results, { ap: state.self.mac, name: state.self.name,
-			                ok: lr.ok, ver: lr.ver, kvr: applied_kvr(roam.ssids) });
+			                ok: lr.ok, ver: lr.ver, kvr: applied_kvr(roam) });
 			// 先落 last_apply，再推送，才能收集到各 SAP 的异步回执
 			state.last_apply = { ts: time(), ver, results };
 			for (let mn, p in state.peers) {
@@ -4007,12 +4139,17 @@ let api_obj = {
 			cur.load("firewall");
 			let sw = cur.get("firewall", "@defaults[0]", "flow_offloading") == "1";
 			let hw = cur.get("firewall", "@defaults[0]", "flow_offloading_hw") == "1";
-			let active = index(cmd_output("nft list chain inet fw4 forward 2>/dev/null"),
-				"flow add") >= 0;
+			let live = fw4_forward_state();
+			let guest = guest_cfg(), guest_guard = null;
+			if (guest.enabled && guest.bandwidth > 0) {
+				guest_guard = state.guest_fw4_error;
+				if (!guest_guard)
+					guest_guard = !live ? "pending" : !live.active ? "off" : live.guarded ? "protected" : "pending";
+			}
 			let managed = state.cfg.role == "sap";
 			if (managed && state.cap_offload != null)
 				sw = state.cap_offload;
-			return { enabled: sw, hw: hw, active: active, managed: managed };
+			return { enabled: sw, hw, active: live?.active ?? false, managed, guest_guard };
 		},
 	},
 	set_offload: {
@@ -4112,18 +4249,35 @@ function steer_tick() {
 	if (!roam.enabled || !roam.v_bss_transition) return;
 	let threshold = roam.rssi_threshold;
 	if (threshold == null || threshold >= 0) return;
-	if (!length(roam.ssids)) return;
+	if (!length(roam.ssids) && !roam.guest_selected) return;
 
 	let has_peer = false;
 	for (let mn, p in state.peers)
 		if (p.authed) { has_peer = true; break; }
 	if (!has_peer) return;   // 单 AP 无处分流，引导只会让终端掉线
 
+	let guest_ready = false;
+	if (roam.guest_selected) {
+		let g = guest_cfg();
+		if (guest_open_now(g)) {
+			if (state.cfg.role == "sap") {
+				let self = macnorm(state.self.mac);
+				for (let ap in state.roster?.aps ?? [])
+					if (ap.id != self && ap.online && ap.kvr?.guest?.v && ap.kvr.guest.ssid == g.ssid)
+						guest_ready = true;
+			} else {
+				for (let mn, p in state.peers)
+					if (p.authed && p.kvr?.guest?.v && p.kvr.guest.ssid == g.ssid)
+						guest_ready = true;
+			}
+		}
+	}
+
 	let now = time();
 	let clients = local_clients();
 	for (let mn, c in clients) {
 		if (c.type != "wifi" || !c.ifname) continue;
-		if (c.ssid == null || index(roam.ssids, c.ssid) < 0) continue;
+		if (c.guest ? !guest_ready : c.ssid == null || index(roam.ssids, c.ssid) < 0) continue;
 		let rssi = c.rssi;
 		if (rssi == null) continue;
 		rssi = int(rssi);
@@ -4133,8 +4287,8 @@ function steer_tick() {
 		try {
 			ubusc.call("hostapd." + c.ifname, "bss_transition_request", {
 				addr: maccolon(mn),
-				disassociation_imminent: true,
-				disassociation_timer: 5,
+				disassociation_imminent: !c.guest,
+				disassociation_timer: c.guest ? 0 : 5,
 				validity_period: 10,
 			});
 			state.steer_last[mn] = now;
@@ -4201,7 +4355,7 @@ function roam_default_init() {
 		ts: time(), ver: roam.config_ver,
 		results: [ { ap: state.self.mac, name: state.self.name,
 		             ok: true, ver: roam.config_ver,
-		             kvr: applied_kvr(roam.ssids) } ],
+		             kvr: applied_kvr(roam) } ],
 	};
 	log(sprintf("roam defaults enabled for %d SSID(s)", length(ssids)));
 }
@@ -4221,6 +4375,7 @@ function main() {
 		enable_relay_ap_mode();
 	alias_load();
 	detect_self();
+	if (state.cfg.role != "unconfigured") guest_fw4_sync(null, false);
 	// 建规则要用到本机接口/网桥信息，必须放在 detect_self 之后
 	appctl_load();
 	ensure_token();
@@ -4254,4 +4409,6 @@ function main() {
 	uloop.run();
 }
 
+if (ARGV[0] == "--restore-guest-fw4")
+	exit(guest_fw4_sync({ enabled: false }, false) ? 0 : 1);
 main();

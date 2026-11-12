@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wifiroam
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=47
+PKG_RELEASE:=49
 PKG_LICENSE:=GPL-2.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
@@ -12,7 +12,7 @@ define Package/wifiroam
   CATEGORY:=Network
   SUBMENU:=Wireless
   TITLE:=WiFi seamless roaming orchestration daemon (802.11k/v/r)
-  DEPENDS:=+ucode +ucode-mod-ubus +ucode-mod-uloop +ucode-mod-socket +ucode-mod-fs +ucode-mod-uci +ucode-mod-digest +libnetfilter-queue +libmnl +libnfnetlink
+  DEPENDS:=+ucode +ucode-mod-ubus +ucode-mod-uloop +ucode-mod-socket +ucode-mod-fs +ucode-mod-uci +ucode-mod-digest +libnetfilter-queue +libmnl +libnfnetlink +tc +kmod-sched-core
 endef
 
 define Package/wifiroam/description
@@ -52,6 +52,15 @@ define Package/wifiroam/postinst
 	# 升级场景进程已在跑，start 是空操作会导致旧代码常驻，必须 restart
 	/etc/init.d/wifiroam restart 2>/dev/null
 }
+exit 0
+endef
+
+define Package/wifiroam/prerm
+#!/bin/sh
+if [ -z "$${IPKG_INSTROOT}" ] && [ "$${PKG_UPGRADE}" != "1" ]; then
+	/usr/bin/ucode -- /usr/share/wifiroam/wifiroamd.uc --restore-guest-fw4 || \
+		logger -t wifiroam 'Could not restore firewall4 template'
+fi
 exit 0
 endef
 
