@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 15;
+var REQUIRED_VERSION = 17;
 
 return view.extend({
 	st: null,
@@ -338,6 +338,33 @@ return view.extend({
 		});
 	},
 
+	resetAll: function(btn) {
+		var self = this;
+		if (this.busy) return;
+		if (!confirm(_('确定要重置为初始状态吗？将清除配对、漫游、回程、访客、信道和统计数据，并重启服务。')))
+			return;
+		this.busy = true;
+		wr.setBusy(btn, true, _('重置中...'));
+		return wr.call('reset').then(function(res) {
+			if (!res || !res.ok) throw new Error(_('重置失败'));
+			return callRcInit('wifiroam', 'restart');
+		}).then(function(rc) {
+			if (rc) throw new Error(_('命令执行失败'));
+			return self.waitServiceState(true);
+		}).then(function(ok) {
+			if (!ok) throw new Error(_('服务未能启动'));
+			self.busy = false;
+			wr.setBusy(btn, false);
+			wr.notify('success', _('已重置为初始状态并重启服务。'));
+			return self.refreshService();
+		}).catch(function(e) {
+			self.busy = false;
+			wr.setBusy(btn, false);
+			wr.notify('danger', _('重置失败') + ': ' + (e && e.message ? e.message : ''));
+			return self.refreshService();
+		});
+	},
+
 	toggleAutostart: function(on) {
 		var self = this;
 
@@ -402,6 +429,11 @@ return view.extend({
 		var badgeText = !this.loaded ? _('读取中...')
 		                             : (running ? _('运行中') : _('已停止'));
 
+		var resetBtn = E('button', {
+			'class': 'btn cbi-button-negative',
+			click: function() { self.resetAll(resetBtn); },
+		}, _('重置'));
+
 		var panel = E('div', { id: 'wr-svc', 'class': 'cbi-section' }, [
 			E('h3', {}, _('插件服务')),
 			E('div', { 'class': 'wr-svc-row' }, [
@@ -416,6 +448,7 @@ return view.extend({
 				actBtn('start', _('启动'), 'cbi-button-positive'),
 				actBtn('stop', _('停止'), 'cbi-button-negative'),
 				actBtn('restart', _('重启'), 'cbi-button-action'),
+				resetBtn,
 				E('label', { 'class': 'wr-svc-auto' }, [
 					auto, ' ', _('开机自动启动'),
 				]),

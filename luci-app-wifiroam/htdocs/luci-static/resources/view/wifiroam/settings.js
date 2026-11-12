@@ -288,8 +288,12 @@ return view.extend({
 			if (ch && ch.cochannel && ch.cochannel.any) {
 				dom.content(el, E('div', { 'class': 'alert-message warning' }, [
 					_('检测到 AP 同频，建议优化信道。'), ' ',
-					E('a', { href: L.url('admin/network/wifiroam/advanced') },
-						_('前往高级设置')),
+					E('a', {
+						href: L.url('admin/mesh/management/advanced') + '?focus=channel',
+						click: function() {
+							try { sessionStorage.setItem('wifiroam_focus_channel', '1'); } catch (e) {}
+						},
+					}, _('前往信道优化')),
 				]));
 			}
 			else {

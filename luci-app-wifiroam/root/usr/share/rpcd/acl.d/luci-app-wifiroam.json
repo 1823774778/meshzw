@@ -10,7 +10,7 @@
 		},
 		"write": {
 			"ubus": {
-				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "set_channel", "pair", "unpair", "set_offload", "set_wifi", "set_guest" ],
+				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "set_channel", "pair", "unpair", "set_offload", "set_wifi", "set_guest", "reset" ],
 				"rc": [ "init" ]
 			}
 		}

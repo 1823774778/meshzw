@@ -62,7 +62,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 15;
+const DAEMON_VERSION = 17;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -2077,6 +2077,15 @@ function station_usage_map(clients) {
 	return map;
 }
 
+/* ucode 单遍绑定：usage_add_traffic 必须在 station_usage_sample 之前定义 */
+function usage_add_traffic(mn, by) {
+	if (by <= 0) return;
+	if (!state.usage.ndata[mn]) state.usage.ndata[mn] = {};
+	let d = state.usage.ndata[mn];
+	d[state.usage.day] = (d[state.usage.day] ?? 0) + by;
+	state._usage_dirty = true;
+}
+
 function station_usage_sample(map) {
 	let snap = state._usage_station_snap ?? {};
 	let fresh = {};
@@ -2119,14 +2128,6 @@ function usage_apply_rules(force, set) {
 	state._usage_snap = null;
 	state._usage_ts = 0;
 	state._usage_track = key;
-}
-
-function usage_add_traffic(mn, by) {
-	if (by <= 0) return;
-	if (!state.usage.ndata[mn]) state.usage.ndata[mn] = {};
-	let d = state.usage.ndata[mn];
-	d[state.usage.day] = (d[state.usage.day] ?? 0) + by;
-	state._usage_dirty = true;
 }
 
 function usage_sample() {
@@ -2210,20 +2211,25 @@ function usage_save() {
 
 function usage_tick() {
 	if (state.cfg.role != "cap") return;
-	usage_roll_day();
-	let clients = local_clients();
-	let all = usage_track_macs(clients);
-	let stations = station_usage_map(clients);
-	/* WiFi 终端用站点计数（上下行、含 offload），其余终端用 nft 计数 */
-	let nft_set = {};
-	for (let mn in all)
-		if (!stations[mn]) nft_set[mn] = true;
-	usage_apply_rules(false, nft_set);
-	usage_sample();
-	station_usage_sample(stations);
-	usage_online_sample(all);
-	if (state._usage_dirty && time() - state._usage_saved >= USAGE_FLUSH)
-		usage_save();
+	try {
+		usage_roll_day();
+		let clients = local_clients();
+		let all = usage_track_macs(clients);
+		let stations = station_usage_map(clients);
+		/* WiFi 终端用站点计数（上下行、含 offload），其余终端用 nft 计数 */
+		let nft_set = {};
+		for (let mn in all)
+			if (!stations[mn]) nft_set[mn] = true;
+		usage_apply_rules(false, nft_set);
+		usage_sample();
+		station_usage_sample(stations);
+		usage_online_sample(all);
+		if (state._usage_dirty && time() - state._usage_saved >= USAGE_FLUSH)
+			usage_save();
+	} catch (e) {
+		/* 单个统计异常不能让整个 wifiroamd 退出，否则 procd 会不断重启 */
+		log("usage_tick failed: " + e);
+	}
 }
 
 function diff_events(prev, cur, apname) {
@@ -3480,6 +3486,139 @@ function find_client(mn) {
 	return null;
 }
 
+/* 恢复插件初始状态：解除组网、清除漫游/回程/访客/信道和数据，角色回到未配置。
+   UI 在接口返回后会重启服务，保证以干净状态重新加载。 */
+function factory_reset() {
+	for (let mn, p in state.peers) {
+		if (!p.authed || !p.chan) continue;
+		try {
+			p.chan.defer({ method: "leave", data: {},
+			               data_cb: function() {}, cb: function() {} });
+		} catch (e) {}
+	}
+	state.peers = {};
+	state.discovered = {};
+
+	/* 清除插件写入 wireless 的漫游/回程配置 */
+	let wc = uci.cursor();
+	wc.load("wireless");
+	wc.foreach("wireless", "wifi-iface", function(s) {
+		if (s.mode && s.mode != "ap") return;
+		for (let k in ROAM_KEYS)
+			wc.delete("wireless", s[".name"], k);
+	});
+	wc.delete("wireless", BACKHAUL_SECTION);
+	wc.commit("wireless");
+
+	/* 移除访客网络基础设施；该函数内部会重载 network/wifi */
+	let g = guest_cfg();
+	g.enabled = false;
+	apply_guest_local(g);
+
+	/* 恢复默认的硬件/软件加速开关 */
+	offload_apply(false);
+
+	/* 重置 wifiroam UCI 默认值 */
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	cur.set("wifiroam", "core", "enabled", "1");
+	cur.set("wifiroam", "core", "role", "unconfigured");
+	cur.set("wifiroam", "core", "token", "");
+	cur.set("wifiroam", "core", "cap_ip", "");
+	cur.set("wifiroam", "core", "name", "");
+	cur.set("wifiroam", "core", "offload", "0");
+
+	cur.set("wifiroam", "roam", "enabled", "1");
+	cur.set("wifiroam", "roam", "ft_mode", "simple");
+	cur.set("wifiroam", "roam", "ft_over_ds", "1");
+	cur.set("wifiroam", "roam", "k_neighbor", "1");
+	cur.set("wifiroam", "roam", "k_beacon", "1");
+	cur.set("wifiroam", "roam", "v_bss_transition", "1");
+	cur.set("wifiroam", "roam", "rssi_profile", "balanced");
+	cur.set("wifiroam", "roam", "rssi_threshold", "-70");
+	cur.set("wifiroam", "roam", "config_ver", "0");
+	cur.delete("wifiroam", "roam", "ssids");
+	cur.delete("wifiroam", "roam", "r_fast");
+	cur.delete("wifiroam", "roam", "guest_selected");
+
+	cur.set("wifiroam", "backhaul", "enabled", "0");
+	cur.set("wifiroam", "backhaul", "ssid", BACKHAUL_DEFAULT_SSID);
+	cur.set("wifiroam", "backhaul", "key", "");
+	cur.set("wifiroam", "backhaul", "device", "");
+	cur.set("wifiroam", "backhaul", "config_ver", "0");
+
+	cur.set("wifiroam", "guest", "enabled", "0");
+	cur.set("wifiroam", "guest", "ssid", GUEST_DEFAULT_SSID);
+	cur.set("wifiroam", "guest", "key", "");
+	cur.set("wifiroam", "guest", "bandwidth", "0");
+	cur.set("wifiroam", "guest", "schedule", "0");
+	cur.set("wifiroam", "guest", "start", "08:00");
+	cur.set("wifiroam", "guest", "end", "23:00");
+	cur.set("wifiroam", "guest", "allow_lan", "0");
+	cur.set("wifiroam", "guest", "config_ver", "0");
+
+	cur.set("wifiroam", "channel", "enabled", "0");
+	cur.set("wifiroam", "channel", "band2g", "1");
+	cur.set("wifiroam", "channel", "band5g", "1");
+	cur.set("wifiroam", "channel", "hour", "4");
+	cur.set("wifiroam", "channel", "last", "");
+	cur.set("wifiroam", "alias_sync", "ver", "0");
+	cur.commit("wifiroam");
+
+	/* 清除别名、流量统计和运行态 */
+	try { fs.unlink(ALIAS_PATH); } catch (e) {}
+	try { fs.unlink(USAGE_PATH); } catch (e) {}
+	state.aliases = { ver: 0, map: {} };
+	state.usage = { day: "", online: {}, ndata: {} };
+	state.events = [];
+	state._usage_snap = null;
+	state._usage_station_snap = null;
+	state._usage_ts = 0;
+	state._usage_online_ts = 0;
+	state._usage_dirty = false;
+	state._usage_saved = 0;
+	state._usage_track = null;
+	state.steer_last = {};
+	state.steer_low = {};
+	state.steer_stage = {};
+	state.bss_list = null;
+	state._bss_cache = null;
+	state.channel_plan = null;
+	state.channel_ver = 0;
+	state.last_apply = null;
+	state.last_backhaul = null;
+	state.last_wifi = null;
+	state.last_guest = null;
+	state.prev_clients = null;
+	state.prev_owner = null;
+	state.wired_seen = {};
+	state.client_seen = {};
+	state.client_bytes = {};
+	state.bytes_cache = {};
+	state.net_names = {};
+	state.roster = null;
+	state.cap_learned = null;
+	state.guest_open = null;
+	state.guest_tc_devs = {};
+	state.guest_tc_error = "";
+	state.guest_fw4_error = null;
+	state.guest_fw4_failed = null;
+	state.guest_fw4_retry_at = 0;
+	state._guest_nft_sig = "";
+	state._guest_zone_migrated = false;
+	state._guest_bridged = null;
+	state.roam_ver_applied = 0;
+	state.backhaul_ver_applied = 0;
+
+	state.cfg = {
+		enabled: true, role: "unconfigured",
+		token: "", cap_ip: "", name: "",
+	};
+	save_config();
+	reconfigure();
+	return { ok: true };
+}
+
 let api_obj = {
 	status: {
 		args: { ubus_rpc_session: "" },
@@ -3558,6 +3697,12 @@ let api_obj = {
 				return { ok: false, error: "invalid_mac" };
 			alias_broadcast();
 			return { ok: true, ver: state.aliases.ver };
+		},
+	},
+	reset: {
+		args: { ubus_rpc_session: "" },
+		call: function(req) {
+			return factory_reset();
 		},
 	},
 	set_role: {
@@ -4159,7 +4304,7 @@ function steer_btm(c, mn, imminent, timer, validity, neighbors) {
 	}
 }
 
-function steer_tick() {
+function steer_tick_impl() {
 	if (state.cfg.role == "unconfigured") return;
 	let roam = current_roam_cfg();
 	if (!roam.enabled || !roam.v_bss_transition) return;
@@ -4248,35 +4393,47 @@ function steer_tick() {
 		}
 }
 
+function steer_tick() {
+	try {
+		steer_tick_impl();
+	} catch (e) {
+		log("steer_tick failed: " + e);
+	}
+}
+
 function channel_tick() {
 	if (state.cfg.role != "cap") return;
-	let cfg = channel_cfg();
-	if (!cfg.enabled) return;
+	try {
+		let cfg = channel_cfg();
+		if (!cfg.enabled) return;
 
-	let lt = localtime(time());
-	if (int(lt.hour) != cfg.hour) return;
-	let today = sprintf("%04d-%02d-%02d", lt.year, lt.mon, lt.mday);
-	if (cfg.last == today) return;
+		let lt = localtime(time());
+		if (int(lt.hour) != cfg.hour) return;
+		let today = sprintf("%04d-%02d-%02d", lt.year, lt.mon, lt.mday);
+		if (cfg.last == today) return;
 
-	// 先记日期，避免失败后每分钟重试
-	let cur = uci.cursor();
-	cur.load("wifiroam");
-	cur.set("wifiroam", "channel", "last", today);
-	cur.commit("wifiroam");
+		// 先记日期，避免失败后每分钟重试
+		let cur = uci.cursor();
+		cur.load("wifiroam");
+		cur.set("wifiroam", "channel", "last", today);
+		cur.commit("wifiroam");
 
-	let plan = channel_make_plan(channel_aps(), cfg);
-	state.channel_plan = plan;
-	state.channel_ver = (state.channel_ver ?? 0) + 1;
-	let mine = [];
-	let self_mn = macnorm(state.self.mac);
-	for (let it in plan)
-		if (it.ap == self_mn && it.changed)
-			push(mine, { device: it.device ?? "", band: it.band,
-			             from: it.from ?? 0, channel: it.to });
-	let lr = channel_apply_local(mine);
-	for (let mn, p in state.peers)
-		if (p.authed) push_channel_to(mn);
-	log(sprintf("auto channel: %d local change(s)", lr.count));
+		let plan = channel_make_plan(channel_aps(), cfg);
+		state.channel_plan = plan;
+		state.channel_ver = (state.channel_ver ?? 0) + 1;
+		let mine = [];
+		let self_mn = macnorm(state.self.mac);
+		for (let it in plan)
+			if (it.ap == self_mn && it.changed)
+				push(mine, { device: it.device ?? "", band: it.band,
+				             from: it.from ?? 0, channel: it.to });
+		let lr = channel_apply_local(mine);
+		for (let mn, p in state.peers)
+			if (p.authed) push_channel_to(mn);
+		log(sprintf("auto channel: %d local change(s)", lr.count));
+	} catch (e) {
+		log("channel_tick failed: " + e);
+	}
 }
 
 // ---------------------------------------------------------------- lifecycle

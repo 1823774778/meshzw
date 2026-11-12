@@ -1035,7 +1035,7 @@ return view.extend({
 
 		poll.add(L.bind(this.pollStatus, this), 15);
 
-		return E('div', { id: 'wr-adv' }, [
+		var page = E('div', { id: 'wr-adv' }, [
 			wr.css(),
 			E('h2', {}, _('高级设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
@@ -1048,6 +1048,35 @@ return view.extend({
 			E('div', { id: 'wr-bh-apply' }, this.renderBackhaulResults(this.st.last_backhaul)),
 			E('div', { id: 'wr-channel' }, this.renderChannelPanel()),
 		]);
+
+		/* 从「前往信道优化」跳转过来时，滚动到信道优化卡片 */
+		window.setTimeout(L.bind(this.focusChannelPanel, this), 0);
+		return page;
+	},
+
+	focusChannelPanel: function() {
+		var focus = false;
+		try {
+			if (sessionStorage.getItem('wifiroam_focus_channel') === '1') {
+				sessionStorage.removeItem('wifiroam_focus_channel');
+				focus = true;
+			}
+		} catch (e) {}
+		if (!focus && /(?:^|[?&])focus=channel(?:&|$)/.test(window.location.search))
+			focus = true;
+		if (!focus)
+			return;
+
+		window.setTimeout(function() {
+			var el = document.getElementById('wr-channel');
+			if (!el) return;
+			try {
+				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				el.style.transition = 'box-shadow .3s ease';
+				el.style.boxShadow = '0 0 0 2px var(--primary, #2e7d32)';
+				window.setTimeout(function() { el.style.boxShadow = ''; }, 2000);
+			} catch (e) {}
+		}, 600);
 	},
 
 	handleSaveApply: null,
