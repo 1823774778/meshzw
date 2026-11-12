@@ -81,7 +81,9 @@ return view.extend({
 			});
 		}, 5);
 
-		return Promise.all([ serviceP, statusP, rcP ]);
+		return Promise.all([ serviceP, statusP, rcP ]).then(function() {
+			self.maybeAutoStartAfterPairing();
+		});
 	},
 
 	/* ------------------------------------------------------ service state */
@@ -179,7 +181,30 @@ return view.extend({
 				self.rcLoaded = true;
 			}
 			self.applyServiceState();
+			self.maybeAutoStartAfterPairing();
 		});
+	},
+
+	/* 配对完成后主路由服务若被重启掉，首页自动拉起一次 */
+	maybeAutoStartAfterPairing: function() {
+		var self = this;
+
+		if (this.autoStartChecked || !this.loaded || !this.rcLoaded || !this.svc)
+			return;
+
+		this.autoStartChecked = true;
+
+		var flag = null;
+		try { flag = sessionStorage.getItem('wr_pair_autostart'); } catch (e) {}
+		if (flag !== '1')
+			return;
+
+		try { sessionStorage.removeItem('wr_pair_autostart'); } catch (e) {}
+
+		if (this.svcRunning() || !this.svcEnabled() || this.busy)
+			return;
+
+		this.serviceAction('start');
 	},
 
 	waitServiceState: function(want) {
@@ -412,6 +437,7 @@ return view.extend({
 		this.rcLoaded = false;
 		this.busy = false;
 		this.actionStarted = false;
+		this.autoStartChecked = false;
 
 		/* 先把页面画出来，状态类 RPC 在首屏后异步补齐 */
 		window.setTimeout(L.bind(this.hydrate, this), 0);

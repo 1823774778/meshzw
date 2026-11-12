@@ -651,6 +651,19 @@ return view.extend({
 		return false;
 	},
 
+	/* 配对轮询只需状态和拓扑，避免 discover/offload 拖慢确认速度 */
+	fetchPairData: function() {
+		var self = this;
+
+		return Promise.all([
+			wr.safeCall('status'),
+			wr.safeCall('topology'),
+		]).then(function(res) {
+			if (res[0]) self.st = res[0];
+			if (res[1]) self.topo = res[1];
+		});
+	},
+
 	/* 拉一次数据；render=false 时不重建 DOM（配对轮询期间用，避免按钮状态被刷掉） */
 	fetchData: function(render) {
 		var self = this;
@@ -727,12 +740,15 @@ return view.extend({
 			wr.notify('info', _('Pairing request sent to') + ' ' + (d.ip || d.mac) +
 				' — ' + _('waiting for the device to join...'));
 
+			/* 配对后主路由服务若被重启掉，首页会自动拉起 */
+			try { sessionStorage.setItem('wr_pair_autostart', '1'); } catch (e) {}
+
 			/* 后端是异步确认的，这里主动探测直到它出现在拓扑里 */
 			return wr.pollUntil(function() {
-				return self.fetchData(false).then(function() {
+				return self.fetchPairData().then(function() {
 					return self.isMember(d.mac);
 				});
-			}, 2000, 45000).then(function(joined) {
+			}, 800, 45000).then(function(joined) {
 				if (joined) {
 					wr.notify('success', _('Device paired successfully'));
 				}
@@ -745,8 +761,10 @@ return view.extend({
 			wr.notify('danger', _('Pair failed') + ': ' + _('request rejected'));
 		}).then(function() {
 			self.actionBusy = false;
-			if (notice) notice();
-			return self.refresh();
+			/* 先刷新列表，再撤掉遮罩：避免遮罩消失后页面还要等一会才更新 */
+			return self.refresh().catch(function() {}).then(function() {
+				if (notice) notice();
+			});
 		});
 	},
 
@@ -782,6 +800,7 @@ return view.extend({
 
 	setRole: function(role, btn) {
 		var self = this;
+		var ok = false;
 
 		if (this.actionBusy) return;
 		if (role === 'unconfigured' &&
@@ -803,13 +822,22 @@ return view.extend({
 			wr.notify('success', role === 'cap'
 				? _('This device is now the main AP (CAP)')
 				: _('This device is now unconfigured'));
+			ok = true;
 		}).catch(function() {
 			wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
 		}).then(function() {
 			self.actionBusy = false;
-			return self.refresh().then(function() {
-				/* 给无线重启留出时间，提示消失前不要刷新页面 */
-				if (notice) window.setTimeout(notice, 2500);
+
+			/* 设为主路由会重启无线：等重启完成后再刷新，
+			   遮罩保留到刷新结束，避免提前刷新或遮罩先消失 */
+			var wait = (role === 'cap' && ok)
+				? new Promise(function(resolve) { window.setTimeout(resolve, 4000); })
+				: Promise.resolve();
+
+			return wait.then(function() {
+				return self.refresh().catch(function() {});
+			}).then(function() {
+				if (notice) notice();
 			});
 		});
 	},
