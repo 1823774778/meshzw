@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wifiroam
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=63
+PKG_RELEASE:=65
 PKG_LICENSE:=GPL-2.0-or-later
 
 include $(INCLUDE_DIR)/package.mk

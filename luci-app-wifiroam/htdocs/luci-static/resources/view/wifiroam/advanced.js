@@ -197,8 +197,13 @@ return view.extend({
 	},
 
 	renderApplyResults: function(res) {
-		if (!res || !res.results)
-			return E('div', { 'class': 'wr-hint' }, _('No configuration has been applied yet.'));
+		if (!res || !res.results) {
+			return E('div', { 'class': 'cbi-section' }, [
+				E('h3', {}, _('Last Apply Result')),
+				E('div', { 'class': 'wr-hint', style: 'padding:0.5em 0' },
+					_('No configuration has been applied yet.')),
+			]);
+		}
 
 		var pending = 0;
 		var rows = res.results.map(function(r) {
@@ -248,8 +253,13 @@ return view.extend({
 
 	/* ---------------------------------------------------------- backhaul */
 	renderBackhaulResults: function(res) {
-		if (!res || !res.results)
-			return E('div', { 'class': 'wr-hint' }, _('No configuration has been applied yet.'));
+		if (!res || !res.results) {
+			return E('div', { 'class': 'cbi-section' }, [
+				E('h3', {}, _('Backhaul Apply Result')),
+				E('div', { 'class': 'wr-hint', style: 'padding:0.5em 0' },
+					_('No configuration has been applied yet.')),
+			]);
+		}
 
 		var pending = 0;
 		var self = this;
@@ -483,30 +493,46 @@ return view.extend({
 			});
 		});
 
-		function radioLabel(it) {
-			return (it.name || it.ap || '-') + (it.device ? ' · ' + it.device : '');
-		}
+		/* 同一设备的多个射频归到一组：AP 列只显示一次，射频单独一列 */
+		var groups = {}, order = [];
+		(ch.plan || []).forEach(function(it) {
+			var key = it.ap || it.name || '-';
+			if (!groups[key]) {
+				groups[key] = { name: it.name || it.ap || '-', items: [] };
+				order.push(key);
+			}
+			groups[key].items.push(it);
+		});
 
-		var rows = (ch.plan || []).map(function(it) {
-			var label = radioLabel(it);
-			var bh = !!(it.backhaul || it.wireless);
-			var same = !!conflict[label + '|' + it.from];
-			var text = bh ? _('回程固定')
-				: (it.changed ? _('建议调整') : (same ? _('同频') : _('正常')));
-			var cls = bh ? 'wr-apply-ok'
-				: ((it.changed || same) ? 'wr-apply-pending' : 'wr-apply-ok');
-			return E('tr', {}, [
-				E('td', {}, label),
-				E('td', {}, it.band === '2g' ? '2.4 GHz'
-					: it.band === '5g' ? '5 GHz' : (it.band || '-')),
-				E('td', {}, it.from ? String(it.from) : '-'),
-				E('td', {}, it.to ? String(it.to) : '-'),
-				E('td', { 'class': cls }, text),
-			]);
+		var rows = [];
+		order.forEach(function(key) {
+			var g = groups[key];
+			g.items.forEach(function(it, idx) {
+				var radioKey = (it.name || '') + (it.device ? ' · ' + it.device : '');
+				var same = !!conflict[radioKey + '|' + it.from];
+				var bh = !!(it.backhaul || it.wireless);
+				var text = bh ? _('回程固定')
+					: (it.changed ? _('建议调整') : (same ? _('同频') : _('正常')));
+				var cls = bh ? 'wr-apply-ok'
+					: ((it.changed || same) ? 'wr-apply-pending' : 'wr-apply-ok');
+				var tds = [];
+				if (idx === 0)
+					tds.push(E('td', { rowspan: g.items.length,
+					                   style: 'font-weight:bold;vertical-align:top' },
+						g.name));
+				tds.push(
+					E('td', {}, it.device || '-'),
+					E('td', {}, it.band === '2g' ? '2.4 GHz'
+						: it.band === '5g' ? '5 GHz' : (it.band || '-')),
+					E('td', {}, it.from ? String(it.from) : '-'),
+					E('td', {}, it.to ? String(it.to) : '-'),
+					E('td', { 'class': cls }, text));
+				rows.push(E('tr', {}, tds));
+			});
 		});
 		if (!rows.length)
 			rows = [ E('tr', {}, [
-				E('td', { colspan: 5, 'class': 'wr-hint' },
+				E('td', { colspan: 6, 'class': 'wr-hint' },
 					_('暂无可优化的 AP（需要至少两台在线 AP）。')),
 			]) ];
 
@@ -514,6 +540,14 @@ return view.extend({
 			enableCb: enableCb, b2: b2, b5: b5, hour: hour,
 			saveBtn: saveBtn, applyBtn: applyBtn,
 		};
+
+		if (isCap) {
+			var autoSave = function() { self.scheduleChannelSave(); };
+			enableCb.addEventListener('change', autoSave);
+			b2.addEventListener('change', autoSave);
+			b5.addEventListener('change', autoSave);
+			hour.addEventListener('change', autoSave);
+		}
 
 		return E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('无线信道优化')),
@@ -535,12 +569,16 @@ return view.extend({
 				E('label', {}, _('每天执行时间')),
 				E('span', {}, [ hour, ' ', _('（仅在启用自动优化时生效）') ]),
 			]),
+			E('div', { 'class': 'wr-hint' },
+				_('开关修改会自动保存；自动优化只按设定时间执行，不会立即切换信道。')),
 			isCap ? E('div', {}, [ saveBtn, ' ', applyBtn ])
 			      : E('div', { 'class': 'wr-hint' },
 					_('只能在主路由上修改信道优化设置。')),
+			E('div', { id: 'wr-channel-save-state', 'class': 'wr-hint' }),
 			E('table', { 'class': 'table cbi-section-table' }, [
 				E('tr', { 'class': 'tr table-titles' }, [
-					E('th', {}, _('AP')), E('th', {}, _('频段')),
+					E('th', {}, _('AP')), E('th', {}, _('射频')),
+					E('th', {}, _('频段')),
 					E('th', {}, _('当前信道')), E('th', {}, _('建议信道')),
 					E('th', {}, _('状态')),
 				]),
@@ -552,8 +590,13 @@ return view.extend({
 		var self = this;
 		var e = this.channelEls;
 
-		if (!e || this.channelBusy || this.busy)
+		if (!e || this.channelBusy || this.channelSaving || this.busy)
 			return;
+
+		if (this._channelSaveTimer) {
+			window.clearTimeout(this._channelSaveTimer);
+			this._channelSaveTimer = null;
+		}
 
 		this.channelBusy = true;
 
@@ -627,6 +670,49 @@ return view.extend({
 			if (box)
 				dom.content(box, self.renderChannelPanel());
 		}).catch(function() {});
+	},
+
+	/* 开关/时间变更后自动保存，避免用户以为开关没生效 */
+	scheduleChannelSave: function() {
+		var self = this;
+		if (this._channelSaveTimer)
+			window.clearTimeout(this._channelSaveTimer);
+		this._channelSaveTimer = window.setTimeout(function() {
+			self._channelSaveTimer = null;
+			self.saveChannelSettings();
+		}, 300);
+	},
+
+	saveChannelSettings: function() {
+		var self = this;
+		var e = this.channelEls;
+
+		if (!e || !this.isCap() || this.channelBusy || this.channelSaving)
+			return Promise.resolve();
+
+		this.channelSaving = true;
+		return wr.call('set_channel', {
+			enabled: e.enableCb.checked,
+			band2g: e.b2.checked,
+			band5g: e.b5.checked,
+			hour: parseInt(e.hour.value, 10),
+			apply: false,
+		}).then(function(res) {
+			if (!res || !res.ok) return;
+			self.channel = res;
+			var box = document.getElementById('wr-channel');
+			if (box)
+				dom.content(box, self.renderChannelPanel());
+			var st = document.getElementById('wr-channel-save-state');
+			if (st) {
+				st.textContent = _('设置已自动保存');
+				window.setTimeout(function() {
+					if (st.parentNode) st.textContent = '';
+				}, 2000);
+			}
+		}).catch(function() {}).then(function() {
+			self.channelSaving = false;
+		});
 	},
 
 	/* 采集勾选的 SSID */
