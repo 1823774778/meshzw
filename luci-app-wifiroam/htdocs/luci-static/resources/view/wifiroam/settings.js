@@ -651,14 +651,20 @@ return view.extend({
 		return false;
 	},
 
-	/* 配对轮询只需状态和拓扑，避免 discover/offload 拖慢确认速度 */
+	/* 配对轮询只需状态和拓扑，并给单次 RPC 加短超时，避免服务重启时卡住轮询 */
 	fetchPairData: function() {
 		var self = this;
 
-		return Promise.all([
-			wr.safeCall('status'),
-			wr.safeCall('topology'),
-		]).then(function(res) {
+		function call(method) {
+			return Promise.race([
+				wr.safeCall(method).catch(function() { return null; }),
+				new Promise(function(resolve) {
+					window.setTimeout(function() { resolve(null); }, 1200);
+				}),
+			]);
+		}
+
+		return Promise.all([ call('status'), call('topology') ]).then(function(res) {
 			if (res[0]) self.st = res[0];
 			if (res[1]) self.topo = res[1];
 		});
@@ -741,7 +747,7 @@ return view.extend({
 				' — ' + _('waiting for the device to join...'));
 
 			/* 配对后主路由服务若被重启掉，首页会自动拉起 */
-			try { sessionStorage.setItem('wr_pair_autostart', '1'); } catch (e) {}
+			try { sessionStorage.setItem('wr_service_autostart', '1'); } catch (e) {}
 
 			/* 后端是异步确认的，这里主动探测直到它出现在拓扑里 */
 			return wr.pollUntil(function() {
@@ -761,10 +767,9 @@ return view.extend({
 			wr.notify('danger', _('Pair failed') + ': ' + _('request rejected'));
 		}).then(function() {
 			self.actionBusy = false;
-			/* 先刷新列表，再撤掉遮罩：避免遮罩消失后页面还要等一会才更新 */
-			return self.refresh().catch(function() {}).then(function() {
-				if (notice) notice();
-			});
+			/* 配对确认后立即撤掉遮罩，列表在后台刷新，避免服务重启时长时间遮挡 */
+			if (notice) notice();
+			return self.refresh().catch(function() {});
 		});
 	},
 
@@ -828,15 +833,19 @@ return view.extend({
 		}).then(function() {
 			self.actionBusy = false;
 
-			/* 设为主路由会重启无线：等重启完成后再刷新，
-			   遮罩保留到刷新结束，避免提前刷新或遮罩先消失 */
-			var wait = (role === 'cap' && ok)
-				? new Promise(function(resolve) { window.setTimeout(resolve, 4000); })
-				: Promise.resolve();
+			if (role === 'cap' && ok) {
+				/* 服务若被重启掉，首页会自动拉起 */
+				try { sessionStorage.setItem('wr_service_autostart', '1'); } catch (e) {}
 
-			return wait.then(function() {
-				return self.refresh().catch(function() {});
-			}).then(function() {
+				/* 等无线重启完成后整页刷新，遮罩随刷新一起消失 */
+				return new Promise(function(resolve) {
+					window.setTimeout(resolve, 4000);
+				}).then(function() {
+					window.location.reload();
+				});
+			}
+
+			return self.refresh().catch(function() {}).then(function() {
 				if (notice) notice();
 			});
 		});

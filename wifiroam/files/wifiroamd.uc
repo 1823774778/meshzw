@@ -58,7 +58,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 9;
+const DAEMON_VERSION = 10;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -3131,8 +3131,15 @@ let api_obj = {
 				state.cfg.cap_ip = "";
 			}
 			save_config();
-			if (r == "cap") roam_default_init();
 			reconfigure();
+			if (r == "cap") {
+				/* 先返回响应，再后台应用默认漫游：避免设为主路由时
+				   同步写无线/重载导致服务像是停止或页面卡住 */
+				uloop.timer(300, function() {
+					if (state.cfg.role != "cap") return;
+					roam_default_init();
+				});
+			}
 			return { ok: true, role: r };
 		},
 	},
@@ -3697,17 +3704,21 @@ function main() {
 	alias_load();
 	usage_load();
 	detect_self();
-	// 首次运行时把 flow offloading 默认关闭（记录后按用户选择）
-	offload_default_init();
-	if (state.cfg.role != "unconfigured") guest_fw4_sync(null, false);
 	ensure_token();
 	// 首次启用插件：按默认设置开启漫游（自动选中本机 SSID）
 	roam_default_init();
 
 	setup_udp();
 	setup_tcp();
-
 	ubusc.publish("wifiroam", api_obj);
+
+	/* 先让 ubus/状态接口可用，再把耗时的防火墙同步放到事件循环，
+	   缩短服务启动、重启以及首页读取状态时的等待 */
+	uloop.timer(50, function() {
+		offload_default_init();
+		if (state.cfg.role != "unconfigured")
+			guest_fw4_sync(null, false);
+	});
 
 	uloop.interval(HELLO_INTERVAL, send_hello);
 	uloop.interval(TICK_INTERVAL, sap_tick);

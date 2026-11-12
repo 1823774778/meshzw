@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 9;
+var REQUIRED_VERSION = 10;
 
 return view.extend({
 	st: null,
@@ -58,6 +58,7 @@ return view.extend({
 			self.st = st || {};
 			self.updateStatusDom();
 			self.updateVersionDom();
+			self.applyServiceState();
 		});
 
 		var rcP = callRcList().catch(function() { return null; })
@@ -73,16 +74,17 @@ return view.extend({
 		/* 角色变化（例如被主路由配对成子路由）时及时刷新页面结构 */
 		poll.add(function() {
 			return wr.safeCall('status').then(function(st) {
-				if (!st || self.actionStarted || self.busy)
+				if (self.actionStarted || self.busy)
 					return;
-				self.st = st;
+				self.st = st || {};
 				self.updateStatusDom();
 				self.updateVersionDom();
+				self.applyServiceState();
 			});
 		}, 5);
 
 		return Promise.all([ serviceP, statusP, rcP ]).then(function() {
-			self.maybeAutoStartAfterPairing();
+			self.maybeAutoStartService();
 		});
 	},
 
@@ -94,6 +96,10 @@ return view.extend({
 		for (var k in inst)
 			if (inst[k] && inst[k].running)
 				return true;
+
+		/* service.list 还没返回时，守护进程 status 能响应就说明服务已在运行 */
+		if (!this.svc && this.st && this.st.role)
+			return true;
 
 		return false;
 	},
@@ -131,7 +137,7 @@ return view.extend({
 		if (!this.loaded || this.busy)
 			return;
 
-		var known = !!this.svc;
+		var known = !!this.svc || (!this.svc && !!(this.st && this.st.role));
 		var running = this.svcRunning();
 		var badge = document.getElementById('wr-svc-badge');
 
@@ -181,12 +187,12 @@ return view.extend({
 				self.rcLoaded = true;
 			}
 			self.applyServiceState();
-			self.maybeAutoStartAfterPairing();
+			self.maybeAutoStartService();
 		});
 	},
 
-	/* 配对完成后主路由服务若被重启掉，首页自动拉起一次 */
-	maybeAutoStartAfterPairing: function() {
+	/* 角色切换/配对完成后服务若被重启掉，首页自动拉起一次 */
+	maybeAutoStartService: function() {
 		var self = this;
 
 		if (this.autoStartChecked || !this.loaded || !this.rcLoaded || !this.svc)
@@ -195,11 +201,11 @@ return view.extend({
 		this.autoStartChecked = true;
 
 		var flag = null;
-		try { flag = sessionStorage.getItem('wr_pair_autostart'); } catch (e) {}
+		try { flag = sessionStorage.getItem('wr_service_autostart'); } catch (e) {}
 		if (flag !== '1')
 			return;
 
-		try { sessionStorage.removeItem('wr_pair_autostart'); } catch (e) {}
+		try { sessionStorage.removeItem('wr_service_autostart'); } catch (e) {}
 
 		if (this.svcRunning() || !this.svcEnabled() || this.busy)
 			return;
