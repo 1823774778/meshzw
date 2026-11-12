@@ -27,6 +27,10 @@ define Package/wifiroam/conffiles
 /etc/wifiroam/aliases.json
 endef
 
+# 纯脚本包：覆盖默认的 make -C $(PKG_BUILD_DIR) 编译步骤
+define Build/Compile
+endef
+
 define Package/wifiroam/install
 	$(INSTALL_DIR) $(1)/usr/share/wifiroam
 	$(INSTALL_BIN) ./files/wifiroamd.uc $(1)/usr/share/wifiroam/wifiroamd.uc
