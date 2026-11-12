@@ -738,37 +738,27 @@ function appctl_apply_rules() {
 function appctl_hw_suspend(on) {
 	let cur = uci.cursor();
 	cur.load("firewall");
-	if (cur.get("firewall", "@defaults[0]") == null) return;
+	if (cur.get("firewall", "@defaults[0]") == null) return false;
 	let hw_on = cur.get("firewall", "@defaults[0]", "flow_offloading_hw") == "1";
 	let cur2 = uci.cursor();
 	cur2.load("wifiroam");
 	let marked = cur2.get("wifiroam", "appctl", "hw_suspended") == "1";
 	if (on) {
-		if (!hw_on || marked) return;   // 本来就关着/已挂起：不动
+		if (!hw_on || marked) return false;   // 本来就关着/已挂起：不动
 		cur.set("firewall", "@defaults[0]", "flow_offloading_hw", "0");
 		cur.commit("firewall");
 		if (cur2.get("wifiroam", "appctl") == null)
 			cur2.set("wifiroam", "appctl", "appctl");
 		cur2.set("wifiroam", "appctl", "hw_suspended", "1");
 		cur2.commit("wifiroam");
-		cmd_output("/etc/init.d/firewall reload >/dev/null 2>&1");
 	} else {
-		if (!marked) return;            // 不是我们挂起的：别动用户设置
+		if (!marked) return false;           // 不是我们挂起的：别动用户设置
 		cur.set("firewall", "@defaults[0]", "flow_offloading_hw", "1");
 		cur.commit("firewall");
 		cur2.delete("wifiroam", "appctl", "hw_suspended");
 		cur2.commit("wifiroam");
-		cmd_output("/etc/init.d/firewall reload >/dev/null 2>&1");
 	}
-}
-
-function appctl_table_remove() {
-	appctl_dpi_daemon("stop");
-	cmd_output(sprintf("nft delete table inet %s 2>/dev/null", APPCTL_TABLE));
-	state._nft_snap = null;
-	state._appstat_ts = 0;
-	state._track_key = "";
-	state._dnslock_on = false;
+	return true;
 }
 
 /* ---------- DPI ---------- */
@@ -834,7 +824,18 @@ function appctl_dpi_daemon(action) {
 		cmd_output(sprintf("kill -HUP %s 2>/dev/null", pid));
 		return;
 	}
-	cmd_output(sprintf("%s & echo $! > %s", DPI_DAEMON, DPI_PIDFILE));
+	// 不能让后台 DPI 持有 popen 的输出管道，否则读不到 EOF，ubus 无法继续处理请求。
+	cmd_output(sprintf("%s </dev/null >/dev/null & echo $! > %s", DPI_DAEMON, DPI_PIDFILE));
+}
+
+function appctl_table_remove() {
+	let removed = system(sprintf("nft delete table inet %s 2>/dev/null", APPCTL_TABLE)) == 0;
+	appctl_dpi_daemon("stop");
+	state._nft_snap = null;
+	state._appstat_ts = 0;
+	state._track_key = "";
+	state._dnslock_on = false;
+	return removed;
 }
 
 /* DNS 出口锁定（精准模式）：把客户端侧的 53 重定向到本机 dnsmasq，
@@ -1084,6 +1085,45 @@ function appctl_tick() {
 		appstats_save();
 }
 
+let appctl_service_proc;
+let appctl_firewall_pending = false, appctl_dns_pending = false;
+
+// 慢速的服务重载不能阻塞 ubus；串行执行，期间的新改动在下一轮应用。
+function appctl_reload_services(firewall, dnsmasq) {
+	appctl_firewall_pending = appctl_firewall_pending || firewall;
+	appctl_dns_pending = appctl_dns_pending || dnsmasq;
+	if (appctl_service_proc || (!appctl_firewall_pending && !appctl_dns_pending)) return;
+
+	let service = appctl_firewall_pending ? "firewall" : "dnsmasq";
+	let action = appctl_firewall_pending ? "reload" : "restart";
+	if (appctl_firewall_pending) appctl_firewall_pending = false;
+	else appctl_dns_pending = false;
+
+	appctl_service_proc = uloop.process("/etc/init.d/" + service, [action], getenv(), function(code) {
+		if (code != 0) log(sprintf("appctl: %s %s failed (%d)", service, action, code));
+		appctl_service_proc = null;
+		appctl_reload_services(false, false);
+	});
+	if (!appctl_service_proc) log(sprintf("appctl: could not start %s %s", service, action));
+}
+
+function appctl_apply() {
+	let on = state.appctl.enabled;
+	let enh = on && appctl_enhanced();
+	let dns_changed = appctl_dnsmasq_sync(on);
+	if (on) {
+		// 集合结构变更时，dnsmasq 需要重新绑定集合。
+		if (appctl_nft_schema()) dns_changed = true;
+		appctl_apply_rules();
+		appctl_dpi_daemon("start");
+		appctl_dnslock_apply(enh);
+	} else if (appctl_table_remove()) {
+		// 旧版关闭中断后，磁盘配置可能已清理，但 dnsmasq 仍引用旧集合。
+		dns_changed = true;
+	}
+	appctl_reload_services(appctl_hw_suspend(enh), dns_changed);
+}
+
 function appctl_load() {
 	let cur = uci.cursor();
 	cur.load("wifiroam");
@@ -1091,23 +1131,7 @@ function appctl_load() {
 	state.appctl.enhanced = cur.get("wifiroam", "appctl", "enhanced") == "1";
 	appctl_read_devices();
 	appstats_load();
-	if (state.cfg.role != "cap" || !state.appctl.enabled) {
-		// 关闭状态也要把之前精准模式挂起的 hw offload 恢复回来
-		if (state.cfg.role == "cap") {
-			appctl_dpi_daemon("stop");
-			appctl_hw_suspend(false);
-		}
-		return;
-	}
-	let schema_changed = appctl_nft_schema();
-	appctl_apply_rules();
-	appctl_dpi_daemon("start");
-	appctl_dnslock_apply(appctl_enhanced());
-	appctl_hw_suspend(appctl_enhanced());
-	// 升级后新增了 v6 集合，需把 dnsmasq 的 ipset 段补齐（内容一致时不会重启）；
-	// 集合结构刚被重建时也必须重启，让 dnsmasq 重新绑定新集合
-	if (schema_changed || appctl_dnsmasq_sync(true))
-		cmd_output("/etc/init.d/dnsmasq restart >/dev/null 2>&1");
+	if (state.cfg.role == "cap") appctl_apply();
 }
 
 // ------------------------------------------------- flow offloading (network)
@@ -4186,23 +4210,7 @@ let api_obj = {
 			cur.commit("wifiroam");
 			state.appctl.enabled = on;
 			state.appctl.enhanced = enh;
-
-			let dirty = appctl_dnsmasq_sync(on);
-			if (on) {
-				// 精准/宽松切换会改变集合默认超时：schema 标记不一致即重建集合
-				if (appctl_nft_schema()) dirty = true;
-				appctl_apply_rules();
-				appctl_dpi_daemon("start");
-				appctl_dnslock_apply(enh);
-				appctl_hw_suspend(enh);
-			}
-			else {
-				appctl_table_remove();
-				appctl_hw_suspend(false);
-			}
-			// dnsmasq 需要重读 nftset 配置才生效，约 1s DNS 瞬断
-			if (dirty)
-				cmd_output("/etc/init.d/dnsmasq restart >/dev/null 2>&1");
+			appctl_apply();
 			return { ok: true, enabled: on, enhanced: enh };
 		},
 	},

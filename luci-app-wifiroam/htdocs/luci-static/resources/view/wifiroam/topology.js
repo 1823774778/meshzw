@@ -4,6 +4,7 @@
 'require ui';
 'require poll';
 'require dom';
+'require rpc';
 'require wifiroam.common as wr';
 'require wifiroam.oui as oui';
 'require wifiroam.logos as logos';
@@ -1184,19 +1185,21 @@ return view.extend({
 
 	/* ---------------------------------------- 应用使用时长与访问控制 */
 	refreshAppctl: function() {
-		return safeCall('appctl_status').then(L.bind(function(res) {
-			if (res) this.appctl = res;
+		return safeCall('appctl_status').then((res) => {
+			if (typeof res?.ok !== 'boolean') return null;
+			this.appctl = res;
 			return res;
-		}, this));
+		});
 	},
 
 	appctlBox: function(n) {
 		var self = this;
 		var box = E('div', { 'class': 'wr-appctl' });
+		let saving = false;
 
-		function render() {
+		function render(force) {
 			// 用户正在操作下拉框 / 开关时不打断
-			if (document.activeElement && box.contains(document.activeElement))
+			if (saving || (force !== true && box.contains(document.activeElement)))
 				return;
 
 			var ac = self.appctl;
@@ -1233,21 +1236,37 @@ return view.extend({
 			if (ac && ac.ok) {
 				enableCb = E('input', {
 					type: 'checkbox', 'class': 'wr-switch-input',
-					change: function(ev) {
-						var on = ev.target.checked;
-						ev.target.disabled = true;
-						wr.call('set_appctl', { enabled: on, enhanced: ac.enhanced === true }).then(function(res) {
-							if (res && res.ok) {
-								wr.notify('success', on ? _('Enabled') : _('Disabled'));
-								return self.refreshAppctl().then(render);
-							}
-							ev.target.disabled = false;
-							wr.notify('danger', _('Failed') + ': ' +
-								((res && res.error) || 'unknown'));
-						}).catch(function() {
-							ev.target.disabled = false;
-							wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
-						});
+					change: async function(ev) {
+						const toggle = ev.target;
+						const on = toggle.checked;
+						saving = true;
+						toggle.disabled = true;
+
+						let res = await wr.call('set_appctl', { enabled: on, enhanced: ac.enhanced === true })
+							.catch(() => null);
+						if (res?.ok === true) {
+							self.appctl = { ...ac, enabled: res.enabled, enhanced: res.enhanced };
+						} else {
+							const status = await self.refreshAppctl();
+							if (!status) self.appctl = ac;
+							// 超时或响应丢失不代表未保存，以重新读取的状态为准。
+							if ((res == null || res === 0 || res === 7) && status?.ok && status.enabled === on)
+								res = status;
+						}
+
+						saving = false;
+						toggle.disabled = false;
+						render(true);
+						if (res?.ok === true) {
+							wr.notify('success', res.enabled ? _('Enabled') : _('Disabled'));
+						} else {
+							let reason = res?.error || _('request rejected');
+							if (res?.error === 'not_cap')
+								reason = _('Configure app control on the main AP');
+							else if (typeof res === 'number' && res !== 0)
+								reason = rpc.getStatusText(res);
+							wr.notify('danger', _('Failed') + ': ' + reason);
+						}
 					}
 				});
 				/* E() 会把 checked:false 写成 checked="false"，浏览器仍视为勾选 */
