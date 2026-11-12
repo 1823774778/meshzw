@@ -475,14 +475,17 @@ msgstr "还有 %d 台 AP 待确认"
 msgid "Roaming trigger threshold (RSSI)"
 msgstr "漫游触发阈值（信号强度）"
 
-msgid "When a client signal drops below this level, 802.11v BSS Transition asks it to move to a better AP."
-msgstr "当终端信号低于该值时，插件通过 802.11v BSS Transition 引导其切换到更合适的 AP。"
+msgid "Below this level the AP sends an advisory 802.11v BTM first; it only forces a transition when the signal stays critical and a candidate AP is known."
+msgstr "低于该值时先发送建议式 802.11v BTM；只有持续低于临界值且存在候选 AP 时才会强制引导。"
 
 msgid "Aggressive"
 msgstr "积极"
 
 msgid "Balanced"
 msgstr "均衡"
+
+msgid "Gaming (low latency)"
+msgstr "游戏/低延迟"
 
 msgid "Conservative"
 msgstr "保守"

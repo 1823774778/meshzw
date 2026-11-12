@@ -8,6 +8,7 @@
 
 var RSSI_PRESETS = {
 	aggressive:   -62,
+	gaming:       -67,
 	balanced:     -70,
 	conservative: -78,
 };
@@ -17,6 +18,9 @@ return view.extend({
 	pre: undefined,
 	st: null,
 	bh: null,
+	channel: null,
+	channelEls: null,
+	channelBusy: false,
 	els: null,
 	busy: false,
 
@@ -27,6 +31,7 @@ return view.extend({
 		return Promise.all([
 			wr.safeCall('get_roam'),
 			wr.safeCall('status'),
+			wr.safeCall('get_channel'),
 		]);
 	},
 
@@ -214,7 +219,9 @@ return view.extend({
 			E('h3', {}, head),
 			E('table', { 'class': 'table cbi-section-table' }, [
 				E('tr', { 'class': 'tr table-titles' }, [
-					E('th', {}, _('AP')), E('th', {}, _('MAC')), E('th', {}, _('Result')),
+					E('th', { style: 'width:28%' }, _('AP')),
+					E('th', { style: 'width:44%' }, _('MAC')),
+					E('th', { style: 'width:28%' }, _('Result')),
 				]),
 			].concat(rows)),
 		]);
@@ -260,11 +267,13 @@ return view.extend({
 		if (pending)
 			head += ' — ' + _('%d AP(s) still pending').format(pending);
 
-		return E('div', {}, [
-			E('h4', {}, head),
+		return E('div', { 'class': 'cbi-section' }, [
+			E('h3', {}, head),
 			E('table', { 'class': 'table cbi-section-table' }, [
 				E('tr', { 'class': 'tr table-titles' }, [
-					E('th', {}, _('AP')), E('th', {}, _('MAC')), E('th', {}, _('Result')),
+					E('th', { style: 'width:28%' }, _('AP')),
+					E('th', { style: 'width:44%' }, _('MAC')),
+					E('th', { style: 'width:28%' }, _('Result')),
 				]),
 			].concat(rows)),
 		]);
@@ -299,7 +308,7 @@ return view.extend({
 
 	applyBackhaul: function() {
 		var self = this;
-		if (this.busy) return;
+		if (this.busy || this.channelBusy) return;
 
 		var e = this.els;
 		var ssid = (e.bhSsid.value || '').trim();
@@ -364,17 +373,17 @@ return view.extend({
 
 		var bhSsid = E('input', {
 			type: 'text', 'class': 'cbi-input-text', placeholder: 'wifiroam-bh',
-			style: 'width:16em',
+			style: 'width:16em;max-width:100%',
 		});
 		bhSsid.value = src.ssid || '';
 
 		var bhKey = E('input', {
 			type: 'text', 'class': 'cbi-input-text', placeholder: _('Leave empty to generate automatically'),
-			style: 'width:16em',
+			style: 'width:16em;max-width:100%',
 		});
 		bhKey.value = src.key || '';
 
-		var bhDev = E('select', { 'class': 'cbi-input-select' }, [
+		var bhDev = E('select', { 'class': 'cbi-input-select', style: 'max-width:100%' }, [
 			E('option', { value: '' }, _('Auto (prefer 5 GHz)')),
 		].concat(radios.filter(function(r) { return !r.disabled; }).map(function(r) {
 			return E('option', { value: r.name },
@@ -406,7 +415,6 @@ return view.extend({
 				E('label', {}, _('Backhaul radio')), bhDev,
 			]),
 			isCap ? E('div', {}, [ saveBtn ]) : '',
-			E('div', { id: 'wr-bh-apply' }, this.renderBackhaulResults(this.st && this.st.last_backhaul)),
 		]);
 
 		this.els = this.els || {};
@@ -421,6 +429,198 @@ return view.extend({
 			wr.setFormDisabled(panel, true);
 
 		return panel;
+	},
+
+	/* ---------------------------------------------------------- channels */
+	renderChannelPanel: function() {
+		var self = this;
+		var ch = this.channel;
+		var isCap = this.isCap();
+
+		if (!ch) {
+			return E('div', { 'class': 'cbi-section' }, [
+				E('h3', {}, _('无线信道优化')),
+				E('div', { 'class': 'wr-hint' },
+					_('无法读取信道信息，请确认插件服务正在运行。')),
+			]);
+		}
+
+		var s = ch.settings || {};
+		var enableCb = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
+		enableCb.checked = !!s.enabled;
+		var b2 = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
+		b2.checked = s.band2g !== false;
+		var b5 = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
+		b5.checked = s.band5g !== false;
+
+		var hour = E('select', { 'class': 'cbi-input-select' });
+		for (var h = 0; h < 24; h++)
+			hour.appendChild(E('option', { value: h },
+				(h < 10 ? '0' : '') + h + ':00'));
+		hour.value = s.hour != null ? s.hour : 4;
+
+		var saveBtn = E('button', {
+			'class': 'btn cbi-button-positive',
+			click: function() { self.applyChannel(false); },
+		}, _('保存设置'));
+
+		var applyBtn = E('button', {
+			'class': 'btn cbi-button-action',
+			click: function() { self.applyChannel(true); },
+		}, _('立即优化'));
+
+		var co = ch.cochannel || {};
+		var conflict = {};
+		if (!isCap) {
+			enableCb.disabled = true;
+			b2.disabled = true;
+			b5.disabled = true;
+			hour.disabled = true;
+		}
+		(co.items || []).forEach(function(it) {
+			(it.aps || []).forEach(function(name) {
+				conflict[name + '|' + it.channel] = true;
+			});
+		});
+
+		var rows = (ch.plan || []).map(function(it) {
+			var same = !!conflict[(it.name || '') + '|' + it.from];
+			var text = it.wireless ? _('随主路由')
+				: (it.changed ? _('建议调整') : (same ? _('同频') : _('正常')));
+			var cls = it.wireless ? 'wr-apply-ok'
+				: ((it.changed || same) ? 'wr-apply-pending' : 'wr-apply-ok');
+			return E('tr', {}, [
+				E('td', {}, it.name || it.ap || '-'),
+				E('td', {}, it.band === '2g' ? '2.4 GHz'
+					: it.band === '5g' ? '5 GHz' : (it.band || '-')),
+				E('td', {}, it.from ? String(it.from) : '-'),
+				E('td', {}, it.to ? String(it.to) : '-'),
+				E('td', { 'class': cls }, text),
+			]);
+		});
+		if (!rows.length)
+			rows = [ E('tr', {}, [
+				E('td', { colspan: 5, 'class': 'wr-hint' },
+					_('暂无可优化的 AP（需要至少两台在线 AP）。')),
+			]) ];
+
+		this.channelEls = {
+			enableCb: enableCb, b2: b2, b5: b5, hour: hour,
+			saveBtn: saveBtn, applyBtn: applyBtn,
+		};
+
+		return E('div', { 'class': 'cbi-section' }, [
+			E('h3', {}, _('无线信道优化')),
+			E('div', { 'class': 'wr-hint' },
+				_('根据各 AP 当前信道，为主路由和子路由分配互不重叠的频道。切换信道会让无线短暂重启，建议在低峰期执行。')),
+			co.any
+				? E('div', { 'class': 'alert-message warning' },
+					_('检测到 AP 同频，建议执行一次信道优化。'))
+				: E('div', { 'class': 'wr-hint' },
+					_('当前未检测到同频；优化时会优先保持现有信道。')),
+			E('div', { 'class': 'wr-form-row' }, [
+				E('label', {}, [ enableCb, ' ', _('启用自动信道优化') ]),
+			]),
+			E('div', { 'class': 'wr-form-row' }, [
+				E('label', {}, _('优化频段')),
+				E('span', {}, [ b2, ' 2.4 GHz ', b5, ' 5 GHz' ]),
+			]),
+			E('div', { 'class': 'wr-form-row' }, [
+				E('label', {}, _('每天执行时间')),
+				E('span', {}, [ hour, ' ', _('（仅在启用自动优化时生效）') ]),
+			]),
+			isCap ? E('div', {}, [ saveBtn, ' ', applyBtn ])
+			      : E('div', { 'class': 'wr-hint' },
+					_('只能在主路由上修改信道优化设置。')),
+			E('table', { 'class': 'table cbi-section-table' }, [
+				E('tr', { 'class': 'tr table-titles' }, [
+					E('th', {}, _('AP')), E('th', {}, _('频段')),
+					E('th', {}, _('当前信道')), E('th', {}, _('建议信道')),
+					E('th', {}, _('状态')),
+				]),
+			].concat(rows)),
+		]);
+	},
+
+	applyChannel: function(apply) {
+		var self = this;
+		var e = this.channelEls;
+
+		if (!e || this.channelBusy || this.busy)
+			return;
+
+		this.channelBusy = true;
+
+		var overlay = apply
+			? wr.busyOverlay(_('正在切换信道，无线将短暂重启，请勿刷新页面……'))
+			: null;
+
+		if (apply) {
+			wr.setBusy(e.applyBtn, true, _('优化中...'));
+			wr.setBusy(e.saveBtn, false);
+			e.saveBtn.disabled = true;
+		}
+		else {
+			wr.setBusy(e.saveBtn, true, _('保存中...'));
+			wr.setBusy(e.applyBtn, false);
+			e.applyBtn.disabled = true;
+		}
+
+		return wr.call('set_channel', {
+			enabled: e.enableCb.checked,
+			band2g: e.b2.checked,
+			band5g: e.b5.checked,
+			hour: parseInt(e.hour.value, 10),
+			apply: !!apply,
+		}).then(function(res) {
+			if (!res || !res.ok) {
+				wr.notify('danger', _('信道设置失败') + ': ' +
+					((res && res.error) || _('request rejected')));
+				return;
+			}
+
+			self.channel = res;
+			var box = document.getElementById('wr-channel');
+			if (box)
+				dom.content(box, self.renderChannelPanel());
+
+			if (apply) {
+				var n = (res.local && res.local.count) || 0;
+				wr.notify('success', n > 0
+					? _('信道已切换，无线将在几秒后重启。')
+					: _('当前信道已是最优，无需调整。'));
+			}
+			else {
+				wr.notify('success', _('信道优化设置已保存。'));
+			}
+		}).catch(function() {
+			wr.notify('danger', _('信道设置失败') + ': ' + _('request rejected'));
+		}).then(function() {
+			self.channelBusy = false;
+			wr.setBusy(e.applyBtn, false);
+			wr.setBusy(e.saveBtn, false);
+			e.applyBtn.disabled = false;
+			e.saveBtn.disabled = false;
+			if (overlay) {
+				/* 切换信道会在 1 秒后重启无线，遮罩多留几秒覆盖重启过程 */
+				if (apply) window.setTimeout(overlay, 4000);
+				else overlay();
+			}
+			if (apply)
+				window.setTimeout(function() { self.refreshChannel(); }, 5000);
+		});
+	},
+
+	refreshChannel: function() {
+		var self = this;
+
+		return wr.safeCall('get_channel').then(function(ch) {
+			if (!ch) return;
+			self.channel = ch;
+			var box = document.getElementById('wr-channel');
+			if (box)
+				dom.content(box, self.renderChannelPanel());
+		}).catch(function() {});
 	},
 
 	/* 采集勾选的 SSID */
@@ -477,7 +677,7 @@ return view.extend({
 	apply: function() {
 		var self = this;
 
-		if (this.busy) return;
+		if (this.busy || this.channelBusy) return;
 
 		const e = this.els;
 		const ssids = this.collectSsids();
@@ -559,12 +759,14 @@ return view.extend({
 			if (sb) dom.content(sb, wr.statusBar(st));
 
 			self.renderApply();
+			self.renderBackhaulApply();
 		});
 	},
 
 	render: function(data) {
 		this.cfg = data[0];
 		this.st = data[1] || {};
+		this.channel = data[2] || null;
 
 		wr.mountNav('advanced', {
 			running: !!(this.st && this.st.role),
@@ -654,10 +856,12 @@ return view.extend({
 		var vB = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
 		vB.checked = roam.v_bss_transition !== false;
 
-		/* RSSI 阈值：三档预设 + 自定义；非 custom 时输入框只读显示预设值 */
+		/* RSSI 阈值：四档预设 + 自定义；非 custom 时输入框只读显示预设值 */
 		var rssiSel = E('select', { 'class': 'cbi-input-select' }, [
 			E('option', { value: 'aggressive' },
 				_('Aggressive') + ' (-62 dBm)'),
+			E('option', { value: 'gaming' },
+				_('Gaming (low latency)') + ' (-67 dBm)'),
 			E('option', { value: 'balanced' },
 				_('Balanced') + ' (-70 dBm)'),
 			E('option', { value: 'conservative' },
@@ -722,7 +926,7 @@ return view.extend({
 					rssiSel, ' ', rssiVal, ' dBm',
 				]),
 				E('div', { 'class': 'wr-hint' },
-					_('When a client signal drops below this level, 802.11v BSS Transition asks it to move to a better AP.')),
+					_('Below this level the AP sends an advisory 802.11v BTM first; it only forces a transition when the signal stays critical and a candidate AP is known.')),
 			]),
 			isCap ? E('div', {}, [ saveBtn ]) : '',
 		]);
@@ -749,6 +953,8 @@ return view.extend({
 			E('div', { id: 'wr-apply' }, this.renderApplyResults(this.st.last_apply)),
 			E('div', { id: 'wr-bh' },
 				E('div', { 'class': 'wr-hint' }, _('Loading wireless backhaul settings...'))),
+			E('div', { id: 'wr-bh-apply' }, this.renderBackhaulResults(this.st.last_backhaul)),
+			E('div', { id: 'wr-channel' }, this.renderChannelPanel()),
 		]);
 	},
 
