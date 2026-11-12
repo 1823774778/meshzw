@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 3;
+var REQUIRED_VERSION = 4;
 
 return view.extend({
 	st: null,
@@ -208,14 +208,7 @@ return view.extend({
 	},
 
 	updateNavTabs: function() {
-		var box = document.getElementById('wr-navtabs');
-		var o = this.navOptions();
-		var sig = (o.running ? '1' : '0') + ':' + o.role;
-		/* 轮询每次都重绘会让页签闪烁，仅在可见项变化时更新 */
-		if (!box || sig === this.navSig)
-			return;
-		this.navSig = sig;
-		dom.content(box, wr.navTabs('home', o));
+		wr.mountNav('home', this.navOptions());
 	},
 
 	updateStatusDom: function() {
@@ -399,10 +392,11 @@ return view.extend({
 		/* 先把页面画出来，状态类 RPC 在首屏后异步补齐 */
 		window.setTimeout(L.bind(this.hydrate, this), 0);
 
+		/* 页签挂在 #view 外，先用上次状态（没有则展示全部）即时渲染 */
+		wr.mountNav('home');
+
 		return E('div', { id: 'wr-home' }, [
 			wr.css(),
-			E('div', { id: 'wr-navtabs' },
-				wr.navTabs('home', { running: false })),
 			E('h2', {}, [
 				_('首页'),
 				E('a', {

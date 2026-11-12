@@ -21,6 +21,8 @@ return view.extend({
 	busy: false,
 
 	load: function() {
+		wr.mountNav('advanced');
+
 		/* precheck / 回程配置放到 hydrate 异步补齐，避免 apk、iw 等命令拖慢首屏 */
 		return Promise.all([
 			wr.safeCall('get_roam'),
@@ -177,16 +179,7 @@ return view.extend({
 	},
 
 	kvrCell: function(k) {
-		const main = this.kvrTags(k);
-		if (!this.cfg?.guest?.enabled || !this.cfg?.roam?.guest_selected || !this.cfg.roam.enabled) {
-			return main;
-		}
-
-		let guest = _('成员尚未上报');
-		if (k?.guest) {
-			guest = k.guest.seen ? this.kvrTags(k.guest) : _('未开放或尚未应用');
-		}
-		return E('div', {}, [main, E('div', { 'class': 'wr-hint' }, [_('访客'), '：', guest])]);
+		return this.kvrTags(k);
 	},
 
 	/* 单条结果的状态文案 / 颜色 */
@@ -481,9 +474,8 @@ return view.extend({
 
 		const e = this.els;
 		const ssids = this.collectSsids();
-		const guestSelected = Boolean(e.guestCb?.checked);
 
-		if (e.enableCb.checked && ssids.length === 0 && !guestSelected) {
+		if (e.enableCb.checked && ssids.length === 0) {
 			wr.notify('warning', _('Select at least one roaming SSID group.'));
 			return;
 		}
@@ -502,9 +494,6 @@ return view.extend({
 			rssi_profile: e.rssiSel.value,
 			rssi_threshold: parseInt(e.rssiVal.value, 10) || 0,
 		};
-		if (this.cfg.guest) {
-			request.guest_selected = guestSelected;
-		}
 
 		return wr.call('set_roam', request).then(function(res) {
 			if (!res || !res.ok) {
@@ -516,9 +505,6 @@ return view.extend({
 			self.st = self.st || {};
 			self.st.last_apply = { ver: res.ver, results: res.results };
 			self.cfg.roam.enabled = request.enabled;
-			if (self.cfg.guest) {
-				self.cfg.roam.guest_selected = guestSelected;
-			}
 			self.renderApply();
 
 			if (res.results && res.results.some(function(r) {
@@ -634,6 +620,11 @@ return view.extend({
 		this.st = data[1] || {};
 		this.appctl = data[2] || null;
 
+		wr.mountNav('advanced', {
+			running: !!(this.st && this.st.role),
+			role: this.st && this.st.role,
+		});
+
 		var isCap = (this.st.role === 'cap');
 
 		/* 次要面板先占位，render 返回后立即异步补齐 */
@@ -642,10 +633,6 @@ return view.extend({
 		if (!this.cfg) {
 			return E('div', {}, [
 				wr.css(),
-				wr.navTabs('advanced', {
-					running: !!(this.st && this.st.role),
-					role: this.st && this.st.role,
-				}),
 				E('h2', {}, _('高级设置')),
 				E('div', { 'class': 'alert-message danger' },
 					_('无法连接 wifiroamd，请先在首页启动插件服务，然后刷新本页。')),
@@ -673,8 +660,6 @@ return view.extend({
 		enableCb.checked = !!roam.enabled;
 
 		var ssidChecks = [];
-		const guest = this.cfg.guest;
-		const guestCb = guest ? E('input', { type: 'checkbox', 'class': 'cbi-input-checkbox' }) : null;
 		var ssidBoxes = groups.map(function(g) {
 			var cb = E('input', { type: 'checkbox', 'class': 'cbi-input-checkbox',
 			                      'data-ssid': g.ssid });
@@ -690,19 +675,6 @@ return view.extend({
 					(g.consistent ? '' : ' (' + _('inconsistent!') + ')')),
 			]);
 		});
-		if (guestCb) {
-			guestCb.checked = Boolean(roam.guest_selected);
-			let hint = _('访客网络未启用；启用后将使用这里的漫游设置。');
-			if (guest.enabled) {
-				hint = guest.has_key
-					? _('启用 802.11r 时，访客使用 WPA2 本地密钥派生和空口快速切换。')
-					: _('开放访客网络仅支持 802.11k/v，不使用 802.11r。');
-			}
-			ssidBoxes.push(E('div', { 'class': 'wr-ssid-group' }, [
-				E('label', {}, [guestCb, ' ', E('b', {}, _('访客网络') + '：' + guest.ssid)]),
-				E('div', { 'class': 'wr-hint' }, hint),
-			]));
-		}
 		if (!ssidBoxes.length)
 			ssidBoxes = [ E('div', { 'class': 'wr-hint' },
 				_('No AP interfaces found. Configure Wi-Fi SSIDs first.')) ];
@@ -810,7 +782,7 @@ return view.extend({
 		]);
 
 		this.els = {
-			form: form, saveBtn: saveBtn, enableCb: enableCb, ssidChecks: ssidChecks, guestCb,
+			form: form, saveBtn: saveBtn, enableCb: enableCb, ssidChecks: ssidChecks,
 			rFast: rFast, ftSel: ftSel, ftDs: ftDs, kN: kN, kB: kB, vB: vB,
 			rssiSel: rssiSel, rssiVal: rssiVal,
 		};
@@ -823,10 +795,6 @@ return view.extend({
 
 		return E('div', { id: 'wr-adv' }, [
 			wr.css(),
-			wr.navTabs('advanced', {
-				running: !!(this.st && this.st.role),
-				role: this.st && this.st.role,
-			}),
 			E('h2', {}, _('高级设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
 			notice,

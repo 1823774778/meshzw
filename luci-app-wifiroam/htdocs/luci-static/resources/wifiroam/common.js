@@ -8,13 +8,97 @@ return baseclass.extend({
 	css: function() {
 		/* 带上版本号：uhttpd 对外链样式只发 ETag/Last-Modified，浏览器会按
 		   启发式规则长时间复用旧缓存。改动样式后手动递增 CSS_VER 即可失效 */
-		return E('link', {
-			rel: 'stylesheet',
-			href: L.resource('wifiroam/wifiroam.css') + '?v=' + this.CSS_VER
-		});
+		let href = L.resource('wifiroam/wifiroam.css') + '?v=' + this.CSS_VER;
+		let link = document.getElementById('wr-css-link');
+
+		if (!link) {
+			link = E('link', { id: 'wr-css-link', rel: 'stylesheet', href: href });
+			document.head.appendChild(link);
+		}
+		else if (link.getAttribute('href') != href) {
+			link.setAttribute('href', href);
+		}
+
+		/* 样式挂在 head，页面切换时不会被 LuCI 清掉；这里不再返回 link */
+		return E([]);
 	},
 
-	CSS_VER: '20261112b',
+	CSS_VER: '20261113a',
+
+	_navState: null,
+	_navHashBound: false,
+
+	/* 记住最近一次的角色/运行状态：页面切换时导航栏在数据返回前
+	   也能按上一次的状态渲染，避免先只显示「首页」再补上其他页签 */
+	navState: function(opts) {
+		if (opts) {
+			this._navState = {
+				running: opts.running !== false,
+				role: opts.role || '',
+			};
+			try {
+				window.sessionStorage.setItem('wr-nav-state',
+					JSON.stringify(this._navState));
+			} catch (e) { /* 隐私模式或存储不可用 */ }
+		}
+
+		if (this._navState)
+			return this._navState;
+
+		try {
+			let s = JSON.parse(window.sessionStorage.getItem('wr-nav-state'));
+			if (s && typeof s.running == 'boolean') {
+				this._navState = s;
+				return s;
+			}
+		} catch (e) { /* ignore */ }
+
+		/* 首次访问：先展示全部页签，状态返回后再按角色收敛 */
+		return { running: true, role: '' };
+	},
+
+	/* 导航栏挂在 #view 之外：LuCI 加载新视图时只清空 #view 并显示
+	   Loading，页签因此不会随页面切换消失 */
+	mountNav: function(active, opts) {
+		let state = this.navState(opts);
+		let vp = document.getElementById('view');
+		if (!vp || !vp.parentNode)
+			return null;
+
+		/* 页签挂在 #view 外，先确保样式已加载，避免切换瞬间裸链接 */
+		this.css();
+
+		if (!this._navHashBound) {
+			this._navHashBound = true;
+			window.addEventListener('hashchange', L.bind(function() {
+				let where = window.location.hash + window.location.pathname;
+				if (where.indexOf('admin/mesh/management') < 0)
+					this.hideNav();
+			}, this));
+		}
+
+		let host = document.getElementById('wr-global-nav');
+		if (!host) {
+			host = E('div', { id: 'wr-global-nav' });
+			vp.parentNode.insertBefore(host, vp);
+		}
+
+		let sig = active + ':' + (state.running ? '1' : '0') + ':' + (state.role || '');
+		if (host.getAttribute('data-sig') != sig) {
+			while (host.firstChild)
+				host.removeChild(host.firstChild);
+			host.appendChild(this.navTabs(active, state));
+			host.setAttribute('data-sig', sig);
+		}
+		host.style.display = '';
+		return host;
+	},
+
+	hideNav: function() {
+		let host = document.getElementById('wr-global-nav');
+		if (host)
+			host.style.display = 'none';
+	},
 
 	/* 网络管理页签：未启动时只保留首页；SAP 只保留首页和无线设置 */
 	navTabs: function(active, opts) {

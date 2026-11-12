@@ -12,6 +12,8 @@ return view.extend({
 	actionBusy: false,
 
 	load: function() {
+		wr.mountNav('settings');
+
 		return Promise.all([
 			wr.safeCall('status'),
 			wr.safeCall('offload_status'),
@@ -958,15 +960,16 @@ return view.extend({
 		this.disc = data[4];
 		this.topo = data[5];
 
+		wr.mountNav('settings', {
+			running: !!(this.st && this.st.role),
+			role: this.st && this.st.role,
+		});
+
 		poll.add(L.bind(this.refresh, this), 10);
 
 		if (!this.st || !this.st.role) {
 			return E('div', {}, [
 				wr.css(),
-				wr.navTabs('settings', {
-					running: !!(this.st && this.st.role),
-					role: this.st && this.st.role,
-				}),
 				E('h2', {}, _('无线设置')),
 				E('div', { class: 'alert-message danger' },
 					_('无法连接 wifiroamd，请先在首页启动插件服务，然后刷新本页。')),
@@ -975,10 +978,6 @@ return view.extend({
 
 		return E('div', { id: 'wr-set' }, [
 			wr.css(),
-			wr.navTabs('settings', {
-				running: !!(this.st && this.st.role),
-				role: this.st && this.st.role,
-			}),
 			E('h2', {}, _('无线设置')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
 			this.renderWifiPanel(),
