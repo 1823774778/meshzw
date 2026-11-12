@@ -118,6 +118,34 @@ return baseclass.extend({
 			host.style.display = 'none';
 	},
 
+	/* 阻塞式提示：切换角色/配对会重启服务，避免用户误刷新页面 */
+	busyOverlay: function(text) {
+		let old = document.getElementById('wr-busy-overlay');
+		if (old && old.parentNode)
+			old.parentNode.removeChild(old);
+
+		let box = E('div', {
+			id: 'wr-busy-overlay',
+			style: 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);' +
+			       'display:flex;align-items:center;justify-content:center;'
+		}, [
+			E('div', {
+				style: 'background:var(--s2,#fff);color:var(--text,#222);' +
+				       'padding:1.2em 1.6em;border-radius:10px;text-align:center;' +
+				       'box-shadow:0 8px 30px rgba(0,0,0,0.35);max-width:80vw;'
+			}, [
+				E('div', { 'class': 'spinning', style: 'margin:0 auto 0.7em' }),
+				E('div', {}, text)
+			])
+		]);
+		document.body.appendChild(box);
+
+		return function() {
+			if (box.parentNode)
+				box.parentNode.removeChild(box);
+		};
+	},
+
 	/* 网络管理页签：未启动时只保留首页；SAP 只保留首页和无线设置 */
 	navTabs: function(active, opts) {
 		opts = opts || {};

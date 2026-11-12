@@ -714,6 +714,8 @@ return view.extend({
 
 		this.actionBusy = true;
 		wr.setBusy(btn, true, _('Pairing...'));
+		var notice = wr.busyOverlay(
+			_('正在添加子路由并重启服务，请勿刷新页面……'));
 
 		return wr.call('pair', { mac: d.mac }).then(function(res) {
 			if (!res || !res.ok) {
@@ -743,6 +745,7 @@ return view.extend({
 			wr.notify('danger', _('Pair failed') + ': ' + _('request rejected'));
 		}).then(function() {
 			self.actionBusy = false;
+			if (notice) notice();
 			return self.refresh();
 		});
 	},
@@ -787,6 +790,9 @@ return view.extend({
 
 		this.actionBusy = true;
 		wr.setBusy(btn, true, _('Applying...'));
+		var notice = (role === 'cap')
+			? wr.busyOverlay(_('正在切换为主路由并重启服务，请勿刷新页面……'))
+			: null;
 
 		return wr.call('set_role', { role: role }).then(function(res) {
 			if (res && res.ok === false) {
@@ -801,7 +807,10 @@ return view.extend({
 			wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
 		}).then(function() {
 			self.actionBusy = false;
-			return self.refresh();
+			return self.refresh().then(function() {
+				/* 给无线重启留出时间，提示消失前不要刷新页面 */
+				if (notice) window.setTimeout(notice, 2500);
+			});
 		});
 	},
 

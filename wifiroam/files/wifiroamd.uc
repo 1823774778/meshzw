@@ -58,7 +58,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 7;
+const DAEMON_VERSION = 9;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -279,14 +279,30 @@ function current_roam_cfg() {
 
 // 漫游配置内容签名：SAP 上报本地已落盘配置的签名，CAP 据此判断是否与主 AP 一致。
 // 只比 ver 无法发现历史遗留的不一致（旧版 SAP 只落盘 ver/enabled，其他字段仍是默认值）。
-function roam_sig(r) {
-	let sig = sprintf("%d|%s|%d|%s|%d|%d|%d|%d|%s|%d",
+function roam_sig_base(r) {
+	return sprintf("%d|%s|%d|%s|%d|%d|%d|%d|%s|%d",
 		r.enabled ? 1 : 0, join(",", r.ssids ?? []), r.r_fast ? 1 : 0,
 		r.ft_mode ?? "simple",
 		r.ft_over_ds ? 1 : 0, r.k_neighbor ? 1 : 0, r.k_beacon ? 1 : 0,
 		r.v_bss_transition ? 1 : 0, r.rssi_profile ?? "balanced",
 		r.rssi_threshold ?? rssi_preset(r.rssi_profile));
-	return sha256(sig);
+}
+
+/* 与旧版本互操作：旧 CAP 在 guest_selected=1 时会追加 "|guest"。
+   本机仍保留该 UCI 值（只是不再提供访客漫游 UI/逻辑），
+   计算签名时带上，保证和旧 CAP 的判断一致。 */
+function roam_sig(r) {
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	let guest = cur.get("wifiroam", "roam", "guest_selected") == "1";
+	return sha256(roam_sig_base(r) + (guest ? "|guest" : ""));
+}
+
+/* 比较对端签名：新旧两种格式都接受，避免混版本时反复下发并重载无线 */
+function roam_sig_ok(peer, r) {
+	if (peer == "") return true;
+	let base = roam_sig_base(r);
+	return peer == sha256(base) || peer == sha256(base + "|guest");
 }
 
 function current_backhaul_cfg() {
@@ -2081,6 +2097,10 @@ function apply_roam_local(roam, members) {
 		rssi_threshold: "" + (roam.rssi_threshold ?? rssi_preset(roam.rssi_profile)),
 		config_ver: "" + state.roam_ver_applied,
 	};
+	/* 旧版 CAP 会下发 guest_selected；保留该值仅用于 roam_sig 兼容，
+	   新版本不再据此启用访客漫游 */
+	if (roam.guest_selected != null)
+		want.guest_selected = roam.guest_selected ? "1" : "0";
 	if (join("\n", cur_ssids) != join("\n", want_ssids)) {
 		if (length(want_ssids)) wc.set("wifiroam", "roam", "ssids", want_ssids);
 		else wc.delete("wifiroam", "roam", "ssids");
@@ -2352,6 +2372,8 @@ function sap_rx(req) {
 					alias_ver: state.aliases.ver,
 					roam_ver: state.roam_ver_applied,
 					roam_sig: roam_sig(current_roam_cfg()),
+					// 兼容旧 CAP：告知其本端曾支持访客漫游签名格式
+					guest_roaming: true,
 					backhaul_ver: state.backhaul_ver_applied,
 					guest_ver: guest_cfg().ver,
 				},
@@ -2534,6 +2556,8 @@ sap_report = function() {
 				alias_ver: state.aliases.ver,
 				roam_ver: state.roam_ver_applied,
 				roam_sig: roam_sig(current_roam_cfg()),
+				// 兼容旧 CAP 的签名判断
+				guest_roaming: true,
 				backhaul_ver: state.backhaul_ver_applied,
 				guest_ver: guest_cfg().ver,
 				// 本机落盘的 K/V/R 生效状态，CAP 汇总后展示给用户
@@ -2579,10 +2603,15 @@ function srv_rx(conn, req) {
 	if (!conn.authed) {
 		if (req.type == "join" && state.cfg.role == "unconfigured") {
 			// pairing: CAP pushes credentials to an unconfigured device
-			if (args.nonce_echo != state.self.nonce || !args.token) {
+			/* 兼容旧/新 CAP：升级或重启后主 AP 缓存的 discovery nonce
+			   可能已过期，只要 token 正确就允许配对，避免跨版本升级后
+			   一直卡在 bad_nonce */
+			if (!args.token) {
 				req.reply({ ok: false, error: "bad_nonce" });
 				return 0;
 			}
+			if (args.nonce_echo != state.self.nonce)
+				log("join: stale nonce accepted (token ok)");
 			state.cfg.token = args.token;
 			state.cfg.cap_ip = args.cap_ip ?? "";
 			state.cfg.role = "sap";
@@ -2625,12 +2654,11 @@ function srv_rx(conn, req) {
 			if ((args.alias_ver ?? 0) < state.aliases.ver)
 				push_aliases_to(mn);
 			let roam = current_roam_cfg();
-			let rsig = roam_sig(roam);
 			// ver 落后或内容签名不一致都重新下发：后者用于修复历史遗留的
 			// SAP 本地配置与主 AP 不一致（例如只同步了 enabled/ver）
 			if (state.cfg.role == "cap" &&
 			    ((args.roam_ver ?? -1) < roam.config_ver ||
-			     (args.roam_sig && args.roam_sig != rsig)))
+			     (args.roam_sig && !roam_sig_ok(args.roam_sig, roam))))
 				push_roam_to(mn);
 			let bh = current_backhaul_cfg();
 			if (state.cfg.role == "cap" && bh.enabled &&
@@ -2670,7 +2698,7 @@ function srv_rx(conn, req) {
 			push_aliases_to(mn);
 		let roam = current_roam_cfg();
 		if (p.roam_ver < roam.config_ver ||
-		    (p.roam_sig != "" && p.roam_sig != roam_sig(roam)))
+		    (p.roam_sig != "" && !roam_sig_ok(p.roam_sig, roam)))
 			push_roam_to(mn);
 		let bh = current_backhaul_cfg();
 		if (bh.enabled && p.backhaul_ver < bh.config_ver)
@@ -3087,22 +3115,24 @@ let api_obj = {
 			state.cfg.role = r;
 			if (r == "cap") ensure_token();
 			if (r == "unconfigured") {
+				/* 主路由重置角色时通知所有在线子路由解除组网，
+				   让它们也回到未配置状态，避免继续用旧 token 重连 */
+				for (let mn, p in state.peers) {
+					if (!p.authed || !p.chan) continue;
+					try {
+						p.chan.defer({
+							method: "leave", data: {},
+							data_cb: function() {}, cb: function() {},
+						});
+					} catch (e) {}
+				}
+				state.peers = {};
 				state.cfg.token = "";
 				state.cfg.cap_ip = "";
 			}
 			save_config();
-			if (r == "cap") {
-				/* 下发漫游配置会重启无线、重建 flowtable，放到响应返回后
-				   执行，避免设置主路由的页面等待（与重置角色保持一致） */
-				uloop.timer(300, function() {
-					if (state.cfg.role != "cap") return;
-					roam_default_init();
-					offload_default_init();
-					reconfigure();
-				});
-			} else {
-				reconfigure();
-			}
+			if (r == "cap") roam_default_init();
+			reconfigure();
 			return { ok: true, role: r };
 		},
 	},
