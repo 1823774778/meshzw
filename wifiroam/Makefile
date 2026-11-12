@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wifiroam
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=53
+PKG_RELEASE:=56
 PKG_LICENSE:=GPL-2.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
@@ -85,6 +85,7 @@ endef
 define Package/wifiroam/prerm
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ] && [ "$${PKG_UPGRADE}" != "1" ]; then
+	nft delete table inet wifiroam_usage 2>/dev/null
 	/usr/bin/ucode -- /usr/share/wifiroam/wifiroamd.uc --restore-guest-fw4 || \
 		logger -t wifiroam 'Could not restore firewall4 template'
 fi

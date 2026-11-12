@@ -22,6 +22,9 @@ const TCP_PORT = 50608;
 const MAGIC = "WIFIROAM1";
 const ALIAS_DIR = "/etc/wifiroam";
 const ALIAS_PATH = ALIAS_DIR + "/aliases.json";
+const USAGE_PATH = ALIAS_DIR + "/usage.json";
+const USAGE_TABLE = "wifiroam_usage";
+const USAGE_FLUSH = 15;     // s：统计落盘的最小间隔
 const PEER_TTL = 30;        // s without hello -> offline
 const DISCOVER_TTL = 180;   // s unconfigured device stays in discover list
 const HELLO_INTERVAL = 5000;
@@ -55,7 +58,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 5;
+const DAEMON_VERSION = 7;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -113,6 +116,13 @@ let state = {
 	steer_last: {},     // macnorm -> 上次 BSS Transition 引导时间
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
+	usage: { day: "", online: {}, ndata: {} }, // CAP: 每终端每日在线秒数 / 总流量
+	_usage_snap: null,  // CAP: 上次 nft counter 快照 { mac: bytes }
+	_usage_ts: 0,
+	_usage_online_ts: 0,
+	_usage_dirty: false,
+	_usage_saved: 0,
+	_usage_track: "",
 };
 
 // ------------------------------------------------------------------ helpers
@@ -1600,6 +1610,163 @@ function local_clients() {
 	return clients;
 }
 
+// ------------------------------------------------ 上网统计（在线时长 + 流量）
+// 只统计总量：用 nft 的 per-MAC counter 累计终端每日流量，不做应用识别。
+function usage_day() {
+	let lt = localtime(time());
+	return sprintf("%04d-%02d-%02d", lt.year, lt.mon, lt.mday);
+}
+
+// 按天分桶只保留最近 7 天：日期字符串字典序即时间序，删最旧的
+function usage_prune(map, keep) {
+	let ks = sort(keys(map));
+	while (length(ks) > (keep ?? 7)) {
+		delete map[ks[0]];
+		shift(ks);
+	}
+}
+
+function usage_roll_day() {
+	let day = usage_day();
+	if (state.usage.day == day) return;
+	state.usage.day = day;
+	for (let mn, d in state.usage.online) usage_prune(d);
+	for (let mn, d in state.usage.ndata) usage_prune(d);
+	state._usage_dirty = true;
+}
+
+function usage_track_macs() {
+	let set = {};
+	for (let mn in local_clients()) set[mn] = true;
+	for (let pmn, p in state.peers)
+		for (let mn in (p.clients ?? {})) set[mn] = true;
+	return set;
+}
+
+function usage_apply_rules(force, set) {
+	if (state.cfg.role != "cap") return;
+	set = set ?? usage_track_macs();
+	let key = join(",", sort(keys(set)));
+	if (!force && key == state._usage_track) return;
+
+	cmd_output(sprintf("nft add table inet %s 2>/dev/null", USAGE_TABLE));
+	cmd_output(sprintf(
+		"nft add chain inet %s forward '{ type filter hook forward priority -10; policy accept; }' 2>/dev/null",
+		USAGE_TABLE));
+	let script = sprintf("flush chain inet %s forward\n", USAGE_TABLE);
+	for (let mn in set)
+		script += sprintf(
+			"add rule inet %s forward ether saddr %s counter comment \"wu:%s\"\n",
+			USAGE_TABLE, maccolon(mn), mn);
+	let path = "/tmp/wifiroam-usage.nft";
+	fs.writefile(path, script);
+	cmd_output(sprintf("nft -f %s 2>/dev/null", path));
+	fs.unlink(path);
+
+	// chain 重建会把 counter 归零，重置快照避免把归零误判成负增量
+	state._usage_snap = null;
+	state._usage_ts = 0;
+	state._usage_track = key;
+}
+
+function usage_add_traffic(mn, by) {
+	if (by <= 0) return;
+	if (!state.usage.ndata[mn]) state.usage.ndata[mn] = {};
+	let d = state.usage.ndata[mn];
+	d[state.usage.day] = (d[state.usage.day] ?? 0) + by;
+	state._usage_dirty = true;
+}
+
+function usage_sample() {
+	if (state.cfg.role != "cap") return;
+	let out = cmd_output(sprintf("nft -j list table inet %s 2>/dev/null", USAGE_TABLE));
+	if (out == "") {
+		// 表被防火墙清掉：下一轮强制重建
+		state._usage_track = "";
+		return;
+	}
+	let data;
+	try { data = json(out); } catch (e) { return; }
+	if (type(data) != "object" || type(data.nftables) != "array") return;
+	let snap = state._usage_snap ?? {};
+	let fresh = {};
+	let want = {};
+	if (state._usage_track != "")
+		for (let mn in split(state._usage_track, ",")) want[mn] = true;
+
+	for (let item in data.nftables) {
+		let r = item.rule;
+		if (!r) continue;
+		let p = split(r.comment ?? "", ":");
+		if (length(p) != 2 || p[0] != "wu") continue;
+		let mn = p[1], by = 0;
+		for (let e in (r.expr ?? []))
+			if (e.counter) { by = int(e.counter.bytes ?? 0); break; }
+		fresh[mn] = (fresh[mn] ?? 0) + by;
+		delete want[mn];
+	}
+	// 规则被防火墙清掉时强制下一轮重建，避免统计永久停摆
+	if (length(keys(want))) state._usage_track = "";
+
+	for (let mn, by in fresh) {
+		let prev = snap[mn];
+		if (prev == null || by < prev) continue;
+		usage_add_traffic(mn, by - prev);
+	}
+	state._usage_snap = fresh;
+	state._usage_ts = time();
+}
+
+function usage_online_sample(seen) {
+	if (state.cfg.role != "cap") return;
+	let now = time();
+	let dt = now - (state._usage_online_ts ?? 0);
+	if (!state._usage_online_ts || dt <= 0 || dt > 180)
+		dt = int(TICK_INTERVAL / 1000);
+	state._usage_online_ts = now;
+
+	seen = seen ?? usage_track_macs();
+	if (!length(keys(seen))) return;
+	for (let mn in seen) {
+		if (!state.usage.online[mn]) state.usage.online[mn] = {};
+		let d = state.usage.online[mn];
+		d[state.usage.day] = (d[state.usage.day] ?? 0) + dt;
+	}
+	state._usage_dirty = true;
+}
+
+function usage_load() {
+	try {
+		let d = json(fs.readfile(USAGE_PATH));
+		if (type(d) == "object") {
+			state.usage.day = d.day ?? "";
+			state.usage.online = d.online ?? {};
+			state.usage.ndata = d.ndata ?? {};
+		}
+	} catch (e) { /* first boot */ }
+}
+
+function usage_save() {
+	fs.mkdir(ALIAS_DIR);
+	fs.writefile(USAGE_PATH, sprintf("%.J", {
+		ver: 1, day: state.usage.day,
+		online: state.usage.online, ndata: state.usage.ndata,
+	}));
+	state._usage_dirty = false;
+	state._usage_saved = time();
+}
+
+function usage_tick() {
+	if (state.cfg.role != "cap") return;
+	usage_roll_day();
+	let set = usage_track_macs();
+	usage_apply_rules(false, set);
+	usage_sample();
+	usage_online_sample(set);
+	if (state._usage_dirty && time() - state._usage_saved >= USAGE_FLUSH)
+		usage_save();
+}
+
 function diff_events(prev, cur, apname) {
 	for (let mn in keys(cur))
 		if (!prev[mn]) push_event("client_join", maccolon(mn), apname, client_name_of(mn, cur));
@@ -1926,9 +2093,13 @@ function apply_roam_local(roam, members) {
 		}
 	}
 	if (dirty) wc.commit("wifiroam");
-	uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
-		log("wifi reload rc=" + res);
-		guest_tc_apply(guest_cfg());
+	/* 延迟重启无线：先让 ubus 响应和向成员 AP 的配置推送发出去，
+	   否则首次保存时管理连接会先被 wifi reload 打断，页面误以为服务停止 */
+	uloop.timer(1000, function() {
+		uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
+			log("wifi reload rc=" + res);
+			guest_tc_apply(guest_cfg());
+		});
 	});
 	push_event("roam_apply", "",
 		sprintf("ver=%d ssids=%d", roam.config_ver ?? 0, length(touched)));
@@ -3321,6 +3492,18 @@ let api_obj = {
 			return { events: ev };
 		},
 	},
+	/* 上网统计：每终端每日在线时长与总流量（仅主 AP 采集） */
+	usage_stats: {
+		args: { ubus_rpc_session: "" },
+		call: function(req) {
+			return {
+				ok: state.cfg.role == "cap",
+				day: state.usage.day || usage_day(),
+				online: state.usage.online,
+				ndata: state.usage.ndata,
+			};
+		},
+	},
 	/* 硬件/软件 flow offload 状态：读 fw4 的实际 forward 链判断是否真的生效，
 	   子 AP 跟随主 AP 下发的状态。 */
 	offload_status: {
@@ -3438,6 +3621,7 @@ reconfigure = function() {
 // 注意：ucode 的函数声明不做提升，本函数必须定义在 wifi_ifaces /
 // member_list / apply_roam_local / applied_kvr 之后。
 function roam_default_init() {
+	if (state.cfg.role != "cap") return;
 	let cur = uci.cursor();
 	cur.load("wifiroam");
 	if (int(cur.get("wifiroam", "roam", "config_ver") ?? "0") != 0) return;
@@ -3481,6 +3665,7 @@ function main() {
 	if (state.cfg.role == "sap")
 		enable_relay_ap_mode();
 	alias_load();
+	usage_load();
 	detect_self();
 	// 首次运行时把 flow offloading 默认关闭（记录后按用户选择）
 	offload_default_init();
@@ -3501,6 +3686,7 @@ function main() {
 	uloop.interval(TICK_INTERVAL, backhaul_tick);
 	uloop.interval(TICK_INTERVAL, steer_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
+	uloop.interval(TICK_INTERVAL, usage_tick);
 	uloop.interval(TICK_INTERVAL, function() {
 		if (state.cfg.role != "cap") return;
 		let cur = local_clients();

@@ -3,7 +3,7 @@
 		"description": "Grant access to wifiroam seamless roaming management",
 		"read": {
 			"ubus": {
-				"wifiroam": [ "status", "topology", "client_detail", "get_roam", "precheck", "discover", "roam_log", "get_backhaul", "offload_status", "get_wifi", "get_guest" ],
+				"wifiroam": [ "status", "topology", "client_detail", "get_roam", "precheck", "discover", "roam_log", "get_backhaul", "usage_stats", "offload_status", "get_wifi", "get_guest" ],
 				"service": [ "list" ],
 				"rc": [ "list" ]
 			}

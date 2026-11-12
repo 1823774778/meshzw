@@ -23,10 +23,28 @@ return baseclass.extend({
 		return E([]);
 	},
 
-	CSS_VER: '20261113b',
+	CSS_VER: '20261113c',
 
 	_navState: null,
 	_navHashBound: false,
+	_role: null,
+
+	/* 角色变化时整页刷新：被主路由配对成子路由后，导航和页面结构
+	   需要按新角色重建；离开子路由时同理。 */
+	checkRole: function(role) {
+		if (!role)
+			return;
+		if (this._role == null) {
+			this._role = role;
+			return;
+		}
+		if (role == this._role)
+			return;
+		let old = this._role;
+		this._role = role;
+		if (role == 'sap' || old == 'sap')
+			window.location.reload();
+	},
 
 	/* 记住最近一次的角色/运行状态：页面切换时导航栏在数据返回前
 	   也能按上一次的状态渲染，避免先只显示「首页」再补上其他页签 */
@@ -560,6 +578,7 @@ return baseclass.extend({
 	},
 
 	statusBar: function(st) {
+		this.checkRole(st && st.role);
 		var roamOn = st.roam && st.roam.enabled;
 		return E('div', { 'class': 'wr-statusbar' }, [
 			E('span', { 'class': 'wr-item' }, [ _('Role'), this.roleBadge(st.role) ]),

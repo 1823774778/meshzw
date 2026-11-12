@@ -310,7 +310,7 @@ return view.extend({
 			return;
 		}
 
-		this.setBusy(true);
+		this.setBusy(true, 'backhaul');
 
 		return wr.call('set_backhaul', {
 			enabled: e.bhEnable.checked,
@@ -350,7 +350,7 @@ return view.extend({
 		}).catch(function() {
 			wr.notify('danger', _('Apply failed') + ': ' + _('request rejected'));
 		}).then(function() {
-			self.setBusy(false);
+			self.setBusy(false, 'backhaul');
 		});
 	},
 
@@ -432,15 +432,23 @@ return view.extend({
 		return ssids;
 	},
 
-	setBusy: function(on) {
+	setBusy: function(on, which) {
 		this.busy = on;
-		wr.setFormDisabled(this.els.form, on);
-		wr.setBusy(this.els.saveBtn, on, on ? _('Applying...') : null);
 
-		if (this.els.bhForm)
+		/* 只让当前操作的表单和按钮进入 Applying 状态；另一个按钮仅禁用，
+		   避免两个「保存并应用」同时显示正在应用 */
+		if (which == 'backhaul') {
 			wr.setFormDisabled(this.els.bhForm, on);
-		if (this.els.bhSaveBtn)
 			wr.setBusy(this.els.bhSaveBtn, on, on ? _('Applying...') : null);
+			wr.setBusy(this.els.saveBtn, false);
+			if (this.els.saveBtn) this.els.saveBtn.disabled = on;
+		}
+		else {
+			wr.setFormDisabled(this.els.form, on);
+			wr.setBusy(this.els.saveBtn, on, on ? _('Applying...') : null);
+			wr.setBusy(this.els.bhSaveBtn, false);
+			if (this.els.bhSaveBtn) this.els.bhSaveBtn.disabled = on;
+		}
 	},
 
 	/* 等所有成员 AP 回执（ok !== null），超时返回 false */
@@ -479,7 +487,7 @@ return view.extend({
 			return;
 		}
 
-		this.setBusy(true);
+		this.setBusy(true, 'roam');
 
 		const request = {
 			enabled: e.enableCb.checked,
@@ -531,7 +539,7 @@ return view.extend({
 			wr.notify('danger',
 				_('Apply failed') + ': ' + _('request rejected'));
 		}).then(function() {
-			self.setBusy(false);
+			self.setBusy(false, 'roam');
 			self.refreshPre();
 		});
 	},

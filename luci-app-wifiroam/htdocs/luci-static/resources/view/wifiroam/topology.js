@@ -99,6 +99,7 @@ return view.extend({
 			safeCall('topology'),
 			safeCall('status'),
 			safeCall('roam_log', { limit: 60 }),
+			safeCall('usage_stats'),
 		]);
 	},
 
@@ -111,10 +112,13 @@ return view.extend({
 			this.topo = res[0];
 			this.status = res[1];
 			this.logs = (res[2] && res[2].events) || [];
+			this.usage = res[3] || null;
 			this.redraw();
 
 			if (this._ratesRedraw && document.querySelector('.wr-dev-rates'))
 				this._ratesRedraw();
+			if (this._statsRedraw && document.querySelector('.wr-stats'))
+				this._statsRedraw();
 
 			var ts = document.getElementById('wr-refresh-ts');
 			if (ts)
@@ -994,9 +998,122 @@ return view.extend({
 	},
 
 
+	/* ---------------------------------------- 上网统计（页签 + 柱状图） */
+	dayStr: function(offset) {
+		var base = (this.usage && this.usage.day)
+			? new Date(this.usage.day + 'T00:00:00') : new Date();
+		var d = new Date(base.getTime() - offset * 86400000);
+		var p = function(x) { return (x < 10 ? '0' : '') + x; };
+		return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+	},
+
+	statsBox: function(n) {
+		var self = this;
+		var mac = (n.mac || '').toLowerCase().replace(/[^0-9a-f]/g, '');
+		var box = E('div', { 'class': 'wr-stats' });
+
+		function onlineDays() {
+			var u = self.usage;
+			return (u && u.online && u.online[mac]) || {};
+		}
+
+		function periodSec() {
+			var ds = onlineDays(), p = self._statsPeriod || 'today';
+			if (p === 'yesterday') return ds[self.dayStr(1)] || 0;
+			if (p === 'week') {
+				var s = 0;
+				for (var i = 0; i < 7; i++) s += ds[self.dayStr(i)] || 0;
+				return s;
+			}
+			return ds[self.dayStr(0)] || 0;
+		}
+
+		/* 终端总流量按天分桶，与在线时长同页签切换 */
+		function periodBytes() {
+			var u = self.usage;
+			var ds = (u && u.ndata && u.ndata[mac]) || {};
+			var p = self._statsPeriod || 'today';
+			if (p === 'yesterday') return ds[self.dayStr(1)] || 0;
+			if (p === 'week') {
+				var s = 0;
+				for (var i = 0; i < 7; i++) s += ds[self.dayStr(i)] || 0;
+				return s;
+			}
+			return ds[self.dayStr(0)] || 0;
+		}
+
+		function render() {
+			var p = self._statsPeriod || 'today';
+			var tabs = E('div', { 'class': 'wr-tabs' },
+				[ ['yesterday', _('Yesterday')], ['today', _('Today')],
+				  ['week', _('Last 7 days')] ].map(function(t) {
+					return E('button', {
+						'class': 'wr-tab' + (p === t[0] ? ' active' : ''),
+						click: function() {
+							self._statsPeriod = t[0];
+							render();
+						}
+					}, t[1]);
+				}));
+
+			/* 7 天柱状图：固定 24 小时满刻度横线，浅蓝柱、今日深色 */
+			var ds = onlineDays();
+			var chart = svg('svg', { viewBox: '0 0 320 96', 'class': 'wr-chart' });
+			[6, 12, 18, 24].forEach(function(h) {
+				var y = 76 - h * 70 / 24;
+				chart.appendChild(svg('line', {
+					x1: 34, y1: y, x2: 320, y2: y,
+					stroke: '#eceff1', 'stroke-width': 1
+				}));
+				chart.appendChild(svg('text', {
+					x: 32, y: y + 3, 'text-anchor': 'end'
+				}, _('%dh').format(h)));
+			});
+			var slot = (320 - 34) / 7;
+			for (var i = 6; i >= 0; i--) {
+				var key = self.dayStr(i);
+				var sec = ds[key] || 0;
+				var h = Math.max(sec > 0 ? 1.5 : 0, sec * 70 / 86400);
+				var cx = 34 + (6 - i) * slot + slot / 2;
+				var bar = svg('rect', {
+					x: cx - 11, y: 76 - h, width: 22, height: h, rx: 2,
+					fill: i === 0 ? '#1e88e5' : '#64b5f6'
+				});
+				bar.appendChild(svg('title', {},
+					key + ' ' + (sec > 0 ? wr.fmtDur(sec) : '0')));
+				chart.appendChild(bar);
+				chart.appendChild(svg('text', {
+					x: cx, y: 90, 'text-anchor': 'middle'
+				}, key.slice(5).replace('-', '.')));
+			}
+
+			dom.content(box, [
+				E('div', { 'class': 'wr-stats-head' }, [
+					E('b', {}, _('Usage stats')), tabs
+				]),
+				E('div', { 'class': 'wr-dev-online wr-stats-online' }, [
+					E('div', {}, [
+						E('div', { 'class': 'wr-cap' }, _('Online time')),
+						E('div', { 'class': 'wr-big' }, wr.fmtDur(periodSec()))
+					]),
+					E('div', {}, [
+						E('div', { 'class': 'wr-cap' }, _('Traffic')),
+						E('div', { 'class': 'wr-big' }, wr.fmtBytes(periodBytes()))
+					])
+				]),
+				chart
+			]);
+		}
+
+		self._statsRedraw = render;
+		render();
+		return box;
+	},
+
 	openDetail: function(n) {
 		var self = this;
 		this.modalOpen = true;
+		this._statsPeriod = 'today';
 
 		var rows = [];
 		function row(k, v) {
@@ -1033,7 +1150,7 @@ return view.extend({
 			}, _('Close')) ];
 		} else {
 			/* 终端详情：TP-Link 风格 —— 图标+大名称头部、灰色信息行、
-			   上下行速率行、在线时间大数字 */
+			   上下行速率行、上网统计 */
 			var conn = n.conn || {};
 			var wifi = conn.type === 'wifi';
 			var vendor = wr.vendorOf(n.mac);
@@ -1124,6 +1241,7 @@ return view.extend({
 					   span 引用存下来，轮询时随最新拓扑数据刷新（见 _ratesRedraw） */
 					upSpan, downSpan
 				]) : null,
+				self.statsBox(n)
 			]);
 			btns = [ E('button', {
 				'class': 'btn',
@@ -1141,6 +1259,7 @@ return view.extend({
 			dlg.addEventListener('hide', function() {
 				self.modalOpen = false;
 				self._ratesRedraw = null;
+				self._statsRedraw = null;
 			});
 	},
 
@@ -1149,6 +1268,7 @@ return view.extend({
 		this.topo = data[0];
 		this.status = data[1];
 		this.logs = (data[2] && data[2].events) || [];
+		this.usage = data[3] || null;
 		this.logFilter = this.logFilter || { type: '', name: '', mac: '', info: '' };
 
 		wr.mountNav('topology', {

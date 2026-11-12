@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 5;
+var REQUIRED_VERSION = 7;
 
 return view.extend({
 	st: null,
@@ -69,7 +69,17 @@ return view.extend({
 				self.applyServiceState();
 			});
 
-		poll.add(function() { return self.refreshService(false); }, 15);
+		poll.add(function() { return self.refreshService(false); }, 5);
+		/* 角色变化（例如被主路由配对成子路由）时及时刷新页面结构 */
+		poll.add(function() {
+			return wr.safeCall('status').then(function(st) {
+				if (!st || self.actionStarted || self.busy)
+					return;
+				self.st = st;
+				self.updateStatusDom();
+				self.updateVersionDom();
+			});
+		}, 5);
 
 		return Promise.all([ serviceP, statusP, rcP ]);
 	},
@@ -119,18 +129,29 @@ return view.extend({
 		if (!this.loaded || this.busy)
 			return;
 
+		var known = !!this.svc;
 		var running = this.svcRunning();
 		var badge = document.getElementById('wr-svc-badge');
 
 		if (badge) {
-			badge.textContent = running ? _('运行中') : _('已停止');
-			badge.className = 'wr-badge ' + (running ? 'wr-badge-on' : 'wr-badge-off');
+			badge.textContent = !known ? _('状态未知')
+				: (running ? _('运行中') : _('已停止'));
+			badge.className = 'wr-badge ' + (!known ? 'wr-badge-unconfigured'
+				: (running ? 'wr-badge-on' : 'wr-badge-off'));
 		}
 
 		if (this.svcBtns) {
-			if (this.svcBtns.start) this.svcBtns.start.disabled = running;
-			if (this.svcBtns.stop) this.svcBtns.stop.disabled = !running;
-			if (this.svcBtns.restart) this.svcBtns.restart.disabled = false;
+			if (!known) {
+				/* 单次读取失败不代表服务已停止，避免刷新页面时误判 */
+				this.svcBtns.start.disabled = false;
+				this.svcBtns.stop.disabled = true;
+				this.svcBtns.restart.disabled = false;
+			}
+			else {
+				this.svcBtns.start.disabled = running;
+				this.svcBtns.stop.disabled = !running;
+				this.svcBtns.restart.disabled = false;
+			}
 		}
 
 		if (this.autoCb) {
@@ -149,7 +170,10 @@ return view.extend({
 			jobs.push(callRcList().catch(function() { return null; }));
 
 		return Promise.all(jobs).then(function(res) {
-			self.svc = res[0];
+			/* 单次 RPC 失败（例如配对/网络重载瞬间）保留上次结果，
+			   不要把服务误判为「已停止」 */
+			if (res[0] != null)
+				self.svc = res[0];
 			if (full !== false) {
 				self.rclist = res[1];
 				self.rcLoaded = true;

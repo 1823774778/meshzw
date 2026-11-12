@@ -127,6 +127,27 @@ msgstr "接收速率（下行）"
 msgid "Connected Since"
 msgstr "接入时间"
 
+msgid "Online time"
+msgstr "在线时间"
+
+msgid "Usage stats"
+msgstr "上网统计"
+
+msgid "Yesterday"
+msgstr "昨日"
+
+msgid "Today"
+msgstr "今日"
+
+msgid "Last 7 days"
+msgstr "过去七天"
+
+msgid "%dh"
+msgstr "%d小时"
+
+msgid "Traffic"
+msgstr "流量"
+
 msgid "Edit name"
 msgstr "编辑名称"
 
