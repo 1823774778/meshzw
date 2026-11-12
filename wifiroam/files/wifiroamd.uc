@@ -47,13 +47,37 @@ const GUEST_IP = "172.16.10.1";
 const GUEST_NET = "172.16.10.0/24";
 const GUEST_DEFAULT_SSID = "Guest";
 const GUEST_SEC_PREFIX = "wifiroam_guest_";
-const GUEST_NFT_TABLE = "wifiroam_guest";
+const GUEST_NFT_TABLE = "wifiroam_guest"; // 旧版独立表；迁移时原子替换为临时转发封锁
 const GUEST_TC_HANDLE = "57:";
+const GUEST_FW_INCLUDE = "wifiroam_guest_policy";
+// 重启后运行态出口需要重新核验；没有 include 时模板里的访客链仍默认拒绝。
+const GUEST_FW_FILE = "/var/run/wifiroam-guest-fw4.nft";
+const GUEST_FW_BRIDGE_HELD = "/var/run/wifiroam-guest-bridge-held";
+const GUEST_FW_GUARD = "wifiroam_guest_guard";
+const GUEST_FW_EGRESS = "wifiroam_guest_egress";
+const GUEST_FW_FORWARD = "wifiroam_forward_policy";
 const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 // OpenWrt 25.12.6, firewall4 2025.03.17~b6e51575-r2（官方 x86/64 与 Cortex-A53 模板一致）。
 const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c87584813fb325805b";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
+const FW4_FORWARD_HOOK = "{% fw4.includes('chain-prepend', 'forward') %}";
+// 访客必须经 guard 的 goto 才能进入原转发链；即使 guard 被清空，也会命中后续 drop。
+const FW4_GUEST_GATE = [
+	`iifname "${GUEST_BRIDGE}" jump ${GUEST_FW_GUARD}`,
+	`iifname "${GUEST_BRIDGE}" drop`,
+	`oifname "${GUEST_BRIDGE}" jump ${GUEST_FW_GUARD}`,
+	`oifname "${GUEST_BRIDGE}" drop`,
+	`jump ${GUEST_FW_FORWARD}`,
+];
+const FW4_GUEST_FORWARD_HOOK = join("\n", map(FW4_GUEST_GATE, rule => "\t\t" + rule + ";")) +
+	`\n\t}\n\n\tchain ${GUEST_FW_FORWARD} {\n` + FW4_FORWARD_HOOK;
+const FW4_ZONE_HOOK = "{%  fw4.includes('chain-append', `forward_${zone.name}`) %}";
+const FW4_GUEST_ZONE_HOOK = FW4_ZONE_HOOK + `\n{%  if (zone.name == "guest"): %}\n` +
+	`\t\tjump ${GUEST_FW_EGRESS};\n{%  endif %}`;
+const FW4_TABLE_HOOK = "{% fw4.includes('table-append') %}";
+const FW4_GUEST_TABLE_HOOK = `\tchain ${GUEST_FW_GUARD} {\n\t\tdrop;\n\t}\n` +
+	`\tchain ${GUEST_FW_EGRESS} {\n\t}\n` + FW4_TABLE_HOOK;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
 const DAEMON_VERSION = 3;
 
@@ -187,7 +211,7 @@ const APPCTL_SCHEMA_PATH = ALIAS_DIR + "/nft_schema";
 const APPSTATS_FLUSH = 15;   // s：统计落盘的最小间隔（重启最多丢这一轮）
 
 // DPI（深度包检测）：把每个新建连接的首包送到 wifiroam-dpi 守护进程，
-// 解析 TLS SNI / QUIC SNI，命中被禁应用域名即 drop。兜底 DNS/IP 集合方案
+// 检查 TCP TLS SNI 和既有 UDP 特征，兜底 DNS/IP 集合方案
 // 无法覆盖的 HTTPDNS 直连与 P2P 流量。blocklist 由本进程写，dpi 读。
 const DPI_QUEUE = 0;
 const DPI_BLOCKLIST = "/tmp/wifiroam/dpi_blocklist";
@@ -203,7 +227,7 @@ let tcp_srv;            // sync listen socket
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
-let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
+let apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
 // 需要 local_clients()，只能在它之后绑定
 let appctl_track_macs, online_sample;
@@ -229,9 +253,10 @@ let state = {
 	guest_fw4_error: null,
 	guest_fw4_failed: null,
 	guest_fw4_retry_at: 0,
-	_guest_nft_sig: "",  // 访客 nft 表（隔离 + 子AP SNAT）的签名，避免每轮重建
-	_guest_zone_migrated: false, // 访客区是否已从 option network 迁移到 device+subnet
-	_guest_bridged: null, // 访客出口是否走 lan + SNAT（桥接上行），null = 尚未判定
+	guest_fw4_sig: null, // 已通过运行态核验的策略签名
+	guest_applying: false,
+	guest_apply_retry_at: 0,
+	_guest_zone_migrated: false, // 旧版按 SSID 写入桥端口和访客 zone 迁移
 	client_seen: {},    // macnorm -> first seen ts
 	client_bytes: {},   // macnorm -> 站点字节计数采样 { ts, rx, tx }（算实时速率）
 	bytes_cache: {},    // ifname -> { ts, map }：1s 内复用，避免同一轮重复调用 iw
@@ -1149,7 +1174,7 @@ function offload_apply(on) {
 		cur.set("firewall", "@defaults[0]", "flow_offloading_hw", want);
 		cur.commit("firewall");
 	}
-	guest_fw4_sync(null, changed);
+	guest_fw4_sync(null, changed, state.guest_applying || state.guest_apply_retry_at ? "hold" : null);
 	return true;
 }
 
@@ -1421,93 +1446,54 @@ function guest_cfg() {
 	};
 }
 
-// 同时检查入、出方向；WAN 回程也能命中 flowtable，不能只从 devices 去掉访客桥。
-function fw4_forward_state() {
-	let proc = fs.popen("nft list chain inet fw4 forward 2>/dev/null", "r");
+function guest_command_output(cmd) {
+	let proc = fs.popen(cmd, "r");
 	if (!proc) return null;
-	let rules = proc.read("all") ?? "";
-	if (proc.close() != 0) return null;
-	let active = false, guarded = true;
-	for (let line in split(rules, "\n")) {
-		let m = match(line, /^(.*?)\s*flow\s+(add|offload)\s+@ft(\s|;|$)/);
-		if (!m) continue;
-		active = true;
-		if (!match(m[1], /(^|\s)iifname\s+!=\s+"?br-guest"?(\s|$)/) ||
-		    !match(m[1], /(^|\s)oifname\s+!=\s+"?br-guest"?(\s|$)/)) guarded = false;
-	}
-	return { active, guarded: active && guarded };
+	let text = proc.read("all") ?? "";
+	return proc.close() == 0 ? text : null;
 }
 
-function fw4_replace_template(expected, body) {
-	let stat = fs.lstat(FW4_TEMPLATE);
-	if (stat?.type != "file" || stat.uid != 0 || stat.gid != 0) return false;
-	let dir = fs.mkdtemp(FW4_TEMPLATE + ".wifiroam-XXXXXX");
+function fw4_forward_state() {
+	let rules = guest_command_output("nft list chain inet fw4 forward 2>/dev/null");
+	if (rules == null) return null;
+	let active = false, guarded = true, forward = false, gate = [];
+	for (let line in split(rules, "\n")) {
+		let text = trim(line);
+		if (index(text, "type filter hook forward ") == 0) {
+			forward = true;
+			continue;
+		}
+		let m = match(text, /^(.*?)\s*flow\s+(add|offload)\s+@ft(\s|;|$)/);
+		if (m) {
+			active = true;
+			if (!match(m[1], /(^|\s)iifname\s+!=\s+"?br-guest"?(\s|$)/) ||
+			    !match(m[1], /(^|\s)oifname\s+!=\s+"?br-guest"?(\s|$)/)) guarded = false;
+		} else if (forward && text != "" && text != "}") {
+			push(gate, text);
+		}
+	}
+	return { active, guarded: active && guarded, isolated: forward && join("\n", gate) == join("\n", FW4_GUEST_GATE) };
+}
+
+function guest_replace_fw4_file(path, expected, body) {
+	let stat = fs.lstat(path);
+	if (stat && (stat.type != "file" || stat.uid != 0 || stat.gid != 0)) return false;
+	if (!stat && expected != null) return false;
+	let dir = fs.mkdtemp(path + ".wifiroam-XXXXXX");
 	if (!dir) return false;
-	let file = dir + "/ruleset.uc";
-	let ok = fs.writefile(file, body) == length(body) && fs.chmod(file, stat.mode & 0777) &&
-	         fs.readfile(FW4_TEMPLATE) == expected && fs.rename(file, FW4_TEMPLATE);
+	let file = dir + "/rules";
+	let mode = stat ? (stat.mode & 0777) : 0600;
+	let ok = fs.writefile(file, body) == length(body) && fs.chmod(file, mode) &&
+	         fs.readfile(path) == expected && fs.rename(file, path);
 	if (!ok) fs.unlink(file);
 	fs.rmdir(dir);
 	return ok;
 }
 
 function guest_fw4_status(error) {
-	if (error && state.guest_fw4_error != error) log("guest flow offload protection: " + error);
+	if (error && state.guest_fw4_error != error) log("guest forwarding paused: " + error);
 	state.guest_fw4_error = error;
 }
-
-guest_fw4_sync = function(cfg, reload) {
-	cfg = cfg ?? guest_cfg();
-	let protect = cfg.enabled && cfg.bandwidth > 0;
-	let source = fs.readfile(FW4_TEMPLATE) ?? "";
-	let patched = index(source, FW4_GUEST_FLOW_RULE) >= 0;
-	let original = patched ? replace(source, FW4_GUEST_FLOW_RULE, FW4_FLOW_RULE) : source;
-	let supported = (protect || patched) && sha256(original) == FW4_TEMPLATE_SHA256 &&
-	                length(split(original, FW4_FLOW_RULE)) == 2;
-	if (protect && !patched && !match(fs.readfile("/etc/openwrt_release") ?? "", /(^|\n)DISTRIB_RELEASE='25\.12\.6'(\n|$)/))
-		supported = false;
-	if (!supported) {
-		guest_fw4_status(protect || patched ? "unsupported" : null);
-		if (reload) system("/sbin/fw4 reload >/dev/null 2>&1");
-		return !protect && !patched;
-	}
-
-	let desired = protect ? replace(original, FW4_FLOW_RULE, FW4_GUEST_FLOW_RULE) : original;
-	let changed = desired != source;
-	let live = protect ? fw4_forward_state() : null;
-	if (!reload && protect && !live) {
-		guest_fw4_status("pending");
-		return false;
-	}
-	if (!changed && !reload && (!live?.active || live.guarded)) {
-		guest_fw4_status(null);
-		state.guest_fw4_failed = null;
-		return true;
-	}
-
-	let attempt = (protect ? "protect:" : "restore:") + sha256(source);
-	if (!reload && state.guest_fw4_failed == attempt && time() < state.guest_fw4_retry_at) return false;
-	let written = changed && fw4_replace_template(source, desired);
-	let ok = (!changed || written) && (!changed || system("/sbin/fw4 -q check") == 0) &&
-	         system("/sbin/fw4 reload >/dev/null 2>&1") == 0;
-	if (ok) {
-		live = fw4_forward_state();
-		ok = live && (!live.active || live.guarded === protect);
-	}
-	if (!ok) {
-		// 只回滚自己的改动；不覆盖被软件包更新或手动编辑过的模板。
-		if (written && !fw4_replace_template(desired, source)) log("guest firewall template rollback failed");
-		if (written || (reload && changed)) system("/sbin/fw4 reload >/dev/null 2>&1");
-		state.guest_fw4_failed = attempt;
-		state.guest_fw4_retry_at = time() + 60;
-		guest_fw4_status("apply_failed");
-		return false;
-	}
-
-	state.guest_fw4_failed = null;
-	guest_fw4_status(null);
-	return true;
-};
 
 // 开放时段判断：start <= end 为当天区间，否则视为跨零点（如 22:00-07:00）
 function guest_open_now(cfg) {
@@ -1539,93 +1525,98 @@ function guest_summary() {
 		bandwidth: g.bandwidth,
 		schedule: g.schedule, start: g.start, end: g.end,
 		allow_lan: g.allow_lan, open: open, ifaces: ifaces,
+		isolation: g.enabled ? state.guest_fw4_error : null,
 		last: state.last_guest ?? null,
 	};
 }
 
-function mask_prefix(m) {
-	if (index(m ?? "", ".") < 0) return int(m ?? "24");
-	let parts = split(m, ".");
-	let bits = 0;
-	for (let i = 0; i < 4; i++) {
-		let v = int(parts[i] ?? "0");
-		for (let b = 7; b >= 0; b--) {
-			if (v & (1 << b)) bits++;
-			else return bits;
-		}
+function guest_ipv4(address) {
+	if (type(address) != "string" || !match(address, /^([0-9]{1,3}\.){3}[0-9]{1,3}$/)) return null;
+	let value = 0;
+	for (let octet in split(address, ".")) {
+		let n = int(octet, 10);
+		if (n > 255) return null;
+		value = (value << 8) | n;
 	}
-	return bits;
+	return value;
 }
 
-// "192.168.0.1" + "255.255.255.0" -> "192.168.0.0/24"
-function ipv4_cidr(ipmask, mask) {
-	let a = split(ipmask ?? "", "/");
-	let ip = a[0];
-	let prefix = (a[1] != null && a[1] != "") ? int(a[1]) : mask_prefix(mask ?? "255.255.255.0");
-	let host = 32 - prefix;
-	if (host < 0) host = 0;
-	if (host > 31) host = 31;
-	let parts = split(ip, ".");
-	let ipint = 0;
-	for (let i = 0; i < 4; i++) ipint = (ipint * 256) + int(parts[i] ?? "0");
-	let div = 1 << host;
-	let net = ipint - (ipint % div);
-	let o = [];
-	let v = net;
-	for (let i = 0; i < 4; i++) { push(o, "" + (v % 256)); v = int(v / 256); }
-	return sprintf("%s.%s.%s.%s/%d", o[3], o[2], o[1], o[0], prefix);
+function guest_ipv4_text(value) {
+	return sprintf("%d.%d.%d.%d", (value >> 24) & 255, (value >> 16) & 255,
+		(value >> 8) & 255, value & 255);
 }
 
-function guest_lan_info() {
-	/* lan 可能由上游 DHCP 获取地址（中继 AP 模式下 router-tool 会把 lan
-	   改成 proto dhcp 并清掉 ipaddr/netmask），UCI 里没有地址时旧逻辑会
-	   退到 192.168.0.1，子 AP 的访客 SNAT 到一个不存在的地址后回程流量
-	   全部丢失——表现就是访客能连上 Wi-Fi 但上不了网。这里优先读 netifd
-	   运行态，读不到再退回 UCI。 */
-	let st = ubusc.call("network.interface.lan", "status");
-	let a = st?.["ipv4-address"]?.[0];
-	if (a?.address != null) {
-		let prefix = int(a.mask ?? 24);
-		if (prefix < 0) prefix = 0;
-		if (prefix > 32) prefix = 32;
-		return {
-			cidr: ipv4_cidr(a.address, "" + prefix),
-			ip: a.address,
-			gw: state.self.ip,
-			dev: st?.device ?? state.brdev,
-		};
-	}
+function guest_uplink(zone) {
+	let st = ubusc.call("network.interface." + zone, "status");
+	let dev = st?.l3_device ?? st?.device;
+	let ip = guest_ipv4(st?.["ipv4-address"]?.[0]?.address);
+	if (!st?.up || st.pending || !ip || !match(dev ?? "", /^[a-zA-Z0-9_.:-]{1,15}$/) ||
+	    dev == GUEST_BRIDGE || dev == "lo") return null;
+	return { dev, ip: guest_ipv4_text(ip) };
+}
 
+function guest_bridge_gateway(dev) {
+	let routes = guest_command_output(`ip -4 route show default dev ${dev} 2>/dev/null`);
+	if (!routes || trim(routes) == "") return null;
+	let gateway = null;
+	for (let line in split(trim(routes), "\n")) {
+		let fields = split(trim(line), /\s+/);
+		let ip = guest_ipv4(fields[2]);
+		if (fields[0] != "default" || fields[1] != "via" || !ip || (gateway != null && gateway != ip))
+			return null;
+		gateway = ip;
+	}
+	return gateway != null ? guest_ipv4_text(gateway) : null;
+}
+
+function guest_wan_configured() {
 	let cur = uci.cursor();
 	cur.load("network");
-	/* lan 的 ipaddr 可能是 list（本机即 list ipaddr），get() 会返回数组。
-	   注意 get_first 的第二参数是 section 类型（interface）而不是段名，
-	   这里统一用 get + 数组取首值最稳妥 */
-	let pick = function(v) {
-		if (type(v) == "array") return v[0];
-		return v;
-	};
-	let ip = pick(cur.get("network", "lan", "ipaddr")) ?? "192.168.0.1";
-	let nm = pick(cur.get("network", "lan", "netmask")) ?? "255.255.255.0";
-	let gw = pick(cur.get("network", "lan", "gateway"));
-	return {
-		cidr: ipv4_cidr(ip, nm),
-		ip: split(ip, "/")[0],
-		gw: gw != null ? split(gw, "/")[0] : state.self.ip,
-		dev: state.brdev,
-	};
-}
-
-// WAN 是否可作为访客出口。中继 AP 模式下 router-tool 会把 wan 置为
-// proto none 并禁用，此时设备本质是二层桥接 AP，访客只能走 guest→lan + SNAT。
-function guest_wan_uplink() {
-	let cur = uci.cursor();
-	cur.load("network");
-	if (cur.get("network", "wan") == null) return false;
 	let proto = cur.get("network", "wan", "proto");
-	if (proto == null || proto == "" || proto == "none") return false;
-	if (cur.get("network", "wan", "disabled") == "1") return false;
-	return true;
+	return proto != null && proto != "" && proto != "none" &&
+	       cur.get("network", "wan", "disabled") != "1";
+}
+
+function guest_local_routes() {
+	let routes = guest_command_output("ip -4 route show table all 2>/dev/null");
+	if (routes == null || trim(routes) == "") return null;
+	let prefixes = [ "0.0.0.0/8", "10.0.0.0/8", "100.64.0.0/10", "127.0.0.0/8",
+	                 "169.254.0.0/16", "172.16.0.0/12", "192.0.0.0/24", "192.168.0.0/16",
+	                 "198.18.0.0/15", "224.0.0.0/3" ];
+	for (let line in split(trim(routes), "\n")) {
+		let words = split(trim(line), /\s+/);
+		let dst = words[0];
+		if (index([ "local", "broadcast", "unicast", "anycast", "multicast",
+		            "blackhole", "unreachable", "prohibit", "throw" ], dst) >= 0)
+			dst = words[1];
+		if (dst == "default" || dst == "0.0.0.0/0" || dst == "nexthop" || dst == "") continue;
+		push(prefixes, dst ?? "");
+	}
+
+	// 内嵌在放行条件里，防止单条 drop 或独立集合丢失后反而放开内网。
+	let nets = {};
+	for (let prefix in prefixes) {
+		let parts = split(prefix, "/");
+		let addr = guest_ipv4(parts[0]);
+		let bits = parts[1] ?? "32";
+		if (length(parts) > 2 || addr == null || !match(bits, /^[0-9]{1,2}$/)) return null;
+		let mask = int(bits, 10);
+		if (mask < 1 || mask > 32) return null;
+		let shift = 32 - mask;
+		let base = (addr >> shift) << shift;
+		nets[base + "/" + mask] = { base, mask };
+	}
+	let disjoint = [];
+	for (let _, net in nets) {
+		let covered = false;
+		for (let bits = 1; bits < net.mask; bits++) {
+			let shift = 32 - bits;
+			let parent = (net.base >> shift) << shift;
+			if (nets[parent + "/" + bits]) { covered = true; break; }
+		}
+		if (!covered) push(disjoint, guest_ipv4_text(net.base) + "/" + net.mask);
+	}
+	return sort(disjoint);
 }
 
 function guest_network_only(network) {
@@ -1695,22 +1686,21 @@ function guest_write_wireless(cfg) {
 		if (!keep[s[".name"]]) push(stale, s[".name"]);
 	});
 	for (let sid in stale) wc.delete("wireless", sid);
-	wc.commit("wireless");
-	return open;
+	return wc.commit("wireless") == true;
 }
 
-// 关闭访客网络时删除残留的桥/接口/DHCP/防火墙段（nft 与 tc 由 after_reload 清理）
+// 关闭访客网络时删除托管的桥、接口、DHCP 和防火墙段。
 function guest_remove_infra() {
 	let nc = uci.cursor();
 	nc.load("network");
 	nc.delete("network", GUEST_IFACE);
 	nc.delete("network", GUEST_DEV);
-	nc.commit("network");
+	if (!nc.commit("network")) return false;
 
 	let dc = uci.cursor();
 	dc.load("dhcp");
 	dc.delete("dhcp", GUEST_IFACE);
-	dc.commit("dhcp");
+	if (!dc.commit("dhcp")) return false;
 
 	let fc = uci.cursor();
 	fc.load("firewall");
@@ -1719,14 +1709,13 @@ function guest_remove_infra() {
 			fc.delete("firewall", z[".name"]);
 	});
 	fc.delete("firewall", GUEST_ZONE);
-	for (let r in [ "wifiroam_guest_dhcp", "wifiroam_guest_dns_u", "wifiroam_guest_dns_t",
-	                GUEST_FWD_WAN, GUEST_FWD_LAN, GUEST_SNAT ])
+	for (let r in [ "wifiroam_guest_dhcp", "wifiroam_guest_dns_u", "wifiroam_guest_dns_t" ])
 		fc.delete("firewall", r);
-	fc.commit("firewall");
+	return fc.commit("firewall") == true;
 }
 
 // 无线配置通过 network=wifiroam_guest 交给 netifd 动态挂桥，不固化无线口名。
-function guest_write_infra(cfg) {
+function guest_write_infra() {
 	let nc = uci.cursor();
 	nc.load("network");
 	if (nc.get("network", GUEST_DEV) == null)
@@ -1741,7 +1730,7 @@ function guest_write_infra(cfg) {
 	nc.set("network", GUEST_IFACE, "device", GUEST_BRIDGE);
 	nc.set("network", GUEST_IFACE, "ipaddr", GUEST_IP);
 	nc.set("network", GUEST_IFACE, "netmask", "255.255.255.0");
-	nc.commit("network");
+	if (!nc.commit("network")) return false;
 
 	let dc = uci.cursor();
 	dc.load("dhcp");
@@ -1756,7 +1745,7 @@ function guest_write_infra(cfg) {
 	dc.set("dhcp", GUEST_IFACE, "dhcpv4", "server");
 	dc.set("dhcp", GUEST_IFACE, "dhcpv6", "disabled");
 	dc.set("dhcp", GUEST_IFACE, "force", "1");
-	dc.commit("dhcp");
+	if (!dc.commit("dhcp")) return false;
 
 	let fc = uci.cursor();
 	fc.load("firewall");
@@ -1798,76 +1787,247 @@ function guest_write_infra(cfg) {
 		fc.set("firewall", r.sec, "enabled", "1");
 	}
 
-	/* 有可用 WAN 时访客走 wan 出口；子 AP 或处于中继 AP 模式（wan 已禁用）
-	   的设备本质是二层桥接 AP，改由 guest→lan 转发 + SNAT。不用的
-	   forwarding 直接删除，避免 fw4 每次 reload 报「section is disabled」 */
-	let bridged = state.cfg.role == "sap" || !guest_wan_uplink();
-	state._guest_bridged = bridged;
-	if (!bridged) {
-		if (fc.get("firewall", GUEST_FWD_WAN) == null)
-			fc.set("firewall", GUEST_FWD_WAN, "forwarding");
-		fc.set("firewall", GUEST_FWD_WAN, "src", "guest");
-		fc.set("firewall", GUEST_FWD_WAN, "dest", "wan");
-		fc.set("firewall", GUEST_FWD_WAN, "enabled", "1");
-	} else {
-		fc.delete("firewall", GUEST_FWD_WAN);
-	}
-
-	if (bridged || cfg.allow_lan) {
-		if (fc.get("firewall", GUEST_FWD_LAN) == null)
-			fc.set("firewall", GUEST_FWD_LAN, "forwarding");
-		fc.set("firewall", GUEST_FWD_LAN, "src", "guest");
-		fc.set("firewall", GUEST_FWD_LAN, "dest", "lan");
-		fc.set("firewall", GUEST_FWD_LAN, "enabled", "1");
-	} else {
-		fc.delete("firewall", GUEST_FWD_LAN);
-	}
-
-	// 子AP 的“外网”其实走 lan 桥到主AP，必须放行 guest→lan 并做 SNAT，
-	// 否则主AP 没有访客子网的回程路由。
-	// 不能用 uci 的 nat 段：fw4 按出接口归 zone，src=guest 的规则只会出现在
-	// "oifname br-guest" 的 srcnat_guest 链里，反而会把去访客的下行包 SNAT 掉。
-	// SNAT 改由 guest_nft_apply 写在自建表（oifname 为 lan 侧）。
-	fc.delete("firewall", GUEST_SNAT);
-	fc.commit("firewall");
+	return fc.commit("firewall") == true;
 }
 
-// 独立 nft 表做访客→内网的兜底拦截（fw4 的 accept 规则之前生效）。
-// 允许访客访问内网资源时整表删除。
-// 注意：本机 nft 的 -f 文件模式不能解析 table/chain 声明，必须先建表与链。
-function guest_nft_apply(cfg) {
-	let info = guest_lan_info();
-	let snat_ip = info.ip != "" ? info.ip : state.self.ip;
-	let bridged = state.cfg.role == "sap" || !guest_wan_uplink();
-	let sig = (cfg.enabled ? "1" : "0") + "|" + (cfg.allow_lan ? "1" : "0") + "|" +
-	          (bridged ? "1" : "0") + "|" + snat_ip + "|" + info.cidr;
-	if (sig == state._guest_nft_sig) return;
-	state._guest_nft_sig = sig;
+function guest_fw4_config(include) {
+	let fc = uci.cursor(), dirty = false;
+	if (!fc.load("firewall")) return false;
+	for (let section in [ GUEST_FWD_WAN, GUEST_FWD_LAN, GUEST_SNAT ]) {
+		if (fc.get("firewall", section) == null) continue;
+		if (!fc.delete("firewall", section)) return false;
+		dirty = true;
+	}
+	if (include) {
+		let section = fc.get_all("firewall", GUEST_FW_INCLUDE);
+		if (section?.[".type"] != "include" || section.type != "nftables" ||
+		    section.position != "ruleset-append" || section.path != GUEST_FW_FILE || section.enabled != "1") {
+			if (!fc.set("firewall", GUEST_FW_INCLUDE, "include") ||
+			    !fc.set("firewall", GUEST_FW_INCLUDE, "type", "nftables") ||
+			    !fc.set("firewall", GUEST_FW_INCLUDE, "position", "ruleset-append") ||
+			    !fc.set("firewall", GUEST_FW_INCLUDE, "path", GUEST_FW_FILE) ||
+			    !fc.set("firewall", GUEST_FW_INCLUDE, "enabled", "1")) return false;
+			dirty = true;
+		}
+	} else if (fc.get("firewall", GUEST_FW_INCLUDE) != null) {
+		if (!fc.delete("firewall", GUEST_FW_INCLUDE)) return false;
+		dirty = true;
+	}
+	return !dirty || fc.commit("firewall") == true;
+}
 
-	cmd_output(sprintf("nft delete table inet %s 2>/dev/null", GUEST_NFT_TABLE));
-	if (!cfg.enabled) return;
-	cmd_output(sprintf("nft add table inet %s 2>/dev/null", GUEST_NFT_TABLE));
+function guest_fw4_source(source) {
+	return replace(replace(replace(replace(source, FW4_GUEST_FORWARD_HOOK, FW4_FORWARD_HOOK),
+		FW4_GUEST_ZONE_HOOK, FW4_ZONE_HOOK), FW4_GUEST_TABLE_HOOK, FW4_TABLE_HOOK),
+		FW4_GUEST_FLOW_RULE, FW4_FLOW_RULE);
+}
 
-	/* 桥接上行（子AP / 中继AP 模式）没有自己的 wan：访客流量经 br-lan
-	   送上游网关，必须在本机 SNAT 成 lan 地址，上游才能把回包按访客
-	   子网送回。fw4 的 nat 段按出接口归 zone，覆盖不到这个方向，所以
-	   放在自建表里做。 */
-	if (bridged && snat_ip != "") {
-		cmd_output(sprintf(
-			"nft add chain inet %s nat '{ type nat hook postrouting priority srcnat; policy accept; }' 2>/dev/null",
-			GUEST_NFT_TABLE));
-		cmd_output(sprintf("nft add rule inet %s nat ip saddr %s oifname %s snat ip to %s 2>/dev/null",
-			GUEST_NFT_TABLE, GUEST_NET, info.dev ?? state.brdev, snat_ip));
+function guest_fw4_policy(cfg) {
+	let routed = state.cfg.role == "cap" && guest_wan_configured();
+	let lan = guest_uplink("lan");
+	let uplink = routed ? guest_uplink("wan") : lan;
+	let prefixes = cfg.allow_lan ? [] : guest_local_routes();
+	if (!uplink || prefixes == null || (routed && lan?.dev == uplink.dev)) return null;
+	// 桥接访客只经当前默认网关上网，不直接访问上联二层网段的其他主机。
+	let gateway = !routed && !cfg.allow_lan ? guest_bridge_gateway(uplink.dev) : null;
+	if (!routed && !cfg.allow_lan && !gateway) return null;
+	let outlets = { [uplink.dev]: true };
+	if (routed && cfg.allow_lan && lan) outlets[lan.dev] = true;
+
+	let guard = [], egress = [], nat = [];
+	let incoming = `iifname "${GUEST_BRIDGE}"`, outgoing = `oifname "${GUEST_BRIDGE}"`;
+	let protected = length(prefixes) ? `{ ${join(", ", prefixes)} }` : null;
+	for (let dev in sort(keys(outlets))) {
+		let request = `${incoming} oifname "${dev}" ip saddr ${GUEST_NET} ct direction original ct state { new, established, related }`;
+		let reply = `iifname "${dev}" ${outgoing} ip daddr ${GUEST_NET} ct direction reply ct state { established, related }`;
+		if (protected) {
+			request += ` ip daddr != ${protected}`;
+			reply += ` ct original ip daddr != ${protected} ct reply ip saddr != ${protected}`;
+		}
+		if (gateway) request += ` rt ip nexthop ${gateway} ip daddr != ${gateway}`;
+		push(guard, request, reply);
+		push(egress, request + " accept");
+	}
+	if (!routed)
+		push(nat, `oifname "${uplink.dev}" ip saddr ${GUEST_NET} snat ip to ${uplink.ip}`);
+
+	let sig = substr(sha256(sprintf("%.J", [ guard, egress, nat ])), 0, 24);
+	let body = `flush chain inet fw4 ${GUEST_FW_GUARD}\n`;
+	for (let i, rule in guard)
+		body += `add rule inet fw4 ${GUEST_FW_GUARD} ${rule} goto ${GUEST_FW_FORWARD} comment "wr-guest-${sig}-g${i}"\n`;
+	body += `add rule inet fw4 ${GUEST_FW_GUARD} drop\n`;
+	for (let i, rule in egress)
+		body += `add rule inet fw4 ${GUEST_FW_EGRESS} ${rule} comment "wr-guest-${sig}-e${i}"\n`;
+	for (let i, rule in nat)
+		body += `insert rule inet fw4 srcnat ${rule} comment "wr-guest-${sig}-n${i}"\n`;
+	return { sig, body, guard, egress: length(egress), nat: length(nat) };
+}
+
+function guest_fw4_policy_live(live, policy) {
+	if (!live?.isolated || (live.active && !live.guarded)) return false;
+	let guard = guest_command_output(`nft list chain inet fw4 ${GUEST_FW_GUARD} 2>/dev/null`);
+	if (guard == null) return false;
+	if (!policy) return match(guard, /\bchain wifiroam_guest_guard\s*\{\s*drop\s*\}/) != null;
+	let egress = guest_command_output(`nft list chain inet fw4 ${GUEST_FW_EGRESS} 2>/dev/null`);
+	let zone = guest_command_output("nft list chain inet fw4 forward_guest 2>/dev/null");
+	if (egress == null || zone == null || index(zone, `jump ${GUEST_FW_EGRESS}\n`) < 0) return false;
+	for (let i = 0; i < length(policy.guard); i++)
+		if (index(guard, `goto ${GUEST_FW_FORWARD} comment "wr-guest-${policy.sig}-g${i}"`) < 0) return false;
+	for (let i = 0; i < policy.egress; i++)
+		if (index(egress, `comment "wr-guest-${policy.sig}-e${i}"`) < 0) return false;
+	if (policy.nat) {
+		let nat = guest_command_output("nft list chain inet fw4 srcnat 2>/dev/null");
+		if (nat == null || index(nat, `comment "wr-guest-${policy.sig}-n0"`) < 0) return false;
+	}
+	return true;
+}
+
+function guest_fw4_held(policy) {
+	let table = guest_command_output(`nft list table inet ${GUEST_NFT_TABLE} 2>/dev/null`);
+	if (table == null) return false;
+	let forward, input;
+	for (let chain in split(table, "\n\tchain ")) {
+		if (index(chain, "hold {") == 0) forward = chain;
+		else if (index(chain, "input {") == 0) input = chain;
+	}
+	if (!forward || !input || index(forward, "type filter hook forward ") < 0 ||
+	    index(input, "type filter hook input ") < 0 || index(input, `iifname "${GUEST_BRIDGE}" drop\n`) < 0 ||
+	    index(forward, `iifname "${GUEST_BRIDGE}" drop\n`) < 0 ||
+	    index(forward, `oifname "${GUEST_BRIDGE}" drop\n`) < 0) return false;
+	if (!policy) return index(forward, " return") < 0;
+	for (let i = 0; i < length(policy.guard); i++)
+		if (index(forward, `return comment "wr-guest-${policy.sig}-f${i}"`) < 0) return false;
+	return true;
+}
+
+// 原子替换旧独立表：加载时封锁转发，核验后只允许同一份访客策略。
+// 独立表留在运行态，fw4 单独停止时也不会开放对内网或本机的访问。
+function guest_fw4_hold(policy) {
+	let table = `inet ${GUEST_NFT_TABLE}`;
+	let guest = `iifname "${GUEST_BRIDGE}"`;
+	let batch = `destroy table ${table}\nadd table ${table}\n` +
+		`add chain ${table} hold { type filter hook forward priority -30; policy accept; }\n` +
+		`add chain ${table} input { type filter hook input priority -30; policy accept; }\n` +
+		`add rule ${table} input ${guest} meta nfproto ipv4 udp dport { 53, 67 } return\n` +
+		`add rule ${table} input ${guest} meta nfproto ipv4 tcp dport 53 return\n` +
+		`add rule ${table} input ${guest} drop\n`;
+	for (let i, rule in policy?.guard ?? [])
+		batch += `add rule ${table} hold ${rule} return comment "wr-guest-${policy.sig}-f${i}"\n`;
+	batch += `add rule ${table} hold ${guest} drop\n` +
+		 `add rule ${table} hold oifname "${GUEST_BRIDGE}" drop\n`;
+	let proc = fs.popen("nft -f - 2>/dev/null", "w");
+	if (!proc) return false;
+	let written = proc.write(batch);
+	return proc.close() == 0 && written == length(batch) && guest_fw4_held(policy);
+}
+
+function guest_fw4_hold_bridge() {
+	if (!fs.access(`/sys/class/net/${GUEST_BRIDGE}`)) return true;
+	let recorded = fs.writefile(GUEST_FW_BRIDGE_HELD, "1") == 1;
+	return system(["ip", "link", "set", "dev", GUEST_BRIDGE, "down"]) == 0 && recorded;
+}
+
+function guest_fw4_release(open, remove_fence) {
+	if (fs.access(GUEST_FW_BRIDGE_HELD)) {
+		if (open && fs.access(`/sys/class/net/${GUEST_BRIDGE}`) &&
+		    system(["ip", "link", "set", "dev", GUEST_BRIDGE, "up"]) != 0) return false;
+		if (!fs.unlink(GUEST_FW_BRIDGE_HELD)) return false;
+	}
+	return !remove_fence || system(`nft destroy table inet ${GUEST_NFT_TABLE}`) == 0;
+}
+
+function guest_fw4_fail(attempt, error) {
+	state.guest_fw4_sig = null;
+	state.guest_fw4_failed = attempt;
+	state.guest_fw4_retry_at = time() + 30;
+	guest_fw4_status(error);
+	return false;
+}
+
+// 暂停模式用于启动迁移和 network reload 前：旧流表也必须随 fw4 重载清除。
+guest_fw4_sync = function(cfg, reload, mode) {
+	cfg = cfg ?? guest_cfg();
+	let source = fs.readfile(FW4_TEMPLATE) ?? "";
+	let original = guest_fw4_source(source);
+	let known = sha256(original) == FW4_TEMPLATE_SHA256;
+	let supported = known && match(fs.readfile("/etc/openwrt_release") ?? "",
+		/(^|\n)DISTRIB_RELEASE='25\.12\.6'(\n|$)/) != null;
+	let fc = uci.cursor();
+	fc.load("firewall");
+	let legacy = fc.get("firewall", GUEST_FWD_WAN) != null || fc.get("firewall", GUEST_FWD_LAN) != null ||
+	             fc.get("firewall", GUEST_SNAT) != null;
+	let include = fc.get_all("firewall", GUEST_FW_INCLUDE);
+	let old_body = fs.readfile(GUEST_FW_FILE);
+	let bridge_exists = fs.access(`/sys/class/net/${GUEST_BRIDGE}`);
+	let managed = cfg.enabled || legacy || source != original || include != null || old_body != null ||
+	              (bridge_exists && fc.get("firewall", GUEST_ZONE) != null) || state.guest_fw4_sig ||
+	              state.guest_fw4_failed || fs.access(GUEST_FW_BRIDGE_HELD);
+	if (!managed) {
+		guest_fw4_status(null);
+		return mode != null || !reload || system("/sbin/fw4 reload >/dev/null 2>&1") == 0;
 	}
 
-	if (cfg.allow_lan) return;
-	/* 链名不能用 fwd：nft 把 fwd 当保留字，会报 unexpected fwd */
-	cmd_output(sprintf(
-		"nft add chain inet %s guard '{ type filter hook forward priority -20; policy accept; }' 2>/dev/null",
-		GUEST_NFT_TABLE));
-	cmd_output(sprintf("nft add rule inet %s guard iifname %s ip daddr %s drop 2>/dev/null",
-		GUEST_NFT_TABLE, GUEST_BRIDGE, info.cidr));
-}
+	let enabled = cfg.enabled && mode != "restore";
+	let configured = state.cfg.role == "cap" || state.cfg.role == "sap";
+	let active = enabled && configured && mode != "hold";
+	let policy = active && supported ? guest_fw4_policy(cfg) : null;
+	let patched = supported && mode != "restore" && (enabled || bridge_exists || mode == "hold");
+	let desired = known ? original : source;
+	if (patched) {
+		desired = replace(replace(replace(replace(original, FW4_FLOW_RULE, FW4_GUEST_FLOW_RULE),
+			FW4_FORWARD_HOOK, FW4_GUEST_FORWARD_HOOK), FW4_ZONE_HOOK, FW4_GUEST_ZONE_HOOK),
+			FW4_TABLE_HOOK, FW4_GUEST_TABLE_HOOK);
+	}
+	let live = fw4_forward_state();
+	let attempt = sha256(desired) + ":" + (policy?.sig ?? (active ? "pending" : "closed"));
+	let config_ready = policy
+		? old_body == policy.body && include?.path == GUEST_FW_FILE && include.type == "nftables" &&
+		  include.position == "ruleset-append" && include.enabled == "1"
+		: include == null && old_body == null;
+	if (!reload && !legacy && source == desired && config_ready && state.guest_fw4_sig == attempt &&
+	    (!patched || guest_fw4_policy_live(live, policy)) && guest_fw4_held(policy)) return !active || policy != null;
+	if (!reload && state.guest_fw4_failed == attempt && time() < state.guest_fw4_retry_at &&
+	    live && (!live.active || live.guarded) && guest_fw4_held()) return false;
+
+	let fenced = guest_fw4_hold();
+	let stale_offload = !live || (!live.guarded && (live.active ||
+		guest_command_output("nft list flowtable inet fw4 ft 2>/dev/null") != null));
+	if ((!fenced || stale_offload || mode == "restore") && !guest_fw4_hold_bridge())
+		return guest_fw4_fail(attempt, "hold_failed");
+	// 停桥兜底时也撤掉旧放行，但不安装新策略，防止 netifd 恢复网桥后误放行。
+	if (!fenced) policy = null;
+	if (old_body != null && !fs.unlink(GUEST_FW_FILE)) return guest_fw4_fail(attempt, "apply_failed");
+	if (!guest_fw4_config(policy != null)) return guest_fw4_fail(attempt, "apply_failed");
+	if (source != desired && !guest_replace_fw4_file(FW4_TEMPLATE, source, desired))
+		return guest_fw4_fail(attempt, "apply_failed");
+	if (policy && !guest_replace_fw4_file(GUEST_FW_FILE, null, policy.body))
+		return guest_fw4_fail(attempt, "apply_failed");
+
+	// 一次失败的 reload 可能丢掉状态文件，却保留内核规则；此时用 start 重建状态。
+	let action = live && !fs.access("/var/run/fw4.state") ? "start" : "reload";
+	let ok = system("/sbin/fw4 -q check") == 0 &&
+	         system(`/sbin/fw4 ${action} >/dev/null 2>&1`) == 0;
+	if (ok && patched) ok = guest_fw4_policy_live(fw4_forward_state(), policy);
+	if (!ok) {
+		// 不回滚到旧宽放行。后续 reload 缺少 include 时仍为默认拒绝。
+		if (policy) fs.unlink(GUEST_FW_FILE);
+		return guest_fw4_fail(attempt, "apply_failed");
+	}
+	if (!fenced && mode != "restore") return guest_fw4_fail(attempt, "apply_failed");
+	let remove_fence = mode == "restore" || (!enabled && !bridge_exists && !patched);
+	if ((policy && !guest_fw4_hold(policy)) ||
+	    (mode != "hold" && (patched || remove_fence) && !guest_fw4_release(enabled, remove_fence))) {
+		// 核验或恢复接口失败时撤掉候选策略，重新封锁访客转发。
+		if (policy) fs.unlink(GUEST_FW_FILE);
+		if (!guest_fw4_hold() && !guest_fw4_hold_bridge()) return guest_fw4_fail(attempt, "hold_failed");
+		return guest_fw4_fail(attempt, "apply_failed");
+	}
+	state.guest_fw4_sig = remove_fence ? null : attempt;
+	state.guest_fw4_failed = null;
+	guest_fw4_status(mode == "hold" ? "pending" : !enabled ? null : !supported ? "unsupported" :
+		!configured ? "not_configured" : !policy ? "no_uplink" : null);
+	return !active || policy != null;
+};
 
 function guest_client_ips() {
 	let ips = {};
@@ -1956,32 +2116,43 @@ function guest_tc_apply(cfg) {
 	state.guest_tc_error = error;
 }
 
-guest_after_reload = function() {
-	let cfg = guest_cfg();
-	uloop.process("/etc/init.d/dnsmasq", [ "reload" ], null, function() {});
-	guest_fw4_sync(cfg, true);
-	guest_nft_apply(cfg);
-	guest_tc_apply(cfg);
-};
+// 先封住旧转发，再加载接口、无线和新策略。一次只应用一份访客配置。
+apply_guest_local = function(cfg, done) {
+	state.guest_applying = true;
+	let finish = function(error, retry) {
+		state.guest_applying = false;
+		state.guest_apply_retry_at = retry ? time() + 30 : 0;
+		if (retry && state.guest_fw4_error == "pending") guest_fw4_status("apply_failed");
+		if (done) done({ ok: error == null, error });
+	};
+	if (!guest_fw4_sync(cfg, true, "hold")) {
+		finish(state.guest_fw4_error ?? "guest_apply_failed", true);
+		return;
+	}
+	if (!guest_write_wireless(cfg) || !(cfg.enabled ? guest_write_infra() : guest_remove_infra())) {
+		finish("guest_apply_failed", true);
+		return;
+	}
 
-// 本机落地：先加载访客接口和防火墙，再重载无线，端口由 netifd 绑定。
-apply_guest_local = function(cfg) {
-	state.guest_open = guest_open_now(cfg);
-	if (cfg.enabled && cfg.bandwidth > 0) guest_fw4_sync(cfg, false);
-	guest_write_wireless(cfg);
-	if (cfg.enabled)
-		guest_write_infra(cfg);
-	else
-		guest_remove_infra();
-
-	uloop.process("/etc/init.d/network", [ "reload" ], null, function() {
-		guest_after_reload();
-		uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
-			log("guest wifi reload rc=" + res);
-			guest_tc_apply(guest_cfg());
-		});
-	});
-	return { ok: true };
+	if (!uloop.process("/etc/init.d/network", [ "reload" ], null, function(rc) {
+		if (rc != 0) {
+			finish("guest_apply_failed", true);
+			return;
+		}
+		if (!uloop.process("/sbin/wifi", [ "reload" ], null, function(rc) {
+			if (rc != 0) {
+				finish("guest_apply_failed", true);
+				return;
+			}
+			let applied = guest_fw4_sync(cfg, true);
+			state.guest_open = guest_open_now(cfg);
+			state._guest_zone_migrated = true;
+			uloop.process("/etc/init.d/dnsmasq", [ "reload" ], null, function() {});
+			guest_tc_apply(cfg);
+			finish(applied && (!cfg.enabled || !state.guest_fw4_error) ? null :
+				state.guest_fw4_error ?? "guest_apply_failed", false);
+		})) finish("guest_apply_failed", true);
+	})) finish("guest_apply_failed", true);
 };
 
 // 校验并写入本机 wifiroam.guest（主AP/子AP 都走这里）
@@ -2009,66 +2180,45 @@ guest_save_local = function(g) {
 	cur.set("wifiroam", GUEST_SECTION, "end", end);
 	cur.set("wifiroam", GUEST_SECTION, "allow_lan", g.allow_lan ? "1" : "0");
 	cur.set("wifiroam", GUEST_SECTION, "config_ver", "" + int(g.ver ?? 0));
-	cur.commit("wifiroam");
-	return true;
+	return cur.commit("wifiroam") == true;
 };
 
 // 定时检查开放时段；只在跨过边界时重启无线。限速规则每轮同步一次
 guest_tick = function() {
-	if (state.cfg.role == "unconfigured") return;
+	if (state.guest_applying) return;
 	let g = guest_cfg();
+	if (state.cfg.role == "unconfigured") {
+		guest_fw4_sync(g, false);
+		return;
+	}
+	if (state.guest_apply_retry_at) {
+		if (time() >= state.guest_apply_retry_at) apply_guest_local(g);
+		return;
+	}
 	if (!g.enabled) {
 		state.guest_open = false;
 		guest_fw4_sync(g, false);
 		guest_tc_apply(g);
-		guest_nft_apply(g);
 		return;
 	}
-	/* 旧版本访客区用 option network / subnet 定义（会让 vif 进 flowtable、
-	   并给 DHCP 加上 saddr 限制），子AP 还留着无效的 uci nat 段；
-	   进程升级后做一次性迁移 */
-	if (state._guest_zone_migrated != true) {
-		let mc = uci.cursor();
-		mc.load("network");
-		mc.load("firewall");
-		state._guest_zone_migrated = true;
-		// 清除旧版按 SSID 写入的桥端口，后续完全由 netifd 管理。
-		if (mc.get("network", GUEST_DEV, "ports") != null ||
-		    mc.get("network", GUEST_DEV, "bridge_empty") != "1") {
+	if (!state._guest_zone_migrated) {
+		let cur = uci.cursor(), zone_ready = false;
+		cur.load("network");
+		cur.load("firewall");
+		cur.foreach("firewall", "zone", function(z) {
+			if (z.name == "guest" && (z.device == GUEST_BRIDGE ||
+			    (type(z.device) == "array" && length(z.device) == 1 && z.device[0] == GUEST_BRIDGE)) &&
+			    z.network == null && z.subnet == null && z.input == "REJECT" && z.forward == "REJECT")
+				zone_ready = true;
+		});
+		if (!zone_ready || cur.get("network", GUEST_DEV, "ports") != null ||
+		    cur.get("network", GUEST_DEV, "bridge_empty") != "1") {
 			apply_guest_local(g);
 			return;
 		}
-		if (mc.get("firewall", GUEST_ZONE, "network") != null ||
-		    mc.get("firewall", GUEST_ZONE, "subnet") != null ||
-		    (state.cfg.role == "sap" && mc.get("firewall", GUEST_SNAT) != null)) {
-			guest_write_infra(g);
-			guest_fw4_sync(g, true);
-			state._guest_nft_sig = "";
-		}
-	}
-	/* 访客出口取决于 wan 是否可用：router-tool 切到中继 AP 模式会禁用
-	   wan，此时必须把转发从 guest→wan 换成 guest→lan + SNAT，否则访客
-	   能连上 Wi-Fi 但没有回程路由，表现为无法上网 */
-	let bridged = state.cfg.role == "sap" || !guest_wan_uplink();
-	if (state._guest_bridged == null) {
-		let fc = uci.cursor();
-		fc.load("firewall");
-		let fw_wan = fc.get("firewall", GUEST_FWD_WAN) != null;
-		state._guest_bridged = bridged;
-		if (fw_wan == bridged) {
-			guest_write_infra(g);
-			guest_fw4_sync(g, true);
-			state._guest_nft_sig = "";
-		}
-	}
-	else if (state._guest_bridged != bridged) {
-		guest_write_infra(g);
-		guest_fw4_sync(g, true);
-		state._guest_nft_sig = "";
+		state._guest_zone_migrated = true;
 	}
 	guest_fw4_sync(g, false);
-	/* 进程重启后内核里的 nft 表可能丢失（设备重启），按需补建/清理 */
-	guest_nft_apply(g);
 	let open = guest_open_now(g);
 	if (open == state.guest_open) {
 		guest_tc_apply(g);
@@ -3075,14 +3225,17 @@ function sap_rx(req) {
 		break;
 	}
 	case "push_guest_config": {
-		// CAP 下发的访客网络配置：SAP 本地落盘并重建访客子网
-		let g = req.args.guest ?? {};
-		if (!guest_save_local(g)) {
+		// 只有实际通过本机核验的策略才确认生效。
+		if (state.guest_applying) {
+			req.reply({ ok: false, error: "guest_busy" });
+			break;
+		}
+		if (!guest_save_local(req.args.guest ?? {})) {
 			req.reply({ ok: false, error: "invalid" });
 			break;
 		}
-		let r = apply_guest_local(guest_cfg());
-		req.reply({ ok: r.ok, error: r.error });
+		req.defer();
+		apply_guest_local(guest_cfg(), function(result) { req.reply(result); });
 		break;
 	}
 	case "push_offload": {
@@ -3924,6 +4077,7 @@ let api_obj = {
 		call: function(req) {
 			if (state.cfg.role != "cap")
 				return { ok: false, error: "not_cap" };
+			if (state.guest_applying) return { ok: false, error: "guest_busy" };
 			let a = req.args;
 			let prev = guest_cfg();
 			let enabled = a.enabled ? true : false;
@@ -3972,19 +4126,22 @@ let api_obj = {
 
 			if (!guest_save_local(cfg))
 				return { ok: false, error: "invalid" };
-			let lr = apply_guest_local(guest_cfg());
-
-			let results = [ { ap: state.self.mac, name: state.self.name,
-			                 ok: lr.ok, error: lr.ok ? null : "invalid" } ];
-			for (let mn, p in state.peers) {
-				if (!p.authed) continue;
-				push(results, { ap: p.mac ?? maccolon(mn),
-				                name: p.info?.name ?? p.name ?? mn,
-				                ok: null, error: "pending" });
-				push_guest_to(mn, cfg);
-			}
-			state.last_guest = { ts: time(), config: cfg, results: results };
-			return { ok: lr.ok, results: results };
+			let local = { ap: state.self.mac, name: state.self.name, ok: null, error: "pending" };
+			let results = [ local ];
+			state.last_guest = { ts: time(), config: cfg, results };
+			req.defer();
+			apply_guest_local(guest_cfg(), function(result) {
+				local.ok = result.ok;
+				local.error = result.error;
+				for (let mn, p in state.peers) {
+					if (!p.authed) continue;
+					push(results, { ap: p.mac ?? maccolon(mn),
+					                name: p.info?.name ?? p.name ?? mn,
+					                ok: null, error: "pending" });
+					push_guest_to(mn, cfg);
+				}
+				req.reply({ ok: result.ok, saved: true, error: result.error, results });
+			});
 		},
 	},
 	set_backhaul: {
@@ -4165,15 +4322,13 @@ let api_obj = {
 			let hw = cur.get("firewall", "@defaults[0]", "flow_offloading_hw") == "1";
 			let live = fw4_forward_state();
 			let guest = guest_cfg(), guest_guard = null;
-			if (guest.enabled && guest.bandwidth > 0) {
-				guest_guard = state.guest_fw4_error;
-				if (!guest_guard)
-					guest_guard = !live ? "pending" : !live.active ? "off" : live.guarded ? "protected" : "pending";
-			}
+			if (guest.enabled && !state.guest_fw4_error)
+				guest_guard = !live ? "pending" : !live.active ? "off" : live.guarded ? "protected" : "pending";
 			let managed = state.cfg.role == "sap";
 			if (managed && state.cap_offload != null)
 				sw = state.cap_offload;
-			return { enabled: sw, hw, active: live?.active ?? false, managed, guest_guard };
+			return { enabled: sw, hw, active: live?.active ?? false, managed, guest_guard,
+			         guest_isolation: guest.enabled ? state.guest_fw4_error : null };
 		},
 	},
 	set_offload: {
@@ -4331,6 +4486,8 @@ reconfigure = function() {
 	state.wired_seen = {};
 	state.prev_owner = null;
 	state.steer_last = {};
+	if (state.guest_applying || state.guest_apply_retry_at) guest_fw4_sync(null, true, "hold");
+	else guest_tick();
 	send_hello();
 };
 
@@ -4383,7 +4540,7 @@ function main() {
 		enable_relay_ap_mode();
 	alias_load();
 	detect_self();
-	if (state.cfg.role != "unconfigured") guest_fw4_sync(null, false);
+	guest_tick();
 	// 建规则要用到本机接口/网桥信息，必须放在 detect_self 之后
 	appctl_load();
 	ensure_token();
@@ -4417,6 +4574,8 @@ function main() {
 	uloop.run();
 }
 
+if (ARGV[0] == "--pause-guest-fw4")
+	exit(guest_fw4_sync(null, true, "hold") ? 0 : 1);
 if (ARGV[0] == "--restore-guest-fw4")
-	exit(guest_fw4_sync({ enabled: false }, false) ? 0 : 1);
+	exit(guest_fw4_sync({ enabled: false }, true, "restore") ? 0 : 1);
 main();

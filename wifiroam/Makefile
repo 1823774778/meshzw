@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wifiroam
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=50
+PKG_RELEASE:=51
 PKG_LICENSE:=GPL-2.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
@@ -48,9 +48,26 @@ endef
 define Package/wifiroam/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
+	/etc/init.d/wifiroam stop 2>/dev/null
+	/usr/bin/ucode -- /usr/share/wifiroam/wifiroamd.uc --pause-guest-fw4 || \
+		logger -t wifiroam 'Could not pause guest forwarding for migration'
+	# DPI 不受主进程的 restart 管理，不能让旧可执行文件继续处理报文。
+	if pidof wifiroam-dpi >/dev/null; then
+		nft delete table inet wifiroam 2>/dev/null
+		for pid in $$(pidof wifiroam-dpi); do
+			kill "$$pid" 2>/dev/null
+		done
+		for attempt in 1 2 3 4 5; do
+			pidof wifiroam-dpi >/dev/null || break
+			sleep 1
+		done
+		if pidof wifiroam-dpi >/dev/null; then
+			logger -t wifiroam 'Old DPI process did not stop; wifiroam was not restarted'
+			exit 1
+		fi
+	fi
 	/etc/init.d/wifiroam enable 2>/dev/null
-	# 升级场景进程已在跑，start 是空操作会导致旧代码常驻，必须 restart
-	/etc/init.d/wifiroam restart 2>/dev/null
+	/etc/init.d/wifiroam start 2>/dev/null
 }
 exit 0
 endef

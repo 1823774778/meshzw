@@ -270,6 +270,20 @@ return view.extend({
 	},
 
 	/* ---------------------------------------------------------- 访客网络 */
+	guestIsolationNotice: function(status) {
+		switch (status) {
+		case 'unsupported': return _('当前防火墙未通过访客隔离兼容性校验，已暂停访客转发。');
+		case 'no_uplink': return _('无法确认访客的 IPv4 上联或内网路由，已暂停访客转发。');
+		case 'pending': return _('正在验证访客隔离，暂不开放转发。');
+		case 'not_configured': return _('本机尚未配置组网角色，访客转发已暂停。');
+		case 'guest_busy': return _('正在应用上一份访客配置，请稍后再试。');
+		case 'hold_failed': return _('无法确认访客转发已封锁，请关闭访客 Wi-Fi 并查看系统日志。');
+		case 'apply_failed':
+		case 'guest_apply_failed': return _('访客隔离配置未能应用，访客转发已暂停。请查看系统日志。');
+		default: return '';
+		}
+	},
+
 	/* 参照 TP-Link：总开关打开后显示名称/密码/限速/开放时间/内网访问。
 	   主AP 保存后推送到所有已配对 AP，各 AP 建自己的访客子网。
 	   关闭时只显示开关。 */
@@ -410,9 +424,12 @@ return view.extend({
 
 		var resBox = E('div', { 'class': 'wr-hint' },
 			g.last ? this.renderWifiResults(g.last.results) : '');
+		this.guestIsolationEl = E('div', { 'class': 'wr-hint', 'aria-live': 'polite' },
+			this.guestIsolationNotice(g.isolation));
 
 		var panel = E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('Guest Network')),
+			this.guestIsolationEl,
 			E('div', { 'class': 'wr-guest-row wr-guest-head' }, [
 				E('label', {}, _('Guest Network')),
 				E('div', { 'class': 'wr-guest-ctrl' }, [ cb ]),
@@ -474,14 +491,14 @@ return view.extend({
 			allow_lan: !!form.allowCb.checked,
 		}).then(function(res) {
 			wr.setBusy(btn, false);
-			if (!res || !res.ok) {
+			if (!res || (!res.ok && !res.saved)) {
 				var why = res && res.error;
 				wr.notify('danger', _('Failed') + ': ' +
 					(why === 'not_cap' ? _('Only the main AP can change guest network settings')
 					 : why === 'ssid_invalid' ? _('SSID must be 1-32 characters')
 					 : why === 'key_invalid' ? _('Password must be at least 8 characters')
 					 : why === 'time_invalid' ? _('Invalid time window')
-					 : (why || 'unknown')));
+					 : (self.guestIsolationNotice(why) || _('request rejected'))));
 				return;
 			}
 
@@ -500,8 +517,13 @@ return view.extend({
 			form.keyEl.value = '';
 			if (resBox) dom.content(resBox, self.renderWifiResults(res.results));
 			self.refreshGuestResults(resBox);
-			wr.notify('success',
-				_('Guest network updated. The guest SSID restarts in a few seconds.'));
+			const notice = self.guestIsolationNotice(res.error);
+			dom.content(self.guestIsolationEl, notice);
+			if (res.ok) {
+				wr.notify('success', _('访客配置已应用。'));
+			} else {
+				wr.notify('warning', _('访客配置已保存，但本机尚未生效。') + (notice ? ` ${notice}` : ''));
+			}
 		}).catch(function() {
 			wr.setBusy(btn, false);
 			wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
@@ -663,7 +685,15 @@ return view.extend({
 			if (res[0]) self.st = res[0];
 			if (res[1]) self.disc = res[1];
 			if (res[2]) self.topo = res[2];
-			if (res[3]) self.offload = res[3];
+			if (res[3] && typeof res[3] === 'object') {
+				self.offload = res[3];
+				if (self.guestIsolationEl && 'guest_isolation' in res[3]) {
+					const notice = self.guestIsolationNotice(res[3].guest_isolation);
+					if (self.guestIsolationEl.textContent !== notice) {
+						dom.content(self.guestIsolationEl, notice);
+					}
+				}
+			}
 
 			var sb = document.getElementById('wr-status');
 			if (sb && self.st)

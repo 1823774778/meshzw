@@ -2,11 +2,10 @@
 /*
  * wifiroam-dpi - lightweight DPI daemon for wifiroam app control.
  *
- * Receives the first packet of each flow via NFQUEUE (queue number 0),
- * extracts the TLS SNI (from TCP ClientHello) or QUIC SNI (from QUIC
- * Initial), and drops the flow if the SNI matches a blocked domain for
- * the source device. Subsequent packets of the same flow are decided
- * from a userspace flow cache (no re-parsing).
+ * Receives packets via NFQUEUE (queue number 0). For devices with a
+ * blocklist, checks TCP ClientHello SNI and the existing UDP port,
+ * fixed-header and plaintext-domain heuristics. It does not parse
+ * encrypted QUIC frames.
  *
  * Blocklist is read from /tmp/wifiroam/dpi_blocklist, written by
  * wifiroamd. Format (one line per device IP):
@@ -316,99 +315,8 @@ static int tls_sni(const uint8_t *d, int len, char *sni, int sni_max)
 	return 0;
 }
 
-/* ---- QUIC variable-length integer ---- */
-static int quic_varint(const uint8_t *d, int len, int off, uint64_t *val)
-{
-	if (off >= len) return -1;
-	uint8_t b = d[off];
-	int n = 1 << ((b >> 6) & 3);   /* 1,2,4,8 bytes */
-	if (off + n > len) return -1;
-	uint64_t v = b & 0x3f;
-	int i;
-	for (i = 1; i < n; i++)
-		v = (v << 8) | d[off + i];
-	*val = v;
-	return n;
-}
-
-/* ByteDance private QUIC version.  Seen in Douyin/TikTok UDP/443
- * traffic; frame layout is non-standard so the CRYPTO frame cannot be
- * parsed, but the version itself is a strong Douyin signal. */
+/* ByteDance private QUIC version; only inspect the fixed header. */
 #define QUIC_VERSION_BYTEDANCE  0xff00001d
-
-/* ---- QUIC Initial SNI extraction ----
- * QUIC v1/v2 Initial packet carries a CRYPTO frame with the TLS
- * ClientHello.  We parse the long header, skip DCID/SCID/token, find
- * CRYPTO frames, concatenate their data and call tls_sni() on it.
- * Returns: SNI length (>0) on success, 0 if no SNI / not parseable. */
-static int quic_sni(const uint8_t *d, int len, char *sni, int sni_max)
-{
-	if (len < 7) return 0;
-	if ((d[0] & 0x80) == 0) return 0;        /* short header */
-	int type = (d[0] >> 4) & 0x3;
-	if (type != 0x00) return 0;              /* not Initial */
-	/* version at [1..4] */
-	int p = 5;
-	if (p >= len) return 0;
-	int dcid_len = d[p]; p++;
-	if (dcid_len > 20 || p + dcid_len > len) return 0;
-	p += dcid_len;
-	if (p >= len) return 0;
-	int scid_len = d[p]; p++;
-	if (scid_len > 20 || p + scid_len > len) return 0;
-	p += scid_len;
-
-	uint64_t tok_len;
-	int n = quic_varint(d, len, p, &tok_len);
-	if (n < 0) return 0;
-	p += n;
-	if (tok_len > (uint64_t)(len - p)) return 0;
-	p += (int)tok_len;
-
-	uint64_t plen;
-	n = quic_varint(d, len, p, &plen);
-	if (n < 0) return 0;
-	p += n;
-	if (plen > (uint64_t)(len - p)) return 0;
-	int pend = p + (int)plen;
-
-	/* Walk frames looking for CRYPTO (type 0x06).  PADDING (0x00)
-	 * and ACK (0x01..0x03) may precede it. */
-	uint8_t crypto[2048];
-	int crypto_len = 0;
-
-	while (p < pend) {
-		uint64_t ftype;
-		n = quic_varint(d, len, p, &ftype);
-		if (n < 0) break;
-		p += n;
-
-		if (ftype == 0x00) continue;        /* PADDING */
-
-		if (ftype == 0x06) {                /* CRYPTO */
-			uint64_t off64, clen;
-			n = quic_varint(d, len, p, &off64); if (n < 0) break; p += n;
-			n = quic_varint(d, len, p, &clen); if (n < 0) break; p += n;
-			if (p + (int)clen > pend) break;
-			if ((int)off64 + (int)clen <= (int)sizeof(crypto)) {
-				memcpy(crypto + off64, d + p, (int)clen);
-				if ((int)off64 + (int)clen > crypto_len)
-					crypto_len = (int)off64 + (int)clen;
-			}
-			p += (int)clen;
-			if (crypto_len >= 5) break;    /* got data, try parse */
-		} else if (ftype <= 0x03) {
-			/* ACK frame: appears before CRYPTO in some Initials. */
-			break;
-		} else {
-			/* Non-standard frame type — private protocol (Douyin).
-			 * Stop walking; caller falls back to payload string scan. */
-			break;
-		}
-	}
-	if (crypto_len < 5) return 0;
-	return tls_sni(crypto, crypto_len, sni, sni_max);
-}
 
 /* Check whether the QUIC long-header version is ByteDance's private
  * version (0xff00001d).  Only meaningful for long-header packets. */
@@ -591,7 +499,6 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
 		int v = cache_get(h, now);
 		if (v >= 0) { nfq_set_verdict(qh, id, v, 0, NULL); return 0; }
 
-		char sni[256];
 		blent_t *be = NULL;
 		char ipstr[46];
 		if (v6) inet_ntop(AF_INET6, saddr, ipstr, sizeof(ipstr));
@@ -599,30 +506,10 @@ static int cb(struct nfq_q_handle *qh, struct nfgenmsg *nfmsg,
 		const char *mac = neigh_mac(ipstr);
 		if (mac) be = bl_find_mac(mac);
 
-		int snilen = 0;
-		if (paylen > 0)
-			snilen = quic_sni(payload + payoff, paylen, sni, sizeof(sni));
-
-		int blocked = 0;
-		if (snilen > 0 && be && sni_blocked(be, sni)) {
-			blocked = 1;
-		} else if (be && paylen > 0) {
-			/* SNI not available on a NEW UDP/443 flow.
-			 * A standard QUIC Initial always carries an SNI in its
-			 * CRYPTO frame.  snilen==0 therefore means this is a
-			 * non-standard/private protocol — Douyin uses a private
-			 * QUIC variant (version 0xff00001d and also v1-looking
-			 * headers with non-standard frame types) whose CRYPTO
-			 * payload is encrypted and unparseable.  For a MAC that
-			 * is under app-control, drop these UDP/443 flows. */
-			if (dport == 443)
-				blocked = 1;
-			else if (quic_is_bytedance(payload + payoff, paylen))
-				blocked = 1;
-			else if (payload_has_blocked_domain(
-			                 payload + payoff, paylen, be))
-				blocked = 1;
-		}
+		/* Preserve the existing non-SNI UDP policy. */
+		int blocked = be && paylen > 0 &&
+			(dport == 443 || quic_is_bytedance(payload + payoff, paylen) ||
+			 payload_has_blocked_domain(payload + payoff, paylen, be));
 
 		if (blocked) {
 			cache_put(h, NF_DROP, now);
