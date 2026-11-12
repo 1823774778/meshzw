@@ -1,0 +1,140 @@
+[2026年11月13日 GMT+8 05:41:26] daemon.info: ucode[18207]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:41:38] daemon.info: ucode[18207]: wifiroam: discovery: DC:D8:7C:5B:79:70 at 192.168.10.112 name=XWRT
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:
+[2026年11月13日 GMT+8 05:41:46] daemon.err: ucode[18207]:
+[2026年11月13日 GMT+8 05:41:46] daemon.info: ucode[18878]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:41:46] daemon.info: ucode[18878]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:41:46] daemon.info: ucode[18878]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:41:48] daemon.info: ucode[18878]: wifiroam: discovery: DC:D8:7C:5B:79:70 at 192.168.10.112 name=XWRT
+[2026年11月13日 GMT+8 05:41:56] daemon.info: ucode[18878]: wifiroam: event paired DC:D8:7C:5B:79:70 - 192.168.10.112
+[2026年11月13日 GMT+8 05:41:58] daemon.info: ucode[20328]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:41:58] daemon.info: ucode[20328]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:41:58] daemon.info: ucode[20328]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:42:04] daemon.info: ucode[20328]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:42:17] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月13日 GMT+8 05:42:17] daemon.notice: wpa_supplicant[3092]: Set MLD config: [ ]
+[2026年11月13日 GMT+8 05:42:17] daemon.notice: wpa_supplicant[3092]: Start pending MLD interfaces
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:
+[2026年11月13日 GMT+8 05:42:18] daemon.err: ucode[20328]:
+[2026年11月13日 GMT+8 05:42:20] daemon.info: ucode[20493]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:42:20] daemon.info: ucode[20493]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:42:20] daemon.info: ucode[20493]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:42:23] daemon.info: ucode[20493]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:42:27] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月13日 GMT+8 05:42:27] daemon.notice: wpa_supplicant[3092]: Set MLD config: [ ]
+[2026年11月13日 GMT+8 05:42:27] daemon.notice: wpa_supplicant[3092]: Start pending MLD interfaces
+[2026年11月13日 GMT+8 05:42:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 05:42:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:
+[2026年11月13日 GMT+8 05:42:40] daemon.err: ucode[20493]:
+[2026年11月13日 GMT+8 05:42:42] daemon.info: ucode[20678]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:42:42] daemon.info: ucode[20678]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:42:42] daemon.info: ucode[20678]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:42:44] daemon.info: ucode[20678]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:
+[2026年11月13日 GMT+8 05:43:02] daemon.err: ucode[20678]:
+[2026年11月13日 GMT+8 05:43:04] daemon.info: ucode[20812]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:43:04] daemon.info: ucode[20812]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:43:04] daemon.info: ucode[20812]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:43:14] daemon.info: ucode[20812]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:
+[2026年11月13日 GMT+8 05:43:24] daemon.err: ucode[20812]:
+[2026年11月13日 GMT+8 05:43:24] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 6 crashes, 21 seconds since last crash
+[2026年11月13日 GMT+8 05:43:30] daemon.info: ucode[22261]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:43:30] daemon.info: ucode[22261]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:43:30] daemon.info: ucode[22261]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:43:33] daemon.info: ucode[22261]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:
+[2026年11月13日 GMT+8 05:43:50] daemon.err: ucode[22261]:
+[2026年11月13日 GMT+8 05:43:50] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 7 crashes, 21 seconds since last crash
+[2026年11月13日 GMT+8 05:44:44] daemon.info: ucode[24354]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:44:44] daemon.info: ucode[24354]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:44:44] daemon.info: ucode[24354]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:44:53] daemon.info: ucode[24354]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:
+[2026年11月13日 GMT+8 05:45:04] daemon.err: ucode[24354]:
+[2026年11月13日 GMT+8 05:45:04] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 8 crashes, 20 seconds since last crash
+[2026年11月13日 GMT+8 05:46:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月13日 GMT+8 05:46:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月13日 GMT+8 05:46:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月13日 GMT+8 05:46:26] daemon.info: ucode[26454]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:46:26] daemon.info: ucode[26454]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月13日 GMT+8 05:46:26] daemon.info: ucode[26454]: wifiroam: started role=cap
+[2026年11月13日 GMT+8 05:46:33] daemon.info: ucode[26454]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月13日 GMT+8 05:46:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 05:46:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]: Reference error: access to undeclared variable usage_add_traffic
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]: In station_usage_sample(), file /usr/share/wifiroam/wifiroamd.uc, line 2026, byte 4:
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:   called from function usage_tick (/usr/share/wifiroam/wifiroamd.uc:2162:31)
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:   called from function run ([C])
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4335:12)
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:   (1 tail call frames omitted)
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:  `            usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));`
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:
+[2026年11月13日 GMT+8 05:46:46] daemon.err: ucode[26454]:
+[2026年11月13日 GMT+8 05:46:46] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 9 crashes, 20 seconds since last crash
