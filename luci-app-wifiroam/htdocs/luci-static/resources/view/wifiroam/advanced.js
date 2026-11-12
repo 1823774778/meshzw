@@ -27,7 +27,6 @@ return view.extend({
 		return Promise.all([
 			wr.safeCall('get_roam'),
 			wr.safeCall('status'),
-			wr.safeCall('appctl_status'),
 		]);
 	},
 
@@ -555,70 +554,9 @@ return view.extend({
 		});
 	},
 
-	/* ------------------------------------------------ 应用识别与统计（精准模式） */
-	/* 精准模式：锁定 DNS 出口 + 严格活跃判定 + 缩短归属缓存 + 挂起硬件加速。
-	   关闭时保持宽松口径（兼容旧行为）。依赖设备页的「应用使用与访问控制」总开关 */
-	renderAppctlPanel: function(isCap) {
-		var self = this;
-		var ac = this.appctl || {};
-		var usable = isCap && ac.ok && ac.enabled === true;
-
-		var cb = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
-		cb.checked = (ac.enhanced === true);
-
-		var btn = E('button', {
-			'class': 'btn cbi-button-positive',
-			click: function() {
-				wr.setBusy(btn, true, _('Applying...'));
-				wr.call('set_appctl', {
-					enabled: ac.enabled, enhanced: cb.checked,
-				}).then(function(res) {
-					wr.setBusy(btn, false);
-					if (!res || !res.ok) {
-						wr.notify('danger', _('Failed') + ': ' +
-							((res && res.error) || 'unknown'));
-						return;
-					}
-					ac.enhanced = (res.enhanced === true);
-					wr.notify('success', cb.checked
-						? _('Precise mode enabled. Hardware flow offload was suspended to keep counters complete.')
-						: _('Precise mode disabled. Reverted to the lenient mode.'));
-				}).catch(function() {
-					wr.setBusy(btn, false);
-					wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
-				});
-			},
-		}, _('Save'));
-
-		var kids = [
-			E('h3', {}, _('App Recognition & Statistics')),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, [ cb, ' ', _('Precise mode (recommended)') ]),
-				E('div', { 'class': 'wr-hint' },
-					_('Locks DNS egress to this router so apps cannot bypass recognition via built-in HTTPDNS/DoH/DoT; ' +
-					  'counts usage time only when a window has real traffic (idle keep-alives ignored); ' +
-					  'expires DNS-to-app mapping in 30 minutes to avoid stale CDN attribution; ' +
-					  'suspends hardware flow offload while enabled so traffic counters stay complete (restored on disable).')),
-			]),
-			isCap ? E('div', {}, [ btn ]) : '',
-		];
-
-		if (!usable) {
-			cb.disabled = true;
-			btn.disabled = true;
-			kids.splice(1, 0, E('div', { 'class': 'wr-hint' },
-				!isCap
-					? _('App recognition can only be configured on the main AP.')
-					: _('Enable "App Usage & Access Control" on the Clients page first.')));
-		}
-
-		return E('div', { 'class': 'cbi-section' }, kids);
-	},
-
 	render: function(data) {
 		this.cfg = data[0];
 		this.st = data[1] || {};
-		this.appctl = data[2] || null;
 
 		wr.mountNav('advanced', {
 			running: !!(this.st && this.st.role),
@@ -800,7 +738,6 @@ return view.extend({
 			notice,
 			E('div', { id: 'wr-pre' }, this.renderChecklist()),
 			form,
-			this.renderAppctlPanel(isCap),
 			E('div', { id: 'wr-apply' }, this.renderApplyResults(this.st.last_apply)),
 			E('div', { id: 'wr-bh' },
 				E('div', { 'class': 'wr-hint' }, _('Loading wireless backhaul settings...'))),

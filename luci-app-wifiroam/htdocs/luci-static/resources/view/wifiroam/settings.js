@@ -541,8 +541,7 @@ return view.extend({
 	},
 
 	/* 硬件加速（flow offloading）开关：本机实时生效。
-	   开启时 fw4 的 flowtable 会接管已建立连接，后续数据包绕过 wifiroam 的
-	   counter / drop 规则，应用统计与访问控制随之失真，因此单独给一个开关。 */
+	   开启后已建立的连接由 fw4 flowtable 转发，吞吐更高但不再经过防火墙规则。 */
 	renderOffload: function() {
 		var self = this;
 		var off = this.offload || {};
@@ -601,7 +600,7 @@ return view.extend({
 				E('div', { 'class': 'wr-hint' },
 					managed
 						? _('硬件加速由主路由统一控制，子路由会跟随主路由状态。')
-						: _('When enabled, established connections bypass the firewall rules used for app detection, so app usage statistics and per-app access control may be incomplete. Turn it off if app detection matters more than forwarding throughput.')),
+						: _('When enabled, established connections are handled by the flowtable for higher throughput; disable it if all traffic must pass through firewall rules.')),
 				E('div', { 'class': 'wr-hint' }, [
 					_('Applies to all paired APs.'), ' ', now,
 				]),

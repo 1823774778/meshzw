@@ -138,24 +138,6 @@
 }
 .wr-detail-table td { padding: 0.3em 0.6em; }
 
-/* 设备详情：应用使用时长与访问控制 */
-.wr-muted { color: var(--text-3, var(--muted-text, #90a4ae)); }
-.wr-appctl { margin-top: 1em; border-top: 1px solid var(--line, var(--border-color, #e0e0e0)); padding-top: 0.8em; }
-.wr-appctl-head {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	gap: 0.5em;
-}
-.wr-appctl-switch {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.35em;
-	font-size: 13px;
-	font-weight: normal;
-	cursor: pointer;
-}
 /* 设备详情（TP-Link 风格）：头部大名称、灰色信息行、速率行、在线时间大数字 */
 .wr-dev-head { display: flex; align-items: center; gap: 0.6em; }
 .wr-dev-head svg { flex: none; }
@@ -182,38 +164,6 @@
 }
 .wr-dev-up { color: #1e88e5; }
 .wr-dev-down { color: #43a047; }
-.wr-dev-online { margin-top: 0.1em; padding-top: 0.65em; border-top: 1px solid var(--line, var(--border-color, #eee)); }
-.wr-dev-online .wr-cap { color: var(--text-3, var(--muted-text, #777)); font-size: 12.5px; }
-.wr-dev-online .wr-big { font-size: 26px; font-weight: 600; margin-top: 0.1em; }
-
-/* 上网统计：页签 + 7 天柱状图 */
-.wr-stats { margin-top: 0.8em; border-top: 1px solid var(--line, var(--border-color, #eee)); padding-top: 0.7em; }
-.wr-stats-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5em; }
-.wr-stats-online { border-top: none; padding-top: 0.4em; display: flex; gap: 2.4em; flex-wrap: wrap; }
-.wr-tabs {
-	display: flex;
-	flex: 1 1 100%;
-	margin-top: 0.5em;
-	padding: 3px;
-	background: var(--s3, var(--surface-inset, var(--background-color-medium, #f5f5f5)));
-	border-radius: 6px;
-}
-.wr-tab {
-	flex: 1;
-	border: 0;
-	background: transparent;
-	padding: 0.35em 0;
-	font-size: 12.5px;
-	color: var(--text-3, var(--muted-text, #666));
-	border-radius: 5px;
-	cursor: pointer;
-}
-.wr-tab.active {
-	background: var(--s2, var(--surface-raised, #fff));
-	color: var(--text, var(--text-strong, #222));
-	font-weight: 600;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-}
 /* 网络管理顶部页签：与 Vantage 的 .cbi-tabmenu 同一套分段控件外观 */
 .wr-navtabs {
 	display: flex;
@@ -256,22 +206,7 @@
 	font-weight: 600;
 	box-shadow: var(--seg-on-ring, inset 0 0 0 1px var(--accent-line, var(--primary, #2e7d32)));
 }
-.wr-chart { display: block; width: 100%; max-width: 460px; height: auto; margin-top: 0.4em; }
-.wr-chart text { font-size: 9.5px; fill: #90a4ae; }
 
-/* 应用时长行列表（替代原表格）：图标+名称 ｜ 时长 ｜ 控制 */
-.wr-app-rows { margin-top: 0.4em; }
-.wr-app-row {
-	display: flex;
-	align-items: center;
-	gap: 0.7em;
-	padding: 0.4em 0.1em;
-	border-bottom: 1px solid var(--line, var(--border-color, #f0f0f0));
-}
-.wr-app-row .wr-app-cell { flex: 1 1 auto; min-width: 0; }
-.wr-app-row .wr-app-name { overflow: hidden; text-overflow: ellipsis; }
-.wr-app-dur { text-align: right; white-space: nowrap; line-height: 1.3; }
-.wr-app-dur .wr-total { display: block; font-size: 11px; color: var(--text-3, var(--muted-text, #90a4ae)); }
 /* 功能开关：矢量 SVG 旋钮，避免小尺寸径向渐变在部分主题/缩放比例下出现锯齿 */
 input.wr-switch-input {
 	-webkit-appearance: none;
@@ -307,43 +242,6 @@ input.wr-switch-input:checked {
 input.wr-switch-input:focus { outline: none; }
 input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* 应用类别小标题（列表按类别分组） */
-.wr-cat { margin: 0.6em 0 0.1em; font-size: 11.5px; color: var(--text-3, var(--muted-text, #78909c)); letter-spacing: 0.3px; }
-/* 未识别流量行：灰色弱化，不参与管控 */
-.wr-app-other { border-top: 1px dashed var(--line, var(--border-color, #eceff1)); }
-.wr-app-other .wr-app-name { color: var(--text-3, var(--muted-text, #90a4ae)); }
-/* 图标与名称水平排列：flex 行内布局，确保任何主题下都不会上下堆叠 */
-.wr-app-cell {
-	display: flex;
-	align-items: center;
-	gap: 0.45em;
-	white-space: nowrap;
-}
-.wr-app-ico {
-	width: 18px;
-	height: 18px;
-	border-radius: 4px;
-	object-fit: contain;
-	flex: none;
-}
-.wr-app-name { line-height: 1.35; }
-.wr-app-sel { min-width: 6em; padding: 0.15em 0.4em; font-size: 12.5px; }
-.wr-app-live {
-	display: inline-block;
-	width: 7px;
-	height: 7px;
-	margin-right: 0;
-	border-radius: 50%;
-	background: #07c160;
-	box-shadow: 0 0 0 2px rgba(7, 193, 96, 0.2);
-	flex: none;
-}
-.wr-appctl-tip {
-	margin-top: 0.5em;
-	font-size: 11.5px;
-	line-height: 1.5;
-	color: var(--text-3, var(--muted-text, #90a4ae));
-}
 
 .wr-check-ok { color: #2e7d32; }
 .wr-check-fail { color: #c62828; }
@@ -508,22 +406,13 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 [data-darkmode="true"] .wr-hint,
 [data-darkmode="true"] .wr-legend,
 [data-darkmode="true"] .wr-dev-info,
-[data-darkmode="true"] .wr-dev-online .wr-cap,
-[data-darkmode="true"] .wr-app-dur .wr-total,
-[data-darkmode="true"] .wr-appctl-tip,
 [data-darkmode="true"] .wr-log-count,
 [data-darkmode="true"] .wr-form-row .wr-hint,
-[data-darkmode="true"] .wr-cat,
 [data-darkmode="true"] .wr-donate-body p {
 	color: var(--text-3, #b0bec5);
 }
 
-[data-darkmode="true"] .wr-appctl,
 [data-darkmode="true"] .wr-dev-rates,
-[data-darkmode="true"] .wr-dev-online,
-[data-darkmode="true"] .wr-stats,
-[data-darkmode="true"] .wr-app-row,
-[data-darkmode="true"] .wr-app-other,
 [data-darkmode="true"] .wr-ssid-group,
 [data-darkmode="true"] .wr-navtabs,
 [data-darkmode="true"] .wr-log-scroll,
@@ -532,17 +421,6 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	border-color: var(--line, #3a4148);
 }
 
-[data-darkmode="true"] .wr-tabs {
-	background: var(--s3, #2a3036);
-}
-[data-darkmode="true"] .wr-tab {
-	color: var(--text-3, #b0bec5);
-}
-[data-darkmode="true"] .wr-tab.active {
-	background: var(--s2, #3a4148);
-	color: var(--text, #eceff1);
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
-}
 
 [data-darkmode="true"] .wr-kvr-on {
 	background: var(--ok-soft, rgba(76, 175, 80, 0.16));
@@ -646,7 +524,4 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 [data-darkmode="true"] .wr-toggle line {
 	stroke: var(--text-3, #b0bec5);
-}
-[data-darkmode="true"] .wr-chart line {
-	stroke: var(--line, #3a4148);
 }

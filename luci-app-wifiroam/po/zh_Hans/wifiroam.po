@@ -127,59 +127,8 @@ msgstr "接收速率（下行）"
 msgid "Connected Since"
 msgstr "接入时间"
 
-msgid "Online time"
-msgstr "在线时间"
-
 msgid "Edit name"
 msgstr "编辑名称"
-
-msgid "Usage stats"
-msgstr "上网统计"
-
-msgid "Yesterday"
-msgstr "昨日"
-
-msgid "Last 7 days"
-msgstr "过去七天"
-
-msgid "%dh"
-msgstr "%d小时"
-
-msgid "No app usage yet"
-msgstr "暂无应用使用记录"
-
-msgid "Traffic"
-msgstr "流量"
-
-msgid "Other apps"
-msgstr "其他应用（未识别）"
-
-msgid "Video"
-msgstr "视频"
-
-msgid "Live"
-msgstr "直播"
-
-msgid "Social"
-msgstr "社交"
-
-msgid "Shopping"
-msgstr "购物"
-
-msgid "Music"
-msgstr "音乐"
-
-msgid "News"
-msgstr "资讯"
-
-msgid "Office"
-msgstr "办公"
-
-msgid "Games"
-msgstr "游戏"
-
-msgid "Web"
-msgstr "浏览"
 
 msgid "Note"
 msgstr "备注"
@@ -628,50 +577,11 @@ msgstr "运行中的 wifiroamd 版本与当前界面不一致，点击「重启�
 msgid "Version mismatch persists after repair. Please update the plugin packages."
 msgstr "自动修复后版本仍不一致，请更新插件软件包。"
 
-msgid "App Usage & Access Control"
-msgstr "应用使用与访问控制"
-
-msgid "Enable"
-msgstr "启用"
-
-msgid "Application"
-msgstr "应用"
-
-msgid "Today"
-msgstr "今日"
-
-msgid "Total"
-msgstr "累计"
-
-msgid "Access"
-msgstr "访问"
-
-msgid "Allowed"
-msgstr "允许"
-
-msgid "Blocked"
-msgstr "禁止"
-
-msgid "In use"
-msgstr "正在使用"
-
 msgid "Saved"
 msgstr "已保存"
 
 msgid "unknown"
 msgstr "未知错误"
-
-msgid "Configure app control on the main AP"
-msgstr "请在主 AP 上配置应用访问控制"
-
-msgid "Cannot reach wifiroamd"
-msgstr "无法连接 wifiroamd 服务"
-
-msgid "Turn on app control to collect usage and enforce rules"
-msgstr "开启应用控制后才会统计使用时长并执行规则"
-
-msgid "Identified by DNS lookups; encrypted DNS may bypass detection."
-msgstr "基于 DNS 解析识别，使用加密 DNS 的应用可能漏统计或拦截无效。"
 
 msgid "Hardware Acceleration (flow offloading)"
 msgstr "硬件加速（flow offloading）"
@@ -679,8 +589,8 @@ msgstr "硬件加速（flow offloading）"
 msgid "Enable flow offloading"
 msgstr "启用 flow offloading"
 
-msgid "When enabled, established connections bypass the firewall rules used for app detection, so app usage statistics and per-app access control may be incomplete. Turn it off if app detection matters more than forwarding throughput."
-msgstr "开启后，已建立的连接会被 flowtable 接管，数据包绕过应用识别所用的防火墙规则，应用使用时长统计和访问控制可能不完整。若更看重应用识别，请关闭此功能。"
+msgid "When enabled, established connections are handled by the flowtable for higher throughput; disable it if all traffic must pass through firewall rules."
+msgstr "开启后已建立的连接由 flowtable 转发以提升吞吐；如果所有流量都必须经过防火墙规则，请关闭。"
 
 msgid "Applies to all paired APs."
 msgstr "对所有已配对的 AP 生效。"
@@ -850,27 +760,6 @@ msgstr "无密码（开放网络）"
 
 msgid "Please set a Wi-Fi password, or tick \"Open (no password)\""
 msgstr "请设置 Wi-Fi 密码，或勾选「开放网络（无密码）」"
-
-msgid "App Recognition & Statistics"
-msgstr "应用识别与统计"
-
-msgid "Precise mode (recommended)"
-msgstr "精准模式（推荐）"
-
-msgid "Locks DNS egress to this router so apps cannot bypass recognition via built-in HTTPDNS/DoH/DoT; counts usage time only when a window has real traffic (idle keep-alives ignored); expires DNS-to-app mapping in 30 minutes to avoid stale CDN attribution; suspends hardware flow offload while enabled so traffic counters stay complete (restored on disable)."
-msgstr "锁定 DNS 出口到本路由器，防止应用通过内置 HTTPDNS/DoH/DoT 绕过识别；仅在窗口内有真实流量时才计使用时长（锁屏保活不计）；DNS 与应用映射 30 分钟过期，避免 CDN 复用后仍误归属；开启期间挂起硬件流量卸载以保证计数完整（关闭后恢复）。"
-
-msgid "Precise mode enabled. Hardware flow offload was suspended to keep counters complete."
-msgstr "精准模式已开启。硬件流量卸载已挂起以保证计数完整。"
-
-msgid "Precise mode disabled. Reverted to the lenient mode."
-msgstr "精准模式已关闭，已恢复为宽松模式。"
-
-msgid "App recognition can only be configured on the main AP."
-msgstr "应用识别只能在主路由（CAP）上配置。"
-
-msgid "Enable \"App Usage & Access Control\" on the Clients page first."
-msgstr "请先在「设备」页开启「应用使用与访问控制」。"
 
 msgid "%d clients"
 msgstr "%d 台终端"

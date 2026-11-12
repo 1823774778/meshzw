@@ -83,79 +83,6 @@ function safeCall(method, args) {
 	return wr.call(method, args).catch(function() { return null; });
 }
 
-/* 应用小图标：使用各应用官方的真实品牌图标（官网 favicon 的 64px 版本），
-   随包内置在 luci-static/resources/wifiroam/apps/，不依赖外网，离线可用 */
-var APP_ICONS = {
-	wechat:        'wechat',
-	qq:            'qq',
-	douyin:        'douyin',
-	kuaishou:      'kuaishou',
-	bilibili:      'bilibili',
-	xiaohongshu:   'xiaohongshu',
-	weibo:         'weibo',
-	taobao:        'taobao',
-	iqiyi:         'iqiyi',
-	netease_music: 'netease_music',
-	youku:         'youku',
-	mgtv:          'mgtv',
-	zhihu:         'zhihu',
-	toutiao:       'toutiao',
-	xigua:         'xigua',
-	jd:            'jd',
-	pinduoduo:     'pinduoduo',
-	meituan:       'meituan',
-	eleme:         'eleme',
-	dingtalk:      'dingtalk',
-	baidu:         'baidu',
-	ximalaya:      'ximalaya',
-	huya:          'huya',
-	douyu:         'douyu',
-	mihoyo:        'mihoyo',
-	kugou:         'kugou'
-};
-
-/* 应用类别（与后端 APP_DEFS.cat 对应）：列表按类别分组，对齐 TP-Link */
-var CAT_ORDER = [ 'video', 'live', 'social', 'shop', 'music', 'news', 'office', 'game', 'web' ];
-var CAT_NAME = {
-	video:  _('Video'),
-	live:   _('Live'),
-	social: _('Social'),
-	shop:   _('Shopping'),
-	music:  _('Music'),
-	news:   _('News'),
-	office: _('Office'),
-	game:   _('Games'),
-	web:    _('Web')
-};
-
-function appIcon(id) {
-	var file = APP_ICONS[id];
-	if (!file) return null;
-
-	return E('img', {
-		'class': 'wr-app-ico',
-		src: L.resource('wifiroam/apps/' + file + '.png'),
-		alt: '', 'aria-hidden': 'true',
-		/* 内联写死尺寸与行内显示，避免主题 img 样式或旧 CSS 缓存把它们变成块级元素 */
-		style: 'width:18px;height:18px;border-radius:4px;object-fit:contain;' +
-		       'flex:0 0 18px;display:inline-block;vertical-align:middle'
-	});
-}
-
-/* 图标、在线圆点、名称排成一行（水平 flex，禁止上下堆叠） */
-function appCell(id, name, live) {
-	return E('div', {
-		'class': 'wr-app-cell',
-		style: 'display:flex;align-items:center;gap:0.45em;white-space:nowrap'
-	}, [
-		appIcon(id),
-		live ? E('span', {
-			'class': 'wr-app-live', title: _('In use'),
-			style: 'flex:0 0 7px'
-		}) : null,
-		E('span', { 'class': 'wr-app-name', style: 'line-height:1.35' }, name)
-	]);
-}
 
 return view.extend({
 	topo: null,
@@ -172,7 +99,6 @@ return view.extend({
 			safeCall('topology'),
 			safeCall('status'),
 			safeCall('roam_log', { limit: 60 }),
-			safeCall('appctl_status')
 		]);
 	},
 
@@ -185,14 +111,8 @@ return view.extend({
 			this.topo = res[0];
 			this.status = res[1];
 			this.logs = (res[2] && res[2].events) || [];
-			this.appctl = res[3] || null;
 			this.redraw();
 
-			// 详情弹窗开着时同步刷新应用区块，让时长随轮询增长
-			if (this._appRedraw && document.querySelector('.wr-appctl'))
-				this._appRedraw();
-			if (this._statsRedraw && document.querySelector('.wr-stats'))
-				this._statsRedraw();
 			if (this._ratesRedraw && document.querySelector('.wr-dev-rates'))
 				this._ratesRedraw();
 
@@ -1073,368 +993,10 @@ return view.extend({
 			dlg.addEventListener('hide', function() { self.modalOpen = false; });
 	},
 
-	/* ---------------------------------------- 上网统计（页签 + 柱状图） */
-	dayStr: function(offset) {
-		var base = (this.appctl && this.appctl.day)
-			? new Date(this.appctl.day + 'T00:00:00') : new Date();
-		var d = new Date(base.getTime() - offset * 86400000);
-		var p = function(x) { return (x < 10 ? '0' : '') + x; };
-		return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
-	},
-
-	statsBox: function(n) {
-		var self = this;
-		var mac = (n.mac || '').toLowerCase().replace(/[^0-9a-f]/g, '');
-		var box = E('div', { 'class': 'wr-stats' });
-
-		function onlineDays() {
-			var ac = self.appctl;
-			return (ac && ac.online && ac.online[mac]) || {};
-		}
-
-		function periodSec() {
-			var ds = onlineDays(), p = self._statsPeriod || 'today';
-			if (p === 'yesterday') return ds[self.dayStr(1)] || 0;
-			if (p === 'week') {
-				var s = 0;
-				for (var i = 0; i < 7; i++) s += ds[self.dayStr(i)] || 0;
-				return s;
-			}
-			return ds[self.dayStr(0)] || 0;
-		}
-
-		/* 终端总流量按天分桶，与在线时长同页签切换 */
-		function periodBytes() {
-			var ac = self.appctl;
-			var ds = (ac && ac.ndata && ac.ndata[mac]) || {};
-			var p = self._statsPeriod || 'today';
-			if (p === 'yesterday') return ds[self.dayStr(1)] || 0;
-			if (p === 'week') {
-				var s = 0;
-				for (var i = 0; i < 7; i++) s += ds[self.dayStr(i)] || 0;
-				return s;
-			}
-			return ds[self.dayStr(0)] || 0;
-		}
-
-		function render() {
-			var p = self._statsPeriod || 'today';
-			var tabs = E('div', { 'class': 'wr-tabs' },
-				[ ['yesterday', _('Yesterday')], ['today', _('Today')],
-				  ['week', _('Last 7 days')] ].map(function(t) {
-					return E('button', {
-						'class': 'wr-tab' + (p === t[0] ? ' active' : ''),
-						click: function() {
-							self._statsPeriod = t[0];
-							render();
-							if (self._appRedraw) self._appRedraw();
-						}
-					}, t[1]);
-				}));
-
-			/* 7 天柱状图：固定 24 小时满刻度横线，浅蓝柱、今日深色 */
-			var ds = onlineDays();
-			var chart = svg('svg', { viewBox: '0 0 320 96', 'class': 'wr-chart' });
-			[6, 12, 18, 24].forEach(function(h) {
-				var y = 76 - h * 70 / 24;
-				chart.appendChild(svg('line', {
-					x1: 34, y1: y, x2: 320, y2: y,
-					stroke: '#eceff1', 'stroke-width': 1
-				}));
-				chart.appendChild(svg('text', {
-					x: 32, y: y + 3, 'text-anchor': 'end'
-				}, _('%dh').format(h)));
-			});
-			var slot = (320 - 34) / 7;
-			for (var i = 6; i >= 0; i--) {
-				var key = self.dayStr(i);
-				var sec = ds[key] || 0;
-				var h = Math.max(sec > 0 ? 1.5 : 0, sec * 70 / 86400);
-				var cx = 34 + (6 - i) * slot + slot / 2;
-				var bar = svg('rect', {
-					x: cx - 11, y: 76 - h, width: 22, height: h, rx: 2,
-					fill: i === 0 ? '#1e88e5' : '#64b5f6'
-				});
-				bar.appendChild(svg('title', {},
-					key + ' ' + (sec > 0 ? wr.fmtDur(sec) : '0')));
-				chart.appendChild(bar);
-				chart.appendChild(svg('text', {
-					x: cx, y: 90, 'text-anchor': 'middle'
-				}, key.slice(5).replace('-', '.')));
-			}
-
-			dom.content(box, [
-				E('div', { 'class': 'wr-stats-head' }, [
-					E('b', {}, _('Usage stats')), tabs
-				]),
-				E('div', { 'class': 'wr-dev-online wr-stats-online' }, [
-					E('div', {}, [
-						E('div', { 'class': 'wr-cap' }, _('Online time')),
-						E('div', { 'class': 'wr-big' }, wr.fmtDur(periodSec()))
-					]),
-					E('div', {}, [
-						E('div', { 'class': 'wr-cap' }, _('Traffic')),
-						E('div', { 'class': 'wr-big' }, wr.fmtBytes(periodBytes()))
-					])
-				]),
-				chart
-			]);
-		}
-
-		self._statsRedraw = render;
-		render();
-		return box;
-	},
-
-	/* ---------------------------------------- 应用使用时长与访问控制 */
-	refreshAppctl: function() {
-		return safeCall('appctl_status').then((res) => {
-			if (typeof res?.ok !== 'boolean') return null;
-			this.appctl = res;
-			return res;
-		});
-	},
-
-	appctlBox: function(n) {
-		var self = this;
-		var box = E('div', { 'class': 'wr-appctl' });
-		let saving = false;
-
-		function render(force) {
-			// 用户正在操作下拉框 / 开关时不打断
-			if (saving || (force !== true && box.contains(document.activeElement)))
-				return;
-
-			var ac = self.appctl;
-			var mac = (n.mac || '').toLowerCase().replace(/[^0-9a-f]/g, '');
-			var dev = (ac && ac.devices && ac.devices[mac]) || null;
-			var blocks = (dev && dev.block) || [];
-			var stats = (ac && ac.stats && ac.stats[mac]) || {};
-			var now = Math.floor(Date.now() / 1000);
-
-			/* 时长/流量跟随上网统计页签：昨日/今日/过去七天 */
-			var period = self._statsPeriod || 'today';
-			function pDur(st) {
-				var ds = st.days || {};
-				if (period === 'yesterday') return ds[self.dayStr(1)] || 0;
-				if (period === 'week') {
-					var s = 0;
-					Object.keys(ds).forEach(function(k) { s += ds[k] || 0; });
-					return s;
-				}
-				return st.today || ds[self.dayStr(0)] || 0;
-			}
-			function pBytes(st) {
-				var ds = st.bdays || {};
-				if (period === 'yesterday') return ds[self.dayStr(1)] || 0;
-				if (period === 'week') {
-					var s = 0;
-					Object.keys(ds).forEach(function(k) { s += ds[k] || 0; });
-					return s;
-				}
-				return st.btoday || ds[self.dayStr(0)] || 0;
-			}
-
-			var enableCb = null;
-			if (ac && ac.ok) {
-				enableCb = E('input', {
-					type: 'checkbox', 'class': 'wr-switch-input',
-					change: async function(ev) {
-						const toggle = ev.target;
-						const on = toggle.checked;
-						saving = true;
-						toggle.disabled = true;
-
-						let res = await wr.call('set_appctl', { enabled: on, enhanced: ac.enhanced === true })
-							.catch(() => null);
-						if (res?.ok === true) {
-							self.appctl = { ...ac, enabled: res.enabled, enhanced: res.enhanced };
-						} else {
-							const status = await self.refreshAppctl();
-							if (!status) self.appctl = ac;
-							// 超时或响应丢失不代表未保存，以重新读取的状态为准。
-							if ((res == null || res === 0 || res === 7) && status?.ok && status.enabled === on)
-								res = status;
-						}
-
-						saving = false;
-						toggle.disabled = false;
-						render(true);
-						if (res?.ok === true) {
-							wr.notify('success', res.enabled ? _('Enabled') : _('Disabled'));
-						} else {
-							let reason = res?.error || _('request rejected');
-							if (res?.error === 'not_cap')
-								reason = _('Configure app control on the main AP');
-							else if (typeof res === 'number' && res !== 0)
-								reason = rpc.getStatusText(res);
-							wr.notify('danger', _('Failed') + ': ' + reason);
-						}
-					}
-				});
-				/* E() 会把 checked:false 写成 checked="false"，浏览器仍视为勾选 */
-				enableCb.checked = !!ac.enabled;
-			}
-
-			var head = E('div', { 'class': 'wr-appctl-head' }, [
-				E('b', {}, _('App Usage & Access Control')),
-				enableCb
-					? E('label', { 'class': 'wr-appctl-switch' }, [
-						enableCb, ' ' + _('Enable')
-					])
-					: null
-			]);
-
-			if (!ac || !ac.ok) {
-				dom.content(box, [
-					head,
-					E('div', { 'class': 'wr-muted', style: 'margin-top:0.5em' },
-						(ac && ac.error === 'not_cap')
-							? _('Configure app control on the main AP')
-							: _('Cannot reach wifiroamd'))
-				]);
-				return;
-			}
-
-			/* TP-Link 风格行列表：图标+名称 ｜ 时长/流量 ｜ 访问控制，
-			   按应用类别分组；只展示有用量（时长或流量）的应用，
-			   已配置管控的保留，便于解除 */
-			var list = E('div', { 'class': 'wr-app-rows' });
-
-			var shown = (ac.apps || []).filter(function(a) {
-				var st = stats[a.id];
-				return (st && (st.total > 0 || st.today > 0 || st.last > 0 ||
-					(st.btotal || 0) > 0 || (st.btoday || 0) > 0))
-					|| blocks.indexOf(a.id) >= 0;
-			});
-
-			var catIdx = function(c) {
-				var i = CAT_ORDER.indexOf(c);
-				return i < 0 ? CAT_ORDER.length : i;
-			};
-			shown.sort(function(a, b) {
-				var ca = catIdx(a.cat), cb = catIdx(b.cat);
-				if (ca !== cb) return ca - cb;
-				return pDur(stats[b.id] || {}) - pDur(stats[a.id] || {});
-			});
-
-			if (!shown.length)
-				list.appendChild(E('div', { 'class': 'wr-muted',
-					style: 'padding:0.5em 0' }, _('No app usage yet')));
-
-			var lastCat = null;
-			var identified = 0;
-
-			/* 总流量（全部 forward 字节），作为应用流量归一化基准 */
-			var nd = (ac.ndata && ac.ndata[mac]) || {};
-			var tot = 0;
-			if (period === 'yesterday')
-				tot = nd[self.dayStr(1)] || 0;
-			else if (period === 'week') {
-				Object.keys(nd).forEach(function(k) { tot += nd[k] || 0; });
-			}
-			else
-				tot = nd[self.dayStr(0)] || 0;
-
-			/* 归一化：共享 CDN 的 IP 会让多个应用同时命中计数（allow 规则无
-			   verdict，同一包可命中多条），Σapps 可能超过总流量；以 total
-			   为准按比例收缩，保证 已识别 + 其他 == total */
-			var rawSum = 0;
-			shown.forEach(function(a) { rawSum += pBytes(stats[a.id] || {}); });
-			var scale = (rawSum > tot && rawSum > 0) ? (tot / rawSum) : 1;
-
-			shown.forEach(function(a) {
-				var st = stats[a.id] || {};
-				var bytes = Math.round(pBytes(st) * scale);
-				identified += bytes;
-				var blocked = blocks.indexOf(a.id) >= 0;
-				var live = st.last && (now - st.last) < 90;
-
-				if (a.cat && a.cat !== lastCat) {
-					lastCat = a.cat;
-					list.appendChild(E('div', { 'class': 'wr-cat' },
-						CAT_NAME[a.cat] || a.cat));
-				}
-
-				var ctl;
-				if (!ac.enabled) {
-					ctl = E('span', { 'class': 'wr-muted' }, '-');
-				}
-				else {
-					ctl = E('select', {
-						'class': 'cbi-input-select wr-app-sel',
-						change: function(ev) {
-							var action = ev.target.value;
-							ev.target.disabled = true;
-							wr.call('set_app_policy', {
-								mac: n.mac, app: a.id, action: action
-							}).then(function(res) {
-								if (res && res.ok) {
-									wr.notify('success', _('Saved'));
-									return self.refreshAppctl().then(render);
-								}
-								ev.target.disabled = false;
-								wr.notify('danger', _('Failed') + ': ' +
-									((res && res.error) || 'unknown'));
-							}).catch(function() {
-								ev.target.disabled = false;
-								wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
-							});
-						}
-					}, [
-						E('option', { value: 'allow' }, _('Allowed')),
-						E('option', { value: 'block' }, _('Blocked'))
-					]);
-					ctl.value = blocked ? 'block' : 'allow';
-				}
-
-				list.appendChild(E('div', { 'class': 'wr-app-row' }, [
-					appCell(a.id, a.name, live),
-					E('div', { 'class': 'wr-app-dur' }, [
-						E('span', {}, wr.fmtDur(pDur(st))),
-						E('span', { 'class': 'wr-total' }, wr.fmtBytes(bytes))
-					]),
-					ctl
-				]));
-			});
-
-			/* 未识别部分 = 终端总流量 - 已识别应用流量（已归一化，不为负）。
-			   单独列出来，避免把非应用流量错误地归到某个 App，
-			   也让用户直观看到识别覆盖率。 */
-			var other = tot - identified;
-			if (other >= 1024) {
-				list.appendChild(E('div', { 'class': 'wr-app-row wr-app-other' }, [
-					E('div', { 'class': 'wr-app-cell' }, [
-						E('span', { 'class': 'wr-app-name' }, _('Other apps'))
-					]),
-					E('div', { 'class': 'wr-app-dur' }, [
-						E('span', { 'class': 'wr-muted' }, '-'),
-						E('span', { 'class': 'wr-total' }, wr.fmtBytes(other))
-					]),
-					E('span', { 'class': 'wr-muted' }, '-')
-				]));
-			}
-
-			var children = [ head ];
-			if (!ac.enabled)
-				children.push(E('div', { 'class': 'wr-muted', style: 'margin:0.4em 0' },
-					_('Turn on app control to collect usage and enforce rules')));
-			children.push(list);
-			children.push(E('div', { 'class': 'wr-appctl-tip' },
-				_('Identified by DNS lookups; encrypted DNS may bypass detection.')));
-
-			dom.content(box, children);
-		}
-
-		self._appRedraw = render;
-		render();
-		return box;
-	},
 
 	openDetail: function(n) {
 		var self = this;
 		this.modalOpen = true;
-		this._statsPeriod = 'today';
 
 		var rows = [];
 		function row(k, v) {
@@ -1471,8 +1033,7 @@ return view.extend({
 			}, _('Close')) ];
 		} else {
 			/* 终端详情：TP-Link 风格 —— 图标+大名称头部、灰色信息行、
-			   上下行速率行、在线时间大数字、应用时长列表 */
-			var now = Math.floor(Date.now() / 1000);
+			   上下行速率行、在线时间大数字 */
 			var conn = n.conn || {};
 			var wifi = conn.type === 'wifi';
 			var vendor = wr.vendorOf(n.mac);
@@ -1563,8 +1124,6 @@ return view.extend({
 					   span 引用存下来，轮询时随最新拓扑数据刷新（见 _ratesRedraw） */
 					upSpan, downSpan
 				]) : null,
-				self.statsBox(n),
-				self.appctlBox(n)
 			]);
 			btns = [ E('button', {
 				'class': 'btn',
@@ -1581,8 +1140,6 @@ return view.extend({
 		if (dlg)
 			dlg.addEventListener('hide', function() {
 				self.modalOpen = false;
-				self._appRedraw = null;
-				self._statsRedraw = null;
 				self._ratesRedraw = null;
 			});
 	},
@@ -1592,7 +1149,6 @@ return view.extend({
 		this.topo = data[0];
 		this.status = data[1];
 		this.logs = (data[2] && data[2].events) || [];
-		this.appctl = data[3] || null;
 		this.logFilter = this.logFilter || { type: '', name: '', mac: '', info: '' };
 
 		wr.mountNav('topology', {
