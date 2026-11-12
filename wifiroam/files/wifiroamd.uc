@@ -62,7 +62,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 13;
+const DAEMON_VERSION = 14;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -505,6 +505,7 @@ function wireless_uplink() {
 			let s = match(link, /signal:\s*(-?[0-9]+)/);
 			let info = {
 				type: "wireless", port: ifc.ifname,
+				device: rname,
 				ssid: ifc.config?.ssid ?? null,
 				bssid: m ? lc(m[1]) : null,
 				rssi: s ? int(s[1]) : null,
@@ -618,10 +619,23 @@ function channel_radios() {
 }
 
 function channel_aps() {
+	let self_radios = channel_radios();
+	let bh = current_backhaul_cfg();
+	let self_bh = "";
+	if (bh.enabled)
+		for (let r in self_radios) {
+			let hit = (bh.device && bh.device == r.device);
+			if (!hit)
+				for (let b in (r.bss ?? []))
+					if (b.ssid == bh.ssid) { hit = true; break; }
+			if (hit) { self_bh = r.device; break; }
+		}
+
 	let aps = [ {
 		id: macnorm(state.self.mac),
 		name: state.self.name || state.self.hostname || maccolon(state.self.mac),
-		self: true, wireless: false, role: state.cfg.role, radios: channel_radios(),
+		self: true, wireless: false, backhaul_device: self_bh,
+		role: state.cfg.role, radios: self_radios,
 	} ];
 	for (let mn, p in state.peers) {
 		if (!p.authed) continue;
@@ -629,6 +643,7 @@ function channel_aps() {
 			id: mn, name: p.info?.name ?? p.name ?? maccolon(mn),
 			self: false, wireless: p.info?.uplink?.type == "wireless",
 			wireless_band: channel_band_key(p.info?.uplink?.band),
+			backhaul_device: p.info?.uplink?.device ?? "",
 			role: p.info?.role ?? "sap",
 			radios: p.info?.channels ?? [],
 		});
@@ -648,8 +663,9 @@ function channel_cochannel(aps) {
 			let key = band + ":" + ch;
 			let b = buckets[key];
 			if (!b) { b = { band, channel: ch, aps: [], wireless: false }; buckets[key] = b; }
-			if (a.wireless_band == band) b.wireless = true;
-			if (index(b.aps, a.name) < 0) push(b.aps, a.name);
+			if (a.backhaul_device && a.backhaul_device == r.device) b.wireless = true;
+			let label = a.name + (r.device ? " · " + r.device : "");
+			if (index(b.aps, label) < 0) push(b.aps, label);
 		}
 	}
 	let items = [];
@@ -690,6 +706,16 @@ function channel_make_plan(aps, settings) {
 	if (settings.band2g !== false) push(bands, "2g");
 	if (settings.band5g !== false) push(bands, "5g");
 
+	let self_mn = macnorm(state.self.mac);
+	let self_ap = null;
+	for (let a in aps)
+		if (a.self) { self_ap = a; break; }
+	let cap_bh = {};
+	if (self_ap?.backhaul_device)
+		for (let r in (self_ap.radios ?? []))
+			if (r.device == self_ap.backhaul_device)
+				cap_bh[channel_band_key(r.band)] = int(r.current ?? r.channel ?? 0);
+
 	for (let band in bands) {
 		let entries = [];
 		for (let a in aps) {
@@ -699,17 +725,23 @@ function channel_make_plan(aps, settings) {
 				if (current <= 0) current = channel_num(r.channel);
 				if (current <= 0) continue;
 				push(entries, {
-					ap: a.id, name: a.name, band, current,
-					wireless: a.wireless_band == band, htmode: r.htmode ?? "",
+					ap: a.id, name: a.name, band,
+					device: r.device ?? "",
+					current, htmode: r.htmode ?? "",
+					backhaul: !!(a.backhaul_device && a.backhaul_device == r.device),
 				});
-				break;
 			}
 		}
 
 		if (length(entries) < 2) {
-			for (let e in entries)
-				push(plan, { ap: e.ap, name: e.name, band, wireless: e.wireless,
-				             from: e.current, to: e.current, changed: false });
+			for (let e in entries) {
+				let to = e.current;
+				if (e.backhaul && e.ap != self_mn && cap_bh[band])
+					to = cap_bh[band];
+				push(plan, { ap: e.ap, name: e.name, band, device: e.device,
+				             backhaul: e.backhaul, from: e.current, to,
+				             changed: to != e.current });
+			}
 			continue;
 		}
 
@@ -722,15 +754,17 @@ function channel_make_plan(aps, settings) {
 		let cands = (band == "2g") ? [1, 6, 11]
 			: (is160 ? [36] : (wide ? [36, 149] : [36, 44, 149, 157]));
 		let used = {};
-		let self_mn = macnorm(state.self.mac);
-		let self_target = 0;
+		/* 主 AP 回程射频占用自己的信道，其它射频避免与之同频 */
+		if (cap_bh[band]) used[cap_bh[band]] = 1;
 
 		for (let e in entries) {
-			/* 无线回程的 SAP 必须跟随主 AP 的信道，否则 STA 上行会断 */
-			if (e.wireless) {
-				let to = self_target || e.current;
-				push(plan, { ap: e.ap, name: e.name, band, wireless: true,
-				             from: e.current, to, changed: to != e.current });
+			/* 回程射频必须跟随主 AP，否则无线回程 STA 会断 */
+			if (e.backhaul) {
+				let to = (e.ap == self_mn) ? e.current
+				         : (cap_bh[band] || e.current);
+				push(plan, { ap: e.ap, name: e.name, band, device: e.device,
+				             backhaul: true, from: e.current, to,
+				             changed: to != e.current });
 				continue;
 			}
 
@@ -748,35 +782,61 @@ function channel_make_plan(aps, settings) {
 			}
 			if (!best) continue;
 			used[best] = (used[best] ?? 0) + 1;
-			if (e.ap == self_mn) self_target = best;
-			push(plan, { ap: e.ap, name: e.name, band, wireless: false,
-			             from: e.current, to: best, changed: best != e.current });
+			push(plan, { ap: e.ap, name: e.name, band, device: e.device,
+			             backhaul: false, from: e.current, to: best,
+			             changed: best != e.current });
 		}
 	}
 	return plan;
 }
 
-// 只改信道，不动带宽/加密；没有变化时不重启无线
+// 只改信道，不动带宽/加密；按射频（device）精确落盘，支持三频设备
 function channel_apply_local(targets) {
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let n = 0;
 
-	/* 已在实际目标信道上时不再写 UCI（即使配置是 auto），避免无谓重启 */
+	let radios = channel_radios();
 	let current = {};
-	for (let r in channel_radios())
-		current[channel_band_key(r.band)] = int(r.current ?? 0);
+	for (let r in radios)
+		current[r.device] = int(r.current ?? 0);
 
 	for (let t in targets) {
 		let band = channel_band_key(t.band);
 		let ch = "" + int(t.channel);
-		if (current[band] == int(ch)) continue;
+		let dev = t.device ?? "";
+		let target = "";
+
+		if (dev && current[dev] != null) {
+			if (current[dev] == int(ch)) continue;
+			target = dev;
+		}
+		if (!target) {
+			/* 旧版对端只给 band：只有一个射频时直接匹配，否则用 from 区分 */
+			let cands = [];
+			for (let r in radios)
+				if (channel_band_key(r.band) == band) push(cands, r);
+			if (length(cands) == 1)
+				target = cands[0].device;
+			else {
+				for (let r in cands)
+					if (int(r.current ?? 0) == int(t.from ?? -1)) {
+						target = r.device; break;
+					}
+			}
+		}
+		if (!target) continue;
+
+		let found = false;
 		cur.foreach("wireless", "wifi-device", function(d) {
+			if (d[".name"] != target) return;
 			if (channel_band_key(d.band ?? d.hwmode) != band) return;
+			found = true;
 			if ((d.channel ?? "") == ch) return;
-			cur.set("wireless", d[".name"], "channel", ch);
+			cur.set("wireless", target, "channel", ch);
 			n++;
 		});
+		if (!found) log("channel: radio " + target + " not found for " + band);
 	}
 
 	if (n > 0) {
@@ -819,7 +879,8 @@ push_channel_to = function(mn) {
 	let targets = [];
 	for (let it in plan)
 		if (it.ap == mn)
-			push(targets, { band: it.band, channel: it.to });
+			push(targets, { device: it.device ?? "", band: it.band,
+			                from: it.from ?? 0, channel: it.to });
 	if (!length(targets)) { p.channel_ver = ver; return true; }
 	try {
 		p.chan.defer({
@@ -3869,7 +3930,8 @@ let api_obj = {
 				let self_mn = macnorm(state.self.mac);
 				for (let it in plan)
 					if (it.ap == self_mn && it.changed)
-						push(mine, { band: it.band, channel: it.to });
+						push(mine, { device: it.device ?? "", band: it.band,
+						             from: it.from ?? 0, channel: it.to });
 				local = channel_apply_local(mine);
 				for (let mn, p in state.peers)
 					if (p.authed) push_channel_to(mn);
@@ -4209,7 +4271,8 @@ function channel_tick() {
 	let self_mn = macnorm(state.self.mac);
 	for (let it in plan)
 		if (it.ap == self_mn && it.changed)
-			push(mine, { band: it.band, channel: it.to });
+			push(mine, { device: it.device ?? "", band: it.band,
+			             from: it.from ?? 0, channel: it.to });
 	let lr = channel_apply_local(mine);
 	for (let mn, p in state.peers)
 		if (p.authed) push_channel_to(mn);

@@ -483,14 +483,20 @@ return view.extend({
 			});
 		});
 
+		function radioLabel(it) {
+			return (it.name || it.ap || '-') + (it.device ? ' · ' + it.device : '');
+		}
+
 		var rows = (ch.plan || []).map(function(it) {
-			var same = !!conflict[(it.name || '') + '|' + it.from];
-			var text = it.wireless ? _('随主路由')
+			var label = radioLabel(it);
+			var bh = !!(it.backhaul || it.wireless);
+			var same = !!conflict[label + '|' + it.from];
+			var text = bh ? _('回程固定')
 				: (it.changed ? _('建议调整') : (same ? _('同频') : _('正常')));
-			var cls = it.wireless ? 'wr-apply-ok'
+			var cls = bh ? 'wr-apply-ok'
 				: ((it.changed || same) ? 'wr-apply-pending' : 'wr-apply-ok');
 			return E('tr', {}, [
-				E('td', {}, it.name || it.ap || '-'),
+				E('td', {}, label),
 				E('td', {}, it.band === '2g' ? '2.4 GHz'
 					: it.band === '5g' ? '5 GHz' : (it.band || '-')),
 				E('td', {}, it.from ? String(it.from) : '-'),
