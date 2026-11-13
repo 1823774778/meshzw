@@ -22,8 +22,6 @@ return view.extend({
 	busy: false,
 
 	load: function() {
-		wr.mountNav('advanced');
-
 		/* precheck / 回程配置放到 hydrate 异步补齐，避免 apk、iw 等命令拖慢首屏 */
 		return Promise.all([
 			wr.safeCall('get_roam'),
@@ -592,11 +590,6 @@ return view.extend({
 	render: function(data) {
 		this.cfg = data[0];
 		this.st = data[1] || {};
-
-		wr.mountNav('advanced', {
-			running: !!(this.st && this.st.role),
-			role: this.st && this.st.role,
-		});
 
 		var isCap = (this.st.role === 'cap');
 

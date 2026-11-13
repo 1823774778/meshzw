@@ -652,8 +652,20 @@ msgstr "Wi-Fi 密码"
 msgid "Leave blank to keep current password"
 msgstr "留空则保持当前密码"
 
+msgid "Leave blank to use the main AP's current password"
+msgstr "留空则使用主路由当前密码"
+
 msgid "At least 8 characters. Leave blank to keep the current password."
 msgstr "至少 8 个字符；留空则保持当前密码。"
+
+msgid "At least 8 characters. Leave blank to use the main AP's current password and sync it to all APs."
+msgstr "至少 8 个字符；留空则使用主路由当前密码并同步到所有 AP。"
+
+msgid "disabled"
+msgstr "已禁用"
+
+msgid "unavailable"
+msgstr "不可用"
 
 msgid "Save Wi-Fi"
 msgstr "保存 Wi-Fi"

@@ -17,7 +17,6 @@ return view.extend({
 	savingCount: 0,
 
 	load: function() {
-		wr.mountNav('clients');
 		return wr.safeCall('topology');
 	},
 
@@ -163,10 +162,6 @@ return view.extend({
 
 	render: function(data) {
 		this.topo = data;
-		wr.mountNav('clients', {
-			running: !!(this.topo && this.topo.role),
-			role: this.topo && this.topo.role,
-		});
 		poll.add(L.bind(this.refresh, this), 15);
 
 		var nodes = (data && data.nodes) || [];
