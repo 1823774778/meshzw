@@ -447,6 +447,17 @@ return view.extend({
 		var ch = this.channel;
 		var isCap = this.isCap();
 
+		/* htmode -> 用户可读的通道宽度 */
+		var widthText = function(ht) {
+			ht = '' + (ht || '');
+			if (ht.indexOf('320') >= 0) return '320 MHz';
+			if (ht.indexOf('160') >= 0) return '160 MHz';
+			if (ht.indexOf('80') >= 0) return '80 MHz';
+			if (ht.indexOf('40') >= 0) return '40 MHz';
+			if (ht.indexOf('20') >= 0) return '20 MHz';
+			return ht || '-';
+		};
+
 		if (!ch) {
 			return E('div', { 'class': 'cbi-section' }, [
 				E('h3', {}, _('无线信道优化')),
@@ -529,19 +540,27 @@ return view.extend({
 					tds.push(E('td', { rowspan: g.items.length,
 					                   style: 'font-weight:bold;vertical-align:top' },
 						g.name));
+				var suggest;
+				if (!it.to)
+					suggest = '-';
+				else if (it.changed)
+					suggest = E('span', { 'class': 'wr-apply-pending' }, '→ ' + it.to);
+				else
+					suggest = E('span', { 'class': 'wr-hint' }, _('保持') + ' ' + it.to);
 				tds.push(
 					E('td', {}, it.device || '-'),
 					E('td', {}, it.band === '2g' ? '2.4 GHz'
 						: it.band === '5g' ? '5 GHz' : (it.band || '-')),
-					E('td', {}, it.from ? String(it.from) : '-'),
-					E('td', {}, it.to ? String(it.to) : '-'),
+					E('td', {}, widthText(it.width)),
+					E('td', {}, it.from ? String(it.from) : _('自动')),
+					E('td', {}, suggest),
 					E('td', { 'class': cls }, text));
 				rows.push(E('tr', {}, tds));
 			});
 		});
 		if (!rows.length)
 			rows = [ E('tr', {}, [
-				E('td', { colspan: 6, 'class': 'wr-hint' },
+				E('td', { colspan: 7, 'class': 'wr-hint' },
 					_('暂无可优化的 AP（需要至少两台在线 AP）。')),
 			]) ];
 
@@ -587,8 +606,8 @@ return view.extend({
 			E('table', { 'class': 'table cbi-section-table' }, [
 				E('tr', { 'class': 'tr table-titles' }, [
 					E('th', {}, _('AP')), E('th', {}, _('射频')),
-					E('th', {}, _('频段')),
-					E('th', {}, _('当前信道')), E('th', {}, _('建议信道')),
+					E('th', {}, _('频段')), E('th', {}, _('通道宽度')),
+					E('th', {}, _('当前信道')), E('th', {}, _('优化后信道')),
 					E('th', {}, _('状态')),
 				]),
 			].concat(rows)),
