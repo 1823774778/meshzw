@@ -104,9 +104,11 @@ return view.extend({
 	},
 
 	fetch: function() {
-		// modal 可能被遮罩点击关闭而没走到我们的 handler
-		if (this.modalOpen && !document.querySelector('.modal'))
+		if (this.modalOpen && !document.body.classList.contains('modal-overlay-active')) {
 			this.modalOpen = false;
+			this._ratesRedraw = null;
+			this._statsRedraw = null;
+		}
 
 		return this.load().then(L.bind(function(res) {
 			this.topo = res[0];
@@ -935,6 +937,13 @@ return view.extend({
 	},
 
 	/* ---------------------------------------------------------- modal */
+	closeModal: function() {
+		this.modalOpen = false;
+		this._ratesRedraw = null;
+		this._statsRedraw = null;
+		ui.hideModal();
+	},
+
 	/* 设备重命名（AP 与终端都支持）：
 	   set_alias 在 SAP 上会转发给 CAP，由 CAP 广播别名表 */
 	openRename: function(n) {
@@ -960,7 +969,7 @@ return view.extend({
 
 		var cancel = E('button', {
 			'class': 'btn',
-			click: function() { self.modalOpen = false; ui.hideModal(); }
+			click: function() { self.closeModal(); }
 		}, _('Cancel'));
 
 		var save = E('button', {
@@ -969,8 +978,7 @@ return view.extend({
 				return wr.call('set_alias', {
 					mac: n.mac, name: input.value.trim()
 				}).then(function(res) {
-					self.modalOpen = false;
-					ui.hideModal();
+					self.closeModal();
 					if (res && res.ok) {
 						wr.notify('success', _('Name saved'));
 						self.fetch();
@@ -994,7 +1002,11 @@ return view.extend({
 
 		var dlg = document.querySelector('.modal');
 		if (dlg)
-			dlg.addEventListener('hide', function() { self.modalOpen = false; });
+			dlg.addEventListener('hide', function() {
+				self.modalOpen = false;
+				self._ratesRedraw = null;
+				self._statsRedraw = null;
+			});
 	},
 
 
@@ -1146,7 +1158,7 @@ return view.extend({
 			]);
 			btns = [ E('button', {
 				'class': 'btn',
-				click: function() { self.modalOpen = false; ui.hideModal(); }
+				click: function() { self.closeModal(); }
 			}, _('Close')) ];
 		} else {
 			/* 终端详情：TP-Link 风格 —— 图标+大名称头部、灰色信息行、
@@ -1194,8 +1206,7 @@ return view.extend({
 						return wr.call('set_alias', {
 							mac: n.mac, name: nameInput.value
 						}).then(function(res) {
-							self.modalOpen = false;
-							ui.hideModal();
+							self.closeModal();
 							if (res && res.ok) {
 								wr.notify('success', _('Name saved'));
 								self.fetch();
@@ -1245,7 +1256,7 @@ return view.extend({
 			]);
 			btns = [ E('button', {
 				'class': 'btn',
-				click: function() { self.modalOpen = false; ui.hideModal(); }
+				click: function() { self.closeModal(); }
 			}, _('Close')) ];
 		}
 

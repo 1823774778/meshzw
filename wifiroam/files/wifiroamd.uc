@@ -31,6 +31,8 @@ const HELLO_INTERVAL = 5000;
 const TICK_INTERVAL = 10000;
 const USAGE_TICK = 5000;    // s：在线时长/流量采样间隔
 const MAX_EVENTS = 100;
+const CONN_AUTH_TIMEOUT = 15;   // s：未认证 TCP 连接最长存活时间
+const MAX_UNAUTH_CONNS = 16;    // 未认证连接上限，避免 fd 被耗尽
 const WIRED_TTL = 300;    // s wired client stays listed after last FDB sighting
 const STEER_COOLDOWN = 30;  // s 同一终端两次 BSS Transition 引导的最小间隔
 const MIN_STEER_ASSOC = 20; // s 终端入网后至少稳定这么久才允许被引导
@@ -58,12 +60,10 @@ const GUEST_SEC_PREFIX = "wifiroam_guest_";
 const GUEST_NFT_TABLE = "wifiroam_guest";
 const GUEST_TC_HANDLE = "57:";
 const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
-// OpenWrt 25.12.6, firewall4 2025.03.17~b6e51575-r2（官方 x86/64 与 Cortex-A53 模板一致）。
-const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c87584813fb325805b";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 24;
+const DAEMON_VERSION = 25;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -79,6 +79,8 @@ let daemon_started = time();  // 进程启动时刻，用于识别「重启后�
 let ubusc;              // ubus connection
 let udp_sock;           // discovery socket
 let tcp_srv;            // sync listen socket
+let active_conns = {};  // id -> conn：未认证连接超时/数量限制
+let conn_seq = 0;
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
@@ -842,10 +844,11 @@ guest_fw4_sync = function(cfg, reload) {
 	let source = fs.readfile(FW4_TEMPLATE) ?? "";
 	let patched = index(source, FW4_GUEST_FLOW_RULE) >= 0;
 	let original = patched ? replace(source, FW4_GUEST_FLOW_RULE, FW4_FLOW_RULE) : source;
-	let supported = (protect || patched) && sha256(original) == FW4_TEMPLATE_SHA256 &&
-	                length(split(original, FW4_FLOW_RULE)) == 2;
-	if (protect && !patched && !match(fs.readfile("/etc/openwrt_release") ?? "", /(^|\n)DISTRIB_RELEASE='25\.12\.6'(\n|$)/))
-		supported = false;
+	/* 只要求模板里存在唯一一条标准 flow offload 规则，避免绑定某个
+	   firewall4 小版本；规则结构不符时仍然安全降级，不做修改。 */
+	let supported = (protect || patched) &&
+	                length(split(original, FW4_FLOW_RULE)) == 2 &&
+	                index(original, "@ft") >= 0;
 	if (!supported) {
 		guest_fw4_status(protect || patched ? "unsupported" : null);
 		if (reload) system("/sbin/fw4 reload >/dev/null 2>&1");
@@ -1338,13 +1341,15 @@ function guest_tc_apply(cfg) {
 guest_after_reload = function() {
 	let cfg = guest_cfg();
 	uloop.process("/etc/init.d/dnsmasq", [ "reload" ], null, function() {});
-	guest_fw4_sync(cfg, true);
+	let fw = guest_fw4_sync(cfg, true);
 	guest_nft_apply(cfg);
 	guest_tc_apply(cfg);
+	return fw;
 };
 
 // 本机落地：先加载访客接口和防火墙，再重载无线，端口由 netifd 绑定。
-apply_guest_local = function(cfg) {
+// done 可选：在网络/无线真正重载完成后回调，避免前端只看到「已提交」。
+apply_guest_local = function(cfg, done) {
 	state.guest_open = guest_open_now(cfg);
 	if (cfg.enabled && cfg.bandwidth > 0) guest_fw4_sync(cfg, false);
 	guest_write_wireless(cfg);
@@ -1353,14 +1358,32 @@ apply_guest_local = function(cfg) {
 	else
 		guest_remove_infra();
 
-	uloop.process("/etc/init.d/network", [ "reload" ], null, function() {
-		guest_after_reload();
+	let finish = function(ok, error) {
+		if (done) done({ ok: ok, error: error ?? null });
+	};
+
+	uloop.process("/etc/init.d/network", [ "reload" ], null, function(rc) {
+		if (rc != 0) {
+			log("guest network reload failed rc=" + rc);
+			finish(false, "network_failed");
+			return;
+		}
+		let fw = guest_after_reload();
 		uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
 			log("guest wifi reload rc=" + res);
 			guest_tc_apply(guest_cfg());
+			if (res != 0) {
+				finish(false, "wifi_failed");
+				return;
+			}
+			if (fw === false) {
+				finish(false, "fw4_failed");
+				return;
+			}
+			finish(true, null);
 		});
 	});
-	return { ok: true };
+	return { ok: true, pending: true };
 };
 
 // 校验并写入本机 wifiroam.guest（主AP/子AP 都走这里）
@@ -1388,7 +1411,7 @@ guest_save_local = function(g) {
 	cur.set("wifiroam", GUEST_SECTION, "end", end);
 	cur.set("wifiroam", GUEST_SECTION, "allow_lan", g.allow_lan ? "1" : "0");
 	cur.set("wifiroam", GUEST_SECTION, "config_ver", "" + int(g.ver ?? 0));
-	cur.commit("wifiroam");
+	if (!cur.commit("wifiroam")) return false;
 	return true;
 };
 
@@ -1855,15 +1878,35 @@ function usage_ip_map(clients) {
 	return map;
 }
 
-function usage_apply_rules(force, set, ips) {
-	if (state.cfg.role != "cap") return;
+function usage_ip6_map(clients) {
+	let map = {};
+
+	let data = cmd_output(`ip -6 neigh show dev ${state.brdev} 2>/dev/null`);
+	for (let line in split(data, "\n")) {
+		let m = match(line, /^([0-9a-fA-F:]+)\s+.*lladdr\s+([0-9a-fA-F:]{17})/);
+		if (!m) continue;
+		let mn = macnorm(m[2]);
+		if (length(mn) != 12) continue;
+		/* 优先全局地址，避免把 fe80:: 当成下行目的地址 */
+		if (!map[mn] || index(map[mn], "fe80:") == 0)
+			map[mn] = m[1];
+	}
+	return map;
+}
+
+function usage_apply_rules(force, set, ips, ips6, before_flush) {
+	if (state.cfg.role != "cap") return false;
 	set = set ?? usage_track_macs();
 	ips = ips ?? {};
+	ips6 = ips6 ?? {};
 	let parts = [];
 	for (let mn in set)
-		parts.push(mn + "=" + (ips[mn] ?? ""));
+		parts.push(mn + "=" + (ips[mn] ?? "") + "|" + (ips6[mn] ?? ""));
 	let key = join(",", sort(parts));
-	if (!force && state._usage_track != null && key == state._usage_track) return;
+	if (!force && state._usage_track != null && key == state._usage_track) return false;
+
+	/* 规则重建会清空计数器；先采样旧计数，避免丢掉这一轮的增量 */
+	if (before_flush) before_flush();
 
 	cmd_output(sprintf("nft add table inet %s 2>/dev/null", USAGE_TABLE));
 	cmd_output(sprintf(
@@ -1871,7 +1914,7 @@ function usage_apply_rules(force, set, ips) {
 		USAGE_TABLE));
 	let script = sprintf("flush chain inet %s forward\n", USAGE_TABLE);
 	for (let mn in set) {
-		/* 上行按源 MAC，下行按目的 IPv4，两个方向都计数 */
+		/* 上行按源 MAC，下行按目的 IPv4/IPv6，两个方向都计数 */
 		script += sprintf(
 			"add rule inet %s forward ether saddr %s counter comment \"wu:%s\"\n",
 			USAGE_TABLE, maccolon(mn), mn);
@@ -1880,6 +1923,11 @@ function usage_apply_rules(force, set, ips) {
 			script += sprintf(
 				"add rule inet %s forward ip daddr %s counter comment \"wu:%s\"\n",
 				USAGE_TABLE, ip, mn);
+		let ip6 = "" + (ips6[mn] ?? "");
+		if (match(ip6, /^[0-9a-fA-F:]+$/) && index(ip6, ":") >= 0)
+			script += sprintf(
+				"add rule inet %s forward ip6 daddr %s counter comment \"wu:%s\"\n",
+				USAGE_TABLE, ip6, mn);
 	}
 	let path = "/tmp/wifiroam-usage.nft";
 	fs.writefile(path, script);
@@ -1890,6 +1938,7 @@ function usage_apply_rules(force, set, ips) {
 	state._usage_snap = null;
 	state._usage_ts = 0;
 	state._usage_track = key;
+	return true;
 }
 
 function usage_sample(set) {
@@ -1986,8 +2035,11 @@ function usage_tick() {
 		let nft = {};
 		try {
 			let ips = usage_ip_map(clients);
-			usage_apply_rules(false, all, ips);
-			nft = usage_sample(all);
+			let ips6 = usage_ip6_map(clients);
+			let changed = usage_apply_rules(false, all, ips, ips6, function() {
+				nft = usage_sample(all);
+			});
+			if (!changed) nft = usage_sample(all);
 		} catch (e) { log("usage nft failed: " + e); }
 
 		let st = {};
@@ -2817,6 +2869,9 @@ sap_report = function() {
 
 // ------------------------------------------------------- TCP server (all)
 conn_close = function(conn) {
+	if (!conn || conn.closed) return;
+	conn.closed = true;
+	if (conn.id != null) delete active_conns[conn.id];
 	if (conn.chan) { try { conn.chan.disconnect(); } catch (e) {} }
 	if (conn.sock) { try { conn.sock.close(); } catch (e) {} }
 	if (conn.mac) {
@@ -2826,6 +2881,11 @@ conn_close = function(conn) {
 			p.conn = null;
 			p.chan = null;
 			p.authed = false;
+			/* 在途推送的回调可能随连接一起丢失，必须清锁，否则重连后不再推送 */
+			p.roam_pushing = false;
+			p.bh_pushing = false;
+			p.wifi_pushing = false;
+			p.guest_pushing = false;
 		}
 	}
 };
@@ -2867,6 +2927,16 @@ function srv_rx(conn, req) {
 			conn.mac = uc(args.mac ?? "");
 			conn.name = args.name;
 			let p = state.peers[mn] ??= { clients: null }; // null = 未收过 report，首轮 diff 抑制
+			/* 旧连接可能还有在途推送，换新连接时一并清锁，避免配置卡住 */
+			if (p.conn && p.conn != conn) {
+				let old = p.conn;
+				p.conn = null;
+				conn_close(old);
+			}
+			p.roam_pushing = false;
+			p.bh_pushing = false;
+			p.wifi_pushing = false;
+			p.guest_pushing = false;
 			p.mac = conn.mac;
 			if (args.name) p.name = args.name;
 			p.authed = true;
@@ -3005,7 +3075,18 @@ function srv_accept() {
 		let addr = {};
 		let cs = tcp_srv.accept(addr);
 		if (!cs) break;
-		let conn = { sock: cs, authed: false, nonce: randhex(16) };
+
+		let unauth = 0;
+		for (let id, c in active_conns)
+			if (!c.authed) unauth++;
+		if (unauth >= MAX_UNAUTH_CONNS) {
+			try { cs.close(); } catch (e) {}
+			continue;
+		}
+
+		let conn = { id: ++conn_seq, ts: time(), authed: false,
+		             sock: cs, nonce: randhex(16) };
+		active_conns[conn.id] = conn;
 		conn.chan = libubus.open_channel(
 			cs,
 			function(req) { return srv_rx(conn, req); },
@@ -3016,6 +3097,31 @@ function srv_accept() {
 			        nonce: conn.nonce },
 			return: "ignore",
 		});
+	}
+}
+
+/* 未认证连接没有业务价值，超时或超额后主动关闭，避免 fd 耗尽 */
+function conn_cleanup() {
+	let now = time();
+	let unauth = [], expired = [];
+
+	for (let id, c in active_conns) {
+		if (c.authed) continue;
+		if (now - (c.ts ?? now) > CONN_AUTH_TIMEOUT)
+			push(expired, c);
+		else
+			push(unauth, c);
+	}
+
+	for (let c in expired) {
+		log("closing unauthenticated connection");
+		conn_close(c);
+	}
+
+	while (length(unauth) > MAX_UNAUTH_CONNS) {
+		let c = shift(unauth);
+		log("closing excess unauthenticated connection");
+		conn_close(c);
 	}
 }
 
@@ -3702,6 +3808,13 @@ let api_obj = {
 			else if (key == "")
 				key = prev.key;
 
+			/* 关闭访客网络时忽略密码框残留值，沿用原来的有效密码 */
+			if (!enabled) {
+				key = prev.key ?? "";
+				if (key != "" && (length(key) < 8 || length(key) > 64))
+					key = "";
+			}
+
 			if (enabled) {
 				if (length(ssid) < 1 || length(ssid) > 32)
 					return { ok: false, error: "ssid_invalid" };
@@ -3737,10 +3850,9 @@ let api_obj = {
 
 			if (!guest_save_local(cfg))
 				return { ok: false, error: "invalid" };
-			let lr = apply_guest_local(guest_cfg());
 
 			let results = [ { ap: state.self.mac, name: state.self.name,
-			                 ok: lr.ok, error: lr.ok ? null : "invalid" } ];
+			                 ok: null, error: "pending" } ];
 			for (let mn, p in state.peers) {
 				if (!p.authed) continue;
 				push(results, { ap: p.mac ?? maccolon(mn),
@@ -3749,7 +3861,12 @@ let api_obj = {
 				push_guest_to(mn, cfg);
 			}
 			state.last_guest = { ts: time(), config: cfg, results: results };
-			return { ok: lr.ok, results: results };
+
+			/* 本机网络/无线重载完成后更新本机结果；成员 AP 由 push 回执更新 */
+			apply_guest_local(guest_cfg(), function(r) {
+				apply_guest_result_update(macnorm(state.self.mac), r.ok, r.error);
+			});
+			return { ok: true, results: results };
 		},
 	},
 	set_backhaul: {
@@ -3971,19 +4088,34 @@ function steer_neighbors(c, all) {
 	return out;
 }
 
+function steer_op_class(band, htmode) {
+	let w = htmode ?? "";
+	if (band == "6g")
+		return index(w, "320") >= 0 ? 135
+		   : index(w, "160") >= 0 ? 134
+		   : index(w, "80") >= 0 ? 133
+		   : index(w, "40") >= 0 ? 132 : 131;
+	if (band == "5g")
+		return index(w, "160") >= 0 ? 118
+		   : index(w, "80") >= 0 ? 117
+		   : index(w, "40") >= 0 ? 116 : 115;
+	if (band == "2g")
+		return index(w, "40") >= 0 ? 83 : 81;
+	return 81;
+}
+
+/* hostapd 的 neighbors 参数要求字符串数组，每项是 Neighbor Report
+   元素体（不含 EID/长度）的十六进制：
+   BSSID(6) + BSSID Info(4, little-endian) + op_class(1) + channel(1) + phy_type(1)。 */
 function steer_btm_neighbors(list) {
 	let out = [];
 	for (let b in list) {
-		let w = b.htmode ?? "";
-		let op = 81;
-		if (channel_band_key(b.band) == "5g")
-			op = index(w, "160") >= 0 ? 118
-			   : index(w, "80") >= 0 ? 117
-			   : index(w, "40") >= 0 ? 116 : 115;
-		push(out, {
-			bssid: b.bssid, ssid: b.ssid, op_class: op,
-			channel: int(b.channel), phy_type: 0,
-		});
+		let ch = int(b.channel ?? 0);
+		let bssid = macnorm(b.bssid ?? "");
+		if (ch <= 0 || ch > 255 || length(bssid) != 12) continue;
+		let op = steer_op_class(channel_band_key(b.band), b.htmode);
+		push(out, bssid + "00000000" +
+			sprintf("%02x%02x00", op, ch));
 	}
 	return out;
 }
@@ -3999,7 +4131,9 @@ function steer_btm(c, mn, imminent, timer, validity, neighbors) {
 	try {
 		let r = ubusc.call("hostapd." + c.ifname, "bss_transition_request", req);
 		if (r == null && length(neighbors)) {
-			/* 个别 hostapd 版本不接受 neighbors 字段，退回普通 BTM */
+			/* 旧 hostapd 不接受 neighbors 时，只允许退回建议式 BTM；
+			   强制式没有候选列表会把终端踢到空处，必须放弃。 */
+			if (imminent) return false;
 			delete req.neighbors;
 			r = ubusc.call("hostapd." + c.ifname, "bss_transition_request", req);
 		}
@@ -4207,6 +4341,7 @@ function main() {
 	uloop.interval(TICK_INTERVAL, sap_tick);
 	uloop.interval(TICK_INTERVAL, sap_report);
 	uloop.interval(TICK_INTERVAL, expire_tick);
+	uloop.interval(10000, conn_cleanup);
 	uloop.interval(TICK_INTERVAL, backhaul_tick);
 	uloop.interval(5000, steer_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);

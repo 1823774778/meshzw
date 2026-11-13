@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 24;
+var REQUIRED_VERSION = 25;
 
 return view.extend({
 	st: null,
@@ -66,7 +66,7 @@ return view.extend({
 				if (self.actionStarted)
 					return;
 				self.rclist = rc;
-				self.rcLoaded = true;
+				self.rcLoaded = (rc != null);
 				self.applyServiceState();
 			});
 
@@ -170,11 +170,12 @@ return view.extend({
 
 	refreshService: function(full) {
 		var self = this;
+		var needRc = (full !== false) || !self.rcLoaded;
 		var jobs = [
 			callServiceList('wifiroam').catch(function() { return null; }),
 		];
 
-		if (full !== false)
+		if (needRc)
 			jobs.push(callRcList().catch(function() { return null; }));
 
 		return Promise.all(jobs).then(function(res) {
@@ -182,7 +183,7 @@ return view.extend({
 			   不要把服务误判为「已停止」 */
 			if (res[0] != null)
 				self.svc = res[0];
-			if (full !== false) {
+			if (needRc && res[1] != null) {
 				self.rclist = res[1];
 				self.rcLoaded = true;
 			}

@@ -389,12 +389,23 @@ return view.extend({
 		});
 		bhKey.value = src.key || '';
 
-		var bhDev = E('select', { 'class': 'cbi-input-select', style: 'max-width:100%' }, [
-			E('option', { value: '' }, _('Auto (prefer 5 GHz)')),
-		].concat(radios.filter(function(r) { return !r.disabled; }).map(function(r) {
-			return E('option', { value: r.name },
-				r.name + ' (' + wr.fmtBand(r.band) + ')');
-		})));
+		var devOpts = [ E('option', { value: '' }, _('Auto (prefer 5 GHz)')) ];
+		radios.filter(function(r) { return !r.disabled; }).forEach(function(r) {
+			devOpts.push(E('option', { value: r.name },
+				r.name + ' (' + wr.fmtBand(r.band) + ')'));
+		});
+		/* 已保存的 radio 被禁用/移除时保留原值，避免保存时静默重置为自动 */
+		if (src.device) {
+			var saved = null;
+			radios.forEach(function(r) { if (r.name == src.device) saved = r; });
+			var known = saved && !saved.disabled;
+			if (!known)
+				devOpts.push(E('option', { value: src.device },
+					src.device + (saved ? ' (' + wr.fmtBand(saved.band) + ', ' +
+						_('disabled') + ')' : ' (' + _('unavailable') + ')')));
+		}
+		var bhDev = E('select', { 'class': 'cbi-input-select', style: 'max-width:100%' },
+			devOpts);
 		bhDev.value = src.device || '';
 
 		var saveBtn = E('button', {
@@ -462,6 +473,7 @@ return view.extend({
 			wr.setBusy(this.els.saveBtn, on, on ? _('Applying...') : null);
 			wr.setBusy(this.els.bhSaveBtn, false);
 			if (this.els.bhSaveBtn) this.els.bhSaveBtn.disabled = on;
+			if (!on && this._syncRoamForm) this._syncRoamForm();
 		}
 	},
 
@@ -699,6 +711,14 @@ return view.extend({
 			if (!custom)
 				rssiVal.value = RSSI_PRESETS[rssiSel.value];
 		});
+
+		/* setFormDisabled(false) 会无差别启用所有控件，保存后恢复联动禁用 */
+		this._syncRoamForm = function() {
+			syncFt();
+			rssiVal.disabled = (rssiSel.value !== 'custom');
+			if (rssiSel.value !== 'custom')
+				rssiVal.value = RSSI_PRESETS[rssiSel.value];
+		};
 
 		function cRow(label, widget, hint) {
 			return E('div', { 'class': 'wr-form-row' }, [

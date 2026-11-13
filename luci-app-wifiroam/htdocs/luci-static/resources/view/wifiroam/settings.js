@@ -259,7 +259,11 @@ return view.extend({
 		function tick() {
 			tries++;
 			wr.safeCall('get_wifi').then(function(st) {
-				if (!st || !st.last || !resBox) return;
+				if (!st || !st.last || !resBox) {
+					/* 无线重载时 RPC 可能短暂失败，继续重试而不是永久停住 */
+					if (tries < 6) window.setTimeout(tick, 2500);
+					return;
+				}
 				dom.content(resBox, self.renderWifiResults(st.last.results));
 				var pending = (st.last.results || []).some(function(r) {
 					return r.ok === null || r.ok === undefined;
@@ -442,7 +446,8 @@ return view.extend({
 		var on = !!form.cb.checked;
 		var ssid = (form.ssidEl.value || '').trim();
 		var openNet = !!form.openCb.checked;
-		var key = openNet ? '' : (form.keyEl.value || '');
+		/* 关闭访客网络时不携带密码框残留值，后端沿用原密码 */
+		var key = (!on || openNet) ? '' : (form.keyEl.value || '');
 
 		if (on) {
 			if (!ssid || ssid.length > 32) {
@@ -518,7 +523,10 @@ return view.extend({
 		function tick() {
 			tries++;
 			wr.safeCall('get_guest').then(function(st) {
-				if (!st || !st.last || !resBox) return;
+				if (!st || !st.last || !resBox) {
+					if (tries < 6) window.setTimeout(tick, 2500);
+					return;
+				}
 				dom.content(resBox, self.renderWifiResults(st.last.results));
 				var pending = (st.last.results || []).some(function(r) {
 					return r.ok === null || r.ok === undefined;

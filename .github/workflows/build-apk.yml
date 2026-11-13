@@ -74,7 +74,8 @@ jobs:
       - name: List APK packages
         run: |
           ls -lh "$GITHUB_WORKSPACE/artifacts"
-          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name '*.apk' -print -quit)"
+          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'wifiroam-*.apk' -print -quit)"
+          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'luci-app-wifiroam-*.apk' -print -quit)"
 
       - name: Upload APK packages
         uses: actions/upload-artifact@v4
