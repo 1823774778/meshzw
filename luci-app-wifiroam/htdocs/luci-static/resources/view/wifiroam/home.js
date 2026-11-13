@@ -256,17 +256,6 @@ return view.extend({
 		});
 	},
 
-	navOptions: function() {
-		return {
-			running: !!(this.st && this.st.role),
-			role: (this.st && this.st.role) || '',
-		};
-	},
-
-	updateNavTabs: function() {
-		wr.mountNav('home', this.navOptions());
-	},
-
 	updateStatusDom: function() {
 		var sb = document.getElementById('wr-status');
 		if (sb)
@@ -275,8 +264,6 @@ return view.extend({
 		var warn = document.getElementById('wr-home-warn');
 		if (warn)
 			warn.style.display = (this.st && this.st.role) ? 'none' : '';
-
-		this.updateNavTabs();
 	},
 
 	afterServiceChange: function(repaired, action) {
@@ -481,9 +468,6 @@ return view.extend({
 
 		/* 先把页面画出来，状态类 RPC 在首屏后异步补齐 */
 		window.setTimeout(L.bind(this.hydrate, this), 0);
-
-		/* 页签挂在 #view 外，先用上次状态（没有则展示全部）即时渲染 */
-		wr.mountNav('home');
 
 		return E('div', { id: 'wr-home' }, [
 			wr.css(),

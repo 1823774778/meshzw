@@ -25,8 +25,6 @@ return baseclass.extend({
 
 	CSS_VER: '20261113c',
 
-	_navState: null,
-	_navHashBound: false,
 	_role: null,
 
 	/* 角色变化时整页刷新：被主路由配对成子路由后，导航和页面结构
@@ -44,78 +42,6 @@ return baseclass.extend({
 		this._role = role;
 		if (role == 'sap' || old == 'sap')
 			window.location.reload();
-	},
-
-	/* 记住最近一次的角色/运行状态：页面切换时导航栏在数据返回前
-	   也能按上一次的状态渲染，避免先只显示「首页」再补上其他页签 */
-	navState: function(opts) {
-		if (opts) {
-			this._navState = {
-				running: opts.running !== false,
-				role: opts.role || '',
-			};
-			try {
-				window.sessionStorage.setItem('wr-nav-state',
-					JSON.stringify(this._navState));
-			} catch (e) { /* 隐私模式或存储不可用 */ }
-		}
-
-		if (this._navState)
-			return this._navState;
-
-		try {
-			let s = JSON.parse(window.sessionStorage.getItem('wr-nav-state'));
-			if (s && typeof s.running == 'boolean') {
-				this._navState = s;
-				return s;
-			}
-		} catch (e) { /* ignore */ }
-
-		/* 首次访问：先展示全部页签，状态返回后再按角色收敛 */
-		return { running: true, role: '' };
-	},
-
-	/* 导航栏挂在 #view 之外：LuCI 加载新视图时只清空 #view 并显示
-	   Loading，页签因此不会随页面切换消失 */
-	mountNav: function(active, opts) {
-		let state = this.navState(opts);
-		let vp = document.getElementById('view');
-		if (!vp || !vp.parentNode)
-			return null;
-
-		/* 页签挂在 #view 外，先确保样式已加载，避免切换瞬间裸链接 */
-		this.css();
-
-		if (!this._navHashBound) {
-			this._navHashBound = true;
-			window.addEventListener('hashchange', L.bind(function() {
-				let where = window.location.hash + window.location.pathname;
-				if (where.indexOf('admin/mesh/management') < 0)
-					this.hideNav();
-			}, this));
-		}
-
-		let host = document.getElementById('wr-global-nav');
-		if (!host) {
-			host = E('div', { id: 'wr-global-nav' });
-			vp.parentNode.insertBefore(host, vp);
-		}
-
-		let sig = active + ':' + (state.running ? '1' : '0') + ':' + (state.role || '');
-		if (host.getAttribute('data-sig') != sig) {
-			while (host.firstChild)
-				host.removeChild(host.firstChild);
-			host.appendChild(this.navTabs(active, state));
-			host.setAttribute('data-sig', sig);
-		}
-		host.style.display = '';
-		return host;
-	},
-
-	hideNav: function() {
-		let host = document.getElementById('wr-global-nav');
-		if (host)
-			host.style.display = 'none';
 	},
 
 	/* 阻塞式提示：切换角色/配对会重启服务，避免用户误刷新页面 */
@@ -144,41 +70,6 @@ return baseclass.extend({
 			if (box.parentNode)
 				box.parentNode.removeChild(box);
 		};
-	},
-
-	/* 网络管理页签：未启动时只保留首页；SAP 只保留首页和无线设置 */
-	navTabs: function(active, opts) {
-		opts = opts || {};
-
-		var running = (opts.running !== false);
-		var role = opts.role || '';
-		var items = [];
-
-		if (running) {
-			items.push([ 'home',     _('首页'),     'admin/mesh/management' ]);
-			if (role !== 'sap') {
-				items.push([ 'topology', _('网络拓扑'), 'admin/mesh/management/topology' ]);
-				items.push([ 'clients',  _('客户端'),   'admin/mesh/management/clients' ]);
-			}
-			items.push([ 'settings', _('无线设置'), 'admin/mesh/management/settings' ]);
-			if (role !== 'sap')
-				items.push([ 'advanced', _('高级设置'), 'admin/mesh/management/advanced' ]);
-		}
-		else {
-			items.push([ 'home', _('首页'), 'admin/mesh/management' ]);
-		}
-
-		return E('div', { 'class': 'wr-navtabs' }, items.map(function(it) {
-			var attrs = {
-				'class': 'wr-navtab' + (active === it[0] ? ' active' : ''),
-				href: L.url(it[2])
-			};
-
-			if (active === it[0])
-				attrs['aria-current'] = 'page';
-
-			return E('a', attrs, it[1]);
-		}));
 	},
 
 	/* LuCI 上游无 ubus.js，统一经 rpc.declare 调 /ubus 端点 */

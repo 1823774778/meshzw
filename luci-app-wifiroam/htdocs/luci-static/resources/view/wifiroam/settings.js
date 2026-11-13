@@ -12,8 +12,6 @@ return view.extend({
 	actionBusy: false,
 
 	load: function() {
-		wr.mountNav('settings');
-
 		return Promise.all([
 			wr.safeCall('status'),
 			wr.safeCall('offload_status'),
@@ -1012,11 +1010,6 @@ return view.extend({
 		this.guest = data[3] || {};
 		this.disc = data[4];
 		this.topo = data[5];
-
-		wr.mountNav('settings', {
-			running: !!(this.st && this.st.role),
-			role: this.st && this.st.role,
-		});
 
 		poll.add(L.bind(this.refresh, this), 10);
 

@@ -92,9 +92,6 @@ return view.extend({
 	collapsed: {},
 
 	load: function() {
-		/* 页签在数据返回前就挂到 #view 外，切换页面时不会消失 */
-		wr.mountNav('topology');
-
 		return Promise.all([
 			safeCall('topology'),
 			safeCall('status'),
@@ -1281,11 +1278,6 @@ return view.extend({
 		this.logs = (data[2] && data[2].events) || [];
 		this.usage = data[3] || null;
 		this.logFilter = this.logFilter || { type: '', name: '', mac: '', info: '' };
-
-		wr.mountNav('topology', {
-			running: !!(this.status && this.status.role),
-			role: (this.status && this.status.role) || (this.topo && this.topo.role),
-		});
 
 		poll.add(L.bind(this.fetch, this), 10);
 
