@@ -59,6 +59,7 @@ const GUEST_DEFAULT_SSID = "Guest";
 const GUEST_SEC_PREFIX = "wifiroam_guest_";
 const GUEST_NFT_TABLE = "wifiroam_guest";
 const GUEST_TC_HANDLE = "57:";
+const GUEST_APPLY_TIMEOUT = 60;  // s：等待 SAP 上报新 guest_ver 的上限
 const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
@@ -121,6 +122,7 @@ let state = {
 	prev_owner: null,   // CAP 视角 macnorm -> 归属 AP（跨 AP 迁移事件；null = 首轮抑制）
 	roam_ver_applied: 0,
 	backhaul_ver_applied: 0,
+	guest_ver_applied: 0,  // SAP: 真正完成本机 apply 的访客配置版本
 	steer_last: {},     // macnorm -> 上次 BSS Transition 引导时间
 	steer_low: {},      // macnorm -> 连续低于阈值的采样次数
 	steer_stage: {},    // macnorm -> 0/1/2（建议/强制阶段）
@@ -1359,6 +1361,8 @@ apply_guest_local = function(cfg, done) {
 		guest_remove_infra();
 
 	let finish = function(ok, error) {
+		if (ok && cfg.ver != null)
+			state.guest_ver_applied = int(cfg.ver);
 		if (done) done({ ok: ok, error: error ?? null });
 	};
 
@@ -1418,6 +1422,24 @@ guest_save_local = function(g) {
 // 定时检查开放时段；只在跨过边界时重启无线。限速规则每轮同步一次
 guest_tick = function() {
 	if (state.cfg.role == "unconfigured") return;
+
+	/* 成员 AP 未在超时前上报新版本，标记失败，避免永久 pending */
+	if (state.cfg.role == "cap" && state.last_guest &&
+	    time() - (state.last_guest.ts ?? 0) > GUEST_APPLY_TIMEOUT) {
+		for (let r in state.last_guest.results)
+			if (r.ok == null) { r.ok = false; r.error = "timeout"; }
+		for (let mn, p in state.peers)
+			if (p.guest_pushing) p.guest_pushing = false;
+	}
+
+	/* 没有 UI 结果记录的自动补推也要有超时，避免 guest_pushing 永久卡住 */
+	if (state.cfg.role == "cap") {
+		for (let mn, p in state.peers)
+			if (p.guest_pushing &&
+			    time() - (p.guest_pushing_ts ?? 0) > GUEST_APPLY_TIMEOUT)
+				p.guest_pushing = false;
+	}
+
 	let g = guest_cfg();
 	if (!g.enabled) {
 		state.guest_open = false;
@@ -2655,7 +2677,7 @@ function sap_rx(req) {
 					// 兼容旧 CAP：告知其本端曾支持访客漫游签名格式
 					guest_roaming: true,
 					backhaul_ver: state.backhaul_ver_applied,
-					guest_ver: guest_cfg().ver,
+					guest_ver: state.guest_ver_applied,
 				},
 				data_cb: function(m) {
 					if (m?.ok) {
@@ -2741,18 +2763,14 @@ function sap_rx(req) {
 			break;
 		}
 		/* 等 network/wifi 真正 reload 完再回执，避免 CAP 把「已接受」当成已生效 */
-		let replied = false;
+		req.reply({ ok: true, pending: true });
 		try {
 			apply_guest_local(guest_cfg(), function(r) {
-				if (replied) return;
-				replied = true;
-				req.reply({ ok: r.ok, error: r.error });
+				if (!r.ok)
+					log("guest apply failed: " + (r.error ?? "unknown"));
 			});
 		} catch (e) {
-			if (!replied) {
-				replied = true;
-				req.reply({ ok: false, error: "apply_failed" });
-			}
+			log("guest apply failed: " + e);
 		}
 		break;
 	}
@@ -2851,7 +2869,7 @@ sap_report = function() {
 				// 兼容旧 CAP 的签名判断
 				guest_roaming: true,
 				backhaul_ver: state.backhaul_ver_applied,
-				guest_ver: guest_cfg().ver,
+				guest_ver: state.guest_ver_applied,
 				// 本机落盘的 K/V/R 生效状态，CAP 汇总后展示给用户
 				kvr: applied_kvr(current_roam_cfg()),
 			},
@@ -2901,6 +2919,15 @@ conn_close = function(conn) {
 		}
 	}
 };
+
+/* 清空 peers 前关闭所有服务端连接，避免 active_conns/fd 悬空 */
+function close_all_conns() {
+	let list = [];
+	for (let id, c in active_conns)
+		push(list, c);
+	for (let c in list)
+		conn_close(c);
+}
 
 function srv_rx(conn, req) {
 	let args = req.args ?? {};
@@ -3004,6 +3031,12 @@ function srv_rx(conn, req) {
 		p.roam_sig = args.roam_sig ?? "";
 		p.backhaul_ver = args.backhaul_ver ?? 0;
 		p.guest_ver = args.guest_ver ?? 0;
+		/* SAP 真正应用后会带着新的 guest_ver 上报，据此确认结果 */
+		if (state.cfg.role == "cap" && state.last_guest &&
+		    p.guest_ver >= (state.last_guest.config?.ver ?? 0)) {
+			p.guest_pushing = false;
+			apply_guest_result_update(mn, true, null);
+		}
 		p.kvr = args.kvr ?? null;
 		p.last_seen = time();
 		if (prev != null) // 首轮 report 不产 join/leave 事件
@@ -3019,6 +3052,8 @@ function srv_rx(conn, req) {
 		if (bh.enabled && p.backhaul_ver < bh.config_ver)
 			push_backhaul_to(mn);
 		let ga = guest_cfg();
+		if (state.cfg.role == "cap" && p.guest_ver >= ga.ver)
+			p.guest_pushing = false;
 		if (state.cfg.role == "cap" && p.guest_ver < ga.ver)
 			push_guest_to(mn, ga);
 		/* flow offload 可能在防火墙页面被直接改动，主 AP 发现与已下发值
@@ -3292,11 +3327,14 @@ push_guest_to = function(mn, cfg) {
 	if (!p?.authed || !p.chan) return false;
 	if (p.guest_pushing) return true;
 	p.guest_pushing = true;
+	p.guest_pushing_ts = time();
 	try {
 		p.chan.defer({
 			method: "push_guest_config",
 			data: { guest: cfg },
 			data_cb: function(m) {
+				/* SAP 已接受但仍在 reload：保持 pushing，避免 report 反复重发 */
+				if (m?.pending) return;
 				p.guest_pushing = false;
 				apply_guest_result_update(mn, m?.ok ?? false, m?.error ?? null);
 			},
@@ -3387,6 +3425,7 @@ function factory_reset() {
 			               data_cb: function() {}, cb: function() {} });
 		} catch (e) {}
 	}
+	close_all_conns();
 	state.peers = {};
 	state.discovered = {};
 
@@ -3611,6 +3650,7 @@ let api_obj = {
 						});
 					} catch (e) {}
 				}
+				close_all_conns();
 				state.peers = {};
 				state.cfg.token = "";
 				state.cfg.cap_ip = "";
@@ -3867,6 +3907,7 @@ let api_obj = {
 			                 ok: null, error: "pending" } ];
 			for (let mn, p in state.peers) {
 				if (!p.authed) continue;
+				p.guest_pushing = false;   // 新配置优先，取消旧配置的等待
 				push(results, { ap: p.mac ?? maccolon(mn),
 				                name: p.info?.name ?? p.name ?? mn,
 				                ok: null, error: "pending" });
@@ -4269,6 +4310,7 @@ reconfigure = function() {
 		enable_relay_ap_mode();
 	state.self.name = state.cfg.name != "" ? state.cfg.name : state.self.hostname;
 	sap_disconnect();
+	close_all_conns();
 	state.peers = {};
 	state.cap_learned = null;
 	state.prev_clients = null;
@@ -4328,6 +4370,8 @@ function main() {
 	}
 
 	load_config();
+	/* 重启后本机访客配置已由 netifd/无线恢复，视为已应用 */
+	state.guest_ver_applied = guest_cfg().ver;
 	if (state.cfg.role == "sap")
 		enable_relay_ap_mode();
 	alias_load();
