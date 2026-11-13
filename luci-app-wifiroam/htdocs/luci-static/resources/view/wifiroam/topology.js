@@ -904,7 +904,7 @@ return view.extend({
 			.map(function(ev) {
 			var t = wr.fmtTime(ev.ts);
 			return E('tr', {}, [
-				E('td', { style: 'white-space:nowrap;color:#90a4ae' }, t),
+				E('td', { style: 'white-space:nowrap;color:var(--wr-fg-3)' }, t),
 				E('td', { style: 'white-space:nowrap' }, EVENT_TEXT[ev.type] || ev.type || '-'),
 				E('td', { style: 'white-space:nowrap;max-width:12em;overflow:hidden;text-overflow:ellipsis',
 				         title: ev.name || '' }, ev.name || '-'),
