@@ -64,7 +64,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 25;
+const DAEMON_VERSION = 26;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -725,7 +725,11 @@ function apply_wifi_local(ssids) {
 			if (it.band == band) want = it;
 		if (want != null && want.ssid != "")
 			cur.set("wireless", s[".name"], "ssid", want.ssid);
-		if (want != null && want.key != "") {
+		if (want != null && want.open) {
+			cur.set("wireless", s[".name"], "encryption", "none");
+			cur.set("wireless", s[".name"], "key", "");
+		}
+		else if (want != null && want.key != "") {
 			cur.set("wireless", s[".name"], "key", want.key);
 			// 开放网络加密为 none/空时补上 WPA2，否则设了密码也不生效
 			let enc = s.encryption ?? "";
@@ -2740,7 +2744,8 @@ function sap_rx(req) {
 			let key = it.key ?? "";
 			if (length(ssid) < 1 || length(ssid) > 32) bad = true;
 			if (key != "" && (length(key) < 8 || length(key) > 64)) bad = true;
-			push(ssids, { band: it.band ?? "?", ssid: ssid, key: key });
+			push(ssids, { band: it.band ?? "?", ssid: ssid, key: key,
+			              open: it.open ? true : false });
 		}
 		let r = { ok: false, error: "ssid_invalid" };
 		if (!bad && length(ssids) > 0) {
@@ -3033,7 +3038,7 @@ function srv_rx(conn, req) {
 		p.guest_ver = args.guest_ver ?? 0;
 		/* SAP 真正应用后会带着新的 guest_ver 上报，据此确认结果 */
 		if (state.cfg.role == "cap" && state.last_guest &&
-		    p.guest_ver >= (state.last_guest.config?.ver ?? 0)) {
+		    p.guest_ver >= (state.last_guest.ver ?? 0)) {
 			p.guest_pushing = false;
 			apply_guest_result_update(mn, true, null);
 		}
@@ -3793,20 +3798,39 @@ let api_obj = {
 				push(ssids, { band: it.band ?? "?", ssid: ssid, key: key });
 			}
 
-			// 多频合一且密码留空：沿用现有密码复制到所有频段，避免只合一名称
-			if (req.args.unified) {
-				let cur = uci.cursor();
-				cur.load("wireless");
-				let common = "";
-				cur.foreach("wireless", "wifi-iface", function(s) {
-					if (common != "") return;
-					if (s.mode && s.mode != "ap") return;
-					if (s.wifiroam_guest == "1") return;
-					if (s.key != null && s.key != "") common = s.key;
-				});
-				if (common != "")
-					for (let it in ssids)
-						if (it.key == "") it.key = common;
+			// 留空表示沿用主路由该频段当前密码；多频合一时统一使用主路由
+			// 现有密码，并把 open 状态一起下发给 SAP，避免只同步名称。
+			let cap_keys = {}, cap_open = {}, common = "";
+			let cur = uci.cursor();
+			cur.load("wireless");
+			cur.foreach("wireless", "wifi-iface", function(s) {
+				if (s.mode && s.mode != "ap") return;
+				if (s.wifiroam_guest == "1") return;
+				let band = cur.get("wireless", s.device, "band") ?? "?";
+				let key = s.key ?? "";
+				let enc = s.encryption ?? "";
+				if (common == "") common = key;
+				if (cap_keys[band] == null) {
+					cap_keys[band] = key;
+					cap_open[band] = (key == "" && (enc == "" || enc == "none"));
+				}
+				else if (cap_keys[band] == "" && key != "") {
+					cap_keys[band] = key;
+					cap_open[band] = false;
+				}
+			});
+
+			for (let it in ssids) {
+				if (it.key == "") {
+					if (req.args.unified && common != "")
+						it.key = common;
+					else if ((cap_keys[it.band] ?? "") != "")
+						it.key = cap_keys[it.band];
+					it.open = (it.key == "" && cap_open[it.band] === true);
+				}
+				else {
+					it.open = false;
+				}
 			}
 
 			// 漫游组记录里的 SSID 跟随改名（两频段同名时按频段逐条映射）
@@ -3828,7 +3852,7 @@ let api_obj = {
 				                ok: null, error: "pending" });
 				push_wifi_to(mn, ssids);
 			}
-			state.last_wifi = { ts: time(), ssids: ssids, results: results };
+			state.last_wifi = { ts: time(), results: results };
 			return { ok: lr.ok, results: results };
 		},
 	},
@@ -3913,7 +3937,7 @@ let api_obj = {
 				                ok: null, error: "pending" });
 				push_guest_to(mn, cfg);
 			}
-			state.last_guest = { ts: time(), config: cfg, results: results };
+			state.last_guest = { ts: time(), ver: cfg.ver, results: results };
 
 			/* 本机网络/无线重载完成后更新本机结果；成员 AP 由 push 回执更新 */
 			apply_guest_local(guest_cfg(), function(r) {

@@ -57,7 +57,7 @@ return view.extend({
 		var uniKey = E('input', {
 			type: 'password', 'class': 'cbi-input-text',
 			style: 'width:16em', maxlength: '64', autocomplete: 'new-password',
-			placeholder: _('Leave blank to keep current password'),
+			placeholder: _('Leave blank to use the main AP\'s current password'),
 		});
 
 		var unifiedBox = E('div', { 'class': 'wr-band-group' }, [
@@ -68,7 +68,7 @@ return view.extend({
 			E('div', { 'class': 'wr-form-row' }, [
 				E('label', {}, _('Wi-Fi Password')), uniKey,
 				E('div', { 'class': 'wr-hint' },
-					_('At least 8 characters. Leave blank to keep the current password.')),
+					_('At least 8 characters. Leave blank to use the main AP\'s current password and sync it to all APs.')),
 			]),
 		]);
 
@@ -90,7 +90,7 @@ return view.extend({
 			var keyEl = E('input', {
 				type: 'password', 'class': 'cbi-input-text',
 				style: 'width:16em', maxlength: '64', autocomplete: 'new-password',
-				placeholder: _('Leave blank to keep current password'),
+				placeholder: _('Leave blank to use the main AP\'s current password'),
 			});
 
 			bandInputs.push({ band: b, nameEl: nameEl, keyEl: keyEl });
@@ -103,7 +103,7 @@ return view.extend({
 				E('div', { 'class': 'wr-form-row' }, [
 					E('label', {}, _('Wi-Fi Password')), keyEl,
 					E('div', { 'class': 'wr-hint' },
-						_('At least 8 characters. Leave blank to keep the current password.')),
+						_('At least 8 characters. Leave blank to use the main AP\'s current password and sync it to all APs.')),
 				]),
 			]));
 		});
@@ -202,7 +202,7 @@ return view.extend({
 
 		if (form.uniCb.checked) {
 			/* 合一：所有频段用同一组名称/密码；密码留空时由守护进程把
-			   现有密码复制到所有频段，保证真正「合一」 */
+			   主路由现有密码/开放状态复制到所有频段，保证真正「合一」 */
 			form.bandInputs.forEach(function(bi) {
 				collect(bi.band, form.uniSsid, form.uniKey);
 			});
