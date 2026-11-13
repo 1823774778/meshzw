@@ -2740,8 +2740,20 @@ function sap_rx(req) {
 			req.reply({ ok: false, error: "invalid" });
 			break;
 		}
-		let r = apply_guest_local(guest_cfg());
-		req.reply({ ok: r.ok, error: r.error });
+		/* 等 network/wifi 真正 reload 完再回执，避免 CAP 把「已接受」当成已生效 */
+		let replied = false;
+		try {
+			apply_guest_local(guest_cfg(), function(r) {
+				if (replied) return;
+				replied = true;
+				req.reply({ ok: r.ok, error: r.error });
+			});
+		} catch (e) {
+			if (!replied) {
+				replied = true;
+				req.reply({ ok: false, error: "apply_failed" });
+			}
+		}
 		break;
 	}
 	case "push_offload": {
