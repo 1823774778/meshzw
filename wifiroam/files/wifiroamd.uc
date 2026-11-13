@@ -62,7 +62,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 20;
+const DAEMON_VERSION = 21;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -2105,7 +2105,7 @@ function usage_track_macs(clients) {
 	return set;
 }
 
-/* 站点计数优先用于 WiFi 终端：同时包含上下行，且不受 flow offload 影响。
+/* 站点计数作为 nft 的补充：同时包含上下行，且不受 flow offload 影响。
    SAP 会在客户端信息里上报 rx_bytes/tx_bytes，CAP 汇总后做差分。 */
 function station_usage_map(clients) {
 	let map = {};
@@ -2134,23 +2134,50 @@ function usage_add_traffic(mn, by) {
 	state._usage_dirty = true;
 }
 
+/* 站点计数用于补充 nft 看不到的流量（flow offload），只返回本轮增量。 */
 function station_usage_sample(map) {
 	let snap = state._usage_station_snap ?? {};
 	let fresh = {};
+	let deltas = {};
 
 	for (let mn, b in map) {
 		let prev = snap[mn];
-		if (prev && b.rx >= prev.rx && b.tx >= prev.tx)
-			usage_add_traffic(mn, (b.rx - prev.rx) + (b.tx - prev.tx));
+		if (prev && b.rx >= prev.rx && b.tx >= prev.tx) {
+			let by = (b.rx - prev.rx) + (b.tx - prev.tx);
+			if (by > 0) deltas[mn] = by;
+		}
 		fresh[mn] = b;
 	}
 	state._usage_station_snap = fresh;
+	return deltas;
 }
 
-function usage_apply_rules(force, set) {
+/* 终端 MAC -> IPv4：下行按目的 IP 计数（与 OAF 的 forward hook 一致），
+   不依赖 Ethernet 目的 MAC，避免路由模式下只统计到上行。 */
+function usage_ip_map(clients) {
+	let map = {};
+
+	function take(src) {
+		for (let mn, c in src)
+			if (!map[mn] && c?.ip) map[mn] = c.ip;
+	}
+
+	take(clients ?? {});
+	for (let pmn, p in state.peers)
+		take(p.clients ?? {});
+	for (let mn, n in (state.net_names ?? {}))
+		if (!map[mn] && n?.ip) map[mn] = n.ip;
+	return map;
+}
+
+function usage_apply_rules(force, set, ips) {
 	if (state.cfg.role != "cap") return;
 	set = set ?? usage_track_macs();
-	let key = join(",", sort(keys(set)));
+	ips = ips ?? {};
+	let parts = [];
+	for (let mn in set)
+		parts.push(mn + "=" + (ips[mn] ?? ""));
+	let key = join(",", sort(parts));
 	if (!force && state._usage_track != null && key == state._usage_track) return;
 
 	cmd_output(sprintf("nft add table inet %s 2>/dev/null", USAGE_TABLE));
@@ -2159,13 +2186,15 @@ function usage_apply_rules(force, set) {
 		USAGE_TABLE));
 	let script = sprintf("flush chain inet %s forward\n", USAGE_TABLE);
 	for (let mn in set) {
-		/* 上下行都计数：saddr=终端发送，daddr=终端接收 */
+		/* 上行按源 MAC，下行按目的 IPv4，两个方向都计数 */
 		script += sprintf(
 			"add rule inet %s forward ether saddr %s counter comment \"wu:%s\"\n",
 			USAGE_TABLE, maccolon(mn), mn);
-		script += sprintf(
-			"add rule inet %s forward ether daddr %s counter comment \"wu:%s\"\n",
-			USAGE_TABLE, maccolon(mn), mn);
+		let ip = "" + (ips[mn] ?? "");
+		if (match(ip, /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/))
+			script += sprintf(
+				"add rule inet %s forward ip daddr %s counter comment \"wu:%s\"\n",
+				USAGE_TABLE, ip, mn);
 	}
 	let path = "/tmp/wifiroam-usage.nft";
 	fs.writefile(path, script);
@@ -2178,22 +2207,22 @@ function usage_apply_rules(force, set) {
 	state._usage_track = key;
 }
 
-function usage_sample() {
-	if (state.cfg.role != "cap") return;
+function usage_sample(set) {
+	if (state.cfg.role != "cap") return {};
 	let out = cmd_output(sprintf("nft -j list table inet %s 2>/dev/null", USAGE_TABLE));
 	if (out == "") {
 		// 表被防火墙清掉：下一轮强制重建
 		state._usage_track = "";
-		return;
+		return {};
 	}
 	let data;
-	try { data = json(out); } catch (e) { return; }
-	if (type(data) != "object" || type(data.nftables) != "array") return;
+	try { data = json(out); } catch (e) { return {}; }
+	if (type(data) != "object" || type(data.nftables) != "array") return {};
 	let snap = state._usage_snap ?? {};
 	let fresh = {};
+	let deltas = {};
 	let want = {};
-	if (state._usage_track)
-		for (let mn in split(state._usage_track, ",")) want[mn] = true;
+	for (let mn in (set ?? {})) want[mn] = true;
 
 	for (let item in data.nftables) {
 		let r = item.rule;
@@ -2212,10 +2241,11 @@ function usage_sample() {
 	for (let mn, by in fresh) {
 		let prev = snap[mn];
 		if (prev == null || by < prev) continue;
-		usage_add_traffic(mn, by - prev);
+		if (by > prev) deltas[mn] = by - prev;
 	}
 	state._usage_snap = fresh;
 	state._usage_ts = time();
+	return deltas;
 }
 
 function usage_online_sample(seen) {
@@ -2264,13 +2294,22 @@ function usage_tick() {
 		let clients = local_clients();
 		let all = usage_track_macs(clients);
 		let stations = station_usage_map(clients);
-		/* WiFi 终端用站点计数（上下行、含 offload），其余终端用 nft 计数 */
-		let nft_set = {};
-		for (let mn in all)
-			if (!stations[mn]) nft_set[mn] = true;
-		usage_apply_rules(false, nft_set);
-		usage_sample();
-		station_usage_sample(stations);
+		/* 与 OAF 的 forward hook 一致：所有终端都按“上行源 MAC + 下行目的 IP”
+		   计数；站点计数只补充 flow offload 看不到的部分，两者取较大增量，
+		   避免 WiFi 漫游导致站点计数复位后少算。 */
+		let ips = usage_ip_map(clients);
+		usage_apply_rules(false, all, ips);
+		let nft = usage_sample(all);
+		let st = station_usage_sample(stations);
+		let add = {};
+		for (let mn, by in nft)
+			add[mn] = int(by);
+		for (let mn, by in st) {
+			by = int(by);
+			if (by > (add[mn] ?? 0)) add[mn] = by;
+		}
+		for (let mn, by in add)
+			usage_add_traffic(mn, by);
 		usage_online_sample(all);
 		if (state._usage_dirty && time() - state._usage_saved >= USAGE_FLUSH)
 			usage_save();

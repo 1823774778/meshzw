@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 20;
+var REQUIRED_VERSION = 21;
 
 return view.extend({
 	st: null,
