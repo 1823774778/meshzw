@@ -34,12 +34,14 @@ const MAX_EVENTS = 100;
 const CONN_AUTH_TIMEOUT = 15;   // s：未认证 TCP 连接最长存活时间
 const MAX_UNAUTH_CONNS = 16;    // 未认证连接上限，避免 fd 被耗尽
 const WIRED_TTL = 300;    // s wired client stays listed after last FDB sighting
-const STEER_COOLDOWN = 30;  // s 同一终端两次 BSS Transition 引导的最小间隔
-const MIN_STEER_ASSOC = 20; // s 终端入网后至少稳定这么久才允许被引导
-const STEER_CONFIRM = 2;    // 连续低于阈值的采样次数（steer_tick 每 5s）
-const STEER_CRITICAL_DROP = 8;    // 低于阈值多少 dBm 视为临界
+const STEER_COOLDOWN = 30;  // s 同一终端两次建议式 BSS Transition 引导的最小间隔
+const MIN_STEER_ASSOC = 10; // s 终端入网后至少稳定这么久才允许被引导
+const STEER_CONFIRM = 2;    // 连续低于阈值的采样次数（steer_tick 每 3s）
+const STEER_CRITICAL_DROP = 5;    // 低于阈值多少 dBm 视为临界
 const STEER_CRITICAL_CONFIRM = 3; // 临界信号需要连续采样次数
-const STEER_CRITICAL_DELAY = 15;  // 建议式 BTM 后多久仍未改善才强制
+const STEER_CRITICAL_DELAY = 8;   // 建议式 BTM 后多久仍未改善才强制
+const STEER_TICK = 3000;    // ms：steering 采样间隔（只走 ubus，不扫 iw）
+const RRM_SYNC_INTERVAL = 15000; // ms：向 hostapd 同步 11k 邻居库的间隔
 const BACKHAUL_SECTION = "wifiroam_bh";
 const BACKHAUL_DEFAULT_SSID = "wifiroam-bh";
 
@@ -64,7 +66,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 26;
+const DAEMON_VERSION = 28;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -88,6 +90,7 @@ let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
+let rrm_sync_local, rrm_sync_tick;
 
 let state = {
 	cfg: {},            // uci wifiroam
@@ -128,6 +131,8 @@ let state = {
 	steer_stage: {},    // macnorm -> 0/1/2（建议/强制阶段）
 	bss_list: null,     // SAP: CAP 下发的全网络 BSS 列表
 	_bss_cache: null,   // CAP: 全网络 BSS 列表缓存
+	_bss_sig: "",       // SAP: CAP 下发的 BSS 列表签名，变化时立即同步 11k 邻居库
+	_own_nr: {},        // ifname -> { ts, nr }：本机 hostapd 的 own Neighbor Report 缓存
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
 	usage: { day: "", online: {}, ndata: {} }, // CAP: 每终端每日在线秒数 / 总流量
@@ -574,6 +579,24 @@ function channel_num(v) {
 	return match(s, /^[0-9]+$/) ? int(s) : 0;
 }
 
+// 本机 hostapd 的 own Neighbor Report：包含正确的 BSSID Info、操作类、
+// 信道和宽带宽子元素，直接用于 11k 邻居库与 BTM 候选，避免手工拼接出错。
+// 只缓存成功结果（10s），与 BSS 列表缓存同周期；hostapd 重启/频道变化
+// 或接口未就绪时下一轮自动重试。
+function own_nr(ifname) {
+	let cached = state._own_nr[ifname];
+	let now = time();
+	if (cached && now - cached.ts < 10) return cached.nr;
+
+	let res = ubusc.call("hostapd." + ifname, "rrm_nr_get_own");
+	let nr = res?.value?.[2];
+	if (type(nr) != "string" || length(nr) < 26 || (length(nr) % 2))
+		return null;
+
+	state._own_nr[ifname] = { ts: now, nr };
+	return nr;
+}
+
 // 本机每块射频的当前信道：优先 iw 实际信道，取不到时退回 UCI 配置
 function channel_radios() {
 	let out = [];
@@ -595,7 +618,9 @@ function channel_radios() {
 			let bssid = "";
 			if (length(macnorm(mac)) == 12) { bssid = mac; push(bssids, mac); }
 			push(bss, { ifname: ifc.ifname, bssid,
-			            ssid: ifc.config?.ssid ?? "" });
+			            ssid: ifc.config?.ssid ?? "",
+			            nr: (ifc.config?.rrm_neighbor_report == "1")
+			                ? own_nr(ifc.ifname) : null });
 			if (!current) {
 				let info = cmd_output(`iw dev ${ifc.ifname} info 2>/dev/null`);
 				let m = match(info, /channel\s+(\d+)/);
@@ -634,13 +659,20 @@ function steer_bss_all() {
 	function add(r, ap, ap_mac) {
 		for (let b in (r.bss ?? [])) {
 			let mn = macnorm(b.bssid ?? "");
-			if (length(mn) != 12 || map[mn]) continue;
+			if (length(mn) != 12) continue;
+			if (map[mn]) {
+				/* 同一 BSS 多来源合并：本机 own report 失败时用对端/ CAP
+				   下发的 nr 补上，避免邻居报告丢字段 */
+				if (!map[mn].nr && b.nr) map[mn].nr = b.nr;
+				continue;
+			}
 			map[mn] = {
 				bssid: b.bssid, ssid: b.ssid ?? "",
 				ifname: b.ifname ?? "", ap: ap ?? "", ap_mac: ap_mac ?? "",
 				band: channel_band_key(r.band),
 				channel: int(r.current ?? r.channel ?? 0),
 				htmode: r.htmode ?? "",
+				nr: b.nr ?? null,
 			};
 		}
 	}
@@ -653,7 +685,12 @@ function steer_bss_all() {
 				add(r, p.info?.name ?? p.name ?? mn, mn);
 	for (let b in (state.bss_list ?? [])) {
 		let mn = macnorm(b.bssid ?? "");
-		if (length(mn) == 12 && !map[mn]) map[mn] = b;
+		if (length(mn) != 12) continue;
+		if (map[mn]) {
+			if (!map[mn].nr && b.nr) map[mn].nr = b.nr;
+			continue;
+		}
+		map[mn] = b;
 	}
 
 	let list = [];
@@ -1796,6 +1833,41 @@ function local_clients() {
 	return clients;
 }
 
+// steering 专用轻量客户端表：只走 hostapd ubus 取 RSSI/在线时长，
+// 不做 iw 字节采样、DHCP/ARP/FDB 解析；3s 采样也不会带来明显开销。
+function wifi_clients() {
+	let clients = {};
+
+	let excl = {};
+	for (let m in keys(state.self.ifaces ?? {})) excl[m] = true;
+	for (let pmn, p in state.peers)
+		for (let m in keys(p.info?.ifaces ?? {})) excl[m] = true;
+
+	let ws = ubusc.call("network.wireless", "status") ?? {};
+	for (let rname, r in ws) {
+		let band = r.config?.band;
+		for (let ifc in r.interfaces ?? []) {
+			if (ifc.config?.mode && ifc.config.mode != "ap") continue;
+			if (!ifc.ifname) continue;
+			let res = ubusc.call("hostapd." + ifc.ifname, "get_clients");
+			if (!res?.clients) continue;
+			for (let mac, ci in res.clients) {
+				let mn = macnorm(mac);
+				if (excl[mn]) continue;
+				clients[mn] = {
+					mac: uc(mac), type: "wifi", ifname: ifc.ifname,
+					ssid: ifc.config?.ssid,
+					guest: guest_network_only(ifc.config?.network),
+					band: band ?? freq_band(res.freq),
+					rssi: ci.signal ?? null,
+					connected_time: ci.connected_time ?? null,
+				};
+			}
+		}
+	}
+	return clients;
+}
+
 // ------------------------------------------------ 上网统计（在线时长 + 流量）
 // 只统计总量：用 nft 的 per-MAC counter 累计终端每日流量，不做应用识别。
 function usage_day() {
@@ -2336,7 +2408,7 @@ write_roam_iface = function(cur, s, roam, members, selected) {
 		cur.set("wireless", sid, "ieee80211r", "1");
 		cur.set("wireless", sid, "mobility_domain", md);
 		cur.set("wireless", sid, "ft_over_ds", roam.ft_over_ds ? "1" : "0");
-		cur.set("wireless", sid, "reassociation_deadline", "2000");
+		cur.set("wireless", sid, "reassociation_deadline", "1000");
 		if (roam.ft_mode == "explicit") {
 			cur.set("wireless", sid, "ft_psk_generate_local", "0");
 			cur.set("wireless", sid, "nas_identifier", uc(macnorm(state.self.mac)) + "-" + s.ssid);
@@ -2421,10 +2493,14 @@ function apply_roam_local(roam, members) {
 	if (dirty) wc.commit("wifiroam");
 	/* 延迟重启无线：先让 ubus 响应和向成员 AP 的配置推送发出去，
 	   否则首次保存时管理连接会先被 wifi reload 打断，页面误以为服务停止 */
+	state._own_nr = {};
+	state._bss_cache = null;
 	uloop.timer(1000, function() {
 		uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
 			log("wifi reload rc=" + res);
 			guest_tc_apply(guest_cfg());
+			/* hostapd 重启后邻居库是空的，稍后重新下发 11k 邻居 */
+			uloop.timer(5000, rrm_sync_tick);
 		});
 	});
 	push_event("roam_apply", "",
@@ -2823,6 +2899,13 @@ function sap_disconnect() {
 	if (link.cap_mac && state.peers[link.cap_mac])
 		state.peers[link.cap_mac].authed = false;
 	state.link = null;
+	/* CAP 断链后旧 BSS 列表已不可信：清掉并让 hostapd 尽快移除旧邻居 */
+	state.bss_list = null;
+	state._bss_cache = null;
+	state._bss_sig = "";
+	state.net_names = {};
+	state.roster = null;
+	uloop.timer(1000, rrm_sync_tick);
 }
 
 function sap_connect(cap_ip) {
@@ -2884,8 +2967,20 @@ sap_report = function() {
 				if (m?.roster) state.roster = m.roster;
 				if (m?.usage) state.cap_usage = m.usage;
 				if (m?.bss) {
+					/* 只有 BSS 列表真正变化时才触发一次立即同步，
+					   避免每 10s 的上报都重建 hostapd 邻居库 */
+					let parts = [];
+					for (let b in m.bss)
+						push(parts, sprintf("%s|%s|%s|%s",
+							b.bssid ?? "", b.ssid ?? "",
+							b.channel ?? "", b.nr ?? ""));
+					let sig = sha256(join("\n", parts));
+					let changed = (sig != state._bss_sig);
+
 					state.bss_list = m.bss;
+					state._bss_sig = sig;
 					state._bss_cache = null;
+					if (changed) uloop.timer(1000, rrm_sync_tick);
 				}
 			},
 			cb: function(rc) {
@@ -4165,34 +4260,89 @@ function steer_neighbors(c, all) {
 	return out;
 }
 
-function steer_op_class(band, htmode) {
+/* 5GHz/6GHz 操作类（IEEE 802.11 全局操作类）：
+   5GHz 20MHz 按信道段取 115/118/121/124/125，80/160MHz 统一 128/129；
+   6GHz 20/40/80/160/320MHz 取 131/132/133/134/137。
+   40MHz 因没有主/次信道方向信息，回退到 20MHz 操作类，避免生成
+   “操作类与信道不匹配”的候选被终端丢弃。 */
+function steer_op_class(band, htmode, channel) {
 	let w = htmode ?? "";
+	let ch = int(channel ?? 0);
+
 	if (band == "6g")
-		return index(w, "320") >= 0 ? 135
+		return index(w, "320") >= 0 ? 137
 		   : index(w, "160") >= 0 ? 134
 		   : index(w, "80") >= 0 ? 133
 		   : index(w, "40") >= 0 ? 132 : 131;
-	if (band == "5g")
-		return index(w, "160") >= 0 ? 118
-		   : index(w, "80") >= 0 ? 117
-		   : index(w, "40") >= 0 ? 116 : 115;
+
+	if (band == "5g") {
+		if (index(w, "160") >= 0) return 129;
+		if (index(w, "80") >= 0) return 128;
+		if (ch >= 36 && ch <= 48) return 115;
+		if (ch >= 52 && ch <= 64) return 118;
+		if (ch >= 100 && ch <= 144) return 121;
+		if (ch >= 149 && ch <= 165) return 124;
+		if (ch >= 166 && ch <= 177) return 125;
+		return 115;
+	}
+
 	if (band == "2g")
-		return index(w, "40") >= 0 ? 83 : 81;
+		return ch == 14 ? 82 : 81;
+
 	return 81;
 }
 
+/* 手工构造 Neighbor Report 时的 BSSID Info（4 字节小端）：
+   AP 可达 + 安全 + Key Scope + RRM + QoS，再按 HT/VHT/HE 能力补位。
+   正常路径优先使用 hostapd own report（b.nr），这里只用于旧 AP 回退。 */
+function steer_bssid_info(b) {
+	let info = 3 | 4 | 8 | 128 | 32;
+	let w = b.htmode ?? "";
+
+	if (channel_band_key(b.band) != "2g") info |= 16;
+
+	if (index(w, "HT") >= 0 || index(w, "VHT") >= 0 ||
+	    index(w, "HE") >= 0 || index(w, "EHT") >= 0)
+		info |= 2048 | 256;
+	if (index(w, "VHT") >= 0 || index(w, "HE") >= 0 || index(w, "EHT") >= 0)
+		info |= 4096;
+	if (index(w, "HE") >= 0 || index(w, "EHT") >= 0)
+		info |= 16384;
+
+	return sprintf("%02x%02x%02x%02x",
+		info & 0xff, (info >> 8) & 0xff, (info >> 16) & 0xff, (info >> 24) & 0xff);
+}
+
+function steer_neighbor_hex(b) {
+	let ch = int(b.channel ?? 0);
+	let bssid = macnorm(b.bssid ?? "");
+	if (ch <= 0 || ch > 255 || length(bssid) != 12) return null;
+	let op = steer_op_class(channel_band_key(b.band), b.htmode, ch);
+	return bssid + steer_bssid_info(b) + sprintf("%02x%02x00", op, ch);
+}
+
+/* 校验对端上报的 nr：必须是合法十六进制、长度足够，且首 6 字节 BSSID
+   与目标 BSS 一致；不合法时回退到本地手工拼接，避免 hostapd 因单条
+   坏数据清空整个邻居库。 */
+function valid_nr(nr, bmn) {
+	if (type(nr) != "string") return false;
+	nr = lc(nr);
+	if (length(nr) < 26 || (length(nr) % 2)) return false;
+	if (match(nr, /^[0-9a-f]+$/) == null) return false;
+	if (length(bmn) == 12 && substr(nr, 0, 12) != bmn) return false;
+	return true;
+}
+
 /* hostapd 的 neighbors 参数要求字符串数组，每项是 Neighbor Report
-   元素体（不含 EID/长度）的十六进制：
-   BSSID(6) + BSSID Info(4, little-endian) + op_class(1) + channel(1) + phy_type(1)。 */
+   元素体（不含 EID/长度）的十六进制。优先直接用 hostapd 的 own report
+   （含正确的 BSSID Info 与宽带宽子元素）；旧 AP 没有 nr 时再手工拼。 */
 function steer_btm_neighbors(list) {
 	let out = [];
 	for (let b in list) {
-		let ch = int(b.channel ?? 0);
-		let bssid = macnorm(b.bssid ?? "");
-		if (ch <= 0 || ch > 255 || length(bssid) != 12) continue;
-		let op = steer_op_class(channel_band_key(b.band), b.htmode);
-		push(out, bssid + "00000000" +
-			sprintf("%02x%02x00", op, ch));
+		let bmn = macnorm(b.bssid ?? "");
+		let nr = b.nr;
+		if (!valid_nr(nr, bmn)) nr = steer_neighbor_hex(b);
+		if (nr) push(out, nr);
 	}
 	return out;
 }
@@ -4235,7 +4385,7 @@ function steer_tick_impl() {
 	if (!has_peer) return;   // 单 AP 无处分流，引导只会让终端掉线
 
 	let now = time();
-	let clients = local_clients();
+	let clients = wifi_clients();
 	let all = steer_bss_all();
 	let seen = {};
 	let critical_at = threshold - STEER_CRITICAL_DROP;
@@ -4274,7 +4424,8 @@ function steer_tick_impl() {
 		if (stage == 0) {
 			if (low < (critical ? STEER_CRITICAL_CONFIRM : STEER_CONFIRM))
 				continue;
-			if (steer_btm(c, mn, false, 0, 30, btm_neigh)) {
+			/* validity 单位是 TBTT（约 100ms/个），150 ≈ 15s */
+			if (steer_btm(c, mn, false, 0, 150, btm_neigh)) {
 				state.steer_last[mn] = now;
 				state.steer_stage[mn] = 1;
 				push_event("roam_steer", maccolon(mn),
@@ -4287,7 +4438,8 @@ function steer_tick_impl() {
 		         since >= STEER_CRITICAL_DELAY) {
 			/* 只有存在明确候选时才强制，避免把终端踢下线 */
 			if (!length(btm_neigh)) continue;
-			if (steer_btm(c, mn, true, 10, 30, btm_neigh)) {
+			/* disassociation_timer 也是 TBTT：30 ≈ 3s，给终端留出切换时间 */
+			if (steer_btm(c, mn, true, 30, 150, btm_neigh)) {
 				state.steer_last[mn] = now;
 				state.steer_stage[mn] = 2;
 				push_event("roam_steer", maccolon(mn),
@@ -4297,7 +4449,7 @@ function steer_tick_impl() {
 		}
 		else if (stage == 1 && since >= STEER_COOLDOWN) {
 			/* 终端没接受建议，再发一次建议式 BTM */
-			if (steer_btm(c, mn, false, 0, 30, btm_neigh))
+			if (steer_btm(c, mn, false, 0, 150, btm_neigh))
 				state.steer_last[mn] = now;
 		}
 	}
@@ -4317,6 +4469,57 @@ function steer_tick() {
 		log("steer_tick failed: " + e);
 	}
 }
+
+// 把全网络邻居报告下发给本机每个 hostapd BSS，802.11k 才会真正返回邻居。
+// 每台 AP 只同步与自身 SSID 相同、且不是自己的 BSS；hostapd 会保留 own report。
+rrm_sync_local = function() {
+	if (state.cfg.role == "unconfigured") return 0;
+	let roam = current_roam_cfg();
+	if (!roam.enabled || !roam.k_neighbor) return 0;
+
+	let all = steer_bss_all();
+	let ws = ubusc.call("network.wireless", "status") ?? {};
+	let synced = 0;
+
+	for (let rname, r in ws) {
+		for (let ifc in r.interfaces ?? []) {
+			if (ifc.config?.mode && ifc.config.mode != "ap") continue;
+			if (ifc.config?.disabled == "1") continue;
+			if (ifc.config?.rrm_neighbor_report != "1") continue;
+			if (!ifc.ifname) continue;
+
+			let ssid = ifc.config?.ssid ?? "";
+			let own_mac = macnorm(trim(fs.readfile(
+				`/sys/class/net/${ifc.ifname}/address`) ?? ""));
+			let list = [];
+
+			for (let b in all) {
+				if ((b.ssid ?? "") != ssid) continue;
+				let bmn = macnorm(b.bssid ?? "");
+				if (length(bmn) != 12 || bmn == own_mac) continue;
+
+				let nr = b.nr;
+				if (!valid_nr(nr, bmn)) nr = steer_neighbor_hex(b);
+				if (!nr) continue;
+
+				push(list, [ maccolon(bmn), ssid, nr ]);
+			}
+
+			/* 空列表也要下发：hostapd 会清掉已离线 AP 的旧邻居条目 */
+			ubusc.call("hostapd." + ifc.ifname, "rrm_nr_set", { list });
+			synced++;
+		}
+	}
+	return synced;
+};
+
+rrm_sync_tick = function() {
+	try {
+		rrm_sync_local();
+	} catch (e) {
+		log("rrm sync failed: " + e);
+	}
+};
 
 // ---------------------------------------------------------------- lifecycle
 ensure_token = function() {
@@ -4345,6 +4548,8 @@ reconfigure = function() {
 	state.steer_stage = {};
 	state.bss_list = null;
 	state._bss_cache = null;
+	state._bss_sig = "";
+	state._own_nr = {};
 	send_hello();
 };
 
@@ -4416,6 +4621,8 @@ function main() {
 		if (state.cfg.role != "unconfigured")
 			guest_fw4_sync(null, false);
 	});
+	/* 启动后尽快下发一次 11k 邻居库，之后按 RRM_SYNC_INTERVAL 周期同步 */
+	uloop.timer(8000, rrm_sync_tick);
 
 	uloop.interval(HELLO_INTERVAL, send_hello);
 	uloop.interval(TICK_INTERVAL, sap_tick);
@@ -4423,7 +4630,8 @@ function main() {
 	uloop.interval(TICK_INTERVAL, expire_tick);
 	uloop.interval(10000, conn_cleanup);
 	uloop.interval(TICK_INTERVAL, backhaul_tick);
-	uloop.interval(5000, steer_tick);
+	uloop.interval(STEER_TICK, steer_tick);
+	uloop.interval(RRM_SYNC_INTERVAL, rrm_sync_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
 	uloop.interval(USAGE_TICK, usage_tick);
 	uloop.interval(TICK_INTERVAL, function() {
