@@ -480,17 +480,22 @@ return view.extend({
 		}, _('立即优化'));
 
 		var co = ch.cochannel || {};
-		var conflict = {};
 		if (!isCap) {
 			enableCb.disabled = true;
 			b2.disabled = true;
 			b5.disabled = true;
 			hour.disabled = true;
 		}
-		(co.items || []).forEach(function(it) {
-			(it.aps || []).forEach(function(name) {
-				conflict[name + '|' + it.channel] = true;
-			});
+
+		/* 状态按「计划信道」判断：优化后不再同频的 AP 显示正常 */
+		var planned = {};
+		(ch.plan || []).forEach(function(it) {
+			if (it.backhaul) return;
+			var k = (it.band || '') + ':' + (it.to || 0);
+			var p = planned[k];
+			if (!p) p = planned[k] = { n: 0, all160: true };
+			p.n++;
+			if (!it.wide160) p.all160 = false;
 		});
 
 		/* 同一设备的多个射频归到一组：AP 列只显示一次，射频单独一列 */
@@ -508,13 +513,17 @@ return view.extend({
 		order.forEach(function(key) {
 			var g = groups[key];
 			g.items.forEach(function(it, idx) {
-				var radioKey = (it.name || '') + (it.device ? ' · ' + it.device : '');
-				var same = !!conflict[radioKey + '|' + it.from];
+				var pk = (it.band || '') + ':' + (it.to || 0);
+				var p = planned[pk];
+				var same = !!p && p.n > 1;
+				var shared160 = same && p.all160;
 				var bh = !!(it.backhaul || it.wireless);
 				var text = bh ? _('回程固定')
-					: (it.changed ? _('建议调整') : (same ? _('同频') : _('正常')));
+					: (it.changed ? _('建议调整')
+					: (shared160 ? _('160MHz 共用')
+					: (same ? _('同频') : _('正常'))));
 				var cls = bh ? 'wr-apply-ok'
-					: ((it.changed || same) ? 'wr-apply-pending' : 'wr-apply-ok');
+					: ((it.changed || (same && !shared160)) ? 'wr-apply-pending' : 'wr-apply-ok');
 				var tds = [];
 				if (idx === 0)
 					tds.push(E('td', { rowspan: g.items.length,
@@ -552,12 +561,12 @@ return view.extend({
 		return E('div', { 'class': 'cbi-section' }, [
 			E('h3', {}, _('无线信道优化')),
 			E('div', { 'class': 'wr-hint' },
-				_('根据各 AP 当前信道，为主路由和子路由分配互不重叠的频道。切换信道会让无线短暂重启，建议在低峰期执行。')),
+				_('根据各 AP 当前信道，为主路由和子路由分配互不重叠的频道。切换信道会让无线短暂重启，建议在低峰期执行。160MHz 射频保持 160MHz 和 36 信道，多个 160MHz 射频共用信道属于正常，不再提示切换；5G 达到 3 个时，80MHz 射频使用 36/149/52（52 为 DFS）。')),
 			co.any
 				? E('div', { 'class': 'alert-message warning' },
 					_('检测到 AP 同频，建议执行一次信道优化。'))
 				: E('div', { 'class': 'wr-hint' },
-					_('当前未检测到同频；优化时会优先保持现有信道。')),
+					_('当前没有需要处理的同频；160MHz 射频共用信道属于正常。')),
 			E('div', { 'class': 'wr-form-row' }, [
 				E('label', {}, [ enableCb, ' ', _('启用自动信道优化') ]),
 			]),
@@ -634,10 +643,18 @@ return view.extend({
 				dom.content(box, self.renderChannelPanel());
 
 			if (apply) {
-				var n = (res.local && res.local.count) || 0;
-				wr.notify('success', n > 0
-					? _('信道已切换，无线将在几秒后重启。')
-					: _('当前信道已是最优，无需调整。'));
+				var changes = (res.plan || []).filter(function(it) { return it.changed; }).length;
+				var dfs = (res.plan || []).some(function(it) {
+					return it.changed && it.band === '5g' && it.to >= 52 && it.to <= 144;
+				});
+				if (changes > 0 && dfs)
+					wr.notify('warning', _('信道已切换；DFS 信道需要约 1 分钟完成雷达检测，期间无线会短暂中断。'));
+				else if (changes > 0)
+					wr.notify('success', _('信道已切换，无线将在几秒后重启。'));
+				else if (res.cochannel && res.cochannel.any)
+					wr.notify('warning', _('检测到同频，但当前没有可用的独立信道，请手动选择信道。'));
+				else
+					wr.notify('success', _('当前信道已是最优，无需调整。'));
 			}
 			else {
 				wr.notify('success', _('信道优化设置已保存。'));

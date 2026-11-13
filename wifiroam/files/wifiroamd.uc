@@ -62,7 +62,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 17;
+const DAEMON_VERSION = 19;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -662,15 +662,16 @@ function channel_cochannel(aps) {
 			if (ch <= 0) continue;
 			let key = band + ":" + ch;
 			let b = buckets[key];
-			if (!b) { b = { band, channel: ch, aps: [], wireless: false }; buckets[key] = b; }
+			if (!b) { b = { band, channel: ch, aps: [], wireless: false, all160: true }; buckets[key] = b; }
 			if (a.backhaul_device && a.backhaul_device == r.device) b.wireless = true;
+			if (index(r.htmode ?? "", "160") < 0) b.all160 = false;
 			let label = a.name + (r.device ? " · " + r.device : "");
 			if (index(b.aps, label) < 0) push(b.aps, label);
 		}
 	}
 	let items = [];
 	for (let k, b in buckets)
-		if (length(b.aps) > 1 && !b.wireless) push(items, b);
+		if (length(b.aps) > 1 && !b.wireless && !b.all160) push(items, b);
 	return { any: length(items) > 0, items };
 }
 
@@ -723,11 +724,12 @@ function channel_make_plan(aps, settings) {
 				if (channel_band_key(r.band) != band) continue;
 				let current = int(r.current ?? 0);
 				if (current <= 0) current = channel_num(r.channel);
-				if (current <= 0) continue;
 				push(entries, {
 					ap: a.id, name: a.name, band,
 					device: r.device ?? "",
 					current, htmode: r.htmode ?? "",
+					auto: channel_num(r.channel) <= 0,
+					wide160: index(r.htmode ?? "", "160") >= 0,
 					backhaul: !!(a.backhaul_device && a.backhaul_device == r.device),
 				});
 			}
@@ -736,37 +738,67 @@ function channel_make_plan(aps, settings) {
 		if (length(entries) < 2) {
 			for (let e in entries) {
 				let to = e.current;
+				if (to <= 0) to = (band == "2g") ? 1 : 36;
 				if (e.backhaul && e.ap != self_mn && cap_bh[band])
 					to = cap_bh[band];
 				push(plan, { ap: e.ap, name: e.name, band, device: e.device,
-				             backhaul: e.backhaul, from: e.current, to,
-				             changed: to != e.current });
+				             backhaul: e.backhaul, from: e.auto ? 0 : e.current, to,
+				             wide160: index(e.htmode ?? "", "160") >= 0,
+				             changed: to != e.current || !!e.auto });
 			}
 			continue;
 		}
 
-		let wide = false, is160 = false;
-		for (let e in entries) {
-			if (index(e.htmode ?? "", "80") >= 0) wide = true;
-			if (index(e.htmode ?? "", "160") >= 0) { wide = true; is160 = true; }
-		}
-		/* 160MHz 只有一个可用块，强行分到高频段可能不被设备支持 */
-		let cands = (band == "2g") ? [1, 6, 11]
-			: (is160 ? [36] : (wide ? [36, 149] : [36, 44, 149, 157]));
 		let used = {};
 		/* 主 AP 回程射频占用自己的信道，其它射频避免与之同频 */
 		if (cap_bh[band]) used[cap_bh[band]] = 1;
 
-		for (let e in entries) {
+		/* 5G 达到 3 个射频时，80MHz 射频用 36/149/52（52 为 DFS）
+		   错开；160MHz 射频始终保留 36，同频属于正常。 */
+		let multi5 = false;
+		if (band == "5g") {
+			let n5 = 0;
+			for (let e in entries)
+				if (!e.backhaul) n5++;
+			multi5 = n5 >= 3;
+		}
+
+		/* 160MHz 射频优先占用 36，80MHz 射频随后避开 */
+		let ordered = [];
+		for (let e in entries)
+			if (e.wide160 && !e.backhaul) push(ordered, e);
+		for (let e in entries)
+			if (!(e.wide160 && !e.backhaul)) push(ordered, e);
+
+		for (let e in ordered) {
 			/* 回程射频必须跟随主 AP，否则无线回程 STA 会断 */
 			if (e.backhaul) {
 				let to = (e.ap == self_mn) ? e.current
 				         : (cap_bh[band] || e.current);
+				if (to <= 0) to = cap_bh[band] || ((band == "2g") ? 1 : 36);
 				push(plan, { ap: e.ap, name: e.name, band, device: e.device,
-				             backhaul: true, from: e.current, to,
-				             changed: to != e.current });
+				             backhaul: true, from: e.auto ? 0 : e.current, to,
+				             wide160: index(e.htmode ?? "", "160") >= 0,
+				             changed: to != e.current || !!e.auto });
 				continue;
 			}
+
+			/* 160MHz 在非 DFS 频段只有 36 一个块，保留 160 就保持 36；
+			   80MHz 在 2 个 5G 射频时用 36/149，3 个及以上时用
+			   36/149/52（52 为 DFS）错开。 */
+			let e160 = index(e.htmode ?? "", "160") >= 0;
+			let e80 = e160 || index(e.htmode ?? "", "80") >= 0;
+			let cands;
+			if (band == "2g")
+				cands = [1, 6, 11];
+			else if (e160)
+				cands = [36];
+			else if (multi5)
+				cands = [36, 149, 52];
+			else if (e80)
+				cands = [36, 149];
+			else
+				cands = [36, 44, 149, 157];
 
 			let best = 0, best_score = 1000000;
 			for (let i, ch in cands) {
@@ -783,34 +815,37 @@ function channel_make_plan(aps, settings) {
 			if (!best) continue;
 			used[best] = (used[best] ?? 0) + 1;
 			push(plan, { ap: e.ap, name: e.name, band, device: e.device,
-			             backhaul: false, from: e.current, to: best,
-			             changed: best != e.current });
+			             backhaul: false, from: e.auto ? 0 : e.current, to: best,
+			             wide160: e160,
+			             changed: best != e.current || !!e.auto });
 		}
 	}
 	return plan;
 }
 
-// 只改信道，不动带宽/加密；按射频（device）精确落盘，支持三频设备
+// 只改信道/带宽，不动加密；按射频（device）精确落盘，支持三频设备
 function channel_apply_local(targets) {
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let n = 0;
+	let dfs = false;
 
 	let radios = channel_radios();
-	let current = {};
-	for (let r in radios)
+	let current = {}, current_ht = {};
+	for (let r in radios) {
 		current[r.device] = int(r.current ?? 0);
+		current_ht[r.device] = r.htmode ?? "";
+	}
 
 	for (let t in targets) {
 		let band = channel_band_key(t.band);
 		let ch = "" + int(t.channel);
 		let dev = t.device ?? "";
+		let ht = t.htmode ?? "";
 		let target = "";
 
-		if (dev && current[dev] != null) {
-			if (current[dev] == int(ch)) continue;
+		if (dev && current[dev] != null)
 			target = dev;
-		}
 		if (!target) {
 			/* 旧版对端只给 band：只有一个射频时直接匹配，否则用 from 区分 */
 			let cands = [];
@@ -832,9 +867,18 @@ function channel_apply_local(targets) {
 			if (d[".name"] != target) return;
 			if (channel_band_key(d.band ?? d.hwmode) != band) return;
 			found = true;
-			if ((d.channel ?? "") == ch) return;
-			cur.set("wireless", target, "channel", ch);
-			n++;
+			let ch_changed = (d.channel ?? "") != ch;
+			let ht_changed = !!ht && (d.htmode ?? "") != ht;
+			if (ch_changed) {
+				cur.set("wireless", target, "channel", ch);
+				n++;
+				if (band == "5g" && int(ch) >= 52 && int(ch) <= 144)
+					dfs = true;
+			}
+			if (ht_changed) {
+				cur.set("wireless", target, "htmode", ht);
+				n++;
+			}
 		});
 		if (!found) log("channel: radio " + target + " not found for " + band);
 	}
@@ -847,7 +891,7 @@ function channel_apply_local(targets) {
 			});
 		});
 	}
-	return { ok: true, count: n };
+	return { ok: true, count: n, dfs };
 }
 
 push_channel_to = function(mn) {
@@ -880,7 +924,8 @@ push_channel_to = function(mn) {
 	for (let it in plan)
 		if (it.ap == mn)
 			push(targets, { device: it.device ?? "", band: it.band,
-			                from: it.from ?? 0, channel: it.to });
+			                from: it.from ?? 0, channel: it.to,
+			                htmode: it.htmode ?? "" });
 	if (!length(targets)) { p.channel_ver = ver; return true; }
 	try {
 		p.chan.defer({
