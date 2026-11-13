@@ -41,7 +41,7 @@ const STEER_CRITICAL_DROP = 5;    // 低于阈值多少 dBm 视为临界
 const STEER_CRITICAL_CONFIRM = 3; // 临界信号需要连续采样次数
 const STEER_CRITICAL_DELAY = 8;   // 建议式 BTM 后多久仍未改善才强制
 const STEER_TICK = 3000;    // ms：steering 采样间隔（只走 ubus，不扫 iw）
-const RRM_SYNC_INTERVAL = 30000; // ms：向 hostapd 同步 11k 邻居库的间隔
+const RRM_SYNC_INTERVAL = 15000; // ms：向 hostapd 同步 11k 邻居库的间隔
 const BACKHAUL_SECTION = "wifiroam_bh";
 const BACKHAUL_DEFAULT_SSID = "wifiroam-bh";
 
@@ -66,7 +66,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 27;
+const DAEMON_VERSION = 28;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -131,6 +131,7 @@ let state = {
 	steer_stage: {},    // macnorm -> 0/1/2（建议/强制阶段）
 	bss_list: null,     // SAP: CAP 下发的全网络 BSS 列表
 	_bss_cache: null,   // CAP: 全网络 BSS 列表缓存
+	_bss_sig: "",       // SAP: CAP 下发的 BSS 列表签名，变化时立即同步 11k 邻居库
 	_own_nr: {},        // ifname -> { ts, nr }：本机 hostapd 的 own Neighbor Report 缓存
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
@@ -580,11 +581,12 @@ function channel_num(v) {
 
 // 本机 hostapd 的 own Neighbor Report：包含正确的 BSSID Info、操作类、
 // 信道和宽带宽子元素，直接用于 11k 邻居库与 BTM 候选，避免手工拼接出错。
-// 只缓存成功结果（30s），hostapd 重启/接口未就绪时下一轮自动重试。
+// 只缓存成功结果（10s），与 BSS 列表缓存同周期；hostapd 重启/频道变化
+// 或接口未就绪时下一轮自动重试。
 function own_nr(ifname) {
 	let cached = state._own_nr[ifname];
 	let now = time();
-	if (cached && now - cached.ts < 30) return cached.nr;
+	if (cached && now - cached.ts < 10) return cached.nr;
 
 	let res = ubusc.call("hostapd." + ifname, "rrm_nr_get_own");
 	let nr = res?.value?.[2];
@@ -2897,6 +2899,13 @@ function sap_disconnect() {
 	if (link.cap_mac && state.peers[link.cap_mac])
 		state.peers[link.cap_mac].authed = false;
 	state.link = null;
+	/* CAP 断链后旧 BSS 列表已不可信：清掉并让 hostapd 尽快移除旧邻居 */
+	state.bss_list = null;
+	state._bss_cache = null;
+	state._bss_sig = "";
+	state.net_names = {};
+	state.roster = null;
+	uloop.timer(1000, rrm_sync_tick);
 }
 
 function sap_connect(cap_ip) {
@@ -2958,8 +2967,20 @@ sap_report = function() {
 				if (m?.roster) state.roster = m.roster;
 				if (m?.usage) state.cap_usage = m.usage;
 				if (m?.bss) {
+					/* 只有 BSS 列表真正变化时才触发一次立即同步，
+					   避免每 10s 的上报都重建 hostapd 邻居库 */
+					let parts = [];
+					for (let b in m.bss)
+						push(parts, sprintf("%s|%s|%s|%s",
+							b.bssid ?? "", b.ssid ?? "",
+							b.channel ?? "", b.nr ?? ""));
+					let sig = sha256(join("\n", parts));
+					let changed = (sig != state._bss_sig);
+
 					state.bss_list = m.bss;
+					state._bss_sig = sig;
 					state._bss_cache = null;
+					if (changed) uloop.timer(1000, rrm_sync_tick);
 				}
 			},
 			cb: function(rc) {
@@ -4300,15 +4321,27 @@ function steer_neighbor_hex(b) {
 	return bssid + steer_bssid_info(b) + sprintf("%02x%02x00", op, ch);
 }
 
+/* 校验对端上报的 nr：必须是合法十六进制、长度足够，且首 6 字节 BSSID
+   与目标 BSS 一致；不合法时回退到本地手工拼接，避免 hostapd 因单条
+   坏数据清空整个邻居库。 */
+function valid_nr(nr, bmn) {
+	if (type(nr) != "string") return false;
+	nr = lc(nr);
+	if (length(nr) < 26 || (length(nr) % 2)) return false;
+	if (match(nr, /^[0-9a-f]+$/) == null) return false;
+	if (length(bmn) == 12 && substr(nr, 0, 12) != bmn) return false;
+	return true;
+}
+
 /* hostapd 的 neighbors 参数要求字符串数组，每项是 Neighbor Report
    元素体（不含 EID/长度）的十六进制。优先直接用 hostapd 的 own report
    （含正确的 BSSID Info 与宽带宽子元素）；旧 AP 没有 nr 时再手工拼。 */
 function steer_btm_neighbors(list) {
 	let out = [];
 	for (let b in list) {
+		let bmn = macnorm(b.bssid ?? "");
 		let nr = b.nr;
-		if (type(nr) != "string" || length(nr) < 26 || (length(nr) % 2))
-			nr = steer_neighbor_hex(b);
+		if (!valid_nr(nr, bmn)) nr = steer_neighbor_hex(b);
 		if (nr) push(out, nr);
 	}
 	return out;
@@ -4466,8 +4499,7 @@ rrm_sync_local = function() {
 				if (length(bmn) != 12 || bmn == own_mac) continue;
 
 				let nr = b.nr;
-				if (type(nr) != "string" || length(nr) < 26 || (length(nr) % 2))
-					nr = steer_neighbor_hex(b);
+				if (!valid_nr(nr, bmn)) nr = steer_neighbor_hex(b);
 				if (!nr) continue;
 
 				push(list, [ maccolon(bmn), ssid, nr ]);
@@ -4516,6 +4548,7 @@ reconfigure = function() {
 	state.steer_stage = {};
 	state.bss_list = null;
 	state._bss_cache = null;
+	state._bss_sig = "";
 	state._own_nr = {};
 	send_hello();
 };
