@@ -1,0 +1,60 @@
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: CTRL-EVENT-CHANNEL-SWITCH freq=5180 ht_enabled=1 ch_offset=1 ch_width=160 MHz cf1=5250 cf2=0 is_dfs0=4 dfs=0 puncturing_bitmap=0x0000
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: AP-CSA-FINISHED freq=5180 dfs=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5660 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5660 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5660 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5660 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5680 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5680 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5680 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5680 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5700 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5700 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5700 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5700 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5720 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5720 cf2=0
+[2026年11月13日 GMT+8 13:23:02] daemon.notice: hostapd: phy2-ap0: DFS-PRE-CAC-EXPIRED freq=5720 ht_enabled=0 chan_offset=0 chan_width=0 cf1=5720 cf2=0
+[2026年11月13日 GMT+8 13:23:04] daemon.info: ucode[9254]: wifiroam: event client_join CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 XWRT
+[2026年11月13日 GMT+8 13:23:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 13:24:00] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED 7a:02:b9:1c:d5:e4
+[2026年11月13日 GMT+8 13:24:00] kern.info: [  363.002173] nss-wifi-drv 39000000.nss: peer 7a:02:b9:1c:d5:e4: id 4 released from vdev 1
+[2026年11月13日 GMT+8 13:24:00] daemon.info: hostapd: phy2-ap0: STA fc:43:45:75:32:6f IEEE 802.11: authenticated
+[2026年11月13日 GMT+8 13:24:00] kern.info: [  363.137837] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 3 ast_idx 355 ast_hash 0x163 vdev 0
+[2026年11月13日 GMT+8 13:24:00] daemon.info: hostapd: phy2-ap0: STA fc:43:45:75:32:6f IEEE 802.11: associated (aid 1)
+[2026年11月13日 GMT+8 13:24:00] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED fc:43:45:75:32:6f auth_alg=open
+[2026年11月13日 GMT+8 13:24:00] daemon.info: hostapd: phy2-ap0: STA fc:43:45:75:32:6f RADIUS: starting accounting session B6E6A82BAABC1270
+[2026年11月13日 GMT+8 13:24:00] daemon.info: hostapd: phy2-ap0: STA fc:43:45:75:32:6f WPA: pairwise key handshake completed (RSN)
+[2026年11月13日 GMT+8 13:24:00] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:24:00] kern.info: [  363.273569] nss-wifi-drv 39000000.nss: interface 33 protects frames with 6
+[2026年11月13日 GMT+8 13:24:00] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:24:00] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.226 fc:43:45:75:32:6f Xiaomi-15-Pro
+[2026年11月13日 GMT+8 13:24:04] daemon.info: ucode[9254]: wifiroam: event client_join FC:43:45:75:32:6F Xiaomi-15-Pro XWRT
+[2026年11月13日 GMT+8 13:24:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 13:24:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月13日 GMT+8 13:24:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月13日 GMT+8 13:24:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月13日 GMT+8 13:26:56] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:14] daemon.info: ucode[9254]: wifiroam: event client_leave 5E:FC:47:00:4D:25 5E:FC:47:00:4D:25 XWRT
+[2026年11月13日 GMT+8 13:27:16] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:16] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:16] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:17] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:17] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:17] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:17] daemon.err: oafd[4122]: Command failed: Not found
+[2026年11月13日 GMT+8 13:27:43] daemon.info: ucode[9254]: wifiroam: event client_leave DA:C9:FA:AD:7D:AE DA:C9:FA:AD:7D:AE XWRT
+[2026年11月13日 GMT+8 13:27:51] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:27:52] kern.info: [  594.419269] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 3 released from vdev 0
+[2026年11月13日 GMT+8 13:27:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.106 7a:02:b9:1c:d5:e4
+[2026年11月13日 GMT+8 13:27:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.106 7a:02:b9:1c:d5:e4 Xiaomi-15-Pro
+[2026年11月13日 GMT+8 13:27:54] daemon.info: ucode[9254]: wifiroam: event client_leave 7A:02:B9:1C:D5:E4 7A:02:B9:1C:D5:E4 XWRT
+[2026年11月13日 GMT+8 13:27:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 13:28:03] daemon.info: ucode[9254]: wifiroam: event client_join 7A:02:B9:1C:D5:E4 7A:02:B9:1C:D5:E4 XWRT
+[2026年11月13日 GMT+8 13:28:17] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.106 fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:28:17] daemon.info: dnsmasq-dhcp[1]: DHCPNAK(br-lan) 192.168.10.106 fc:43:45:75:32:6f wrong address
+[2026年11月13日 GMT+8 13:28:17] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:28:17] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:28:17] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月13日 GMT+8 13:28:17] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.226 fc:43:45:75:32:6f Xiaomi-15-Pro
+[2026年11月13日 GMT+8 13:28:23] daemon.info: ucode[9254]: wifiroam: event client_join FC:43:45:75:32:6F FC:43:45:75:32:6F XWRT
+[2026年11月13日 GMT+8 13:28:23] daemon.info: ucode[9254]: wifiroam: event roam_move FC:43:45:75:32:6F FC:43:45:75:32:6F XWRT → XWRT
+[2026年11月13日 GMT+8 13:28:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月13日 GMT+8 13:28:24] daemon.info: ucode[9254]: wifiroam: event client_leave FC:43:45:75:32:6F FC:43:45:75:32:6F XWRT
+[2026年11月13日 GMT+8 13:29:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月13日 GMT+8 13:29:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月13日 GMT+8 13:29:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月13日 GMT+8 13:29:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
