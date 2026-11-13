@@ -18,10 +18,6 @@ return view.extend({
 	pre: undefined,
 	st: null,
 	bh: null,
-	channel: null,
-	channelEls: null,
-	channelBusy: false,
-	channelSwitching: false,
 	els: null,
 	busy: false,
 
@@ -32,7 +28,6 @@ return view.extend({
 		return Promise.all([
 			wr.safeCall('get_roam'),
 			wr.safeCall('status'),
-			wr.safeCall('get_channel'),
 		]);
 	},
 
@@ -319,7 +314,7 @@ return view.extend({
 
 	applyBackhaul: function() {
 		var self = this;
-		if (this.busy || this.channelBusy) return;
+		if (this.busy) return;
 
 		var e = this.els;
 		var ssid = (e.bhSsid.value || '').trim();
@@ -442,328 +437,6 @@ return view.extend({
 		return panel;
 	},
 
-	/* ---------------------------------------------------------- channels */
-	renderChannelPanel: function() {
-		var self = this;
-		var ch = this.channel;
-		var isCap = this.isCap();
-
-		/* htmode -> 用户可读的通道宽度 */
-		var widthText = function(ht) {
-			ht = '' + (ht || '');
-			if (ht.indexOf('320') >= 0) return '320 MHz';
-			if (ht.indexOf('160') >= 0) return '160 MHz';
-			if (ht.indexOf('80') >= 0) return '80 MHz';
-			if (ht.indexOf('40') >= 0) return '40 MHz';
-			if (ht.indexOf('20') >= 0) return '20 MHz';
-			return ht || '-';
-		};
-
-		if (!ch) {
-			return E('div', { 'class': 'cbi-section' }, [
-				E('h3', {}, _('无线信道优化')),
-				E('div', { 'class': 'wr-hint' },
-					_('无法读取信道信息，请确认插件服务正在运行。')),
-			]);
-		}
-
-		var s = ch.settings || {};
-		var enableCb = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
-		enableCb.checked = !!s.enabled;
-		var b2 = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
-		b2.checked = s.band2g !== false;
-		var b5 = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
-		b5.checked = s.band5g !== false;
-
-		var hour = E('select', { 'class': 'cbi-input-select' });
-		for (var h = 0; h < 24; h++)
-			hour.appendChild(E('option', { value: h },
-				(h < 10 ? '0' : '') + h + ':00'));
-		hour.value = s.hour != null ? s.hour : 4;
-
-		var saveBtn = E('button', {
-			'class': 'btn cbi-button-positive',
-			click: function() { self.applyChannel(false); },
-		}, _('保存设置'));
-
-		var applyBtn = E('button', {
-			'class': 'btn cbi-button-action',
-			click: function() { self.applyChannel(true); },
-		}, _('立即优化'));
-
-		var co = ch.cochannel || {};
-		if (!isCap) {
-			enableCb.disabled = true;
-			b2.disabled = true;
-			b5.disabled = true;
-			hour.disabled = true;
-		}
-
-		/* 状态按「计划信道」判断：优化后不再同频的 AP 显示正常 */
-		var planned = {};
-		(ch.plan || []).forEach(function(it) {
-			if (it.backhaul) return;
-			var k = (it.band || '') + ':' + (it.to || 0);
-			var p = planned[k];
-			if (!p) p = planned[k] = { n: 0, all160: true };
-			p.n++;
-			if (!it.wide160) p.all160 = false;
-		});
-
-		/* 同一设备的多个射频归到一组：AP 列只显示一次，射频单独一列 */
-		var groups = {}, order = [];
-		(ch.plan || []).forEach(function(it) {
-			var key = it.ap || it.name || '-';
-			if (!groups[key]) {
-				groups[key] = { name: it.name || it.ap || '-', items: [] };
-				order.push(key);
-			}
-			groups[key].items.push(it);
-		});
-
-		var rows = [];
-		order.forEach(function(key) {
-			var g = groups[key];
-			g.items.forEach(function(it, idx) {
-				var pk = (it.band || '') + ':' + (it.to || 0);
-				var p = planned[pk];
-				var same = !!p && p.n > 1;
-				var shared160 = same && p.all160;
-				var bh = !!(it.backhaul || it.wireless);
-				var applying = self.channelSwitching && it.changed && !bh;
-				var text = bh ? _('回程固定')
-					: (applying ? _('切换中')
-					: (it.changed ? _('建议调整')
-					: (shared160 ? _('160MHz 共用')
-					: (same ? _('同频') : _('正常')))));
-				var cls = bh ? 'wr-apply-ok'
-					: ((it.changed || (same && !shared160)) ? 'wr-apply-pending' : 'wr-apply-ok');
-				var tds = [];
-				if (idx === 0)
-					tds.push(E('td', { rowspan: g.items.length,
-					                   style: 'font-weight:bold;vertical-align:top' },
-						g.name));
-				var suggest;
-				if (!it.to)
-					suggest = '-';
-				else if (it.changed)
-					suggest = E('span', { 'class': 'wr-apply-pending' }, '→ ' + it.to);
-				else
-					suggest = E('span', { 'class': 'wr-hint' }, _('保持') + ' ' + it.to);
-				tds.push(
-					E('td', {}, it.device || '-'),
-					E('td', {}, it.band === '2g' ? '2.4 GHz'
-						: it.band === '5g' ? '5 GHz' : (it.band || '-')),
-					E('td', {}, widthText(it.width)),
-					E('td', {}, it.from ? String(it.from) : _('自动')),
-					E('td', {}, suggest),
-					E('td', { 'class': cls }, text));
-				rows.push(E('tr', {}, tds));
-			});
-		});
-		if (!rows.length)
-			rows = [ E('tr', {}, [
-				E('td', { colspan: 7, 'class': 'wr-hint' },
-					_('暂无可优化的 AP（需要至少两台在线 AP）。')),
-			]) ];
-
-		this.channelEls = {
-			enableCb: enableCb, b2: b2, b5: b5, hour: hour,
-			saveBtn: saveBtn, applyBtn: applyBtn,
-		};
-
-		if (isCap) {
-			var autoSave = function() { self.scheduleChannelSave(); };
-			enableCb.addEventListener('change', autoSave);
-			b2.addEventListener('change', autoSave);
-			b5.addEventListener('change', autoSave);
-			hour.addEventListener('change', autoSave);
-		}
-
-		return E('div', { 'class': 'cbi-section' }, [
-			E('h3', {}, _('无线信道优化')),
-			E('div', { 'class': 'wr-hint' },
-				_('根据各 AP 当前信道，为主路由和子路由分配互不重叠的频道。切换信道会让无线短暂重启，建议在低峰期执行。160MHz 射频保持 160MHz 和 36 信道，多个 160MHz 射频共用信道属于正常，不再提示切换；5G 达到 3 个时，80MHz 射频使用 36/149/52（52 为 DFS）。')),
-			co.any
-				? E('div', { 'class': 'alert-message warning' },
-					_('检测到 AP 同频，建议执行一次信道优化。'))
-				: E('div', { 'class': 'wr-hint' },
-					_('当前没有需要处理的同频；160MHz 射频共用信道属于正常。')),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, [ enableCb, ' ', _('启用自动信道优化') ]),
-			]),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, _('优化频段')),
-				E('span', {}, [ b2, ' 2.4 GHz ', b5, ' 5 GHz' ]),
-			]),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, _('每天执行时间')),
-				E('span', {}, [ hour, ' ', _('（仅在启用自动优化时生效）') ]),
-			]),
-			E('div', { 'class': 'wr-hint' },
-				_('开关修改会自动保存；自动优化只按设定时间执行，不会立即切换信道。')),
-			isCap ? E('div', {}, [ saveBtn, ' ', applyBtn ])
-			      : E('div', { 'class': 'wr-hint' },
-					_('只能在主路由上修改信道优化设置。')),
-			E('div', { id: 'wr-channel-save-state', 'class': 'wr-hint' }),
-			E('table', { 'class': 'table cbi-section-table' }, [
-				E('tr', { 'class': 'tr table-titles' }, [
-					E('th', {}, _('AP')), E('th', {}, _('射频')),
-					E('th', {}, _('频段')), E('th', {}, _('通道宽度')),
-					E('th', {}, _('当前信道')), E('th', {}, _('优化后信道')),
-					E('th', {}, _('状态')),
-				]),
-			].concat(rows)),
-		]);
-	},
-
-	applyChannel: function(apply) {
-		var self = this;
-		var e = this.channelEls;
-
-		if (!e || this.channelBusy || this.channelSaving || this.busy)
-			return;
-
-		if (this._channelSaveTimer) {
-			window.clearTimeout(this._channelSaveTimer);
-			this._channelSaveTimer = null;
-		}
-
-		this.channelBusy = true;
-
-		var overlay = apply
-			? wr.busyOverlay(_('正在切换信道，无线将短暂重启，请勿刷新页面……'))
-			: null;
-
-		if (apply) {
-			wr.setBusy(e.applyBtn, true, _('优化中...'));
-			wr.setBusy(e.saveBtn, false);
-			e.saveBtn.disabled = true;
-		}
-		else {
-			wr.setBusy(e.saveBtn, true, _('保存中...'));
-			wr.setBusy(e.applyBtn, false);
-			e.applyBtn.disabled = true;
-		}
-
-		return wr.call('set_channel', {
-			enabled: e.enableCb.checked,
-			band2g: e.b2.checked,
-			band5g: e.b5.checked,
-			hour: parseInt(e.hour.value, 10),
-			apply: !!apply,
-		}).then(function(res) {
-			if (!res || !res.ok) {
-				wr.notify('danger', _('信道设置失败') + ': ' +
-					((res && res.error) || _('request rejected')));
-				return;
-			}
-
-			self.channelSwitching = apply &&
-				(res.plan || []).some(function(it) { return it.changed && !it.backhaul; });
-			self.channel = res;
-			var box = document.getElementById('wr-channel');
-			if (box)
-				dom.content(box, self.renderChannelPanel());
-
-			if (apply) {
-				var changes = (res.plan || []).filter(function(it) { return it.changed; }).length;
-				var dfs = (res.plan || []).some(function(it) {
-					return it.changed && it.band === '5g' && it.to >= 52 && it.to <= 144;
-				});
-				if (changes > 0 && dfs)
-					wr.notify('warning', _('信道已切换；DFS 信道需要约 1 分钟完成雷达检测，期间无线会短暂中断。'));
-				else if (changes > 0)
-					wr.notify('success', _('信道已切换，无线将在几秒后重启。'));
-				else if (res.cochannel && res.cochannel.any)
-					wr.notify('warning', _('检测到同频，但当前没有可用的独立信道，请手动选择信道。'));
-				else
-					wr.notify('success', _('当前信道已是最优，无需调整。'));
-			}
-			else {
-				wr.notify('success', _('信道优化设置已保存。'));
-			}
-		}).catch(function() {
-			wr.notify('danger', _('信道设置失败') + ': ' + _('request rejected'));
-		}).then(function() {
-			self.channelBusy = false;
-			wr.setBusy(e.applyBtn, false);
-			wr.setBusy(e.saveBtn, false);
-			e.applyBtn.disabled = false;
-			e.saveBtn.disabled = false;
-			if (overlay) {
-				/* 切换信道会在 1 秒后重启无线，遮罩多留几秒覆盖重启过程 */
-				if (apply) window.setTimeout(overlay, 4000);
-				else overlay();
-			}
-			if (apply)
-				[5000, 12000, 20000, 30000, 45000, 60000, 90000, 120000].forEach(function(ms) {
-					window.setTimeout(function() { self.refreshChannel(); }, ms);
-				});
-		});
-	},
-
-	refreshChannel: function() {
-		var self = this;
-
-		if (this.channelBusy || this.channelSaving || this._channelSaveTimer || this.busy)
-			return Promise.resolve();
-
-		return wr.safeCall('get_channel').then(function(ch) {
-			if (!ch) return;
-			self.channel = ch;
-			self.channelSwitching = (ch.plan || []).some(function(it) {
-				return it.changed && !it.backhaul;
-			});
-			var box = document.getElementById('wr-channel');
-			if (box)
-				dom.content(box, self.renderChannelPanel());
-		}).catch(function() {});
-	},
-
-	/* 开关/时间变更后自动保存，避免用户以为开关没生效 */
-	scheduleChannelSave: function() {
-		var self = this;
-		if (this._channelSaveTimer)
-			window.clearTimeout(this._channelSaveTimer);
-		this._channelSaveTimer = window.setTimeout(function() {
-			self._channelSaveTimer = null;
-			self.saveChannelSettings();
-		}, 300);
-	},
-
-	saveChannelSettings: function() {
-		var self = this;
-		var e = this.channelEls;
-
-		if (!e || !this.isCap() || this.channelBusy || this.channelSaving)
-			return Promise.resolve();
-
-		this.channelSaving = true;
-		return wr.call('set_channel', {
-			enabled: e.enableCb.checked,
-			band2g: e.b2.checked,
-			band5g: e.b5.checked,
-			hour: parseInt(e.hour.value, 10),
-			apply: false,
-		}).then(function(res) {
-			if (!res || !res.ok) return;
-			self.channel = res;
-			var box = document.getElementById('wr-channel');
-			if (box)
-				dom.content(box, self.renderChannelPanel());
-			var st = document.getElementById('wr-channel-save-state');
-			if (st) {
-				st.textContent = _('设置已自动保存');
-				window.setTimeout(function() {
-					if (st.parentNode) st.textContent = '';
-				}, 2000);
-			}
-		}).catch(function() {}).then(function() {
-			self.channelSaving = false;
-		});
-	},
-
 	/* 采集勾选的 SSID */
 	collectSsids: function() {
 		var ssids = [];
@@ -818,7 +491,7 @@ return view.extend({
 	apply: function() {
 		var self = this;
 
-		if (this.busy || this.channelBusy) return;
+		if (this.busy) return;
 
 		const e = this.els;
 		const ssids = this.collectSsids();
@@ -907,7 +580,6 @@ return view.extend({
 	render: function(data) {
 		this.cfg = data[0];
 		this.st = data[1] || {};
-		this.channel = data[2] || null;
 
 		wr.mountNav('advanced', {
 			running: !!(this.st && this.st.role),
@@ -1095,38 +767,11 @@ return view.extend({
 			E('div', { id: 'wr-bh' },
 				E('div', { 'class': 'wr-hint' }, _('Loading wireless backhaul settings...'))),
 			E('div', { id: 'wr-bh-apply' }, this.renderBackhaulResults(this.st.last_backhaul)),
-			E('div', { id: 'wr-channel' }, this.renderChannelPanel()),
 		]);
 
-		/* 从「前往信道优化」跳转过来时，滚动到信道优化卡片 */
-		window.setTimeout(L.bind(this.focusChannelPanel, this), 0);
 		return page;
 	},
 
-	focusChannelPanel: function() {
-		var focus = false;
-		try {
-			if (sessionStorage.getItem('wifiroam_focus_channel') === '1') {
-				sessionStorage.removeItem('wifiroam_focus_channel');
-				focus = true;
-			}
-		} catch (e) {}
-		if (!focus && /(?:^|[?&])focus=channel(?:&|$)/.test(window.location.search))
-			focus = true;
-		if (!focus)
-			return;
-
-		window.setTimeout(function() {
-			var el = document.getElementById('wr-channel');
-			if (!el) return;
-			try {
-				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				el.style.transition = 'box-shadow .3s ease';
-				el.style.boxShadow = '0 0 0 2px var(--primary, #2e7d32)';
-				window.setTimeout(function() { el.style.boxShadow = ''; }, 2000);
-			} catch (e) {}
-		}, 600);
-	},
 
 	handleSaveApply: null,
 	handleSave: null,

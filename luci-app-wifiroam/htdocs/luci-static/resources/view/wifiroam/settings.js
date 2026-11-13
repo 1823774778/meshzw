@@ -140,7 +140,6 @@ return view.extend({
 
 		var resBox = E('div', { 'class': 'wr-hint' },
 			w.last ? this.renderWifiResults(w.last.results) : '');
-		var channelHint = E('div', { id: 'wr-wifi-channel-hint' });
 
 		/* LuCI 的 E() 不会展开嵌套数组（会变成 "[object HTMLDivElement]"） */
 		var kids = [
@@ -158,13 +157,9 @@ return view.extend({
 					_('Applies to all paired APs. Radios restart after saving, clients will reconnect.')),
 			]),
 			resBox,
-			channelHint,
 		];
 
 		var panel = E('div', { 'class': 'cbi-section' }, kids);
-
-		if (isCap)
-			window.setTimeout(L.bind(this.checkChannelHint, this), 0);
 
 		if (!isCap || !bandInputs.length) {
 			uniCb.disabled = true;
@@ -248,8 +243,6 @@ return view.extend({
 			/* 成员 AP 的结果是异步回传的（pending → ok），本页没有轮询，
 			   这里补几次短轮询把「…」刷新成 ✓/✗ */
 			self.refreshWifiResults(resBox);
-			/* 无线重启后重新检查同频，给用户一个跳转高级设置的入口 */
-			window.setTimeout(function() { self.checkChannelHint(); }, 6000);
 			wr.notify('success',
 				_('Wi-Fi updated. Radios restart in a few seconds, clients will reconnect.'));
 		}).catch(function() {
@@ -276,30 +269,6 @@ return view.extend({
 			});
 		}
 		window.setTimeout(tick, 2500);
-	},
-
-	/* 保存 WiFi 后检测同频，只提示，不自动改信道 */
-	checkChannelHint: function() {
-		var el = document.getElementById('wr-wifi-channel-hint');
-		if (!el) return Promise.resolve();
-
-		return wr.safeCall('get_channel').then(function(ch) {
-			if (!el.parentNode) return;
-			if (ch && ch.cochannel && ch.cochannel.any) {
-				dom.content(el, E('div', { 'class': 'alert-message warning' }, [
-					_('检测到 AP 同频，建议优化信道。'), ' ',
-					E('a', {
-						href: L.url('admin/mesh/management/advanced') + '?focus=channel',
-						click: function() {
-							try { sessionStorage.setItem('wifiroam_focus_channel', '1'); } catch (e) {}
-						},
-					}, _('前往信道优化')),
-				]));
-			}
-			else {
-				dom.content(el, '');
-			}
-		}).catch(function() {});
 	},
 
 	/* ---------------------------------------------------------- 访客网络 */

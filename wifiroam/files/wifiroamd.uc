@@ -63,7 +63,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 23;
+const DAEMON_VERSION = 24;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -81,7 +81,7 @@ let udp_sock;           // discovery socket
 let tcp_srv;            // sync listen socket
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
-let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, push_channel_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
+let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
@@ -124,8 +124,6 @@ let state = {
 	steer_stage: {},    // macnorm -> 0/1/2（建议/强制阶段）
 	bss_list: null,     // SAP: CAP 下发的全网络 BSS 列表
 	_bss_cache: null,   // CAP: 全网络 BSS 列表缓存
-	channel_ver: 0,     // 信道计划版本：变化后重新下发给各 SAP
-	channel_plan: null, // 最近一次信道计划
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
 	usage: { day: "", online: {}, ndata: {} }, // CAP: 每终端每日在线秒数 / 总流量
@@ -558,7 +556,7 @@ function wifi_ifaces() {
 	return out;
 }
 
-// ------------------------------------------------------- channel planning
+// ------------------------------------------------------- radio band helpers
 function channel_band_key(b) {
 	b = "" + (b ?? "");
 	if (index(b, "2") == 0 || index(b, "11g") == 0 || index(b, "11b") == 0) return "2g";
@@ -619,331 +617,6 @@ function channel_radios() {
 	}
 	return out;
 }
-
-function channel_aps() {
-	let self_radios = channel_radios();
-	let bh = current_backhaul_cfg();
-	let self_bh = "";
-	if (bh.enabled)
-		for (let r in self_radios) {
-			let hit = (bh.device && bh.device == r.device);
-			if (!hit)
-				for (let b in (r.bss ?? []))
-					if (b.ssid == bh.ssid) { hit = true; break; }
-			if (hit) { self_bh = r.device; break; }
-		}
-
-	let aps = [ {
-		id: macnorm(state.self.mac),
-		name: state.self.name || state.self.hostname || maccolon(state.self.mac),
-		self: true, wireless: false, backhaul_device: self_bh,
-		role: state.cfg.role, radios: self_radios,
-	} ];
-	for (let mn, p in state.peers) {
-		if (!p.authed) continue;
-		push(aps, {
-			id: mn, name: p.info?.name ?? p.name ?? maccolon(mn),
-			self: false, wireless: p.info?.uplink?.type == "wireless",
-			wireless_band: channel_band_key(p.info?.uplink?.band),
-			backhaul_device: p.info?.uplink?.device ?? "",
-			role: p.info?.role ?? "sap",
-			radios: p.info?.channels ?? [],
-		});
-	}
-	return aps;
-}
-
-function channel_cochannel(aps) {
-	let buckets = {};
-	for (let a in aps) {
-		for (let r in (a.radios ?? [])) {
-			let band = channel_band_key(r.band);
-			if (band != "2g" && band != "5g") continue;
-			let ch = int(r.current ?? 0);
-			if (ch <= 0) ch = channel_num(r.channel);
-			if (ch <= 0) continue;
-			let key = band + ":" + ch;
-			let b = buckets[key];
-			if (!b) { b = { band, channel: ch, aps: [], wireless: false, all160: true }; buckets[key] = b; }
-			if (a.backhaul_device && a.backhaul_device == r.device) b.wireless = true;
-			if (index(r.htmode ?? "", "160") < 0) b.all160 = false;
-			let label = a.name + (r.device ? " · " + r.device : "");
-			if (index(b.aps, label) < 0) push(b.aps, label);
-		}
-	}
-	let items = [];
-	for (let k, b in buckets)
-		if (length(b.aps) > 1 && !b.wireless && !b.all160) push(items, b);
-	return { any: length(items) > 0, items };
-}
-
-function channel_cfg() {
-	let cur = uci.cursor();
-	cur.load("wifiroam");
-	let hour = int(cur.get("wifiroam", "channel", "hour") ?? "4");
-	if (hour < 0 || hour > 23) hour = 4;
-	return {
-		enabled: cur.get("wifiroam", "channel", "enabled") == "1",
-		band2g: cur.get("wifiroam", "channel", "band2g") != "0",
-		band5g: cur.get("wifiroam", "channel", "band5g") != "0",
-		hour,
-		last: cur.get("wifiroam", "channel", "last") ?? "",
-	};
-}
-
-function channel_block_80(ch) {
-	ch = int(ch);
-	if (ch >= 36 && ch <= 48) return 36;
-	if (ch >= 52 && ch <= 64) return 52;
-	if (ch >= 100 && ch <= 112) return 100;
-	if (ch >= 116 && ch <= 128) return 116;
-	if (ch >= 149 && ch <= 161) return 149;
-	return ch;
-}
-
-/* 给所有 AP 生成信道计划：2.4G 只在 1/6/11 中选，5G 优先不重叠的
-   80MHz 块；已有信道有粘性，只有冲突时才调整。 */
-function channel_make_plan(aps, settings) {
-	let plan = [];
-	let bands = [];
-	if (settings.band2g !== false) push(bands, "2g");
-	if (settings.band5g !== false) push(bands, "5g");
-
-	let self_mn = macnorm(state.self.mac);
-	let self_ap = null;
-	for (let a in aps)
-		if (a.self) { self_ap = a; break; }
-	let cap_bh = {};
-	if (self_ap?.backhaul_device)
-		for (let r in (self_ap.radios ?? []))
-			if (r.device == self_ap.backhaul_device)
-				cap_bh[channel_band_key(r.band)] = int(r.current ?? r.channel ?? 0);
-
-	for (let band in bands) {
-		let entries = [];
-		for (let a in aps) {
-			for (let r in (a.radios ?? [])) {
-				if (channel_band_key(r.band) != band) continue;
-				let current = int(r.current ?? 0);
-				if (current <= 0) current = channel_num(r.channel);
-				push(entries, {
-					ap: a.id, name: a.name, band,
-					device: r.device ?? "",
-					current, htmode: r.htmode ?? "",
-					auto: channel_num(r.channel) <= 0,
-					wide160: index(r.htmode ?? "", "160") >= 0,
-					backhaul: !!(a.backhaul_device && a.backhaul_device == r.device),
-				});
-			}
-		}
-
-		if (length(entries) < 2) {
-			for (let e in entries) {
-				let to = e.current;
-				if (to <= 0) to = (band == "2g") ? 1 : 36;
-				if (e.backhaul && e.ap != self_mn && cap_bh[band])
-					to = cap_bh[band];
-				push(plan, { ap: e.ap, name: e.name, band, device: e.device,
-				             backhaul: e.backhaul, from: e.auto ? 0 : e.current, to,
-				             width: e.htmode ?? "",
-				             wide160: index(e.htmode ?? "", "160") >= 0,
-				             changed: to != e.current || !!e.auto });
-			}
-			continue;
-		}
-
-		let used = {};
-		/* 主 AP 回程射频占用自己的信道，其它射频避免与之同频 */
-		if (cap_bh[band]) used[cap_bh[band]] = 1;
-
-		/* 5G 达到 3 个射频时，80MHz 射频用 36/149/52（52 为 DFS）
-		   错开；160MHz 射频始终保留 36，同频属于正常。 */
-		let multi5 = false;
-		if (band == "5g") {
-			let n5 = 0;
-			for (let e in entries)
-				if (!e.backhaul) n5++;
-			multi5 = n5 >= 3;
-		}
-
-		/* 160MHz 射频优先占用 36，80MHz 射频随后避开 */
-		let ordered = [];
-		for (let e in entries)
-			if (e.wide160 && !e.backhaul) push(ordered, e);
-		for (let e in entries)
-			if (!(e.wide160 && !e.backhaul)) push(ordered, e);
-
-		for (let e in ordered) {
-			/* 回程射频必须跟随主 AP，否则无线回程 STA 会断 */
-			if (e.backhaul) {
-				let to = (e.ap == self_mn) ? e.current
-				         : (cap_bh[band] || e.current);
-				if (to <= 0) to = cap_bh[band] || ((band == "2g") ? 1 : 36);
-				push(plan, { ap: e.ap, name: e.name, band, device: e.device,
-				             backhaul: true, from: e.auto ? 0 : e.current, to,
-				             width: e.htmode ?? "",
-				             wide160: index(e.htmode ?? "", "160") >= 0,
-				             changed: to != e.current || !!e.auto });
-				continue;
-			}
-
-			/* 160MHz 在非 DFS 频段只有 36 一个块，保留 160 就保持 36；
-			   80MHz 在 2 个 5G 射频时用 36/149，3 个及以上时用
-			   36/149/52（52 为 DFS）错开。 */
-			let e160 = index(e.htmode ?? "", "160") >= 0;
-			let e80 = e160 || index(e.htmode ?? "", "80") >= 0;
-			let cands;
-			if (band == "2g")
-				cands = [1, 6, 11];
-			else if (e160)
-				cands = [36];
-			else if (multi5)
-				cands = [36, 149, 52];
-			else if (e80)
-				cands = [36, 149];
-			else
-				cands = [36, 44, 149, 157];
-
-			let best = 0, best_score = 1000000;
-			for (let i, ch in cands) {
-				let score = (used[ch] ?? 0) * 1000;
-				if (band == "5g") {
-					let blk = channel_block_80(ch);
-					for (let u in used)
-						if (channel_block_80(int(u)) == blk) score += 500;
-				}
-				if (ch == e.current) score -= 30;
-				score += i;
-				if (score < best_score) { best_score = score; best = ch; }
-			}
-			if (!best) continue;
-			used[best] = (used[best] ?? 0) + 1;
-			push(plan, { ap: e.ap, name: e.name, band, device: e.device,
-			             backhaul: false, from: e.auto ? 0 : e.current, to: best,
-			             width: e.htmode ?? "",
-			             wide160: e160,
-			             changed: best != e.current || !!e.auto });
-		}
-	}
-	return plan;
-}
-
-// 只改信道/带宽，不动加密；按射频（device）精确落盘，支持三频设备
-function channel_apply_local(targets) {
-	let cur = uci.cursor();
-	cur.load("wireless");
-	let n = 0;
-	let dfs = false;
-
-	let radios = channel_radios();
-	let current = {}, current_ht = {};
-	for (let r in radios) {
-		current[r.device] = int(r.current ?? 0);
-		current_ht[r.device] = r.htmode ?? "";
-	}
-
-	for (let t in targets) {
-		let band = channel_band_key(t.band);
-		let ch = "" + int(t.channel);
-		let dev = t.device ?? "";
-		let ht = t.htmode ?? "";
-		let target = "";
-
-		if (dev && current[dev] != null)
-			target = dev;
-		if (!target) {
-			/* 旧版对端只给 band：只有一个射频时直接匹配，否则用 from 区分 */
-			let cands = [];
-			for (let r in radios)
-				if (channel_band_key(r.band) == band) push(cands, r);
-			if (length(cands) == 1)
-				target = cands[0].device;
-			else {
-				for (let r in cands)
-					if (int(r.current ?? 0) == int(t.from ?? -1)) {
-						target = r.device; break;
-					}
-			}
-		}
-		if (!target) continue;
-
-		let found = false;
-		cur.foreach("wireless", "wifi-device", function(d) {
-			if (d[".name"] != target) return;
-			if (channel_band_key(d.band ?? d.hwmode) != band) return;
-			found = true;
-			let ch_changed = (d.channel ?? "") != ch;
-			let ht_changed = !!ht && (d.htmode ?? "") != ht;
-			if (ch_changed) {
-				cur.set("wireless", target, "channel", ch);
-				n++;
-				if (band == "5g" && int(ch) >= 52 && int(ch) <= 144)
-					dfs = true;
-			}
-			if (ht_changed) {
-				cur.set("wireless", target, "htmode", ht);
-				n++;
-			}
-		});
-		if (!found) log("channel: radio " + target + " not found for " + band);
-	}
-
-	if (n > 0) {
-		cur.commit("wireless");
-		uloop.timer(1000, function() {
-			uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
-				log("channel wifi reload rc=" + res);
-			});
-		});
-	}
-	return { ok: true, count: n, dfs };
-}
-
-push_channel_to = function(mn) {
-	let p = state.peers[mn];
-	if (!p?.authed || !p.chan) return false;
-	/* 旧版 SAP 不上报信道，跳过，避免反复重算计划 */
-	if (!length(p.info?.channels ?? [])) {
-		p.channel_ver = state.channel_ver ?? 0;
-		return true;
-	}
-
-	let ver0 = state.channel_ver ?? 0;
-	if (p.channel_ver == ver0 && state.channel_plan) return true;
-
-	let plan = state.channel_plan;
-	let has = false;
-	if (plan)
-		for (let it in plan)
-			if (it.ap == mn) { has = true; break; }
-	if (!plan || !has) {
-		plan = channel_make_plan(channel_aps(), channel_cfg());
-		state.channel_plan = plan;
-		state.channel_ver = (state.channel_ver ?? 0) + 1;
-	}
-
-	let ver = state.channel_ver ?? 0;
-	if (p.channel_ver == ver) return true;
-
-	let targets = [];
-	for (let it in plan)
-		if (it.ap == mn)
-			push(targets, { device: it.device ?? "", band: it.band,
-			                from: it.from ?? 0, channel: it.to,
-			                htmode: it.htmode ?? "" });
-	if (!length(targets)) { p.channel_ver = ver; return true; }
-	try {
-		p.chan.defer({
-			method: "push_channel_config",
-			data: { radios: targets },
-			data_cb: function(m) { if (!m?.ok) log("channel push rejected " + mn); },
-			cb: function(rc) { if (rc != 0) log("channel push failed " + mn); },
-		});
-		p.channel_ver = ver;
-	} catch (e) { return false; }
-	return true;
-};
-
 
 // 全网络 BSS 列表：CAP 汇总自己的和各 SAP 上报的信道/BSSID；
 // SAP 侧再合并 CAP 回执里的 bss。BTM 候选和 11k 邻居都基于它。
@@ -3008,15 +2681,6 @@ function sap_rx(req) {
 		req.reply({ ok: r.ok, error: r.error });
 		break;
 	}
-	case "push_channel_config": {
-		// CAP 统一分配的信道：SAP 本地写 wireless 并按需重启无线
-		let r = channel_apply_local(req.args.radios ?? []);
-		req.reply({ ok: r.ok, count: r.count });
-		/* 无线 reload 后立即上报新信道，避免 CAP 页面长时间显示旧信道 */
-		if (r.count > 0)
-			uloop.timer(6000, function() { sap_report(); });
-		break;
-	}
 	case "push_guest_config": {
 		// CAP 下发的访客网络配置：SAP 本地落盘并重建访客子网
 		let g = req.args.guest ?? {};
@@ -3260,8 +2924,6 @@ function srv_rx(conn, req) {
 		p.guest_ver = args.guest_ver ?? 0;
 		p.kvr = args.kvr ?? null;
 		p.last_seen = time();
-		if (state.cfg.role == "cap" && (channel_cfg().enabled || state.channel_plan))
-			push_channel_to(mn);
 		if (prev != null) // 首轮 report 不产 join/leave 事件
 			diff_events(prev, p.clients, p.info?.name ?? conn.name ?? mn);
 		owner_events(local_clients()); // SAP 终端表更新后立即重算归属（含跨 AP 迁移）
@@ -3668,11 +3330,6 @@ function factory_reset() {
 	cur.set("wifiroam", "guest", "allow_lan", "0");
 	cur.set("wifiroam", "guest", "config_ver", "0");
 
-	cur.set("wifiroam", "channel", "enabled", "0");
-	cur.set("wifiroam", "channel", "band2g", "1");
-	cur.set("wifiroam", "channel", "band5g", "1");
-	cur.set("wifiroam", "channel", "hour", "4");
-	cur.set("wifiroam", "channel", "last", "");
 	cur.set("wifiroam", "alias_sync", "ver", "0");
 	cur.commit("wifiroam");
 
@@ -3694,8 +3351,6 @@ function factory_reset() {
 	state.steer_stage = {};
 	state.bss_list = null;
 	state._bss_cache = null;
-	state.channel_plan = null;
-	state.channel_ver = 0;
 	state.last_apply = null;
 	state.last_backhaul = null;
 	state.last_wifi = null;
@@ -4138,67 +3793,6 @@ let api_obj = {
 			return { ok: true, ver, results, backhaul: bh };
 		},
 	},
-	get_channel: {
-		args: { ubus_rpc_session: "" },
-		call: function(req) {
-			let cfg = channel_cfg();
-			let aps = channel_aps();
-			return {
-				ok: true,
-				settings: cfg,
-				aps,
-				cochannel: channel_cochannel(aps),
-				plan: channel_make_plan(aps, cfg),
-				can_apply: state.cfg.role == "cap",
-			};
-		},
-	},
-	set_channel: {
-		args: {
-			ubus_rpc_session: "", enabled: false,
-			band2g: true, band5g: true, hour: 4, apply: false,
-		},
-		call: function(req) {
-			if (state.cfg.role != "cap")
-				return { ok: false, error: "not_cap" };
-			let hour = int(req.args.hour ?? 4);
-			if (hour < 0 || hour > 23) hour = 4;
-
-			let cur = uci.cursor();
-			cur.load("wifiroam");
-			cur.set("wifiroam", "channel", "enabled", req.args.enabled ? "1" : "0");
-			cur.set("wifiroam", "channel", "band2g", req.args.band2g !== false ? "1" : "0");
-			cur.set("wifiroam", "channel", "band5g", req.args.band5g !== false ? "1" : "0");
-			cur.set("wifiroam", "channel", "hour", "" + hour);
-			if (req.args.apply)
-				cur.set("wifiroam", "channel", "last", usage_day());
-			cur.commit("wifiroam");
-
-			let cfg = channel_cfg();
-			let aps = channel_aps();
-			let plan = channel_make_plan(aps, cfg);
-			let local = { ok: true, count: 0 };
-
-			if (req.args.apply) {
-				state.channel_plan = plan;
-				state.channel_ver = (state.channel_ver ?? 0) + 1;
-				let mine = [];
-				let self_mn = macnorm(state.self.mac);
-				for (let it in plan)
-					if (it.ap == self_mn && it.changed)
-						push(mine, { device: it.device ?? "", band: it.band,
-						             from: it.from ?? 0, channel: it.to });
-				local = channel_apply_local(mine);
-				for (let mn, p in state.peers)
-					if (p.authed) push_channel_to(mn);
-			}
-
-			return {
-				ok: true, settings: cfg, aps,
-				cochannel: channel_cochannel(aps), plan, local,
-			};
-		},
-	},
 	discover: {
 		args: { ubus_rpc_session: "" },
 		call: function(req) {
@@ -4513,41 +4107,6 @@ function steer_tick() {
 	}
 }
 
-function channel_tick() {
-	if (state.cfg.role != "cap") return;
-	try {
-		let cfg = channel_cfg();
-		if (!cfg.enabled) return;
-
-		let lt = localtime(time());
-		if (int(lt.hour) != cfg.hour) return;
-		let today = sprintf("%04d-%02d-%02d", lt.year, lt.mon, lt.mday);
-		if (cfg.last == today) return;
-
-		// 先记日期，避免失败后每分钟重试
-		let cur = uci.cursor();
-		cur.load("wifiroam");
-		cur.set("wifiroam", "channel", "last", today);
-		cur.commit("wifiroam");
-
-		let plan = channel_make_plan(channel_aps(), cfg);
-		state.channel_plan = plan;
-		state.channel_ver = (state.channel_ver ?? 0) + 1;
-		let mine = [];
-		let self_mn = macnorm(state.self.mac);
-		for (let it in plan)
-			if (it.ap == self_mn && it.changed)
-				push(mine, { device: it.device ?? "", band: it.band,
-				             from: it.from ?? 0, channel: it.to });
-		let lr = channel_apply_local(mine);
-		for (let mn, p in state.peers)
-			if (p.authed) push_channel_to(mn);
-		log(sprintf("auto channel: %d local change(s)", lr.count));
-	} catch (e) {
-		log("channel_tick failed: " + e);
-	}
-}
-
 // ---------------------------------------------------------------- lifecycle
 ensure_token = function() {
 	if (state.cfg.role == "cap" && state.cfg.token == "") {
@@ -4652,7 +4211,6 @@ function main() {
 	uloop.interval(5000, steer_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
 	uloop.interval(USAGE_TICK, usage_tick);
-	uloop.interval(60000, channel_tick);
 	uloop.interval(TICK_INTERVAL, function() {
 		if (state.cfg.role != "cap") return;
 		let cur = local_clients();
