@@ -21,6 +21,7 @@ return view.extend({
 	channel: null,
 	channelEls: null,
 	channelBusy: false,
+	channelSwitching: false,
 	els: null,
 	busy: false,
 
@@ -529,10 +530,12 @@ return view.extend({
 				var same = !!p && p.n > 1;
 				var shared160 = same && p.all160;
 				var bh = !!(it.backhaul || it.wireless);
+				var applying = self.channelSwitching && it.changed && !bh;
 				var text = bh ? _('回程固定')
+					: (applying ? _('切换中')
 					: (it.changed ? _('建议调整')
 					: (shared160 ? _('160MHz 共用')
-					: (same ? _('同频') : _('正常'))));
+					: (same ? _('同频') : _('正常')))));
 				var cls = bh ? 'wr-apply-ok'
 					: ((it.changed || (same && !shared160)) ? 'wr-apply-pending' : 'wr-apply-ok');
 				var tds = [];
@@ -656,6 +659,8 @@ return view.extend({
 				return;
 			}
 
+			self.channelSwitching = apply &&
+				(res.plan || []).some(function(it) { return it.changed && !it.backhaul; });
 			self.channel = res;
 			var box = document.getElementById('wr-channel');
 			if (box)
@@ -692,16 +697,24 @@ return view.extend({
 				else overlay();
 			}
 			if (apply)
-				window.setTimeout(function() { self.refreshChannel(); }, 5000);
+				[5000, 12000, 20000, 30000, 45000, 60000, 90000, 120000].forEach(function(ms) {
+					window.setTimeout(function() { self.refreshChannel(); }, ms);
+				});
 		});
 	},
 
 	refreshChannel: function() {
 		var self = this;
 
+		if (this.channelBusy || this.channelSaving || this._channelSaveTimer || this.busy)
+			return Promise.resolve();
+
 		return wr.safeCall('get_channel').then(function(ch) {
 			if (!ch) return;
 			self.channel = ch;
+			self.channelSwitching = (ch.plan || []).some(function(it) {
+				return it.changed && !it.backhaul;
+			});
 			var box = document.getElementById('wr-channel');
 			if (box)
 				dom.content(box, self.renderChannelPanel());

@@ -29,6 +29,7 @@ const PEER_TTL = 30;        // s without hello -> offline
 const DISCOVER_TTL = 180;   // s unconfigured device stays in discover list
 const HELLO_INTERVAL = 5000;
 const TICK_INTERVAL = 10000;
+const USAGE_TICK = 5000;    // s：在线时长/流量采样间隔
 const MAX_EVENTS = 100;
 const WIRED_TTL = 300;    // s wired client stays listed after last FDB sighting
 const STEER_COOLDOWN = 30;  // s 同一终端两次 BSS Transition 引导的最小间隔
@@ -62,7 +63,7 @@ const FW4_TEMPLATE_SHA256 = "3c67659a861500b4bcc3fbc058790c7b40adf5ff861ff9c8758
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 21;
+const DAEMON_VERSION = 23;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -100,6 +101,7 @@ let state = {
 	last_wifi: null,    // last Wi-Fi rename push result summary
 	last_guest: null,   // last guest-network push result summary
 	cap_offload: null,  // SAP: last flow offload state pushed by CAP
+	cap_usage: null,    // SAP: usage snapshot pushed by CAP
 	guest_open: null,   // 访客网络当前是否在开放时段内（null = 未知）
 	guest_tc_devs: {},  // 访客无线接口 → 已成功安装的限速规则签名
 	guest_tc_error: "",
@@ -2105,6 +2107,16 @@ function usage_track_macs(clients) {
 	return set;
 }
 
+/* CAP 只把该 SAP 自己终端的统计回传给 SAP，避免子 AP 页面看到全量数据 */
+function usage_for_clients(clients) {
+	let out = { day: state.usage.day, online: {}, ndata: {} };
+	for (let mn in (clients ?? {})) {
+		if (state.usage.online[mn]) out.online[mn] = state.usage.online[mn];
+		if (state.usage.ndata[mn]) out.ndata[mn] = state.usage.ndata[mn];
+	}
+	return out;
+}
+
 /* 站点计数作为 nft 的补充：同时包含上下行，且不受 flow offload 影响。
    SAP 会在客户端信息里上报 rx_bytes/tx_bytes，CAP 汇总后做差分。 */
 function station_usage_map(clients) {
@@ -2253,7 +2265,7 @@ function usage_online_sample(seen) {
 	let now = time();
 	let dt = now - (state._usage_online_ts ?? 0);
 	if (!state._usage_online_ts || dt <= 0 || dt > 180)
-		dt = int(TICK_INTERVAL / 1000);
+		dt = int(USAGE_TICK / 1000);
 	state._usage_online_ts = now;
 
 	seen = seen ?? usage_track_macs();
@@ -2294,23 +2306,30 @@ function usage_tick() {
 		let clients = local_clients();
 		let all = usage_track_macs(clients);
 		let stations = station_usage_map(clients);
-		/* 与 OAF 的 forward hook 一致：所有终端都按“上行源 MAC + 下行目的 IP”
-		   计数；站点计数只补充 flow offload 看不到的部分，两者取较大增量，
-		   避免 WiFi 漫游导致站点计数复位后少算。 */
-		let ips = usage_ip_map(clients);
-		usage_apply_rules(false, all, ips);
-		let nft = usage_sample(all);
-		let st = station_usage_sample(stations);
+
+		/* 在线时长与流量采集解耦：某一项异常不影响另一项 */
+		usage_online_sample(all);
+
+		let nft = {};
+		try {
+			let ips = usage_ip_map(clients);
+			usage_apply_rules(false, all, ips);
+			nft = usage_sample(all);
+		} catch (e) { log("usage nft failed: " + e); }
+
+		let st = {};
+		try { st = station_usage_sample(stations); }
+		catch (e) { log("usage station failed: " + e); }
+
 		let add = {};
 		for (let mn, by in nft)
 			add[mn] = int(by);
-		for (let mn, by in st) {
-			by = int(by);
+		for (let mn, by0 in st) {
+			let by = int(by0);
 			if (by > (add[mn] ?? 0)) add[mn] = by;
 		}
 		for (let mn, by in add)
 			usage_add_traffic(mn, by);
-		usage_online_sample(all);
 		if (state._usage_dirty && time() - state._usage_saved >= USAGE_FLUSH)
 			usage_save();
 	} catch (e) {
@@ -2993,6 +3012,9 @@ function sap_rx(req) {
 		// CAP 统一分配的信道：SAP 本地写 wireless 并按需重启无线
 		let r = channel_apply_local(req.args.radios ?? []);
 		req.reply({ ok: r.ok, count: r.count });
+		/* 无线 reload 后立即上报新信道，避免 CAP 页面长时间显示旧信道 */
+		if (r.count > 0)
+			uloop.timer(6000, function() { sap_report(); });
 		break;
 	}
 	case "push_guest_config": {
@@ -3109,6 +3131,7 @@ sap_report = function() {
 				link.last_pong = time();
 				if (m?.names) state.net_names = m.names;
 				if (m?.roster) state.roster = m.roster;
+				if (m?.usage) state.cap_usage = m.usage;
 				if (m?.bss) {
 					state.bss_list = m.bss;
 					state._bss_cache = null;
@@ -3267,6 +3290,7 @@ function srv_rx(conn, req) {
 		            roam_ver: roam.config_ver, backhaul_ver: bh.config_ver,
 		            names: state.cfg.role == "cap" ? client_names() : {},
 		            roster: state.cfg.role == "cap" ? ap_overview() : null,
+		            usage: state.cfg.role == "cap" ? usage_for_clients(p.clients) : null,
 		            bss: state.cfg.role == "cap" ? steer_bss_all() : null });
 		break;
 	}
@@ -4282,11 +4306,12 @@ let api_obj = {
 	usage_stats: {
 		args: { ubus_rpc_session: "" },
 		call: function(req) {
+			let u = state.cfg.role == "cap" ? state.usage : state.cap_usage;
 			return {
-				ok: state.cfg.role == "cap",
-				day: state.usage.day || usage_day(),
-				online: state.usage.online,
-				ndata: state.usage.ndata,
+				ok: !!u,
+				day: (u?.day) || usage_day(),
+				online: u?.online ?? {},
+				ndata: u?.ndata ?? {},
 			};
 		},
 	},
@@ -4626,7 +4651,7 @@ function main() {
 	uloop.interval(TICK_INTERVAL, backhaul_tick);
 	uloop.interval(5000, steer_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
-	uloop.interval(TICK_INTERVAL, usage_tick);
+	uloop.interval(USAGE_TICK, usage_tick);
 	uloop.interval(60000, channel_tick);
 	uloop.interval(TICK_INTERVAL, function() {
 		if (state.cfg.role != "cap") return;

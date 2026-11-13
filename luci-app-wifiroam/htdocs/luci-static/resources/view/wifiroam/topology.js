@@ -1276,7 +1276,7 @@ return view.extend({
 			role: (this.status && this.status.role) || (this.topo && this.topo.role),
 		});
 
-		poll.add(L.bind(this.fetch, this), 15);
+		poll.add(L.bind(this.fetch, this), 10);
 
 		var hint = null;
 		if (!this.topo)
