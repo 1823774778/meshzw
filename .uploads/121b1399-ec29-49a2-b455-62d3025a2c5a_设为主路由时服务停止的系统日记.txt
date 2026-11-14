@@ -1,0 +1,72 @@
+[2026年11月15日 GMT+8 00:32:39] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0 LiteMod11
+[2026年11月15日 GMT+8 00:32:43] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:32:48] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:32:53] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:32:55] daemon.info: ucode[26283]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.174 name=XWRT
+[2026年11月15日 GMT+8 00:32:58] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:03] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:03] daemon.info: ucode[26283]: wifiroam: event client_leave 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月15日 GMT+8 00:33:03] daemon.info: ucode[26283]: wifiroam: event client_leave CC:4D:75:34:6B:9E CC:4D:75:34:6B:9E XWRT
+[2026年11月15日 GMT+8 00:33:03] daemon.info: ucode[26283]: wifiroam: event client_leave CC:4D:75:FD:E8:06 CC:4D:75:FD:E8:06 XWRT
+[2026年11月15日 GMT+8 00:33:03] daemon.info: ucode[26283]: wifiroam: event client_leave DC:D8:7C:20:37:6B DC:D8:7C:20:37:6B XWRT
+[2026年11月15日 GMT+8 00:33:03] daemon.info: ucode[26283]: wifiroam: event client_leave E8:4A:54:2C:34:69 E8:4A:54:2C:34:69 XWRT
+[2026年11月15日 GMT+8 00:33:08] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:13] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:18] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:23] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:28] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:33] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:38] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:43] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:48] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:53] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:33:58] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:03] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:08] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:13] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:18] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:23] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:28] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:33] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:34] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 00:34:38] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:43] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:48] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:53] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:34:58] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:35:03] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:35:08] daemon.info: ucode[26283]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:35:15] daemon.info: ucode[26283]: wifiroam: generated new network token
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]: Reference error: access to undeclared variable roam_default_init
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 3993, byte 6:
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:  `                    roam_default_init();`
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:                       ^~~~~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:
+[2026年11月15日 GMT+8 00:35:16] daemon.err: ucode[26283]:
+[2026年11月15日 GMT+8 00:35:16] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 9 crashes, 163 seconds since last crash
+[2026年11月15日 GMT+8 00:35:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 00:36:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月15日 GMT+8 00:36:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月15日 GMT+8 00:36:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月15日 GMT+8 00:38:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 00:39:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 00:39:47] daemon.info: ucode[766]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:39:47] daemon.info: ucode[766]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:39:47] daemon.info: ucode[766]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 00:39:47] daemon.info: ucode[766]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.174 name=XWRT
+[2026年11月15日 GMT+8 00:39:57] daemon.info: ucode[766]: wifiroam: generated new network token
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]: Reference error: access to undeclared variable roam_default_init
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 3993, byte 6:
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:  `                    roam_default_init();`
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:                       ^~~~~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:
+[2026年11月15日 GMT+8 00:39:58] daemon.err: ucode[766]:
+[2026年11月15日 GMT+8 00:39:58] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 10 crashes, 11 seconds since last crash

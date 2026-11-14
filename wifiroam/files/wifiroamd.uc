@@ -2055,7 +2055,7 @@ function usage_apply_rules(force, set, ips, ips6, before_flush) {
 	ips6 = ips6 ?? {};
 	let parts = [];
 	for (let mn in set)
-		parts.push(mn + "=" + (ips[mn] ?? "") + "|" + (ips6[mn] ?? ""));
+		push(parts, mn + "=" + (ips[mn] ?? "") + "|" + (ips6[mn] ?? ""));
 	let key = join(",", sort(parts));
 	if (!force && state._usage_track != null && key == state._usage_track) return false;
 
