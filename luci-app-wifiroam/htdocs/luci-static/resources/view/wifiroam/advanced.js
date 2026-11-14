@@ -20,6 +20,7 @@ return view.extend({
 	bh: null,
 	els: null,
 	busy: false,
+	resultsEpoch: 0,
 
 	load: function() {
 		/* precheck / 回程配置放到 hydrate 异步补齐，避免 apk、iw 等命令拖慢首屏 */
@@ -211,6 +212,7 @@ return view.extend({
 		}, this);
 
 		var head = _('Last Apply Result') + ' (v' + (res.ver || '?') + ')';
+		if (res.ts) head += ' — ' + wr.fmtAge(res.ts);
 		if (pending)
 			head += ' — ' + _('%d AP(s) still pending').format(pending);
 
@@ -268,6 +270,7 @@ return view.extend({
 		});
 
 		var head = _('Backhaul Apply Result') + ' (v' + (res.ver || '?') + ')';
+		if (res.ts) head += ' — ' + wr.fmtAge(res.ts);
 		if (pending)
 			head += ' — ' + _('%d AP(s) still pending').format(pending);
 
@@ -338,7 +341,8 @@ return view.extend({
 			}
 
 			self.st = self.st || {};
-			self.st.last_backhaul = { ver: res.ver, results: res.results };
+			self.st.last_backhaul = { ts: res.ts, ver: res.ver, results: res.results };
+			self.resultsEpoch = (self.resultsEpoch || 0) + 1;
 			self.renderBackhaulApply();
 
 			/* 密钥为空时由 CAP 自动生成，回填到输入框避免用户误以为未设置 */
@@ -534,7 +538,8 @@ return view.extend({
 			}
 
 			self.st = self.st || {};
-			self.st.last_apply = { ver: res.ver, results: res.results };
+			self.st.last_apply = { ts: res.ts, ver: res.ver, results: res.results };
+			self.resultsEpoch = (self.resultsEpoch || 0) + 1;
 			self.cfg.roam.enabled = request.enabled;
 			self.renderApply();
 
@@ -574,8 +579,13 @@ return view.extend({
 
 		if (this.busy) return Promise.resolve();
 
+		var epoch = this.resultsEpoch || 0;
 		return wr.safeCall('status').then(function(st) {
 			if (!st) return;
+
+			/* 这个 status 请求可能早于刚完成的保存：丢弃旧结果，
+			   避免上一次（例如首次组网的 v1）覆盖刚应用的 v2 */
+			if ((self.resultsEpoch || 0) !== epoch) return;
 
 			self.st = st;
 
