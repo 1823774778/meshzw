@@ -2704,8 +2704,12 @@ function apply_backhaul_local(bh, role) {
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let exists = cur.get("wireless", BACKHAUL_SECTION) != null;
+	/* enabled 但 SSID/密钥缺失时不能静默删除现有 STA 并回 ok，
+	   否则上层会显示“已应用”，实际却没有任何无线回程接口 */
+	if (bh.enabled && ((bh.ssid ?? "") == "" || (bh.key ?? "") == ""))
+		return { ok: false, error: "backhaul_credentials" };
 
-	if (bh.enabled && (bh.ssid ?? "") != "" && (bh.key ?? "") != "") {
+	if (bh.enabled) {
 		let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
 		if (!dev) return { ok: false, error: "no_radio" };
 		cur.set("wireless", BACKHAUL_SECTION, "device", dev);
@@ -2752,9 +2756,20 @@ function backhaul_tick() {
 	if (state.cfg.role != "sap") return;
 	let bh = current_backhaul_cfg();
 	if (!bh.enabled) return;
+	if ((bh.ssid ?? "") == "" || (bh.key ?? "") == "") return;
 	let cur = uci.cursor();
 	cur.load("wireless");
-	if (cur.get("wireless", BACKHAUL_SECTION) == null) return;
+	let sec = cur.get("wireless", BACKHAUL_SECTION);
+	/* 回程已启用但 STA 段丢失/被改坏时自动重建，否则拔掉网线后
+	   没有可启用的无线回程接口，表现就是一直不走无线 */
+	if (sec == null ||
+	    cur.get("wireless", BACKHAUL_SECTION, "mode") != "sta" ||
+	    (cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") != bh.ssid ||
+	    (cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") != bh.key) {
+		log("backhaul STA missing or stale, rebuilding");
+		apply_backhaul_local(bh, "sap");
+		return;
+	}
 	let want = ethernet_uplink_port() ? "1" : "0";
 	if ((cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == want) return;
 	cur.set("wireless", BACKHAUL_SECTION, "disabled", want);
@@ -3093,7 +3108,12 @@ function sap_connect(cap_ip) {
 	if (!sock) return;
 	sock.connect(addr); // nonblocking: completes via channel machinery
 	let link = { sock, authed: false, ts: time(), last_pong: time() };
-	link.chan = libubus.open_channel(sock, sap_rx, sap_disconnect);
+	link.chan = libubus.open_channel(sock, sap_rx, function() {
+		/* 通道已由 libubus 关闭：先清句柄，只做状态清理 */
+		link.chan = null;
+		link.sock = null;
+		if (state.link == link) sap_disconnect();
+	});
 	state.link = link;
 	log(sprintf("connecting to CAP %s", cap_ip));
 }
@@ -3200,8 +3220,15 @@ conn_close = function(conn) {
 	if (!conn || conn.closed) return;
 	conn.closed = true;
 	if (conn.id != null) delete active_conns[conn.id];
-	if (conn.chan) { try { conn.chan.disconnect(); } catch (e) {} }
-	if (conn.sock) { try { conn.sock.close(); } catch (e) {} }
+	/* 先摘掉句柄再关闭：disconnect 回调可能重入，对已释放的
+	   channel/socket 再次 disconnect/close 会让守护进程静默崩溃
+	   （主路由在子路由 WiFi 重载断链时反复重启就是这个问题） */
+	let ch = conn.chan;
+	conn.chan = null;
+	if (ch) { try { ch.disconnect(); } catch (e) {} }
+	let sk = conn.sock;
+	conn.sock = null;
+	if (sk) { try { sk.close(); } catch (e) {} }
 	if (conn.mac) {
 		let mn = macnorm(conn.mac);
 		let p = state.peers[mn];
@@ -3464,7 +3491,13 @@ function srv_accept() {
 		conn.chan = libubus.open_channel(
 			cs,
 			function(req) { return srv_rx(conn, req); },
-			function() { conn_close(conn); });
+			function() {
+				/* 通道已被 libubus 关闭：清掉句柄再清理状态，
+				   避免重复 disconnect/close */
+				conn.chan = null;
+				conn.sock = null;
+				conn_close(conn);
+			});
 		conn.chan.request({
 			method: "hello",
 			data: { mac: state.self.mac, role: state.cfg.role,

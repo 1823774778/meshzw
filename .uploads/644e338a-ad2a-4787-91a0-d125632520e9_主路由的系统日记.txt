@@ -1,0 +1,172 @@
+[2026年11月15日 GMT+8 01:00:17] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 01:00:17] kern.info: [ 2124.978383] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 25 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月15日 GMT+8 01:00:17] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 01:00:17] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月15日 GMT+8 01:00:17] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session 8A73A0032428B6AE
+[2026年11月15日 GMT+8 01:00:17] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 01:00:17] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 01:00:17] kern.info: [ 2125.110960] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月15日 GMT+8 01:00:17] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 01:00:17] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.227 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月15日 GMT+8 01:00:17] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:00:17] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:00:17] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 01:00:18] kern.info: [ 2125.547972] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 25 released from vdev 0
+[2026年11月15日 GMT+8 01:00:36] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 01:00:36] kern.info: [ 2144.218995] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 26 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月15日 GMT+8 01:00:36] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 01:00:36] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月15日 GMT+8 01:00:36] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session B86E8965FA77F4EC
+[2026年11月15日 GMT+8 01:00:36] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 01:00:36] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 01:00:36] kern.info: [ 2144.352484] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月15日 GMT+8 01:00:37] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 01:00:37] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.227 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月15日 GMT+8 01:00:37] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:00:37] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:00:52] kern.info: [ 2159.900048] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 01:00:52] kern.info: [ 2159.900116] br-lan: port 1(lan1) entered blocking state
+[2026年11月15日 GMT+8 01:00:52] kern.info: [ 2159.906532] br-lan: port 1(lan1) entered forwarding state
+[2026年11月15日 GMT+8 01:00:52] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月15日 GMT+8 01:00:59] daemon.notice: netifd: Network device 'lan1' link is down
+[2026年11月15日 GMT+8 01:00:59] kern.info: [ 2167.177445] br-lan: port 1(lan1) entered disabled state
+[2026年11月15日 GMT+8 01:00:59] kern.info: [ 2167.196746] qca-ppe 3a000000.ppe lan1: Link is Down
+[2026年11月15日 GMT+8 01:01:02] kern.info: [ 2170.299809] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 01:01:02] kern.info: [ 2170.299874] br-lan: port 1(lan1) entered blocking state
+[2026年11月15日 GMT+8 01:01:02] kern.info: [ 2170.306291] br-lan: port 1(lan1) entered forwarding state
+[2026年11月15日 GMT+8 01:01:02] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月15日 GMT+8 01:01:05] kern.info: [ 2172.699778] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 01:01:05] kern.info: [ 2172.699847] br-lan: port 3(lan3) entered blocking state
+[2026年11月15日 GMT+8 01:01:05] kern.info: [ 2172.706258] br-lan: port 3(lan3) entered forwarding state
+[2026年11月15日 GMT+8 01:01:05] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月15日 GMT+8 01:01:06] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 01:01:06] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 01:01:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 01:01:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.137 e8:4a:54:2c:34:69 xiaomi-airc-h09r00_mibt3469
+[2026年11月15日 GMT+8 01:01:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 01:01:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 01:01:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 01:01:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e xiaomi-airc-h09h00_mibt6B9E
+[2026年11月15日 GMT+8 01:01:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:09] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 01:01:09] kern.info: [ 2177.177084] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 26 released from vdev 0
+[2026年11月15日 GMT+8 01:01:10] kern.warn: [ 2178.430697] qca-edma 3ab00000.edma: tx error 0x90000017
+[2026年11月15日 GMT+8 01:01:11] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 01:01:11] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.226 fc:43:45:75:32:6f Xiaomi-15-Pro
+[2026年11月15日 GMT+8 01:01:11] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:11] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:36] daemon.info: ucode[21310]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:01:36] daemon.info: ucode[21310]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:01:36] daemon.info: ucode[21310]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 01:01:36] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 01:01:36] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 01:01:36] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 01:01:36] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 01:01:36] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 01:01:36] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 01:01:36] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:36] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 01:01:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月15日 GMT+8 01:01:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月15日 GMT+8 01:01:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月15日 GMT+8 01:01:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月15日 GMT+8 01:01:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 01:01:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月15日 GMT+8 01:01:41] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 01:01:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:41] daemon.info: ucode[21310]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:01:42] daemon.info: ucode[21310]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 01:01:42] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 01:01:42] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 01:01:42] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月15日 GMT+8 01:01:42] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 01:01:42] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:42] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.226 fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.226 fc:43:45:75:32:6f Xiaomi-15-Pro
+[2026年11月15日 GMT+8 01:01:45] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:45] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 01:01:45] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:45] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 01:01:45] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 01:01:46] daemon.info: ucode[22148]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:01:46] daemon.info: ucode[22148]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:01:46] daemon.info: ucode[22148]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.137 e8:4a:54:2c:34:69 xiaomi-airc-h09r00_mibt3469
+[2026年11月15日 GMT+8 01:01:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 01:01:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e xiaomi-airc-h09h00_mibt6B9E
+[2026年11月15日 GMT+8 01:01:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:52] daemon.info: ucode[22148]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:01:52] daemon.info: ucode[22148]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 01:01:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 01:01:54] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 01:01:54] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 01:01:54] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:54] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:01:54] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 01:01:54] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 01:01:57] daemon.info: ucode[22148]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 01:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 01:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 01:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月15日 GMT+8 01:01:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:01:59] daemon.info: ucode[22269]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:01:59] daemon.info: ucode[22269]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:01:59] daemon.info: ucode[22269]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 01:02:02] daemon.info: ucode[22269]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 01:02:04] daemon.info: ucode[22269]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f LiteMod11
+[2026年11月15日 GMT+8 01:02:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:02:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 01:02:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f LiteMod11
+[2026年11月15日 GMT+8 01:02:08] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 01:02:08] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 01:02:08] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 8 names
+[2026年11月15日 GMT+8 01:02:08] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 01:02:08] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:02:08] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 01:02:09] daemon.info: ucode[22269]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:02:11] daemon.info: ucode[22427]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:02:11] daemon.info: ucode[22427]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:02:11] daemon.info: ucode[22427]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 01:02:12] daemon.info: ucode[22427]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 01:02:16] daemon.info: ucode[22427]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:02:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 01:02:22] daemon.info: ucode[22427]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 01:02:24] daemon.info: ucode[22543]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:02:24] daemon.info: ucode[22543]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 01:02:24] daemon.info: ucode[22543]: wifiroam: started role=cap
