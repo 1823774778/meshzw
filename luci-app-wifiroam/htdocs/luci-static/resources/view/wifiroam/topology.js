@@ -90,6 +90,7 @@ return view.extend({
 	logs: [],
 	modalOpen: false,
 	collapsed: {},
+	zoom: 1,
 
 	load: function() {
 		return Promise.all([
@@ -599,6 +600,23 @@ return view.extend({
 	},
 
 	/* ---------------------------------------------------------- drawing */
+	zoomBy: function(factor) {
+		var z = (this.zoom || 1) * factor;
+		this.zoom = Math.min(3, Math.max(0.5, Math.round(z * 100) / 100));
+		this.applyZoom();
+	},
+
+	applyZoom: function() {
+		var box = document.getElementById('wr-topo');
+		var root = box ? box.querySelector('svg') : null;
+		var lay = this._lay;
+		if (!root || !lay) return;
+		var z = this.zoom || 1;
+		var w = lay.W / z, h = lay.H / z;
+		root.setAttribute('viewBox',
+			((lay.W - w) / 2) + ' ' + ((lay.H - h) / 2) + ' ' + w + ' ' + h);
+	},
+
 	redraw: function() {
 		var box = document.getElementById('wr-topo');
 		if (!box || this.modalOpen) return;
@@ -612,9 +630,13 @@ return view.extend({
 		var lay = this.layout();
 		var pos = lay.pos;
 		var self = this;
+		this._lay = lay;
 
+		var z = this.zoom || 1;
+		var vw = lay.W / z, vh = lay.H / z;
+		var vx = (lay.W - vw) / 2, vy = (lay.H - vh) / 2;
 		var root = svg('svg', {
-			viewBox: '0 0 ' + lay.W + ' ' + lay.H,
+			viewBox: vx + ' ' + vy + ' ' + vw + ' ' + vh,
 			preserveAspectRatio: 'xMidYMin meet',
 			width: '100%'
 		});
@@ -1051,6 +1073,26 @@ return view.extend({
 			return ds[self.dayStr(0)] || 0;
 		}
 
+		/* 上行/下行明细：与总流量同周期汇总（新版本开始采集方向） */
+		function periodDir() {
+			var u = self.usage;
+			var ds = (u && u.ndir && u.ndir[mac]) || {};
+			var p = self._statsPeriod || 'today';
+			var up = 0, down = 0;
+			function addDay(key) {
+				var e = ds[key];
+				if (!e) return;
+				up += parseInt(e.u, 10) || 0;
+				down += parseInt(e.d, 10) || 0;
+			}
+			if (p === 'yesterday') addDay(self.dayStr(1));
+			else if (p === 'week') {
+				for (var i = 0; i < 7; i++) addDay(self.dayStr(i));
+			}
+			else addDay(self.dayStr(0));
+			return { up: up, down: down };
+		}
+
 		function render() {
 			var p = self._statsPeriod || 'today';
 			var tabs = E('div', { 'class': 'wr-tabs' },
@@ -1096,6 +1138,10 @@ return view.extend({
 				}, key.slice(5).replace('-', '.')));
 			}
 
+			var bytes = periodBytes();
+			var dir = periodDir();
+			var hasDir = dir.up > 0 || dir.down > 0;
+
 			dom.content(box, [
 				E('div', { 'class': 'wr-stats-head' }, [
 					E('b', {}, _('Usage stats')), tabs
@@ -1105,9 +1151,15 @@ return view.extend({
 						E('div', { 'class': 'wr-cap' }, _('Online time')),
 						E('div', { 'class': 'wr-big' }, wr.fmtDur(periodSec()))
 					]),
-					E('div', {}, [
+					E('div', { 'class': 'wr-stat-tip' }, [
 						E('div', { 'class': 'wr-cap' }, _('Traffic')),
-						E('div', { 'class': 'wr-big' }, wr.fmtBytes(periodBytes()))
+						E('div', { 'class': 'wr-big' }, wr.fmtBytes(bytes)),
+						E('div', { 'class': 'wr-tip' }, [
+							E('div', {}, '↑ ' + _('Send') + ': ' +
+								(hasDir ? wr.fmtBytes(dir.up) : '—')),
+							E('div', {}, '↓ ' + _('Receive') + ': ' +
+								(hasDir ? wr.fmtBytes(dir.down) : '—'))
+						])
 					])
 				]),
 				chart
@@ -1313,7 +1365,19 @@ return view.extend({
 				E('span', { id: 'wr-refresh-ts', 'class': 'wr-hint' },
 					_('Updated') + ' ' + wr.fmtTime(Math.floor(Date.now() / 1000)))
 			]),
-			E('div', { 'class': 'wr-topo-wrap', id: 'wr-topo' }),
+			E('div', { 'class': 'wr-topo-outer' }, [
+				E('div', { 'class': 'wr-zoom' }, [
+					E('button', {
+						'class': 'btn', type: 'button', title: '放大',
+						click: L.bind(function() { this.zoomBy(1.25); }, this)
+					}, '+'),
+					E('button', {
+						'class': 'btn', type: 'button', title: '缩小',
+						click: L.bind(function() { this.zoomBy(0.8); }, this)
+					}, '−')
+				]),
+				E('div', { 'class': 'wr-topo-wrap', id: 'wr-topo' })
+			]),
 			E('div', { 'class': 'wr-legend' }, [
 				E('span', { 'class': 'wr-lg-wired' }, _('Wired backhaul')),
 				E('span', { 'class': 'wr-lg-wifi' }, _('Wireless link')),

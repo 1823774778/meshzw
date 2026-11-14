@@ -69,7 +69,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 34;
+const DAEMON_VERSION = 35;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -141,7 +141,7 @@ let state = {
 	_own_nr: {},        // ifname -> { ts, nr }：本机 hostapd 的 own Neighbor Report 缓存
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
-	usage: { day: "", online: {}, ndata: {} }, // CAP: 每终端每日在线秒数 / 总流量
+	usage: { day: "", online: {}, ndata: {}, ndir: {} }, // CAP: 每终端每日在线秒数 / 总流量 / 上下行
 	_usage_snap: null,  // CAP: 上次 nft counter 快照 { mac: bytes }
 	_usage_station_snap: null, // CAP: 上次站点计数快照 { mac: { rx, tx } }
 	_usage_ts: 0,
@@ -1966,6 +1966,7 @@ function usage_roll_day() {
 	state.usage.day = day;
 	for (let mn, d in state.usage.online) usage_prune(d);
 	for (let mn, d in state.usage.ndata) usage_prune(d);
+	for (let mn, d in state.usage.ndir) usage_prune(d);
 	state._usage_dirty = true;
 }
 
@@ -1979,10 +1980,11 @@ function usage_track_macs(clients) {
 
 /* CAP 只把该 SAP 自己终端的统计回传给 SAP，避免子 AP 页面看到全量数据 */
 function usage_for_clients(clients) {
-	let out = { day: state.usage.day, online: {}, ndata: {} };
+	let out = { day: state.usage.day, online: {}, ndata: {}, ndir: {} };
 	for (let mn in (clients ?? {})) {
 		if (state.usage.online[mn]) out.online[mn] = state.usage.online[mn];
 		if (state.usage.ndata[mn]) out.ndata[mn] = state.usage.ndata[mn];
+		if (state.usage.ndir[mn]) out.ndir[mn] = state.usage.ndir[mn];
 	}
 	return out;
 }
@@ -2008,15 +2010,22 @@ function station_usage_map(clients) {
 }
 
 /* ucode 单遍绑定：usage_add_traffic 必须在 station_usage_sample 之前定义 */
-function usage_add_traffic(mn, by) {
-	if (by <= 0) return;
+function usage_add_traffic(mn, up, down) {
+	let u = int(up ?? 0), d = int(down ?? 0);
+	if (u <= 0 && d <= 0) return;
 	if (!state.usage.ndata[mn]) state.usage.ndata[mn] = {};
-	let d = state.usage.ndata[mn];
-	d[state.usage.day] = (d[state.usage.day] ?? 0) + by;
+	let nd = state.usage.ndata[mn];
+	nd[state.usage.day] = (nd[state.usage.day] ?? 0) + u + d;
+	if (!state.usage.ndir[mn]) state.usage.ndir[mn] = {};
+	let dir = state.usage.ndir[mn];
+	let e = dir[state.usage.day] ??= { u: 0, d: 0 };
+	e.u = (e.u ?? 0) + u;
+	e.d = (e.d ?? 0) + d;
 	state._usage_dirty = true;
 }
 
-/* 站点计数用于补充 nft 看不到的流量（flow offload），只返回本轮增量。 */
+/* 站点计数用于补充 nft 看不到的流量（flow offload），只返回本轮增量。
+   hostapd 的 rx 是终端发往 AP（上行），tx 是 AP 发往终端（下行）。 */
 function station_usage_sample(map) {
 	let snap = state._usage_station_snap ?? {};
 	let fresh = {};
@@ -2025,8 +2034,8 @@ function station_usage_sample(map) {
 	for (let mn, b in map) {
 		let prev = snap[mn];
 		if (prev && b.rx >= prev.rx && b.tx >= prev.tx) {
-			let by = (b.rx - prev.rx) + (b.tx - prev.tx);
-			if (by > 0) deltas[mn] = by;
+			let du = b.rx - prev.rx, dd = b.tx - prev.tx;
+			if (du > 0 || dd > 0) deltas[mn] = { u: du, d: dd };
 		}
 		fresh[mn] = b;
 	}
@@ -2088,19 +2097,19 @@ function usage_apply_rules(force, set, ips, ips6, before_flush) {
 		USAGE_TABLE));
 	let script = sprintf("flush chain inet %s forward\n", USAGE_TABLE);
 	for (let mn in set) {
-		/* 上行按源 MAC，下行按目的 IPv4/IPv6，两个方向都计数 */
+		/* 上行按源 MAC，下行按目的 IPv4/IPv6，两个方向分别计数 */
 		script += sprintf(
-			"add rule inet %s forward ether saddr %s counter comment \"wu:%s\"\n",
+			"add rule inet %s forward ether saddr %s counter comment \"wu-u:%s\"\n",
 			USAGE_TABLE, maccolon(mn), mn);
 		let ip = "" + (ips[mn] ?? "");
 		if (match(ip, /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/))
 			script += sprintf(
-				"add rule inet %s forward ip daddr %s counter comment \"wu:%s\"\n",
+				"add rule inet %s forward ip daddr %s counter comment \"wu-d:%s\"\n",
 				USAGE_TABLE, ip, mn);
 		let ip6 = "" + (ips6[mn] ?? "");
 		if (match(ip6, /^[0-9a-fA-F:]+$/) && index(ip6, ":") >= 0)
 			script += sprintf(
-				"add rule inet %s forward ip6 daddr %s counter comment \"wu:%s\"\n",
+				"add rule inet %s forward ip6 daddr %s counter comment \"wu-d:%s\"\n",
 				USAGE_TABLE, ip6, mn);
 	}
 	let path = "/tmp/wifiroam-usage.nft";
@@ -2136,20 +2145,23 @@ function usage_sample(set) {
 		let r = item.rule;
 		if (!r) continue;
 		let p = split(r.comment ?? "", ":");
-		if (length(p) != 2 || p[0] != "wu") continue;
+		if (length(p) != 2 || (p[0] != "wu-u" && p[0] != "wu-d")) continue;
 		let mn = p[1], by = 0;
 		for (let e in (r.expr ?? []))
 			if (e.counter) { by = int(e.counter.bytes ?? 0); break; }
-		fresh[mn] = (fresh[mn] ?? 0) + by;
+		let f = fresh[mn] ??= { u: 0, d: 0 };
+		if (p[0] == "wu-u") f.u += by;
+		else f.d += by;
 		delete want[mn];
 	}
 	// 规则被防火墙清掉时强制下一轮重建，避免统计永久停摆
 	if (length(keys(want))) state._usage_track = "";
 
-	for (let mn, by in fresh) {
+	for (let mn, v in fresh) {
 		let prev = snap[mn];
-		if (prev == null || by < prev) continue;
-		if (by > prev) deltas[mn] = by - prev;
+		if (prev == null || v.u < prev.u || v.d < prev.d) continue;
+		let du = v.u - prev.u, dd = v.d - prev.d;
+		if (du > 0 || dd > 0) deltas[mn] = { u: du, d: dd };
 	}
 	state._usage_snap = fresh;
 	state._usage_ts = time();
@@ -2181,6 +2193,7 @@ function usage_load() {
 			state.usage.day = d.day ?? "";
 			state.usage.online = d.online ?? {};
 			state.usage.ndata = d.ndata ?? {};
+			state.usage.ndir = d.ndir ?? {};
 		}
 	} catch (e) { /* first boot */ }
 }
@@ -2190,6 +2203,7 @@ function usage_save() {
 	fs.writefile(USAGE_PATH, sprintf("%.J", {
 		ver: 1, day: state.usage.day,
 		online: state.usage.online, ndata: state.usage.ndata,
+		ndir: state.usage.ndir,
 	}));
 	state._usage_dirty = false;
 	state._usage_saved = time();
@@ -2221,14 +2235,15 @@ function usage_tick() {
 		catch (e) { log("usage station failed: " + e); }
 
 		let add = {};
-		for (let mn, by in nft)
-			add[mn] = int(by);
-		for (let mn, by0 in st) {
-			let by = int(by0);
-			if (by > (add[mn] ?? 0)) add[mn] = by;
+		for (let mn, v in nft)
+			add[mn] = { u: int(v.u), d: int(v.d) };
+		for (let mn, v0 in st) {
+			let v = add[mn] ??= { u: 0, d: 0 };
+			if (int(v0.u) > v.u) v.u = int(v0.u);
+			if (int(v0.d) > v.d) v.d = int(v0.d);
 		}
-		for (let mn, by in add)
-			usage_add_traffic(mn, by);
+		for (let mn, v in add)
+			usage_add_traffic(mn, v.u, v.d);
 		if (state._usage_dirty && time() - state._usage_saved >= USAGE_FLUSH)
 			usage_save();
 	} catch (e) {
@@ -3898,7 +3913,7 @@ function factory_reset() {
 	try { fs.unlink(ALIAS_PATH); } catch (e) {}
 	try { fs.unlink(USAGE_PATH); } catch (e) {}
 	state.aliases = { ver: 0, map: {} };
-	state.usage = { day: "", online: {}, ndata: {} };
+	state.usage = { day: "", online: {}, ndata: {}, ndir: {} };
 	state.events = [];
 	state._usage_snap = null;
 	state._usage_station_snap = null;
@@ -4521,6 +4536,7 @@ let api_obj = {
 				day: (u?.day) || usage_day(),
 				online: u?.online ?? {},
 				ndata: u?.ndata ?? {},
+				ndir: u?.ndir ?? {},
 			};
 		},
 	},
