@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 30;
+var REQUIRED_VERSION = 31;
 
 return view.extend({
 	st: null,
@@ -329,7 +329,7 @@ return view.extend({
 	resetAll: function(btn) {
 		var self = this;
 		if (this.busy) return;
-		if (!confirm(_('确定要重置为初始状态吗？将清除配对、漫游、回程、访客、信道和统计数据，并重启服务。')))
+		if (!confirm(_('确定要重置为初始状态吗？将清除所有配置，并重启服务。')))
 			return;
 		this.busy = true;
 		wr.setBusy(btn, true, _('重置中...'));

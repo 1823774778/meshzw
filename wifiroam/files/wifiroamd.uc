@@ -68,7 +68,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 30;
+const DAEMON_VERSION = 31;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -3011,6 +3011,8 @@ function sap_rx(req) {
 			state.cfg.cap_mac = "";
 			state.cap_lost_since = null;
 			state.cap_learned = null;
+			state.last_apply = null;
+			state.last_backhaul = null;
 			save_config();
 			reconfigure();
 		});
@@ -3050,6 +3052,8 @@ sap_self_reset = function(reason) {
 	state.cfg.cap_mac = "";
 	state.cap_lost_since = null;
 	state.cap_learned = null;
+	state.last_apply = null;
+	state.last_backhaul = null;
 	save_config();
 	reconfigure();
 };
@@ -3113,6 +3117,9 @@ sap_report = function() {
 				if (m?.names) state.net_names = m.names;
 				if (m?.roster) state.roster = m.roster;
 				if (m?.usage) state.cap_usage = m.usage;
+				/* CAP 汇总的最近应用结果同步到本机，供 SAP 页面展示 */
+				state.last_apply = m?.last_apply ?? null;
+				state.last_backhaul = m?.last_backhaul ?? null;
 				if (m?.bss) {
 					/* 只有 BSS 列表真正变化时才触发一次立即同步，
 					   避免每 10s 的上报都重建 hostapd 邻居库 */
@@ -3143,6 +3150,24 @@ sap_report = function() {
 		if (state.link == link) sap_disconnect();
 	}
 };
+
+// 最近应用结果：把新接入/需要补发的 SAP 加入结果表并标记 pending。
+// CAP 首次组网时 last_apply 只有本机，新 SAP 入网后补进来，页面才能看到完整结果。
+function last_result_mark_pending(results, mn, name, with_kvr) {
+	if (!results) return false;
+	for (let r in results) {
+		if (macnorm(r.ap) != mn) continue;
+		r.ok = null;
+		r.error = "pending";
+		if (name) r.name = name;
+		return true;
+	}
+	let row = { ap: maccolon(mn), name: name ?? maccolon(mn),
+	            ok: null, error: "pending" };
+	if (with_kvr) row.kvr = null;
+	push(results, row);
+	return true;
+}
 
 // ------------------------------------------------------- TCP server (all)
 conn_close = function(conn) {
@@ -3252,14 +3277,24 @@ function srv_rx(conn, req) {
 			let roam = current_roam_cfg();
 			// ver 落后或内容签名不一致都重新下发：后者用于修复历史遗留的
 			// SAP 本地配置与主 AP 不一致（例如只同步了 enabled/ver）
-			if (state.cfg.role == "cap" &&
+			let roam_push = state.cfg.role == "cap" &&
 			    ((args.roam_ver ?? -1) < roam.config_ver ||
-			     (args.roam_sig && !roam_sig_ok(args.roam_sig, roam))))
+			     (args.roam_sig && !roam_sig_ok(args.roam_sig, roam)));
+			if (roam_push) {
+				if (state.last_apply)
+					last_result_mark_pending(state.last_apply.results, mn,
+						p.info?.name ?? p.name ?? mn, true);
 				push_roam_to(mn);
+			}
 			let bh = current_backhaul_cfg();
-			if (state.cfg.role == "cap" && bh.enabled &&
-			    (args.backhaul_ver ?? -1) < bh.config_ver)
+			let bh_push = state.cfg.role == "cap" && bh.enabled &&
+			    (args.backhaul_ver ?? -1) < bh.config_ver;
+			if (bh_push) {
+				if (state.last_backhaul)
+					last_result_mark_pending(state.last_backhaul.results, mn,
+						p.info?.name ?? p.name ?? mn, false);
 				push_backhaul_to(mn);
+			}
 			/* 访客配置也要在这里补发：只在保存那一刻推送的话，
 			   子 AP 重连后仍会保留本地旧配置（旧密码/旧限速） */
 			let ga = guest_cfg();
@@ -3328,7 +3363,10 @@ function srv_rx(conn, req) {
 		            names: state.cfg.role == "cap" ? client_names() : {},
 		            roster: state.cfg.role == "cap" ? ap_overview() : null,
 		            usage: state.cfg.role == "cap" ? usage_for_clients(p.clients) : null,
-		            bss: state.cfg.role == "cap" ? steer_bss_all() : null });
+		            bss: state.cfg.role == "cap" ? steer_bss_all() : null,
+		            /* 最近一次漫游/无线回程应用结果：SAP 页面也显示全网络结果 */
+		            last_apply: state.cfg.role == "cap" ? state.last_apply : null,
+		            last_backhaul: state.cfg.role == "cap" ? state.last_backhaul : null });
 		break;
 	}
 	case "report_event":
@@ -3942,6 +3980,8 @@ let api_obj = {
 				state.cfg.cap_ip = "";
 				state.cfg.cap_mac = "";
 				state.cap_learned = null;
+				state.last_apply = null;
+				state.last_backhaul = null;
 			}
 			save_config();
 			reconfigure();
@@ -4031,7 +4071,7 @@ let api_obj = {
 				                ok: null, error: "pending" });
 				push_roam_to(mn);
 			}
-			return { ok: true, ver, results };
+			return { ok: true, ver, results, ts: state.last_apply.ts };
 		},
 	},
 	precheck: {
@@ -4269,7 +4309,7 @@ let api_obj = {
 				                ok: null, error: "pending" });
 				push_backhaul_to(mn);
 			}
-			return { ok: true, ver, results, backhaul: bh };
+			return { ok: true, ver, results, ts: state.last_backhaul.ts, backhaul: bh };
 		},
 	},
 	discover: {
