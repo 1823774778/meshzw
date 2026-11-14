@@ -55,6 +55,7 @@ const GUEST_BRIDGE = "br-guest";
 const GUEST_ZONE = "wifiroam_guest_zone";
 const GUEST_FWD_WAN = "wifiroam_guest_fwd_wan";
 const GUEST_FWD_LAN = "wifiroam_guest_fwd_lan";
+const GUEST_ALLOW_LAN = "wifiroam_guest_allow_lan";
 const GUEST_SNAT = "wifiroam_guest_snat";
 const GUEST_IP = "172.16.10.1";
 const GUEST_NET = "172.16.10.0/24";
@@ -1201,7 +1202,7 @@ function guest_remove_infra() {
 	});
 	fc.delete("firewall", GUEST_ZONE);
 	for (let r in [ "wifiroam_guest_dhcp", "wifiroam_guest_dns_u", "wifiroam_guest_dns_t",
-	                GUEST_FWD_WAN, GUEST_FWD_LAN, GUEST_SNAT ])
+	                GUEST_FWD_WAN, GUEST_FWD_LAN, GUEST_ALLOW_LAN, GUEST_SNAT ])
 		fc.delete("firewall", r);
 	fc.commit("firewall");
 }
@@ -1302,6 +1303,25 @@ function guest_write_infra(cfg) {
 		fc.set("firewall", GUEST_FWD_LAN, "enabled", "1");
 	} else {
 		fc.delete("firewall", GUEST_FWD_LAN);
+	}
+
+	/* 访问内网资源除了访客→lan 的转发，还要放行目的地址为内网网段的
+	   input 流量，否则访客打不开主路由 LuCI、路由器上的 Samba/NAS 等
+	   本机服务（input 默认 REJECT）。input 规则不能带 dest 区，只能
+	   用 dest_ip 限定内网地址。 */
+	let lan = cfg.allow_lan ? guest_lan_info() : null;
+	if (lan && lan.cidr != "") {
+		if (fc.get("firewall", GUEST_ALLOW_LAN) == null)
+			fc.set("firewall", GUEST_ALLOW_LAN, "rule");
+		fc.set("firewall", GUEST_ALLOW_LAN, "name", GUEST_ALLOW_LAN);
+		fc.set("firewall", GUEST_ALLOW_LAN, "src", "guest");
+		fc.set("firewall", GUEST_ALLOW_LAN, "dest_ip", lan.cidr);
+		fc.set("firewall", GUEST_ALLOW_LAN, "proto", "all");
+		fc.set("firewall", GUEST_ALLOW_LAN, "target", "ACCEPT");
+		fc.set("firewall", GUEST_ALLOW_LAN, "family", "ipv4");
+		fc.set("firewall", GUEST_ALLOW_LAN, "enabled", "1");
+	} else {
+		fc.delete("firewall", GUEST_ALLOW_LAN);
 	}
 
 	// 子AP 的“外网”其实走 lan 桥到主AP，必须放行 guest→lan 并做 SNAT，
