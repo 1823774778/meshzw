@@ -4354,6 +4354,16 @@ let api_obj = {
 			sock.connect(addr);
 			let done = false;
 			let chan = null;
+			/* 不能在 channel 回调里同步 disconnect 自身（会崩溃），
+			   统一延迟到下一轮 uloop 再关闭 */
+			let close_chan = function() {
+				if (!chan) return;
+				let c = chan;
+				chan = null;
+				uloop.timer(100, function() {
+					try { c.disconnect(); } catch (e) {}
+				});
+			};
 			chan = libubus.open_channel(sock,
 				function(req2) {
 					if (req2.type == "hello" && chan) {
@@ -4374,23 +4384,22 @@ let api_obj = {
 										push_event("paired", d.mac, d.ip);
 										delete state.discovered[mn];
 									}
-									chan.disconnect();
+									close_chan();
 								},
 								cb: function(rc) {
 									// 成功时 data_cb 已处理并断开；仅失败时兜底断开
-									if (rc != 0 && chan)
-										try { chan.disconnect(); } catch (e) {}
+									if (rc != 0) close_chan();
 								},
 							});
 						} catch (e) {
-							try { chan.disconnect(); } catch (e2) {}
+							close_chan();
 						}
 					}
 					return 0;
 				},
 				function() {});
 			uloop.timer(8000, function() {
-				if (!done && chan) { try { chan.disconnect(); } catch (e) {} }
+				if (!done) close_chan();
 			});
 			return { ok: true, ip: d.ip };
 		},

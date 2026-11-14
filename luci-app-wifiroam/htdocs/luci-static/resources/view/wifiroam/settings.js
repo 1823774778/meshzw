@@ -755,6 +755,10 @@ return view.extend({
 			/* 配对后主路由服务若被重启掉，首页会自动拉起 */
 			try { sessionStorage.setItem('wr_service_autostart', '1'); } catch (e) {}
 
+			/* 配对请求已被接受：立即撤掉全屏遮罩，页面可继续操作，
+			   设备入网确认在后台轮询完成 */
+			if (notice) { notice(); notice = null; }
+
 			/* 后端是异步确认的，这里主动探测直到它出现在拓扑里 */
 			return wr.pollUntil(function() {
 				return self.fetchPairData().then(function() {

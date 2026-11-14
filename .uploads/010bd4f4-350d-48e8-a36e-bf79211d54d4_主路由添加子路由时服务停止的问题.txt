@@ -1,0 +1,35 @@
+2026年11月15日 GMT+8 00:41:05] daemon.info: ucode[3179]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:41:05] daemon.info: ucode[3179]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:41:05] daemon.info: ucode[3179]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 00:41:07] daemon.info: ucode[3179]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.174 name=XWRT
+[2026年11月15日 GMT+8 00:41:10] daemon.info: ucode[3179]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:41:12] daemon.info: ucode[3179]: wifiroam: event paired DC:D8:7C:20:37:6B - 192.168.10.174
+[2026年11月15日 GMT+8 00:41:12] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 11 crashes, 7 seconds since last crash
+[2026年11月15日 GMT+8 00:41:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月15日 GMT+8 00:41:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月15日 GMT+8 00:41:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月15日 GMT+8 00:42:06] daemon.info: ucode[6203]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:42:06] daemon.info: ucode[6203]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:42:06] daemon.info: ucode[6203]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 00:42:11] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:42:12] daemon.info: ucode[6203]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 00:42:14] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 00:42:14] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 00:42:14] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 00:42:14] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 00:42:14] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 00:42:14] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 00:42:15] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 00:42:15] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 00:42:15] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 00:42:15] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 00:42:15] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 00:42:15] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 00:42:15] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 00:42:15] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 00:42:16] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:42:21] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:42:26] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:42:31] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:42:36] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
+[2026年11月15日 GMT+8 00:42:41] daemon.info: ucode[6203]: wifiroam: usage nft failed: `parts.push` is not a function, got null instead
