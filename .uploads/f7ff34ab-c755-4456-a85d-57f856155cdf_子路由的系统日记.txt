@@ -1,0 +1,980 @@
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51af8014]
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [    0.000000] Linux version 6.18.60 (runner@ip-10-0-136-216) (aarch64-openwrt-linux-musl-gcc (OpenWrt GCC 14.4.0 toolchain-0336f60730) 14.4.0, GNU ld (GNU Binutils) 2.46.1) #0 SMP Sat Nov 14 07:36:37 2026
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Machine model: JDCloud RE-SS-01
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x0000000000060000..0x0000000000065fff (24 KiB) nomap non-reusable rpm_msg_ram@60000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x0000000040000000..0x0000000040ffffff (16384 KiB) nomap non-reusable nss@40000000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004a100000..0x000000004a4fffff (4096 KiB) nomap non-reusable bootloader@4a100000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004a600000..0x000000004a9fffff (4096 KiB) nomap non-reusable tz@4a600000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004aa00000..0x000000004aafffff (1024 KiB) nomap non-reusable smem@4aa00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004ab00000..0x000000004eafffff (65536 KiB) nomap non-reusable q6@4ab00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004eb00000..0x000000004ebfffff (1024 KiB) nomap non-reusable q6_etr@4eb00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004ec00000..0x000000004ecfffff (1024 KiB) nomap non-reusable m3_dump@4ec00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] OF: reserved mem: 0x000000004ed00000..0x000000004edfffff (1024 KiB) nomap non-reusable ramoops@4ed00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Zone ranges:
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   DMA      [mem 0x0000000040000000-0x000000007fffffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   DMA32    empty
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   Normal   empty
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Movable zone start for each node
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Early memory node ranges
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   node   0: [mem 0x0000000040000000-0x0000000040ffffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   node   0: [mem 0x0000000041000000-0x000000004a0fffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   node   0: [mem 0x000000004a100000-0x000000004a4fffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   node   0: [mem 0x000000004a500000-0x000000004a5fffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   node   0: [mem 0x000000004a600000-0x000000004edfffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000]   node   0: [mem 0x000000004ee00000-0x000000007fffffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x000000007fffffff]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] cma: Reserved 102 MiB at 0x0000000078400000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] psci: probing for conduit method from DT.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] psci: PSCIv1.0 detected in firmware.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] psci: Using standard PSCI v0.2 function IDs
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] psci: SMC Calling Convention v1.0
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] percpu: Embedded 20 pages/cpu s44184 r8192 d29544 u81920
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    0.000000] pcpu-alloc: s44184 r8192 d29544 u81920 alloc=20*4096
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Detected VIPT I-cache on CPU0
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] CPU features: detected: Spectre-v4
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] alternatives: applying boot alternatives
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [    0.000000] Kernel command line: console=ttyMSM0,115200n8 root=PARTUUID=487fa66f-4663-5be5-62f8-c4f63317f9b3 gpt rootwait
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] printk: log buffer data + meta data: 131072 + 458752 = 589824 bytes
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Dentry cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Inode-cache hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 1MB
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] software IO TLB: area num 4.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] software IO TLB: mapped [mem 0x0000000078300000-0x0000000078400000] (1MB)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 262144
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] rcu: Hierarchical RCU implementation.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] 	Tracing variant of Tasks RCU enabled.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] Root IRQ handler: gic_handle_irq
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] GICv2m: range[mem 0x0b00a000-0x0b00affc], SPI[448:479]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] arch_timer: cp15 timer running at 24.00MHz (virt).
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000000] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000141] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.000154] pid_max: default: 32768 minimum: 301
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.004329] Mount-cache hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.004345] Mountpoint-cache hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.014220] rcu: Hierarchical SRCU implementation.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.014229] rcu: 	Max phase no-delay instances is 1000.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.014537] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.014957] smp: Bringing up secondary CPUs ...
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.015658] Detected VIPT I-cache on CPU1
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.015803] CPU1: Booted secondary processor 0x0000000001 [0x51af8014]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.016570] Detected VIPT I-cache on CPU2
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.016684] CPU2: Booted secondary processor 0x0000000002 [0x51af8014]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017413] Detected VIPT I-cache on CPU3
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017521] CPU3: Booted secondary processor 0x0000000003 [0x51af8014]
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017601] smp: Brought up 1 node, 4 CPUs
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017609] SMP: Total of 4 processors activated.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017613] CPU: All CPU(s) started at EL1
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017617] CPU features: detected: 32-bit EL0 Support
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017622] CPU features: detected: CRC32 instructions
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017668] alternatives: applying system-wide alternatives
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.017884] CPU features: emulated: Privileged Access Never (PAN) using TTBR0_EL1 switching
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.018150] Memory: 808168K/1048576K available (9408K kernel code, 920K rwdata, 3068K rodata, 960K init, 289K bss, 130432K reserved, 106496K cma-reserved)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.024488] posixtimers hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.024578] futex hash table entries: 1024 (65536 bytes on 1 NUMA nodes, total 64 KiB, linear).
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.026332] 29056 pages in range for non-PLT usage
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.026343] 520576 pages in range for PLT usage
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.028765] pinctrl core: initialized pinctrl subsystem
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.031077] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.032598] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.033191] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.034290] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.035416] thermal_sys: Registered thermal governor 'step_wise'
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.035463] cpuidle: using governor menu
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.035711] ASID allocator initialised with 65536 entries
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040680] /soc@0/ssphy@78000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040713] /soc@0/phy@84000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040749] /soc@0/clock-controller@9b000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040804] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/phy@84000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040818] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ssphy@78000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040832] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/clock-controller@9b000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040845] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ethernet-pcs@7a00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.040966] /soc@0/interrupt-controller@b000000: Fixed dependency cycle(s) with /soc@0/interrupt-controller@b000000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.041036] /soc@0/ethernet-pcs@7a00000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.041271] /soc@0/ssphy@78000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.041578] /soc@0/phy@84000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.041908] /soc@0/clock-controller@9b000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045382] /soc@0/clock-controller@9b000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045529] /soc@0/phy@84000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045670] /soc@0/ssphy@78000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045754] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/phy@84000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045836] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ssphy@78000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045928] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/clock-controller@9b000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.045997] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ethernet-pcs@7a00000
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [    0.091650] SCSI subsystem initialized
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.091866] usbcore: registered new interface driver usbfs
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.091920] usbcore: registered new interface driver hub
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.091963] usbcore: registered new device driver usb
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.092294] qcom_scm: convention: smc arm 64
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.094438] clocksource: Switched to clocksource arch_sys_counter
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.098673] NET: Registered PF_INET protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.098845] IP idents hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.101382] tcp_listen_portaddr_hash hash table entries: 512 (order: 1, 8192 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.101407] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.101429] TCP established hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.101514] TCP bind hash table entries: 8192 (order: 6, 262144 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.101800] TCP: Hash tables configured (established 8192 bind 8192)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.102176] MPTCP token hash table entries: 1024 (order: 3, 24576 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.102359] UDP hash table entries: 512 (order: 3, 32768 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.102411] UDP-Lite hash table entries: 512 (order: 3, 32768 bytes, linear)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.102998] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.103036] PCI: CLS 0 bytes, default 64
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.104729] workingset: timestamp_bits=46 max_order=18 bucket_order=0
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.105546] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.105553] jffs2: version 2.2 (NAND) (SUMMARY) (LZMA) (RTIME) (CMODE_PRIORITY) (c) 2001-2006 Red Hat, Inc.
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    0.112091] qcom-qmp-usb-phy 78000.ssphy: supply vdda-phy not found, using dummy regulator
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    0.112253] qcom-qmp-usb-phy 78000.ssphy: supply vdda-pll not found, using dummy regulator
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    0.113405] qcom-qusb2-phy 79000.qusb: supply vdd not found, using dummy regulator
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    0.113581] qcom-qusb2-phy 79000.qusb: supply vdda-pll not found, using dummy regulator
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    0.113621] qcom-qusb2-phy 79000.qusb: supply vdda-phy-dpdm not found, using dummy regulator
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.122854] Serial: 8250/16550 driver, 2 ports, IRQ sharing disabled
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.123894] msm_serial 78b1000.serial: msm_serial: detected port #0
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.123977] msm_serial 78b1000.serial: uartclk = 1843199
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.124456] 78b1000.serial: ttyMSM0 at MMIO 0x78b1000 (irq = 19, base_baud = 115199) is a MSM
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.124544] msm_serial: console setup on port #0
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    0.124594] printk: legacy console [ttyMSM0] enabled
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.099519] msm_serial: driver initialized
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.109658] loop: module loaded
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.114993] spi_qup 78b5000.spi: IN:block:16, fifo:64, OUT:block:16, fifo:64
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.466150] i2c_dev: i2c /dev entries driver
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.473385] sdhci: Secure Digital Host Controller Interface driver
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.473432] sdhci: Copyright(c) Pierre Ossman
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.478493] sdhci-pltfm: SDHCI platform and OF driver helper
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.483183] qcom_rng e3000.qrng: TRNG support not detected
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.489464] clocksource: arch_mmio_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.493939] arch-timer-mmio b120000.timer: mmio timer running at 24.00MHz (virt)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.507230] remoteproc remoteproc0: releasing wcnss
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.514723] NET: Registered PF_INET6 protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.518467] Segment Routing with IPv6
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.522203] In-situ OAM (IOAM) with IPv6
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.525789] NET: Registered PF_PACKET protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.529870] 8021q: 802.1Q VLAN Support v1.8
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.534449] mmc0: SDHCI controller on 7804000.mmc [7804000.mmc] using ADMA 64-bit
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.627616] mmc0: new HS200 MMC card at address 0001
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.628486] mmcblk0: mmc0:0001 8GTF4R 7.28 GiB
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.633038] GPT:Primary header alternate_lba != Alt. header my_lba
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.635968] GPT:8683519 != 15269887
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.642068] GPT:last_usable_lbas don't match.
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.645468] GPT:8683486 != 15269854
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.649967] GPT:num_partition_entries don't match: 0x1c != 0x18
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.653271] GPT:partition_entry_array_crc32 values don't match: 0x77537fc8 != 0xe7a932f6
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.659189] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.667521] GPT:8683519 != 15269887
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    1.674894] GPT: Use GNU Parted to correct GPT errors.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.678181]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24 p25 p26
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.686247] mmcblk0boot0: mmc0:0001 8GTF4R 4.00 MiB
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.695781] mmcblk0boot1: mmc0:0001 8GTF4R 4.00 MiB
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.699806] mmcblk0rpmb: mmc0:0001 8GTF4R 512 KiB, chardev (246:0)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.917055] cpufreq: cpufreq_policy_online: CPU0: Running at unlisted initial frequency: 799999 kHz, changing to: 864000 kHz
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    1.919160] remoteproc remoteproc0: wcnss is available
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    2.585038] qca-ppe 3a000000.ppe: configuring for fixed/internal link mode
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    2.585104] qca-ppe 3a000000.ppe: Link is Up - 1Gbps/Full - flow control off
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    2.765398] qca-ppe 3a000000.ppe lan1 (uninitialized): PHY [90000.mdio-1:01] driver [Qualcomm QCA8075] (irq=POLL)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    2.855008] qca-ppe 3a000000.ppe lan2 (uninitialized): PHY [90000.mdio-1:02] driver [Qualcomm QCA8075] (irq=POLL)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    2.934981] qca-ppe 3a000000.ppe lan3 (uninitialized): PHY [90000.mdio-1:03] driver [Qualcomm QCA8075] (irq=POLL)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.014985] qca-ppe 3a000000.ppe wan (uninitialized): PHY [90000.mdio-1:04] driver [Qualcomm QCA8075] (irq=POLL)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.017376] qca-edma 3ab00000.edma eth0: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.024278] DSA: tree 0 setup
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.030869] clk: Disabling unused clocks
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    3.033699] check access for rdinit=/init failed: -2, ignoring
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.036250] VFS: Mounted root (squashfs filesystem) readonly on device 179:18.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.038956] Freeing unused kernel memory: 960K
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    3.045776] Run /sbin/init as init process
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    3.050043]   with arguments:
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    3.050048]     /sbin/init
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    3.050053]   with environment:
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    3.050057]     HOME=/
+[2026年11月15日 GMT+8 00:13:39] kern.debug: [    3.050062]     TERM=linux
+[2026年11月15日 GMT+8 00:13:39] user.info: [    3.287570] init: Console is alive
+[2026年11月15日 GMT+8 00:13:39] user.info: [    3.287702] init: - watchdog -
+[2026年11月15日 GMT+8 00:13:39] user.info: [    4.022677] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.062333] raid6: skipped pq benchmark and selected neonx8
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.062373] raid6: using neon recovery algorithm
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.068048] xor: measuring software checksum speed
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.072579]    8regs           :  3276 MB/sec
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.077204]    32regs          :  3285 MB/sec
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.081697]    arm64_neon      :  2997 MB/sec
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.084951] xor: using function: 32regs (3285 MB/sec)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.164529] Btrfs loaded, zoned=no, fsverity=no
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [    4.195878] gpio_button_hotplug: loading out-of-tree module taints kernel.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.213102] xhci-hcd xhci-hcd.1.auto: xHCI Host Controller
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.213154] xhci-hcd xhci-hcd.1.auto: new USB bus registered, assigned bus number 1
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.218470] xhci-hcd xhci-hcd.1.auto: hcc params 0x0220fe65 hci version 0x110 quirks 0x0000808000000010
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.225099] xhci-hcd xhci-hcd.1.auto: irq 41, io mem 0x08a00000
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.234581] xhci-hcd xhci-hcd.1.auto: xHCI Host Controller
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.240320] xhci-hcd xhci-hcd.1.auto: new USB bus registered, assigned bus number 2
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.245914] xhci-hcd xhci-hcd.1.auto: Host supports USB 3.0 SuperSpeed
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.253842] hub 1-0:1.0: USB hub found
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.260083] hub 1-0:1.0: 1 port detected
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.264036] usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.268168] hub 2-0:1.0: USB hub found
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.275930] hub 2-0:1.0: 1 port detected
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.285906] usbcore: registered new interface driver usb-storage
+[2026年11月15日 GMT+8 00:13:39] kern.info: [    4.287235] usbcore: registered new interface driver uas
+[2026年11月15日 GMT+8 00:13:39] user.info: [    4.291331] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[2026年11月15日 GMT+8 00:13:39] user.info: [    4.300566] init: - preinit -
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [   11.124435] random: crng init done
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   11.563755] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[2026年11月15日 GMT+8 00:13:39] user.info: [   16.286152] mount_root: loading kmods from internal overlay
+[2026年11月15日 GMT+8 00:13:39] user.info: [   16.303794] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[2026年11月15日 GMT+8 00:13:39] user.info: [   16.305777] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[2026年11月15日 GMT+8 00:13:39] user.info: [   16.516990] block: attempting to load /etc/config/fstab
+[2026年11月15日 GMT+8 00:13:39] user.err: [   16.520148] block: unable to load configuration (fstab: Entry not found)
+[2026年11月15日 GMT+8 00:13:39] user.err: [   16.521066] block: no usable configuration
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   16.532053] loop0: detected capacity change from 0 to 4194304
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   16.574520] loop0: detected capacity change from 4194304 to 4156800
+[2026年11月15日 GMT+8 00:13:39] user.info: [   16.584476] block: overlay filesystem in /dev/loop0 has not been formatted yet
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [   18.670294] F2FS-fs (loop0): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [   18.670552] F2FS-fs (loop0): Mounted with checkpoint version = 6eb89b81
+[2026年11月15日 GMT+8 00:13:39] user.info: [   18.686064] block: attempting to load /etc/config/fstab
+[2026年11月15日 GMT+8 00:13:39] user.err: [   18.686229] block: unable to load configuration (fstab: Entry not found)
+[2026年11月15日 GMT+8 00:13:39] user.err: [   18.690152] block: no usable configuration
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   18.703799] loop0: detected capacity change from 0 to 4194304
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   18.754448] loop0: detected capacity change from 4194304 to 4156800
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [   18.760460] F2FS-fs (loop0): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+[2026年11月15日 GMT+8 00:13:39] kern.notice: [   18.760752] F2FS-fs (loop0): Mounted with checkpoint version = 6eb89b83
+[2026年11月15日 GMT+8 00:13:39] user.info: [   18.915008] block: attempting to load /etc/config/fstab
+[2026年11月15日 GMT+8 00:13:39] user.err: [   18.915139] block: unable to load configuration (fstab: Entry not found)
+[2026年11月15日 GMT+8 00:13:39] user.err: [   18.919094] block: no usable configuration
+[2026年11月15日 GMT+8 00:13:39] user.info: [   18.927392] block: attempting to load /etc/config/fstab
+[2026年11月15日 GMT+8 00:13:39] user.err: [   18.929970] block: unable to load configuration (fstab: Entry not found)
+[2026年11月15日 GMT+8 00:13:39] user.err: [   18.935088] block: no usable configuration
+[2026年11月15日 GMT+8 00:13:39] user.info: [   18.942841] mount_root: overlay filesystem has not been fully initialized yet
+[2026年11月15日 GMT+8 00:13:39] user.info: [   18.946324] mount_root: switching to f2fs overlay
+[2026年11月15日 GMT+8 00:13:39] kern.warn: [   18.956767] overlayfs: null uuid detected in lower fs '/', falling back to xino=off,index=off,nfs_export=off.
+[2026年11月15日 GMT+8 00:13:39] user.warn: [   19.146733] urandom-seed: Seed file not found (/etc/urandom.seed)
+[2026年11月15日 GMT+8 00:13:39] user.info: [   19.245351] procd: - early -
+[2026年11月15日 GMT+8 00:13:39] user.info: [   19.245464] procd: - watchdog -
+[2026年11月15日 GMT+8 00:13:39] user.info: [   19.784544] procd: - watchdog -
+[2026年11月15日 GMT+8 00:13:39] user.info: [   19.784793] procd: - ubus -
+[2026年11月15日 GMT+8 00:13:39] user.info: [   19.938465] procd: - init -
+[2026年11月15日 GMT+8 00:13:39] user.info: [   20.403825] kmodloader: loading kernel modules from /etc/modules.d/*
+[2026年11月15日 GMT+8 00:13:39] user.info: [   20.446459] urngd: v1.0.2 started.
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.588528] tun: Universal TUN/TAP device driver, 1.6
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.601148] GACT probability on
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.602365] Mirror/redirect action on
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.610633] u32 classifier
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.610666]     input device check on
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.612235]     Actions configured
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.625287] fuse: init (API version 7.45)
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.655968] NET: Registered PF_QIPCRTR protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.661725] usbcore: registered new interface driver ums-alauda
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.662663] usbcore: registered new interface driver ums-cypress
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.667518] usbcore: registered new interface driver ums-datafab
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.673677] usbcore: registered new interface driver ums-freecom
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.679778] usbcore: registered new interface driver ums-isd200
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.685790] usbcore: registered new interface driver ums-jumpshot
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.691278] usbcore: registered new interface driver ums-karma
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.697711] usbcore: registered new interface driver ums-sddr09
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.703369] usbcore: registered new interface driver ums-sddr55
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.709225] usbcore: registered new interface driver ums-usbat
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.715925] usbcore: registered new interface driver usbserial_generic
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.720001] usbserial: USB Serial support registered for generic
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.756293] PPP generic driver version 2.4.2
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.757378] PPP MPPE Compression module registered
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.760635] NET: Registered PF_PPPOX protocol family
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.774350] usbcore: registered new interface driver qcserial
+[2026年11月15日 GMT+8 00:13:39] kern.info: [   20.774550] usbserial: USB Serial support registered for Qualcomm USB modem
+[2026年11月15日 GMT+8 00:13:39] user.info: [   20.779480] kmodloader: done loading kernel modules from /etc/modules.d/*
+[2026年11月15日 GMT+8 00:13:39] daemon.notice: procd: /etc/rc.d/S13openssl: Generating engines.cnf
+[2026年11月15日 GMT+8 00:13:39] daemon.notice: procd: /etc/rc.d/S13openssl: Generating providers.cnf
+[2026年11月15日 GMT+8 00:13:39] daemon.notice: procd: /etc/rc.d/S13openssl: Enabling legacy
+[2026年11月15日 GMT+8 00:13:39] daemon.info: router-tool[1907]: Configuration mode: ap; LAN protocol: dhcp; LAN IPv4: null
+[2026年11月15日 GMT+8 00:13:40] user.notice: dnsmasq: DNS rebinding protection is active, will discard upstream RFC1918 responses!
+[2026年11月15日 GMT+8 00:13:40] user.notice: dnsmasq: Allowing 127.0.0.0/8 responses
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:13:40] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:13:40] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月15日 GMT+8 00:13:41] daemon.notice: procd: /etc/rc.d/S19nss-wifi: /etc/rc.common: line 83: can't open /sys/bus/pci/devices/*/vendor: no such file
+[2026年11月15日 GMT+8 00:13:41] user.info: [   24.260889] kmodloader: loading kernel modules from /var/run/nss-wifi-start.lock/modules/*
+[2026年11月15日 GMT+8 00:13:41] user.info: [   24.305576] kmodloader: done loading kernel modules from /var/run/nss-wifi-start.lock/modules/*
+[2026年11月15日 GMT+8 00:13:41] kern.info: [   24.378286] Loading modules backported from Linux version v7.2-0-g8d3ae59288f1
+[2026年11月15日 GMT+8 00:13:41] kern.info: [   24.378328] Backport generated by backports.git v5.15.58-1-198-g2580fa90cb79
+[2026年11月15日 GMT+8 00:13:41] kern.info: [   24.502551] ath11k c000000.wifi: ipq6018 hw1.0
+[2026年11月15日 GMT+8 00:13:41] kern.info: [   24.502591] ath11k c000000.wifi: FW memory mode: 1
+[2026年11月15日 GMT+8 00:13:48] daemon.err: procd: Could not find firmware /lib/firmware/ath11k/IPQ6018/hw1.0/firmware-2.bin: No such file or directory
+[2026年11月15日 GMT+8 00:13:48] kern.info: [   31.732390] remoteproc remoteproc0: powering up wcnss
+[2026年11月15日 GMT+8 00:13:48] kern.info: [   31.751351] remoteproc remoteproc0: Booting fw image IPQ6018/q6_fw.mdt, size 7340
+[2026年11月15日 GMT+8 00:13:49] kern.info: [   32.533351] remoteproc remoteproc0: remote processor wcnss is now up
+[2026年11月15日 GMT+8 00:13:49] kern.info: [   32.586104] ath11k c000000.wifi: chip_id 0x0 chip_family 0x4 board_id 0xff soc_id 0xffffffff
+[2026年11月15日 GMT+8 00:13:49] kern.info: [   32.586158] ath11k c000000.wifi: fw_version 0x2c0205b4 fw_build_timestamp 2024-10-04 16:15 fw_build_id WLAN.HK.2.12-01460-QCAHKSWPL_SILICONZ-1
+[2026年11月15日 GMT+8 00:13:49] kern.info: [   32.817820] nss-wifi-drv: radio 0 rxdma id 128 base 0x78a20000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 00:13:49] kern.info: [   32.828794] nss-wifi-drv: radio 1 rxdma id 143 base 0x78c10000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.553598] nss-wifi-drv 39000000.nss: memory profile: 1024 MiB RAM, 8192 connections, 33554432 descriptor bytes
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.671034] nss-wifi-drv 39000000.nss: loaded qca-nss0-retail-12.5.bin, line 12.5, 862184 bytes at 0x0000000040000000
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.695788] nss-wifi-drv 39000000.nss: core 0 booted
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.709189] nss-wifi-drv 39000000.nss: payload pool set to 32768: 0
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.709488] nss-wifi-drv 39000000.nss: payload pool 8704 low 4352 high 32768: 0
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.852281] nss-wifi-drv 39000000.nss: packet descriptors: 8192 pages of 4096 lent: 0
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.852444] nss-wifi-drv 39000000.nss: load reports off at 1497600219 Hz: 0 ack 1
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.861815] nss-wifi-drv 39000000.nss: IPv4 connection capacity 4096 acknowledged, CE 344064 CME 1571328 bytes
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.869252] nss-wifi-drv 39000000.nss: IPv6 connection capacity 4096 acknowledged, CE 376832 CME 1571328 bytes
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.876863] nss-wifi-drv 39000000.nss: lan1: port 2 routes in the firmware
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.886839] nss-wifi-drv 39000000.nss: lan2: port 3 routes in the firmware
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.893753] nss-wifi-drv 39000000.nss: lan3: port 4 routes in the firmware
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.900492] nss-wifi-drv 39000000.nss: wan: port 5 routes in the firmware
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.912871] nss-wifi-drv 39000000.nss: wifili: txdesc 0x0000000078e40000 ext 0x0000000079500000, 6+11 pages, 2 pools, 3 tcl, 4 reo
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.913898] nss-wifi-drv 39000000.nss: wifili: tcl0 id 16 base 0x784b0000 x512  txcomp id 106 base 0x78900000 x32768 hw 0xca34910/0xca370c0  tclhw 0xca44510/0xca46000 tcle 8
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.925603] nss-wifi-drv 39000000.nss: wifili: tcl1 id 17 base 0x784b8000 x512  txcomp id 107 base 0x78b00000 x32768 hw 0xca34968/0xca370c8  tclhw 0xca44568/0xca46008 tcle 8
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.941191] nss-wifi-drv 39000000.nss: wifili: tcl2 id 18 base 0x78a08000 x512  txcomp id 108 base 0x78d00000 x32768 hw 0xca349c0/0xca370d0  tclhw 0xca445c0/0xca46010 tcle 8
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.956552] nss-wifi-drv 39000000.nss: wifili: shadow rd 0x43c25000 wr 0x43c24000 lmac from 128
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.972043] nss-wifi-drv 39000000.nss: wifili: reo0 id 0 base 0x78a80000 x2048 hw 0xca3829c/0xca3b038
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.980475] nss-wifi-drv 39000000.nss: wifili: reo1 id 1 base 0x78ac0000 x2048 hw 0xca382f4/0xca3b040
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.989919] nss-wifi-drv 39000000.nss: wifili: reo2 id 2 base 0x78c40000 x2048 hw 0xca3834c/0xca3b048
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   33.999061] nss-wifi-drv 39000000.nss: wifili: reo3 id 3 base 0x78c80000 x2048 hw 0xca383a4/0xca3b050
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   34.008265] nss-wifi-drv 39000000.nss: wifili: radio 0 rxdma id 128 base 0x78a20000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 00:13:50] kern.info: [   34.017526] nss-wifi-drv 39000000.nss: wifili: radio 1 rxdma id 143 base 0x78c10000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: vrf
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: bonding
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: 8021ad
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: 8021q
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: macvlan
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: veth
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: bridge
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: Network device
+[2026年11月15日 GMT+8 00:13:51] user.notice: : Added device handler type: tunnel
+[2026年11月15日 GMT+8 00:13:51] user.notice: smp_affinity: IRQ affinity: changed=2 failed=0 pending=0
+[2026年11月15日 GMT+8 00:13:51] daemon.notice: wpa_supplicant[2987]: Successfully initialized wpa_supplicant
+[2026年11月15日 GMT+8 00:13:51] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 00:13:51] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'wifiroam_guest' is enabled
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'wifiroam_guest' is setting up now
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'wifiroam_guest' is now up
+[2026年11月15日 GMT+8 00:13:52] cron.err: crond[3403]: crond (busybox 1.38.0) started, log level 7
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.271147] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.425877] br-lan: port 1(lan1) entered blocking state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.425917] br-lan: port 1(lan1) entered disabled state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.429951] qca-ppe 3a000000.ppe lan1: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.435191] qca-edma 3ab00000.edma eth0: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.441902] qca-ppe 3a000000.ppe lan1: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'lan' is enabled
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'wan6' is enabled
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.454288] qca-ppe 3a000000.ppe lan2: configuring for phy/psgmii link mode
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/luci-splash reload dependency on /etc/config/firewall
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/qos reload dependency on /etc/config/firewall
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/miniupnpd reload dependency on /etc/config/firewall
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.615234] br-lan: port 2(lan2) entered blocking state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.615278] br-lan: port 2(lan2) entered disabled state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.619307] qca-ppe 3a000000.ppe lan2: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.625030] qca-ppe 3a000000.ppe lan2: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.634400] qca-ppe 3a000000.ppe lan3: configuring for phy/psgmii link mode
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/odhcpd reload dependency on /etc/config/dhcp
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/dhcp reload dependency on /etc/config/network
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/network reload dependency on /etc/config/wireless
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.797647] qca-ppe 3a000000.ppe lan3: Link is Up - 100Mbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.797742] br-lan: port 3(lan3) entered blocking state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.804511] br-lan: port 3(lan3) entered disabled state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.809550] qca-ppe 3a000000.ppe lan3: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.815275] qca-ppe 3a000000.ppe lan3: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.821575] br-lan: port 3(lan3) entered blocking state
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up non-init /etc/config/fstab reload handler: /sbin/block mount
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.826640] br-lan: port 3(lan3) entered forwarding state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.835855] qca-ppe 3a000000.ppe wan: configuring for phy/psgmii link mode
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/system reload trigger for non-procd /etc/init.d/led
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/luci_statistics reload dependency on /etc/config/system
+[2026年11月15日 GMT+8 00:13:52] user.notice: ucitrack: Setting up /etc/config/dhcp reload dependency on /etc/config/system
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.997555] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   35.997728] br-lan: port 4(wan) entered blocking state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   36.004045] br-lan: port 4(wan) entered disabled state
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   36.009288] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   36.014983] qca-ppe 3a000000.ppe wan: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   36.020825] br-lan: port 4(wan) entered blocking state
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: bridge 'br-lan' link is up
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'lan' is setting up now
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'wan6' has link connectivity
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'wan6' is setting up now
+[2026年11月15日 GMT+8 00:13:52] kern.info: [   36.026031] br-lan: port 4(wan) entered forwarding state
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'loopback' is enabled
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'loopback' is setting up now
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: netifd: Interface 'loopback' is now up
+[2026年11月15日 GMT+8 00:13:52] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: Network device 'eth0' link is up
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: Network device 'lo' link is up
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: Interface 'loopback' has link connectivity
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: lan (3913): udhcpc: started, v1.38.0
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: radio0 (3869): wifi-scripts: Starting
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): Failed to send RS (Address not available)
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: lan (3913): udhcpc: broadcasting discover
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: Set new config for phy phy0:
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: Restart interface for phy phy0
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.848764] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.848813] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.853213] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.859077] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:53] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:13:53] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: Configuration file: <inline> (phy phy0) --> new PHY
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.886209] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 30, encap 2 decap 2
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.916429] nss-wifi-drv 39000000.nss: peer dc:d8:7c:20:37:6c: id 1 ast_idx 419 ast_hash 0x1a3 vdev 0
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.916849] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.924687] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 00:13:53] kern.info: [   36.931041] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: phy0-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:53] daemon.notice: hostapd: phy0-ap0: interface state COUNTRY_UPDATE->HT_SCAN
+[2026年11月15日 GMT+8 00:13:53] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: radio0 (3869): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: radio0 (3869): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: radio0 (3869): wifi-scripts: Setting antenna for 'phy0' txantenna: 4294967295, rxantenna: 4294967295
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: radio0 (3869): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: radio0 (3869): wifi-scripts: Preparing interface: phy0-ap1
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq: jail (2197) exited with exit: 0
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: wan6 (3949): Failed to send SOLICIT message to ff02::1:2 (Address not available)
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: radio1 (4610): wifi-scripts: Starting
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 172.16.10.10 -- 172.16.10.109, lease time 12h
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:13:54] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:13:54] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 00:13:54] daemon.info: procd: - init complete -
+[2026年11月15日 GMT+8 00:13:54] daemon.info: urandom_seed[4745]: Seed saved (/etc/urandom.seed)
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: Set new config for phy phy1:
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy1
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy1
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.441884] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.441934] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: wan6 (3949): br-lan: error connecting LLA socket
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 00:13:54] daemon.info: ucode[4842]: wifiroam: self: DC:D8:7C:20:37:6B ? XWRT bcast=255.255.255.255
+[2026年11月15日 GMT+8 00:13:54] daemon.info: ucode[4842]: wifiroam: discovery udp 50607 bcast=255.255.255.255
+[2026年11月15日 GMT+8 00:13:54] daemon.info: ucode[4842]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.738052] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.738095] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.742918] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.749351] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.756867] nss-wifi-drv 39000000.nss: vdev 1 on radio 0 is interface 31, encap 2 decap 2
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.766437] nss-wifi-drv 39000000.nss: peer de:d8:7c:20:37:6c: id 3 ast_idx 865 ast_hash 0x361 vdev 1
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.772041] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.778322] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.784587] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.792637] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.795671] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: bridge 'br-guest' link is up
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: netifd: Interface 'wifiroam_guest' has link connectivity
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: phy0-ap0: interface state HT_SCAN->ENABLED
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: phy0-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: Restart interface for phy phy1
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.951372] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.951417] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.955864] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: Configuration file: <inline> (phy phy1) --> new PHY
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.961580] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.971203] nss-wifi-drv 39000000.nss: vdev 2 on radio 1 is interface 32, encap 2 decap 2
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.978656] nss-wifi-drv 39000000.nss: peer dc:d8:7c:20:37:6d: id 5 ast_idx 270 ast_hash 0x10e vdev 2
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.982451] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.991298] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月15日 GMT+8 00:13:54] daemon.notice: hostapd: phy1-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 00:13:54] kern.info: [   37.999068] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: Network device 'phy1-ap0' link is up
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: radio1 (4610): wifi-scripts: Setting country code to US
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: radio1 (4610): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: radio1 (4610): wifi-scripts: Setting antenna for 'phy1' txantenna: 4294967295, rxantenna: 4294967295
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: radio1 (4610): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: radio1 (4610): wifi-scripts: Preparing interface: phy1-ap1
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.097366] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.097415] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.195372] br-guest: port 2(phy1-ap1) entered blocking state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.195422] br-guest: port 2(phy1-ap1) entered disabled state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.200153] ath11k c000000.wifi phy1-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.206401] ath11k c000000.wifi phy1-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.213851] nss-wifi-drv 39000000.nss: vdev 3 on radio 1 is interface 33, encap 2 decap 2
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.224682] nss-wifi-drv 39000000.nss: peer de:d8:7c:20:37:6d: id 7 ast_idx 972 ast_hash 0x3cc vdev 3
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.226870] br-guest: port 2(phy1-ap1) entered blocking state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.235683] br-guest: port 2(phy1-ap1) entered forwarding state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.243878] br-guest: port 2(phy1-ap1) entered disabled state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.249874] br-guest: port 2(phy1-ap1) entered blocking state
+[2026年11月15日 GMT+8 00:13:55] kern.info: [   38.252980] br-guest: port 2(phy1-ap1) entered forwarding state
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: netifd: Network device 'phy1-ap1' link is up
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: hostapd: phy1-ap0: interface state COUNTRY_UPDATE->ENABLED
+[2026年11月15日 GMT+8 00:13:55] daemon.notice: hostapd: phy1-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 00:13:55] user.notice: nss-wifi: failed to apply firewall bridge scope
+[2026年11月15日 GMT+8 00:13:56] daemon.notice: netifd: lan (3913): udhcpc: broadcasting discover
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 00:13:56] daemon.notice: netifd: lan (3913): udhcpc: broadcasting select for 192.168.10.174, server 192.168.10.1
+[2026年11月15日 GMT+8 00:13:56] daemon.notice: netifd: lan (3913): udhcpc: lease of 192.168.10.174 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 00:13:56] daemon.notice: netifd: Interface 'lan' is now up
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:13:56] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:13:56] user.notice: firewall: Reloading firewall due to ifup of lan (br-lan)
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq: jail (4717) exited with exit: 0
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 172.16.10.10 -- 172.16.10.109, lease time 12h
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 00:13:58] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月15日 GMT+8 00:13:58] user.info: : Binding to interface 'br-lan'
+[2026年11月15日 GMT+8 00:13:58] authpriv.info: dropbear[6032]: Not backgrounding
+[2026年11月15日 GMT+8 00:13:59] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:dc59::1#53
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:13:59] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:13:59] user.notice: firewall: Reloading firewall due to ifup of wan6 (br-lan)
+[2026年11月15日 GMT+8 00:14:49] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:14:49] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:14:49] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 00:14:49] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 00:14:49] daemon.info: dnsmasq: jail (5959) exited with exit: 0
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 172.16.10.10 -- 172.16.10.109, lease time 12h
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:dc59::1#53
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 00:14:50] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 00:14:51] kern.info: [   45.582683] nss-wifi-drv 39000000.nss: peer cc:4d:75:34:6b:9e: id 8 ast_idx 494 ast_hash 0x1ee vdev 2
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:14:51] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED cc:4d:75:34:6b:9e auth_alg=open
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e RADIUS: starting accounting session 603CC70EC971C8F6
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:14:51] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA e8:4a:54:2c:34:69 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:14:51] kern.info: [   45.644818] nss-wifi-drv 39000000.nss: interface 32 protects frames with 6
+[2026年11月15日 GMT+8 00:14:51] kern.info: [   45.647272] nss-wifi-drv 39000000.nss: peer e8:4a:54:2c:34:69: id 9 ast_idx 133 ast_hash 0x85 vdev 2
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA e8:4a:54:2c:34:69 IEEE 802.11: associated (aid 2)
+[2026年11月15日 GMT+8 00:14:51] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED e8:4a:54:2c:34:69 auth_alg=open
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA e8:4a:54:2c:34:69 RADIUS: starting accounting session EB02F3C244832ACB
+[2026年11月15日 GMT+8 00:14:51] daemon.info: hostapd: phy1-ap0: STA e8:4a:54:2c:34:69 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:14:51] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 00:14:52] kern.info: [   45.704858] nss-wifi-drv 39000000.nss: interface 32 protects frames with 6
+[2026年11月15日 GMT+8 00:14:53] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:14:53] daemon.info: ucode[4842]: wifiroam: self ip updated: 192.168.10.174
+[2026年11月15日 GMT+8 00:14:53] daemon.info: ucode[4842]: wifiroam: event cap_connected  - 192.168.10.1
+[2026年11月15日 GMT+8 00:14:53] daemon.info: ucode[4842]: wifiroam: link to CAP established
+[2026年11月15日 GMT+8 00:14:58] kern.info: [   52.283145] nss-wifi-drv 39000000.nss: peer cc:4d:75:fd:e8:06: id 10 ast_idx 23 ast_hash 0x17 vdev 2
+[2026年11月15日 GMT+8 00:14:58] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:14:58] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 IEEE 802.11: associated (aid 3)
+[2026年11月15日 GMT+8 00:14:58] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED cc:4d:75:fd:e8:06 auth_alg=open
+[2026年11月15日 GMT+8 00:14:58] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 RADIUS: starting accounting session A71BA28EEB6DD74F
+[2026年11月15日 GMT+8 00:14:58] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:14:58] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 00:14:58] kern.info: [   52.354905] nss-wifi-drv 39000000.nss: interface 32 protects frames with 6
+[2026年11月15日 GMT+8 00:15:03] daemon.info: ucode[4842]: wifiroam: event client_join CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 XWRT
+[2026年11月15日 GMT+8 00:15:40] authpriv.info: dispatcher.uc: luci: accepted login on / for root from 2408:825c:6c60:dc59:f54e:1c36:1b2a:72a8
+[2026年11月15日 GMT+8 00:16:40] user.notice: nss-wifi: bring-up survived; NSS data plane ready
+[2026年11月15日 GMT+8 00:17:39] kern.info: [  212.742790] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 11 ast_idx 355 ast_hash 0x163 vdev 0
+[2026年11月15日 GMT+8 00:17:39] daemon.info: hostapd: phy0-ap0: STA fc:43:45:75:32:6f IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:17:39] daemon.info: hostapd: phy0-ap0: STA fc:43:45:75:32:6f IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:17:39] daemon.notice: hostapd: phy0-ap0: AP-STA-CONNECTED fc:43:45:75:32:6f auth_alg=open
+[2026年11月15日 GMT+8 00:17:39] daemon.info: hostapd: phy0-ap0: STA fc:43:45:75:32:6f RADIUS: starting accounting session ABCAAF87861E23A4
+[2026年11月15日 GMT+8 00:17:39] daemon.info: hostapd: phy0-ap0: STA fc:43:45:75:32:6f WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:17:39] daemon.notice: hostapd: phy0-ap0: EAPOL-4WAY-HS-COMPLETED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:17:39] kern.info: [  212.883336] nss-wifi-drv 39000000.nss: interface 30 protects frames with 6
+[2026年11月15日 GMT+8 00:17:43] daemon.info: ucode[4842]: wifiroam: event client_join FC:43:45:75:32:6F FC:43:45:75:32:6F XWRT
+[2026年11月15日 GMT+8 00:17:47] daemon.notice: hostapd: phy0-ap0: AP-STA-DISCONNECTED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:17:48] kern.info: [  221.813142] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 11 released from vdev 0
+[2026年11月15日 GMT+8 00:17:48] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:17:48] kern.info: [  221.960707] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 12 ast_idx 355 ast_hash 0x163 vdev 2
+[2026年11月15日 GMT+8 00:17:48] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: associated (aid 4)
+[2026年11月15日 GMT+8 00:17:48] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED fc:43:45:75:32:6f auth_alg=open
+[2026年11月15日 GMT+8 00:17:48] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f RADIUS: starting accounting session E3137A2E5B93B98C
+[2026年11月15日 GMT+8 00:17:48] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:17:48] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:17:48] kern.info: [  222.043229] nss-wifi-drv 39000000.nss: interface 32 protects frames with 6
+[2026年11月15日 GMT+8 00:24:20] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:24:23] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:24:23] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:24:33] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:24:33] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:24:40] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:24:40] kern.info: [  633.934223] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 13 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:24:40] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:24:40] daemon.notice: hostapd: phy0-ap0: AP-STA-CONNECTED ac:36:1b:f3:15:d0 auth_alg=open
+[2026年11月15日 GMT+8 00:24:40] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 RADIUS: starting accounting session 6E03B95F2DD4B5BC
+[2026年11月15日 GMT+8 00:24:40] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:24:40] daemon.notice: hostapd: phy0-ap0: EAPOL-4WAY-HS-COMPLETED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 00:24:40] kern.info: [  633.976927] nss-wifi-drv 39000000.nss: interface 30 protects frames with 6
+[2026年11月15日 GMT+8 00:24:43] daemon.notice: netifd: Network device 'wan' link is down
+[2026年11月15日 GMT+8 00:24:43] kern.info: [  637.107237] br-lan: port 4(wan) entered disabled state
+[2026年11月15日 GMT+8 00:24:43] kern.info: [  637.126548] qca-ppe 3a000000.ppe wan: Link is Down
+[2026年11月15日 GMT+8 00:24:43] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:24:43] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: disconnected due to excessive missing ACKs
+[2026年11月15日 GMT+8 00:24:43] daemon.notice: hostapd: phy0-ap0: AP-STA-DISCONNECTED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 00:24:44] kern.info: [  637.717332] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 13 released from vdev 0
+[2026年11月15日 GMT+8 00:24:44] kern.info: [  638.149661] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 00:24:44] kern.info: [  638.149730] br-lan: port 4(wan) entered blocking state
+[2026年11月15日 GMT+8 00:24:44] kern.info: [  638.156143] br-lan: port 4(wan) entered forwarding state
+[2026年11月15日 GMT+8 00:24:44] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月15日 GMT+8 00:24:49] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:24:49] kern.info: [  643.376811] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 12 released from vdev 2
+[2026年11月15日 GMT+8 00:24:49] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:24:49] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:24:49] kern.info: [  643.636677] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 14 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:24:49] daemon.notice: hostapd: phy0-ap0: AP-STA-CONNECTED ac:36:1b:f3:15:d0 auth_alg=open
+[2026年11月15日 GMT+8 00:24:49] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 RADIUS: starting accounting session 6E03B95F2DD4B5BC
+[2026年11月15日 GMT+8 00:24:49] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:24:49] daemon.notice: hostapd: phy0-ap0: EAPOL-4WAY-HS-COMPLETED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 00:24:49] kern.info: [  643.656701] nss-wifi-drv 39000000.nss: interface 30 protects frames with 6
+[2026年11月15日 GMT+8 00:24:50] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:24:50] kern.info: [  644.440196] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 15 ast_idx 355 ast_hash 0x163 vdev 2
+[2026年11月15日 GMT+8 00:24:50] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: associated (aid 4)
+[2026年11月15日 GMT+8 00:24:50] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED fc:43:45:75:32:6f auth_alg=open
+[2026年11月15日 GMT+8 00:24:50] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f RADIUS: starting accounting session D305FF59BCFEEFDC
+[2026年11月15日 GMT+8 00:24:50] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:24:50] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:24:50] kern.info: [  644.546707] nss-wifi-drv 39000000.nss: interface 32 protects frames with 6
+[2026年11月15日 GMT+8 00:24:53] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:24:53] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:24:53] daemon.info: ucode[4842]: wifiroam: event ap_offline DC:D8:7C:54:4A:1D - XWRT
+[2026年11月15日 GMT+8 00:24:54] daemon.notice: netifd: Network device 'wan' link is down
+[2026年11月15日 GMT+8 00:24:54] kern.info: [  648.556880] br-lan: port 4(wan) entered disabled state
+[2026年11月15日 GMT+8 00:24:54] kern.info: [  648.576226] qca-ppe 3a000000.ppe wan: Link is Down
+[2026年11月15日 GMT+8 00:24:56] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:24:57] kern.info: [  651.669280] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 00:24:57] kern.info: [  651.669349] br-lan: port 4(wan) entered blocking state
+[2026年11月15日 GMT+8 00:24:57] kern.info: [  651.675760] br-lan: port 4(wan) entered forwarding state
+[2026年11月15日 GMT+8 00:24:57] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月15日 GMT+8 00:24:58] daemon.notice: hostapd: phy0-ap0: AP-STA-DISCONNECTED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 00:24:58] kern.info: [  652.126582] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 14 released from vdev 0
+[2026年11月15日 GMT+8 00:25:02] kern.info: [  656.665179] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 16 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:25:02] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:25:02] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:25:02] daemon.notice: hostapd: phy0-ap0: AP-STA-CONNECTED ac:36:1b:f3:15:d0 auth_alg=open
+[2026年11月15日 GMT+8 00:25:02] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 RADIUS: starting accounting session 95A91DF42D1D1955
+[2026年11月15日 GMT+8 00:25:02] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:25:02] daemon.notice: hostapd: phy0-ap0: EAPOL-4WAY-HS-COMPLETED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 00:25:02] kern.info: [  656.686270] nss-wifi-drv 39000000.nss: interface 30 protects frames with 6
+[2026年11月15日 GMT+8 00:25:03] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:25:04] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:25:04] kern.info: [  658.016201] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 15 released from vdev 2
+[2026年11月15日 GMT+8 00:25:04] daemon.info: hostapd: phy1-ap1: STA 4e:86:c5:dc:b5:6c IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:25:04] daemon.info: hostapd: phy1-ap1: STA 4e:86:c5:dc:b5:6c IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:25:04] daemon.notice: hostapd: phy1-ap1: AP-STA-CONNECTED 4e:86:c5:dc:b5:6c auth_alg=open
+[2026年11月15日 GMT+8 00:25:04] kern.info: [  658.178520] nss-wifi-drv 39000000.nss: peer 4e:86:c5:dc:b5:6c: id 17 ast_idx 447 ast_hash 0x1bf vdev 3
+[2026年11月15日 GMT+8 00:25:04] daemon.info: hostapd: phy1-ap1: STA 4e:86:c5:dc:b5:6c RADIUS: starting accounting session 930ACC465F75303D
+[2026年11月15日 GMT+8 00:25:06] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-guest) 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-guest) 172.16.10.96 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-guest) 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-guest) 172.16.10.96 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-guest) 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-guest) 172.16.10.96 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-guest) 172.16.10.96 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-guest) 172.16.10.96 4e:86:c5:dc:b5:6c Xiaomi-15-Pro
+[2026年11月15日 GMT+8 00:25:13] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:25:14] daemon.notice: hostapd: phy0-ap0: AP-STA-DISCONNECTED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 00:25:14] kern.info: [  668.265938] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 16 released from vdev 0
+[2026年11月15日 GMT+8 00:25:15] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:25:16] daemon.notice: netifd: Network device 'lan3' link is down
+[2026年11月15日 GMT+8 00:25:16] kern.info: [  670.226327] br-lan: port 3(lan3) entered disabled state
+[2026年11月15日 GMT+8 00:25:16] kern.info: [  670.245671] qca-ppe 3a000000.ppe lan3: Link is Down
+[2026年11月15日 GMT+8 00:25:18] kern.info: [  672.308744] qca-ppe 3a000000.ppe lan3: Link is Up - 100Mbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 00:25:18] kern.info: [  672.308811] br-lan: port 3(lan3) entered blocking state
+[2026年11月15日 GMT+8 00:25:18] kern.info: [  672.315573] br-lan: port 3(lan3) entered forwarding state
+[2026年11月15日 GMT+8 00:25:18] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月15日 GMT+8 00:25:19] kern.info: [  672.844028] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 18 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:25:19] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:25:19] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:25:22] kern.info: [  676.285978] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 18 released from vdev 0
+[2026年11月15日 GMT+8 00:25:23] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:25:24] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:25:24] daemon.notice: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: did not acknowledge authentication response
+[2026年11月15日 GMT+8 00:25:24] kern.info: [  678.480757] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 19 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:25:24] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:25:29] kern.info: [  682.715823] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 19 released from vdev 0
+[2026年11月15日 GMT+8 00:25:31] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:25:31] kern.info: [  684.927142] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 20 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:25:31] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 00:25:33] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:25:33] daemon.info: ucode[4842]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:25:34] daemon.info: ucode[4842]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:25:34] kern.info: [  688.075716] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 20 released from vdev 0
+[2026年11月15日 GMT+8 00:25:36] kern.info: [  690.152776] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 21 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 00:25:36] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:25:39] daemon.notice: hostapd: phy1-ap1: AP-STA-DISCONNECTED 4e:86:c5:dc:b5:6c
+[2026年11月15日 GMT+8 00:25:39] kern.info: [  692.925625] nss-wifi-drv 39000000.nss: peer 4e:86:c5:dc:b5:6c: id 17 released from vdev 3
+[2026年11月15日 GMT+8 00:25:39] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: deauthenticated due to local deauth request
+[2026年11月15日 GMT+8 00:25:39] kern.info: [  693.065398] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 21 released from vdev 0
+[2026年11月15日 GMT+8 00:25:40] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 00:25:40] kern.info: [  694.279939] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 22 ast_idx 355 ast_hash 0x163 vdev 2
+[2026年11月15日 GMT+8 00:25:40] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: associated (aid 4)
+[2026年11月15日 GMT+8 00:25:40] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED fc:43:45:75:32:6f auth_alg=open
+[2026年11月15日 GMT+8 00:25:40] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f RADIUS: starting accounting session 7362CC9017F1B46A
+[2026年11月15日 GMT+8 00:25:40] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 00:25:40] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:25:40] kern.info: [  694.375504] nss-wifi-drv 39000000.nss: interface 32 protects frames with 6
+[2026年11月15日 GMT+8 00:25:43] daemon.info: ucode[4842]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:25:43] daemon.info: ucode[4842]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:25:43] daemon.info: ucode[4842]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:
+[2026年11月15日 GMT+8 00:25:43] daemon.err: ucode[4842]:
+[2026年11月15日 GMT+8 00:25:45] daemon.info: ucode[14351]: wifiroam: self: DC:D8:7C:20:37:6B 192.168.10.174 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:25:45] daemon.info: ucode[14351]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:25:45] daemon.info: ucode[14351]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:25:50] daemon.info: ucode[14351]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:25:51] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 00:25:51] kern.info: [  705.255458] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 22 released from vdev 2
+[2026年11月15日 GMT+8 00:25:55] daemon.info: ucode[14351]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:25:56] daemon.info: ucode[14351]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:25:56] daemon.info: ucode[14351]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:
+[2026年11月15日 GMT+8 00:25:56] daemon.err: ucode[14351]:
+[2026年11月15日 GMT+8 00:25:58] daemon.info: ucode[14709]: wifiroam: self: DC:D8:7C:20:37:6B 192.168.10.174 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:25:58] daemon.info: ucode[14709]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:25:58] daemon.info: ucode[14709]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:26:03] daemon.info: ucode[14709]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:26:08] daemon.info: ucode[14709]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:26:08] daemon.info: ucode[14709]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:26:08] daemon.info: ucode[14709]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:
+[2026年11月15日 GMT+8 00:26:08] daemon.err: ucode[14709]:
+[2026年11月15日 GMT+8 00:26:10] daemon.info: ucode[14798]: wifiroam: self: DC:D8:7C:20:37:6B 192.168.10.174 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:26:10] daemon.info: ucode[14798]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:26:10] daemon.info: ucode[14798]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:26:15] daemon.info: ucode[14798]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:26:20] daemon.info: ucode[14798]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:26:20] daemon.info: ucode[14798]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:26:20] daemon.info: ucode[14798]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:
+[2026年11月15日 GMT+8 00:26:20] daemon.err: ucode[14798]:
+[2026年11月15日 GMT+8 00:26:22] daemon.info: ucode[14890]: wifiroam: self: DC:D8:7C:20:37:6B 192.168.10.174 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:26:22] daemon.info: ucode[14890]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:26:22] daemon.info: ucode[14890]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:26:27] daemon.info: ucode[14890]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:26:32] daemon.info: ucode[14890]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:26:33] daemon.info: ucode[14890]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:26:33] daemon.info: ucode[14890]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:
+[2026年11月15日 GMT+8 00:26:33] daemon.err: ucode[14890]:
+[2026年11月15日 GMT+8 00:26:35] daemon.info: ucode[14982]: wifiroam: self: DC:D8:7C:20:37:6B 192.168.10.174 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:26:35] daemon.info: ucode[14982]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:26:35] daemon.info: ucode[14982]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:26:40] daemon.info: ucode[14982]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:26:45] daemon.info: ucode[14982]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:26:45] daemon.info: ucode[14982]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:26:45] daemon.info: ucode[14982]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:
+[2026年11月15日 GMT+8 00:26:45] daemon.err: ucode[14982]:
+[2026年11月15日 GMT+8 00:26:45] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 6 crashes, 11 seconds since last crash
+[2026年11月15日 GMT+8 00:27:30] daemon.notice: netifd: Interface 'wan6' has lost the connection
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:27:30] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:27:31] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:dc59::1#53
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:dd20::1#53
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:27:31] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:27:32] user.notice: firewall: Reloading firewall due to ifup of wan6 (br-lan)
+[2026年11月15日 GMT+8 00:27:42] daemon.notice: netifd: Interface 'wan6' has lost the connection
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:27:42] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:dd20::1#53
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 00:27:42] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 00:27:42] user.notice: firewall: Reloading firewall due to ifup of wan6 (br-lan)
+[2026年11月15日 GMT+8 00:27:51] authpriv.info: dispatcher.uc: luci: accepted login on /admin/system/xwrt-ota for root from 192.168.10.149
+[2026年11月15日 GMT+8 00:27:59] daemon.info: ucode[17761]: wifiroam: self: DC:D8:7C:20:37:6B 192.168.10.174 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:27:59] daemon.info: ucode[17761]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 00:27:59] daemon.info: ucode[17761]: wifiroam: started role=sap
+[2026年11月15日 GMT+8 00:28:09] daemon.info: ucode[17761]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:28:10] daemon.info: ucode[17761]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 00:28:13] daemon.info: ucode[17761]: wifiroam: discovery: DC:D8:7C:54:4A:1D at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 00:28:19] daemon.info: ucode[17761]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 00:28:20] daemon.info: ucode[17761]: wifiroam: CAP auth rejected
+[2026年11月15日 GMT+8 00:28:20] daemon.info: ucode[17761]: wifiroam: CAP auth request failed
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]: Reference error: access to undeclared variable sap_disconnect
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 2911, byte 7:
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:   called from function run ([C])
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:4882:12)
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:  `                        sap_disconnect();`
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:                           ^~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:
+[2026年11月15日 GMT+8 00:28:20] daemon.err: ucode[17761]:
+[2026年11月15日 GMT+8 00:28:20] daemon.info: procd: Instance wifiroam::wifiroam s in a crash loop 7 crashes, 20 seconds since last crash
