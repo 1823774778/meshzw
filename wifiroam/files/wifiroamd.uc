@@ -62,11 +62,12 @@ const GUEST_SEC_PREFIX = "wifiroam_guest_";
 const GUEST_NFT_TABLE = "wifiroam_guest";
 const GUEST_TC_HANDLE = "57:";
 const GUEST_APPLY_TIMEOUT = 60;  // s：等待 SAP 上报新 guest_ver 的上限
+const WIFI_PUSH_GRACE = 60;      // s：同一 Wi-Fi 签名重复下发的保护间隔
 const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 28;
+const DAEMON_VERSION = 29;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -91,6 +92,7 @@ let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
 let rrm_sync_local, rrm_sync_tick;
+let wifi_sync_to;
 
 let state = {
 	cfg: {},            // uci wifiroam
@@ -745,6 +747,52 @@ function wifi_summary() {
 		unified: unified, ifaces: ifaces,
 	};
 }
+
+// CAP 自动下发用的 Wi-Fi 快照：每个频段取主 SSID/密码（与「无线设置」
+// 保存时的取值一致），排除访客和回程口，避免把回程 SSID 当主 SSID。
+function wifi_push_payload() {
+	let cur = uci.cursor();
+	cur.load("wireless");
+	let by = {};
+
+	cur.foreach("wireless", "wifi-iface", function(s) {
+		if (s[".name"] == BACKHAUL_SECTION) return;
+		if (s.wifiroam_guest == "1") return;
+		if (s.mode && s.mode != "ap") return;
+
+		let band = cur.get("wireless", s.device, "band") ?? "?";
+		let key = s.key ?? "";
+		let enc = s.encryption ?? "";
+		let it = by[band];
+		if (!it) {
+			it = by[band] = {
+				band, ssid: s.ssid ?? "", key: "",
+				open: (key == "" && (enc == "" || enc == "none")),
+			};
+		}
+		// 与 set_wifi 的 cap_keys 逻辑一致：同频段取第一个非空密码
+		if (it.key == "" && key != "") {
+			it.key = key;
+			it.open = false;
+		}
+	});
+
+	let out = [];
+	for (let band in sort(keys(by))) push(out, by[band]);
+	return out;
+}
+
+// Wi-Fi 配置签名：只包含实际会下发的字段（频段/SSID/密码/是否开放），
+// 用于主 AP 判断子 AP 是否已经同步，避免重复重启无线。
+function wifi_sig(ssids) {
+	let parts = [];
+	for (let it in ssids)
+		push(parts, sprintf("%s|%s|%s|%s", it.band, it.ssid, it.key,
+		                    it.open ? "open" : (it.key != "" ? "psk" : "none")));
+	return sha256(join("\n", parts));
+}
+
+function wifi_sig_local() { return wifi_sig(wifi_push_payload()); }
 
 // 改本机全部 AP 口的 SSID 与密码。ssids = [{ band, ssid, key }]，同频段的接口取同名同密码。
 // 某一项的 key 为空表示该频段只改名称、不动密码。无线重启放在后台：
@@ -2758,6 +2806,7 @@ function sap_rx(req) {
 					guest_roaming: true,
 					backhaul_ver: state.backhaul_ver_applied,
 					guest_ver: state.guest_ver_applied,
+					wifi_sig: wifi_sig_local(),
 				},
 				data_cb: function(m) {
 					if (m?.ok) {
@@ -2958,6 +3007,7 @@ sap_report = function() {
 				guest_roaming: true,
 				backhaul_ver: state.backhaul_ver_applied,
 				guest_ver: state.guest_ver_applied,
+				wifi_sig: wifi_sig_local(),
 				// 本机落盘的 K/V/R 生效状态，CAP 汇总后展示给用户
 				kvr: applied_kvr(current_roam_cfg()),
 			},
@@ -3076,6 +3126,7 @@ function srv_rx(conn, req) {
 			p.bh_pushing = false;
 			p.wifi_pushing = false;
 			p.guest_pushing = false;
+			p.wifi_sig = args.wifi_sig ?? null;
 			p.mac = conn.mac;
 			if (args.name) p.name = args.name;
 			p.authed = true;
@@ -3095,6 +3146,9 @@ function srv_rx(conn, req) {
 			});
 			if ((args.alias_ver ?? 0) < state.aliases.ver)
 				push_aliases_to(mn);
+			/* 先下发 Wi-Fi，再下发漫游：新 SAP 的 SSID 改名后，
+			   随后的 802.11k/v/r 才能匹配到正确的 AP 接口 */
+			wifi_sync_to(mn, p, args.wifi_sig ?? null);
 			let roam = current_roam_cfg();
 			// ver 落后或内容签名不一致都重新下发：后者用于修复历史遗留的
 			// SAP 本地配置与主 AP 不一致（例如只同步了 enabled/ver）
@@ -3113,6 +3167,7 @@ function srv_rx(conn, req) {
 				push_guest_to(mn, ga);
 			if (state.cfg.role == "cap")
 				push_offload_to(mn);
+			/* 旧版 SAP 不发送 wifi_sig，保持原有「保存 Wi-Fi 时才推送」的行为 */
 			return 0;
 		}
 		return 0;
@@ -3131,6 +3186,7 @@ function srv_rx(conn, req) {
 		p.roam_sig = args.roam_sig ?? "";
 		p.backhaul_ver = args.backhaul_ver ?? 0;
 		p.guest_ver = args.guest_ver ?? 0;
+		p.wifi_sig = args.wifi_sig ?? null;
 		/* SAP 真正应用后会带着新的 guest_ver 上报，据此确认结果 */
 		if (state.cfg.role == "cap" && state.last_guest &&
 		    p.guest_ver >= (state.last_guest.ver ?? 0)) {
@@ -3144,6 +3200,8 @@ function srv_rx(conn, req) {
 		owner_events(local_clients()); // SAP 终端表更新后立即重算归属（含跨 AP 迁移）
 		if (p.alias_ver < state.aliases.ver)
 			push_aliases_to(mn);
+		/* 同 auth：先 Wi-Fi 改名，再补发漫游配置 */
+		wifi_sync_to(mn, p, p.wifi_sig);
 		let roam = current_roam_cfg();
 		if (p.roam_ver < roam.config_ver ||
 		    (p.roam_sig != "" && !roam_sig_ok(p.roam_sig, roam)))
@@ -3384,11 +3442,13 @@ push_backhaul_to = function(mn) {
 };
 
 // 把新的 SSID / 密码（按频段）推给成员 AP（SAP 收到后改写本地 wireless 并重启无线）
-push_wifi_to = function(mn, ssids) {
+push_wifi_to = function(mn, ssids, sig) {
 	let p = state.peers[mn];
 	if (!p?.authed || !p.chan) return false;
 	if (p.wifi_pushing) return true;
 	p.wifi_pushing = true;
+	p.wifi_sig_pushed = sig ?? "";
+	p.wifi_pushed_ts = time();
 	try {
 		p.chan.defer({
 			method: "push_wifi_config",
@@ -3400,12 +3460,14 @@ push_wifi_to = function(mn, ssids) {
 			cb: function(rc) {
 				if (rc != 0) {
 					p.wifi_pushing = false;
+					p.wifi_sig_pushed = "";
 					apply_wifi_result_update(mn, false, "timeout");
 				}
 			},
 		});
 	} catch (e) {
 		p.wifi_pushing = false;
+		p.wifi_sig_pushed = "";
 		peer_link_dead(mn, "push_wifi_config");
 		return false;
 	}
@@ -3419,6 +3481,26 @@ apply_wifi_result_update = function(mn, ok, err) {
 			r.ok = ok; r.error = err;
 		}
 	}
+};
+
+// CAP：按 Wi-Fi 签名判断是否需要给某台 SAP 下发当前无线配置。
+// 同一签名在 WIFI_PUSH_GRACE 内不重复下发，避免 SAP reload 期间反复重启无线。
+wifi_sync_to = function(mn, p, reported_sig) {
+	if (state.cfg.role != "cap" || reported_sig == null) return false;
+
+	let ssids = wifi_push_payload();
+	if (!length(ssids)) return false;
+
+	let sig = wifi_sig(ssids);
+	if (reported_sig == sig) {
+		p.wifi_sig_pushed = "";
+		return false;
+	}
+	if (p.wifi_sig_pushed == sig &&
+	    time() - (p.wifi_pushed_ts ?? 0) < WIFI_PUSH_GRACE)
+		return false;
+
+	return push_wifi_to(mn, ssids, sig);
 };
 
 // 把访客网络配置推给成员 AP（SAP 收到后重建本机访客子网）
@@ -3937,6 +4019,8 @@ let api_obj = {
 			roam_rename_ssids(pairs);
 
 			let lr = apply_wifi_local(ssids);
+			// 本机落盘后的签名：SAP 应用完成并上报同一签名后不再重复下发
+			let wsig = wifi_sig_local();
 
 			let results = [ { ap: state.self.mac, name: state.self.name,
 			                 ok: lr.ok, error: lr.ok ? null : "no_ap_iface" } ];
@@ -3945,7 +4029,7 @@ let api_obj = {
 				push(results, { ap: p.mac ?? maccolon(mn),
 				                name: p.info?.name ?? p.name ?? mn,
 				                ok: null, error: "pending" });
-				push_wifi_to(mn, ssids);
+				push_wifi_to(mn, ssids, wsig);
 			}
 			state.last_wifi = { ts: time(), results: results };
 			return { ok: lr.ok, results: results };
