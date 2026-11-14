@@ -27,6 +27,7 @@ const USAGE_TABLE = "wifiroam_usage";
 const USAGE_FLUSH = 15;     // s：统计落盘的最小间隔
 const PEER_TTL = 30;        // s without hello -> offline
 const DISCOVER_TTL = 180;   // s unconfigured device stays in discover list
+const CAP_LOST_GRACE = 15;  // s：CAP 持续处于未配置/换 token 状态后，SAP 自动回到未配置
 const HELLO_INTERVAL = 5000;
 const TICK_INTERVAL = 10000;
 const USAGE_TICK = 5000;    // s：在线时长/流量采样间隔
@@ -67,7 +68,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 29;
+const DAEMON_VERSION = 30;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -88,6 +89,7 @@ let conn_seq = 0;
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
+let sap_self_reset;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
@@ -103,6 +105,7 @@ let state = {
 	aliases: { ver: 0, map: {} },
 	link: null,         // SAP: outgoing channel to CAP {sock,chan,authed}
 	cap_learned: null,  // CAP ip learned from hello
+	cap_lost_since: null, // SAP: 首次发现主 AP 丢失配置的时间
 	events: [],         // ring buffer
 	last_apply: null,   // last roam push result summary
 	last_backhaul: null, // last wireless-backhaul push result summary
@@ -227,8 +230,12 @@ function load_config() {
 		role: cur.get("wifiroam", "core", "role") ?? "unconfigured",
 		token: cur.get("wifiroam", "core", "token") ?? "",
 		cap_ip: cur.get("wifiroam", "core", "cap_ip") ?? "",
+		cap_mac: cur.get("wifiroam", "core", "cap_mac") ?? "",
 		name: cur.get("wifiroam", "core", "name") ?? "",
 	};
+	// 只有 SAP 需要记住主 AP 的 MAC；切换成 CAP 后清掉，避免误判
+	if (state.cfg.role != "sap")
+		state.cfg.cap_mac = "";
 	state.roam_ver_applied = int(cur.get("wifiroam", "roam", "config_ver") ?? "0");
 	state.backhaul_ver_applied = int(cur.get("wifiroam", "backhaul", "config_ver") ?? "0");
 	let aver = int(cur.get("wifiroam", "alias_sync", "ver") ?? "0");
@@ -241,6 +248,7 @@ function save_config() {
 	cur.set("wifiroam", "core", "role", state.cfg.role);
 	cur.set("wifiroam", "core", "token", state.cfg.token);
 	cur.set("wifiroam", "core", "cap_ip", state.cfg.cap_ip);
+	cur.set("wifiroam", "core", "cap_mac", state.cfg.cap_mac);
 	cur.set("wifiroam", "core", "name", state.cfg.name);
 	cur.commit("wifiroam");
 }
@@ -2234,6 +2242,42 @@ function send_hello() {
 	});
 }
 
+// 判断 UDP hello 是否说明「已配对的主 AP 已经丢失配置」。
+// 返回 ""（无关）、"ok"（同一网络）、"unconfigured"（主 AP 回到未配置）、
+// "token"（主 AP 换了网络令牌）。优先用持久化的 CAP MAC 识别，
+// 旧配对没有 MAC 时才退回 IP 比较。
+function cap_lost_kind(msg, mn, src, cap_mac, cap_ip, token) {
+	let cm = macnorm(cap_mac ?? "");
+	let from_cap = cm != ""
+		? (mn == cm)
+		: (cap_ip != "" && (msg.ip ?? src) == cap_ip);
+	if (!from_cap) return "";
+	if (msg.role == "unconfigured") return "unconfigured";
+	if (msg.role != "cap" || msg.thash == null) return "";
+	let my_th = substr(sha256("wifiroam:" + token), 0, 16);
+	return msg.thash == my_th ? "ok" : "token";
+}
+
+function sap_cap_lost(msg, mn, src) {
+	if (state.cfg.role != "sap") return false;
+	let cap_ip = state.cfg.cap_ip != "" ? state.cfg.cap_ip : (state.cap_learned ?? "");
+	let kind = cap_lost_kind(msg, mn, src,
+		state.cfg.cap_mac, cap_ip, state.cfg.token);
+	if (kind == "ok") {
+		state.cap_lost_since = null;
+		return false;
+	}
+	if (kind == "") return false;
+
+	/* 连续 15s 看到主 AP 处于未配置/换 token 状态才重置，
+	   避免单包丢失或主 AP 短暂重启时误把子 AP 退出组网 */
+	state.cap_lost_since ??= time();
+	if (time() - state.cap_lost_since < CAP_LOST_GRACE) return false;
+
+	sap_self_reset(kind == "unconfigured" ? "cap_unconfigured" : "cap_token_changed");
+	return true;
+}
+
 function udp_rx() {
 	while (true) {
 		let peer = {};
@@ -2245,8 +2289,30 @@ function udp_rx() {
 		let mn = macnorm(msg.mac);
 		if (length(mn) != 12 || mn == macnorm(state.self.mac)) continue;
 
+		/* SAP：主 AP 被重置/换 token 后，UDP 里能第一时间看出来，
+		   不必等 TCP 重连超时，也不会一直卡在旧的组网角色 */
+		if (sap_cap_lost(msg, mn, peer.address)) continue;
+
 		if (msg.role == "unconfigured") {
 			let dip = msg.ip ?? peer.address;
+
+			/* CAP：已配对设备重新变成未配置（重置/刷机），立即从成员列表
+			   摘掉并关掉旧连接，让它马上出现在「发现新设备」里 */
+			if (state.cfg.role == "cap") {
+				let oldp = state.peers[mn];
+				/* 刚配对的 SAP 可能还有一个未配置 UDP 包在途，
+				   认证后 5s 内不据此摘除，避免刚配对就被踢掉 */
+				let just_authed = oldp?.authed &&
+					time() - (oldp.authed_at ?? 0) < 5;
+				if (oldp && !just_authed) {
+					delete state.peers[mn];
+					if (oldp.chan) try { oldp.chan.disconnect(); } catch (e) {}
+					push_event("unpaired", msg.mac,
+						oldp.info?.name ?? oldp.name ?? "");
+					log(sprintf("peer %s reverted to unconfigured", msg.mac));
+				}
+			}
+
 			let old = state.discovered[mn];
 			if (!old || old.ip != dip)
 				log(sprintf("discovery: %s at %s name=%s",
@@ -2792,7 +2858,18 @@ function sap_rx(req) {
 
 	if (!link.authed) {
 		if (req.type == "hello") {
-			link.cap_mac = macnorm(req.args?.mac ?? "");
+			let cm = macnorm(req.args?.mac ?? "");
+			if (cm != "") {
+				link.cap_mac = cm;
+				/* 持久化主 AP MAC：重启/换 IP 后仍能识别它是否被重置。
+				   注意不要在这里清 cap_lost_since：未配置的 CAP 仍会回
+				   TCP hello，清掉会让 15s 计时永远走不完；由 UDP 的正常
+				   hello（thash 匹配）来清。 */
+				if (state.cfg.cap_mac != cm) {
+					state.cfg.cap_mac = cm;
+					save_config();
+				}
+			}
 			let digest = sha256(state.cfg.token + ":" + (req.args?.nonce ?? ""));
 			link.chan.defer({
 				method: "auth",
@@ -2931,6 +3008,9 @@ function sap_rx(req) {
 			state.cfg.role = "unconfigured";
 			state.cfg.token = "";
 			state.cfg.cap_ip = "";
+			state.cfg.cap_mac = "";
+			state.cap_lost_since = null;
+			state.cap_learned = null;
 			save_config();
 			reconfigure();
 		});
@@ -2956,6 +3036,23 @@ function sap_disconnect() {
 	state.roster = null;
 	uloop.timer(1000, rrm_sync_tick);
 }
+
+// SAP 发现已配对的主 AP 丢失配置/换了网络令牌：自动回到未配置，
+// 否则会一直以「子路由」身份重连旧 token，主 AP 也无法在发现列表里看到它。
+sap_self_reset = function(reason) {
+	if (state.cfg.role != "sap") return;
+	log("CAP " + reason + ", resetting to unconfigured");
+	push_event("unpaired", "", reason);
+	apply_roam_local({ enabled: false, ssids: [], config_ver: 0 }, []);
+	state.cfg.role = "unconfigured";
+	state.cfg.token = "";
+	state.cfg.cap_ip = "";
+	state.cfg.cap_mac = "";
+	state.cap_lost_since = null;
+	state.cap_learned = null;
+	save_config();
+	reconfigure();
+};
 
 function sap_connect(cap_ip) {
 	sap_disconnect();
@@ -3096,7 +3193,9 @@ function srv_rx(conn, req) {
 				log("join: stale nonce accepted (token ok)");
 			state.cfg.token = args.token;
 			state.cfg.cap_ip = args.cap_ip ?? "";
+			if (args.cap_mac) state.cfg.cap_mac = macnorm(args.cap_mac);
 			state.cfg.role = "sap";
+			state.cap_lost_since = null;
 			save_config();
 			enable_relay_ap_mode();
 			req.reply({ ok: true });
@@ -3130,6 +3229,7 @@ function srv_rx(conn, req) {
 			p.mac = conn.mac;
 			if (args.name) p.name = args.name;
 			p.authed = true;
+			p.authed_at = time();
 			p.last_seen = time();
 			p.chan = conn.chan;   // 存 channel 本体，conn 仅用于关闭时清理
 			p.conn = conn;
@@ -3714,10 +3814,12 @@ function factory_reset() {
 	state._guest_bridged = null;
 	state.roam_ver_applied = 0;
 	state.backhaul_ver_applied = 0;
+	state.cap_lost_since = null;
+	state.cap_learned = null;
 
 	state.cfg = {
 		enabled: true, role: "unconfigured",
-		token: "", cap_ip: "", name: "",
+		token: "", cap_ip: "", cap_mac: "", name: "",
 	};
 	save_config();
 	reconfigure();
@@ -3819,6 +3921,8 @@ let api_obj = {
 			if (r == "sap")
 				return { ok: false, error: "sap_via_pairing" };
 			state.cfg.role = r;
+			if (r != "sap") state.cfg.cap_mac = "";
+			state.cap_lost_since = null;
 			if (r == "cap") ensure_token();
 			if (r == "unconfigured") {
 				/* 主路由重置角色时通知所有在线子路由解除组网，
@@ -3836,6 +3940,8 @@ let api_obj = {
 				state.peers = {};
 				state.cfg.token = "";
 				state.cfg.cap_ip = "";
+				state.cfg.cap_mac = "";
+				state.cap_learned = null;
 			}
 			save_config();
 			reconfigure();
@@ -4206,11 +4312,14 @@ let api_obj = {
 								data: {
 									token: state.cfg.token,
 									cap_ip: state.self.ip,
+									cap_mac: state.self.mac,
 									nonce_echo: d.nonce,
 								},
 								data_cb: function(m) {
 									done = true;
 									if (m?.ok) {
+										/* 重新配对时清掉旧成员缓存，等 SAP 重新认证上报 */
+										delete state.peers[mn];
 										push_event("paired", d.mac, d.ip);
 										delete state.discovered[mn];
 									}
@@ -4624,6 +4733,7 @@ reconfigure = function() {
 	close_all_conns();
 	state.peers = {};
 	state.cap_learned = null;
+	state.cap_lost_since = null;
 	state.prev_clients = null;
 	state.wired_seen = {};
 	state.prev_owner = null;
