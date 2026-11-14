@@ -69,7 +69,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 33;
+const DAEMON_VERSION = 34;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -2712,6 +2712,13 @@ function apply_backhaul_local(bh, role) {
 	if (bh.enabled) {
 		let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
 		if (!dev) return { ok: false, error: "no_radio" };
+		/* 命名段必须先声明 uci 类型为 wifi-iface，否则 wifi reload
+		   会忽略这段，STA/AP 都不会真正创建 */
+		let sd = cur.get_all("wireless", BACKHAUL_SECTION);
+		if (sd == null || sd[".type"] != "wifi-iface") {
+			if (sd != null) cur.delete("wireless", BACKHAUL_SECTION);
+			cur.set("wireless", BACKHAUL_SECTION, "wifi-iface");
+		}
 		cur.set("wireless", BACKHAUL_SECTION, "device", dev);
 		cur.set("wireless", BACKHAUL_SECTION, "mode", role == "cap" ? "ap" : "sta");
 		cur.set("wireless", BACKHAUL_SECTION, "ssid", bh.ssid);
@@ -2765,17 +2772,20 @@ function backhaul_tick() {
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let sec = cur.get("wireless", BACKHAUL_SECTION);
+	let sdata = cur.get_all("wireless", BACKHAUL_SECTION);
+	let wtype = sdata != null ? sdata[".type"] : null;
 	let wmode = cur.get("wireless", BACKHAUL_SECTION, "mode");
 	let wssid = cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "";
 	let wkey = cur.get("wireless", BACKHAUL_SECTION, "key") ?? "";
 	/* 回程已启用但 STA 段丢失/被改坏时自动重建，否则拔掉网线后
 	   没有可启用的无线回程接口，表现就是一直不走无线 */
-	if (sec == null || wmode != "sta" || wssid != bh.ssid || wkey != bh.key) {
+	if (sec == null || wtype != "wifi-iface" || wmode != "sta" ||
+	    wssid != bh.ssid || wkey != bh.key) {
 		/* 重建会重载无线，最多 60s 一次，避免配置异常时每 10s 打断 Wi-Fi */
 		if (time() - (state._bh_rebuild_ts ?? 0) < 60) return;
 		state._bh_rebuild_ts = time();
-		log(sprintf("backhaul STA stale: sec=%s mode=%s ssid=%s/%s keylen=%d/%d ver=%d",
-			sec ?? "null", wmode ?? "null", wssid, bh.ssid,
+		log(sprintf("backhaul STA stale: sec=%s type=%s mode=%s ssid=%s/%s keylen=%d/%d ver=%d",
+			sec ?? "null", wtype ?? "null", wmode ?? "null", wssid, bh.ssid,
 			length(wkey), length(bh.key ?? ""), bh.config_ver ?? 0));
 		apply_backhaul_local(bh, "sap");
 		return;
