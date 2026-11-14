@@ -28,7 +28,7 @@ return baseclass.extend({
 	_role: null,
 
 	/* 角色变化时整页刷新：被主路由配对成子路由后，导航和页面结构
-	   需要按新角色重建；离开子路由时同理。 */
+	   需要按新角色重建；解除配对/切换主从角色时同理。 */
 	checkRole: function(role) {
 		if (!role)
 			return;
@@ -38,10 +38,8 @@ return baseclass.extend({
 		}
 		if (role == this._role)
 			return;
-		let old = this._role;
 		this._role = role;
-		if (role == 'sap' || old == 'sap')
-			window.location.reload();
+		window.location.reload();
 	},
 
 	/* 阻塞式提示：切换角色/配对会重启服务，避免用户误刷新页面 */

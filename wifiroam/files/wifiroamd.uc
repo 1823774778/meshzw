@@ -55,6 +55,7 @@ const GUEST_BRIDGE = "br-guest";
 const GUEST_ZONE = "wifiroam_guest_zone";
 const GUEST_FWD_WAN = "wifiroam_guest_fwd_wan";
 const GUEST_FWD_LAN = "wifiroam_guest_fwd_lan";
+const GUEST_ALLOW_LAN = "wifiroam_guest_allow_lan";
 const GUEST_SNAT = "wifiroam_guest_snat";
 const GUEST_IP = "172.16.10.1";
 const GUEST_NET = "172.16.10.0/24";
@@ -68,7 +69,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 31;
+const DAEMON_VERSION = 32;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -89,7 +90,7 @@ let conn_seq = 0;
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
-let sap_self_reset;
+let sap_self_reset, sap_disconnect, roam_default_init;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
@@ -1201,7 +1202,7 @@ function guest_remove_infra() {
 	});
 	fc.delete("firewall", GUEST_ZONE);
 	for (let r in [ "wifiroam_guest_dhcp", "wifiroam_guest_dns_u", "wifiroam_guest_dns_t",
-	                GUEST_FWD_WAN, GUEST_FWD_LAN, GUEST_SNAT ])
+	                GUEST_FWD_WAN, GUEST_FWD_LAN, GUEST_ALLOW_LAN, GUEST_SNAT ])
 		fc.delete("firewall", r);
 	fc.commit("firewall");
 }
@@ -1302,6 +1303,25 @@ function guest_write_infra(cfg) {
 		fc.set("firewall", GUEST_FWD_LAN, "enabled", "1");
 	} else {
 		fc.delete("firewall", GUEST_FWD_LAN);
+	}
+
+	/* 访问内网资源除了访客→lan 的转发，还要放行目的地址为内网网段的
+	   input 流量，否则访客打不开主路由 LuCI、路由器上的 Samba/NAS 等
+	   本机服务（input 默认 REJECT）。input 规则不能带 dest 区，只能
+	   用 dest_ip 限定内网地址。 */
+	let lan = cfg.allow_lan ? guest_lan_info() : null;
+	if (lan && lan.cidr != "") {
+		if (fc.get("firewall", GUEST_ALLOW_LAN) == null)
+			fc.set("firewall", GUEST_ALLOW_LAN, "rule");
+		fc.set("firewall", GUEST_ALLOW_LAN, "name", GUEST_ALLOW_LAN);
+		fc.set("firewall", GUEST_ALLOW_LAN, "src", "guest");
+		fc.set("firewall", GUEST_ALLOW_LAN, "dest_ip", lan.cidr);
+		fc.set("firewall", GUEST_ALLOW_LAN, "proto", "all");
+		fc.set("firewall", GUEST_ALLOW_LAN, "target", "ACCEPT");
+		fc.set("firewall", GUEST_ALLOW_LAN, "family", "ipv4");
+		fc.set("firewall", GUEST_ALLOW_LAN, "enabled", "1");
+	} else {
+		fc.delete("firewall", GUEST_ALLOW_LAN);
 	}
 
 	// 子AP 的“外网”其实走 lan 桥到主AP，必须放行 guest→lan 并做 SNAT，
@@ -2055,7 +2075,7 @@ function usage_apply_rules(force, set, ips, ips6, before_flush) {
 	ips6 = ips6 ?? {};
 	let parts = [];
 	for (let mn in set)
-		parts.push(mn + "=" + (ips[mn] ?? "") + "|" + (ips6[mn] ?? ""));
+		push(parts, mn + "=" + (ips[mn] ?? "") + "|" + (ips6[mn] ?? ""));
 	let key = join(",", sort(parts));
 	if (!force && state._usage_track != null && key == state._usage_track) return false;
 
@@ -2684,8 +2704,12 @@ function apply_backhaul_local(bh, role) {
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let exists = cur.get("wireless", BACKHAUL_SECTION) != null;
+	/* enabled 但 SSID/密钥缺失时不能静默删除现有 STA 并回 ok，
+	   否则上层会显示“已应用”，实际却没有任何无线回程接口 */
+	if (bh.enabled && ((bh.ssid ?? "") == "" || (bh.key ?? "") == ""))
+		return { ok: false, error: "backhaul_credentials" };
 
-	if (bh.enabled && (bh.ssid ?? "") != "" && (bh.key ?? "") != "") {
+	if (bh.enabled) {
 		let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
 		if (!dev) return { ok: false, error: "no_radio" };
 		cur.set("wireless", BACKHAUL_SECTION, "device", dev);
@@ -2732,9 +2756,20 @@ function backhaul_tick() {
 	if (state.cfg.role != "sap") return;
 	let bh = current_backhaul_cfg();
 	if (!bh.enabled) return;
+	if ((bh.ssid ?? "") == "" || (bh.key ?? "") == "") return;
 	let cur = uci.cursor();
 	cur.load("wireless");
-	if (cur.get("wireless", BACKHAUL_SECTION) == null) return;
+	let sec = cur.get("wireless", BACKHAUL_SECTION);
+	/* 回程已启用但 STA 段丢失/被改坏时自动重建，否则拔掉网线后
+	   没有可启用的无线回程接口，表现就是一直不走无线 */
+	if (sec == null ||
+	    cur.get("wireless", BACKHAUL_SECTION, "mode") != "sta" ||
+	    (cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") != bh.ssid ||
+	    (cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") != bh.key) {
+		log("backhaul STA missing or stale, rebuilding");
+		apply_backhaul_local(bh, "sap");
+		return;
+	}
 	let want = ethernet_uplink_port() ? "1" : "0";
 	if ((cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == want) return;
 	cur.set("wireless", BACKHAUL_SECTION, "disabled", want);
@@ -2901,14 +2936,20 @@ function sap_rx(req) {
 						sap_report();
 					} else {
 						log("CAP auth rejected");
-						link.chan.disconnect();
+						/* 不能在 channel 回调里直接 disconnect 自身（可能
+						   use-after-free 崩溃）；交给下一轮 uloop 处理 */
+						uloop.timer(100, function() {
+							if (state.link == link) sap_disconnect();
+						});
 					}
 				},
 				// cb 为 complete 回调（成功也触发），仅 rc != 0 表示失败/超时
 				cb: function(rc) {
 					if (rc != 0 && state.link == link) {
 						log("CAP auth request failed");
-						sap_disconnect();
+						uloop.timer(100, function() {
+							if (state.link == link) sap_disconnect();
+						});
 					}
 				},
 			});
@@ -3021,7 +3062,7 @@ function sap_rx(req) {
 	return 0;
 }
 
-function sap_disconnect() {
+sap_disconnect = function() {
 	let link = state.link;
 	if (!link) return;
 	log("link to CAP closed");
@@ -3037,7 +3078,7 @@ function sap_disconnect() {
 	state.net_names = {};
 	state.roster = null;
 	uloop.timer(1000, rrm_sync_tick);
-}
+};
 
 // SAP 发现已配对的主 AP 丢失配置/换了网络令牌：自动回到未配置，
 // 否则会一直以「子路由」身份重连旧 token，主 AP 也无法在发现列表里看到它。
@@ -3067,7 +3108,12 @@ function sap_connect(cap_ip) {
 	if (!sock) return;
 	sock.connect(addr); // nonblocking: completes via channel machinery
 	let link = { sock, authed: false, ts: time(), last_pong: time() };
-	link.chan = libubus.open_channel(sock, sap_rx, sap_disconnect);
+	link.chan = libubus.open_channel(sock, sap_rx, function() {
+		/* 通道已由 libubus 关闭：先清句柄，只做状态清理 */
+		link.chan = null;
+		link.sock = null;
+		if (state.link == link) sap_disconnect();
+	});
 	state.link = link;
 	log(sprintf("connecting to CAP %s", cap_ip));
 }
@@ -3174,8 +3220,15 @@ conn_close = function(conn) {
 	if (!conn || conn.closed) return;
 	conn.closed = true;
 	if (conn.id != null) delete active_conns[conn.id];
-	if (conn.chan) { try { conn.chan.disconnect(); } catch (e) {} }
-	if (conn.sock) { try { conn.sock.close(); } catch (e) {} }
+	/* 先摘掉句柄再关闭：disconnect 回调可能重入，对已释放的
+	   channel/socket 再次 disconnect/close 会让守护进程静默崩溃
+	   （主路由在子路由 WiFi 重载断链时反复重启就是这个问题） */
+	let ch = conn.chan;
+	conn.chan = null;
+	if (ch) { try { ch.disconnect(); } catch (e) {} }
+	let sk = conn.sock;
+	conn.sock = null;
+	if (sk) { try { sk.close(); } catch (e) {} }
 	if (conn.mac) {
 		let mn = macnorm(conn.mac);
 		let p = state.peers[mn];
@@ -3231,8 +3284,13 @@ function srv_rx(conn, req) {
 		if (req.type == "auth") {
 			let expect = sha256(state.cfg.token + ":" + conn.nonce);
 			if (state.cfg.token == "" || args.digest != expect) {
+				log(sprintf("reject auth from %s (role=%s)",
+					args.mac ?? "?", state.cfg.role));
 				req.reply({ ok: false, error: "auth" });
-				conn_close(conn);
+				/* 不能在 ubus channel 请求回调里同步关闭自身连接，
+				   先让拒绝回执发出去，下一轮 uloop 再关闭 */
+				let c = conn;
+				uloop.timer(1000, function() { conn_close(c); });
 				return 0;
 			}
 			let mn = macnorm(args.mac);
@@ -3433,7 +3491,13 @@ function srv_accept() {
 		conn.chan = libubus.open_channel(
 			cs,
 			function(req) { return srv_rx(conn, req); },
-			function() { conn_close(conn); });
+			function() {
+				/* 通道已被 libubus 关闭：清掉句柄再清理状态，
+				   避免重复 disconnect/close */
+				conn.chan = null;
+				conn.sock = null;
+				conn_close(conn);
+			});
 		conn.chan.request({
 			method: "hello",
 			data: { mac: state.self.mac, role: state.cfg.role,
@@ -4343,6 +4407,16 @@ let api_obj = {
 			sock.connect(addr);
 			let done = false;
 			let chan = null;
+			/* 不能在 channel 回调里同步 disconnect 自身（会崩溃），
+			   统一延迟到下一轮 uloop 再关闭 */
+			let close_chan = function() {
+				if (!chan) return;
+				let c = chan;
+				chan = null;
+				uloop.timer(100, function() {
+					try { c.disconnect(); } catch (e) {}
+				});
+			};
 			chan = libubus.open_channel(sock,
 				function(req2) {
 					if (req2.type == "hello" && chan) {
@@ -4363,23 +4437,22 @@ let api_obj = {
 										push_event("paired", d.mac, d.ip);
 										delete state.discovered[mn];
 									}
-									chan.disconnect();
+									close_chan();
 								},
 								cb: function(rc) {
 									// 成功时 data_cb 已处理并断开；仅失败时兜底断开
-									if (rc != 0 && chan)
-										try { chan.disconnect(); } catch (e) {}
+									if (rc != 0) close_chan();
 								},
 							});
 						} catch (e) {
-							try { chan.disconnect(); } catch (e2) {}
+							close_chan();
 						}
 					}
 					return 0;
 				},
 				function() {});
 			uloop.timer(8000, function() {
-				if (!done && chan) { try { chan.disconnect(); } catch (e) {} }
+				if (!done) close_chan();
 			});
 			return { ok: true, ip: d.ip };
 		},
@@ -4791,7 +4864,7 @@ reconfigure = function() {
 // 自动选中本机全部主网络 SSID，并按默认 k/v/r 参数下发一次。
 // 注意：ucode 的函数声明不做提升，本函数必须定义在 wifi_ifaces /
 // member_list / apply_roam_local / applied_kvr 之后。
-function roam_default_init() {
+roam_default_init = function() {
 	if (state.cfg.role != "cap") return;
 	let cur = uci.cursor();
 	cur.load("wifiroam");
@@ -4820,7 +4893,7 @@ function roam_default_init() {
 		             kvr: applied_kvr(roam) } ],
 	};
 	log(sprintf("roam defaults enabled for %d SSID(s)", length(ssids)));
-}
+};
 
 function main() {
 	srand(time());
