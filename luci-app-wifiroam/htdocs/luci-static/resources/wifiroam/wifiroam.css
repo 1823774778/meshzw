@@ -835,12 +835,24 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 .wr-dcard-actions { display: flex; gap: 0.45em; flex-wrap: wrap; }
 
-/* 网络唤醒：始终使用高亮主色，避免主题把 action 按钮渲染成灰色不可点 */
-button.wr-wake-btn,
+/* 网络唤醒：图中的黄绿色描边按钮，暗色主题下高亮，明确可点击 */
+button.wr-wake-btn {
+	background: transparent !important;
+	border: 1px solid #8aa61b !important;
+	color: #5f7a00 !important;
+	font-weight: 600;
+}
 button.wr-wake-btn:hover {
-	background: var(--wr-primary) !important;
-	border-color: var(--wr-primary) !important;
-	color: #fff !important;
+	background: rgba(154, 187, 42, 0.12) !important;
+}
+body.wr-dark button.wr-wake-btn,
+:root[data-darkmode='true'] button.wr-wake-btn {
+	border-color: #b5d334 !important;
+	color: #c7e34a !important;
+}
+body.wr-dark button.wr-wake-btn:hover,
+:root[data-darkmode='true'] button.wr-wake-btn:hover {
+	background: rgba(181, 211, 52, 0.12) !important;
 }
 button.wr-wake-btn:disabled {
 	opacity: 0.55;

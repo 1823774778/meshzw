@@ -966,7 +966,7 @@ msgid "Wireless / Wired"
 msgstr "无线 / 有线"
 
 msgid "Paused"
-msgstr "已暂停"
+msgstr "已禁用"
 
 msgid "View topology"
 msgstr "查看拓扑"
@@ -996,19 +996,19 @@ msgid "Actions"
 msgstr "操作"
 
 msgid "Pause"
-msgstr "暂停"
+msgstr "禁用"
 
 msgid "Resume"
 msgstr "恢复"
 
 msgid "Pausing..."
-msgstr "正在暂停..."
+msgstr "正在禁用..."
 
 msgid "Resuming..."
 msgstr "正在恢复..."
 
 msgid "Internet paused for this client"
-msgstr "已暂停该终端联网"
+msgstr "已禁用该终端联网"
 
 msgid "Internet restored for this client"
 msgstr "已恢复该终端联网"
@@ -1059,13 +1059,13 @@ msgid "Reset zoom"
 msgstr "重置缩放"
 
 msgid "Pause internet"
-msgstr "暂停联网"
+msgstr "禁用联网"
 
 msgid "Resume internet"
 msgstr "恢复联网"
 
 msgid "Internet paused"
-msgstr "已暂停联网"
+msgstr "联网已禁用"
 
 msgid "Internet restored"
 msgstr "已恢复联网"
@@ -1077,7 +1077,7 @@ msgid "Loading..."
 msgstr "加载中..."
 
 msgid "Only the main AP can pause clients"
-msgstr "只有主路由可以暂停终端联网"
+msgstr "只有主路由可以禁用终端联网"
 
 msgid "Classic"
 msgstr "经典"
@@ -1252,3 +1252,6 @@ msgstr "工作日"
 
 msgid "Weekend"
 msgstr "周末"
+
+msgid "Send a magic packet to the last known MAC"
+msgstr "向最后已知 MAC 发送魔术包"

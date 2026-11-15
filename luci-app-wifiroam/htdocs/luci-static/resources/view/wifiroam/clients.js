@@ -227,8 +227,7 @@ return view.extend({
 			E('div', { 'class': 'wr-card wr-card-note' }, [
 				E('div', { 'class': 'wr-card-value' },
 					shown === s.total ? _('All') : ('%d / %d'.format(shown, s.total))),
-				E('div', { 'class': 'wr-card-label' },
-					isCap ? _('Filtered') : _('Read-only on sub AP'))
+				E('div', { 'class': 'wr-card-label' }, _('Filtered'))
 			])
 		]);
 	},
@@ -244,7 +243,8 @@ return view.extend({
 
 		if (this.blocking[c.mac]) return;
 
-		if (!this.data || this.data.role !== 'cap') {
+		if (!this.data ||
+		    (this.data.role !== 'cap' && this.data.role !== 'sap')) {
 			wr.notify('warning', _('Only the main AP can pause clients'));
 			return;
 		}
@@ -516,7 +516,7 @@ return view.extend({
 
 		var blockBtn = E('button', {
 			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
-			disabled: (self.data.role !== 'cap') || !!self.blocking[c.mac],
+			disabled: !!self.blocking[c.mac],
 			click: function(ev) {
 				return self.toggleBlock(c, ev.currentTarget);
 			}
@@ -525,7 +525,7 @@ return view.extend({
 		if (self.blocking[c.mac])
 			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
 
-		var wakeBtn = (!online && c.can_wake)
+		var wakeBtn = (!online)
 			? E('button', {
 				'class': 'btn cbi-button-action wr-wake-btn',
 				disabled: !!self.waking[c.id],
@@ -577,7 +577,9 @@ return view.extend({
 			E('div', { 'class': 'wr-dcard-rows' }, rows),
 			E('div', { 'class': 'wr-dcard-actions' }, [
 				blockBtn,
-				wakeBtn ? ' ' : null, wakeBtn
+				wakeBtn ? ' ' : null, wakeBtn,
+				wakeBtn ? E('span', { 'class': 'wr-hint' },
+					_('Send a magic packet to the last known MAC')) : null
 			])
 		]);
 	},
@@ -587,7 +589,6 @@ return view.extend({
 		poll.add(L.bind(this.refresh, this), 15);
 
 		var self = this;
-		var isCap = !!(data && data.role === 'cap');
 		var apNames = this.apNames();
 
 		/* 上次筛选的 AP 已离线/被移除时回到全部，避免页面空白 */
@@ -663,10 +664,6 @@ return view.extend({
 				_('Cannot reach wifiroamd. Make sure the service is running.')));
 		}
 		else {
-			if (!isCap)
-				body.push(E('div', { 'class': 'alert-message warning' },
-					_('Clients can be paused only on the main AP. This page is read-only on a sub AP.')));
-
 			body.push(
 				E('div', { 'class': 'wr-toolbar wr-toolbar-wrap' }, [
 					search, apSel, kindSel, sortSel,

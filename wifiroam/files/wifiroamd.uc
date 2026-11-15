@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 46;
+const DAEMON_VERSION = 47;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -3982,6 +3982,16 @@ function wol_send(mn) {
 	return sent;
 }
 
+/* 唤醒入口：立即发一轮，再在 0.4s / 1.2s 各补发一轮。
+   部分网卡/交换机对单次广播不敏感，间隔重发可以显著提高成功率。 */
+function wol_wake(mn) {
+	let sent = wol_send(mn);
+	if (!sent) return 0;
+	uloop.timer(400, function() { wol_send(mn); });
+	uloop.timer(1200, function() { wol_send(mn); });
+	return sent;
+}
+
 // ---------------------------------------------------------- pin enforcement
 /* 固定 AP 的本机执行：连到非目标 AP 的终端直接断开并禁入一段时间。
    每台 AP 各自纠正直连终端，CAP 不需要跨设备下发。 */
@@ -5100,6 +5110,19 @@ function srv_rx(conn, req) {
 			req.reply({ ok: false });
 		}
 		break;
+	case "block_update": {
+		/* 子 AP 页面触发的禁用/恢复：CAP 执行 nft 规则并同步回全部子 AP */
+		if (state.cfg.role == "cap") {
+			let bmn = macnorm(args.mac ?? "");
+			if (length(bmn) == 12) {
+				acl_set(bmn, args.block ? true : false);
+				req.reply({ ok: true, blocked: args.block ? true : false });
+				break;
+			}
+		}
+		req.reply({ ok: false });
+		break;
+	}
 	case "pin_update":
 		if (state.cfg.role == "cap" &&
 		    pin_apply(args.mac, args.ap ?? "").ok) {
@@ -5706,16 +5729,33 @@ let api_obj = {
 			return { ok: true, ver: state.aliases.ver };
 		},
 	},
-	/* 暂停/恢复某个终端的所有转发流量（仅主 AP 执行）。 */
+	/* 禁用/恢复某个终端的所有转发流量（实际规则由主 AP 执行）。 */
 	set_client_block: {
 		args: { ubus_rpc_session: "", mac: "", block: false },
 		call: function(req) {
 			if (!req.args.mac) return libubus.STATUS_INVALID_ARGUMENT;
-			if (state.cfg.role != "cap")
-				return { ok: false, error: "not_cap" };
 			let mn = macnorm(req.args.mac);
 			if (length(mn) != 12) return libubus.STATUS_INVALID_ARGUMENT;
 			let on = req.args.block ? true : false;
+
+			/* 子 AP 上操作时转发给主 AP，CAP 执行后会通过 block_sync
+			   把状态广播回来，页面无需区分当前在哪台 AP */
+			if (state.cfg.role == "sap" && state.link?.authed) {
+				try {
+					state.link.chan.defer({
+						method: "block_update",
+						data: { mac: maccolon(mn), block: on },
+						data_cb: function() {}, cb: function() {},
+					});
+				} catch (e) {
+					sap_disconnect();
+					return { ok: false, error: "link_down" };
+				}
+				return { ok: true, blocked: on, forwarded: true };
+			}
+			if (state.cfg.role != "cap")
+				return { ok: false, error: "not_cap" };
+
 			acl_set(mn, on);
 			log(sprintf("client block %s -> %s", maccolon(mn), on ? "on" : "off"));
 			return { ok: true, blocked: on };
@@ -5735,7 +5775,7 @@ let api_obj = {
 			if (!d) return { ok: false, error: "unknown_device" };
 			/* 只唤醒曾经在线过的设备（历史白名单），在线设备直接拒绝 */
 			if (d.online) return { ok: false, error: "already_online" };
-			let sent = wol_send(mn);
+			let sent = wol_wake(mn);
 			if (!sent) return { ok: false, error: "send_failed" };
 			return { ok: true, sent, mac: maccolon(mn) };
 		},

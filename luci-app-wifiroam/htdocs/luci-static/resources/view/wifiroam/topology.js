@@ -1856,12 +1856,14 @@ return view.extend({
 						(n.blocked ? 'cbi-button-positive' : 'cbi-button-negative');
 					blockBtn.textContent = n.blocked
 						? _('Resume internet') : _('Pause internet');
-					blockBtn.disabled = !(self.topo && self.topo.role === 'cap');
+					blockBtn.disabled = !(self.topo &&
+						(self.topo.role === 'cap' || self.topo.role === 'sap'));
 				};
 				applyBlockText();
 
 				blockBtn.addEventListener('click', function() {
-					if (!self.topo || self.topo.role !== 'cap')
+					if (!self.topo ||
+					    (self.topo.role !== 'cap' && self.topo.role !== 'sap'))
 						return;
 
 					var want = !n.blocked;
