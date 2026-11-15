@@ -2103,18 +2103,17 @@ return view.extend({
 			}, _('Save'));
 
 			var wakeBtn = E('button', {
-				'class': 'btn cbi-button-action',
-				disabled: n.online !== false,
-				title: n.online !== false ? _('Only offline devices can be woken') : ''
+				'class': 'btn cbi-button-action'
 			}, _('Wake on LAN'));
 			wakeBtn.addEventListener('click', function() {
-				if (n.online !== false) return;
 				wakeBtn.disabled = true;
 				wr.call('wake', { mac: n.id }).then(function(res) {
 					wakeBtn.disabled = false;
 					if (res && res.ok)
 						wr.notify('success',
 							_('Magic packet sent to %s').format(n.mac || n.id));
+					else if (res && res.error === 'already_online')
+						wr.notify('info', _('Device is already online'));
 					else
 						wr.notify('danger', _('Wake failed') +
 							(res && res.error ? ': ' + res.error : ''));

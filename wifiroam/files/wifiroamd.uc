@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 44;
+const DAEMON_VERSION = 45;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -3941,7 +3941,7 @@ function wol_send(mn) {
 	for (let i = 0; i < 6; i++) pkt += chr(255);
 	for (let i = 0; i < 16; i++) pkt += raw;
 
-	let sock = null, sent = 0;
+	let sock = null;
 	try {
 		sock = socket.create(socket.AF_INET, socket.SOCK_DGRAM, 0);
 		sock.setopt(socket.SOL_SOCKET, socket.SO_BROADCAST, true);
@@ -3950,17 +3950,34 @@ function wol_send(mn) {
 	}
 	if (!sock) return 0;
 
-	let targets = [
-		{ address: "255.255.255.255", port: 9 },
-		{ address: "255.255.255.255", port: 7 },
-	];
-	/* 本机网段广播地址更容易被交换机/AP 转发（部分设备丢弃 255.255.255.255） */
-	if (state.bcast && state.bcast != "255.255.255.255")
-		push(targets, { address: state.bcast, port: 9 });
-	for (let t in targets) {
-		try { sock.send(pkt, 0, t); sent++; }
-		catch (e) { /* 单个目标失败不影响其它目标 */ }
+	/* 关键：把发送接口锁定到 LAN 桥。否则 255.255.255.255 可能按默认路由
+	   从 WAN 发出，魔术包永远到不了睡眠终端所在的局域网。 */
+	let dev = state.brdev ?? "";
+	if (dev != "") {
+		try { sock.setopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, dev); }
+		catch (e) { /* 旧版 ucode 没有该选项时仍走网段广播 */ }
 	}
+
+	/* 优先网段广播，再补全局广播；部分设备/交换机只认其中一种 */
+	let targets = [];
+	if (state.bcast && state.bcast != "255.255.255.255") {
+		push(targets, { address: state.bcast, port: 9 });
+		push(targets, { address: state.bcast, port: 7 });
+	}
+	push(targets, { address: "255.255.255.255", port: 9 });
+	push(targets, { address: "255.255.255.255", port: 7 });
+
+	/* 邻居/租约还在时再发一次单播，兼容不转发广播的交换机 */
+	let ip = parse_leases()[mn]?.ip ?? parse_neigh()[mn]?.ip ?? null;
+	if (ip) push(targets, { address: ip, port: 9 });
+
+	let sent = 0;
+	/* 魔术包本身无确认，连发 3 轮降低 UDP 丢包导致的唤醒失败 */
+	for (let round = 0; round < 3; round++)
+		for (let t in targets) {
+			try { sock.send(pkt, 0, t); sent++; }
+			catch (e) { /* 单个目标失败不影响其它目标 */ }
+		}
 	try { sock.close(); } catch (e) {}
 	return sent;
 }
