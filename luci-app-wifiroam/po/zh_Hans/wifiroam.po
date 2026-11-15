@@ -1216,3 +1216,39 @@ msgstr "对被禁止应用的终端：阻断 QUIC（UDP 443）强制回落到 TC
 
 msgid "Only offline devices can be woken"
 msgstr "只有离线设备可以唤醒"
+
+msgid "Internet Schedule"
+msgstr "上网时间"
+
+msgid "Blocked hours"
+msgstr "断网时段"
+
+msgid "Days"
+msgstr "星期"
+
+msgid "Blocked now"
+msgstr "当前已断网"
+
+msgid "Allowed now"
+msgstr "当前允许上网"
+
+msgid "No rule yet"
+msgstr "尚未设置规则"
+
+msgid "Select at least one day"
+msgstr "请至少选择一天"
+
+msgid "Configure on the main AP"
+msgstr "请在主 AP 上配置"
+
+msgid "The schedule applies to every recognized MAC address of this device."
+msgstr "该上网时间规则会应用到此设备所有已识别的 MAC 地址。"
+
+msgid "Every day"
+msgstr "每天"
+
+msgid "Weekdays"
+msgstr "工作日"
+
+msgid "Weekend"
+msgstr "周末"

@@ -729,21 +729,54 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 /* 已离线终端：卡片整体降低对比度，状态与设备页的「离线」一致 */
 .wr-dcard-off {
 	background: var(--wr-bg-2);
-	opacity: 0.9;
+}
+.wr-dcard:hover {
+	box-shadow: 0 4px 14px rgba(16, 24, 40, 0.08);
 }
 .wr-dcard-offline { color: var(--wr-fg-3); }
 .wr-dcard-offline .wr-dcard-dot { background: var(--wr-fg-3); }
+.wr-dcard-name {
+	font-size: 15px;
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.wr-dcard-edit-btn {
+	flex: none;
+	width: 26px;
+	height: 26px;
+	margin-left: 0.1em;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--wr-line);
+	border-radius: 50%;
+	background: var(--wr-bg);
+	color: var(--wr-fg-3);
+	cursor: pointer;
+	padding: 0;
+}
+.wr-dcard-edit-btn:hover {
+	color: var(--wr-primary);
+	border-color: var(--wr-primary);
+}
+.wr-dcard-pin-tag {
+	margin-top: 0.15em;
+	font-size: 11.5px;
+	color: var(--wr-primary);
+}
 .wr-dcard-head { display: flex; align-items: center; gap: 0.65em; }
 .wr-dcard-avatar {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 42px; height: 42px;
-	border-radius: 10px;
+	width: 38px; height: 38px;
+	border-radius: 50%;
 	color: #fff;
 	font-size: 16px;
 	font-weight: 700;
-	flex: 0 0 42px;
+	flex: 0 0 38px;
 }
 .wr-dcard-title-wrap { flex: 1 1 auto; min-width: 0; }
 .wr-dcard-title {
@@ -777,21 +810,20 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 .wr-dcard-paused { color: var(--wr-err); }
 .wr-dcard-paused .wr-dcard-dot { background: var(--wr-err); }
 .wr-dcard-rows {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 0.15em;
+	display: block;
+	margin-top: 0.35em;
+	border-top: 1px solid var(--wr-line-soft);
+	padding-top: 0.35em;
 	font-size: 0.86em;
-}
-@media (min-width: 560px) {
-	.wr-dcard-rows { grid-template-columns: 1fr 1fr; }
 }
 .wr-dcard-row {
 	display: flex;
 	justify-content: space-between;
-	gap: 0.6em;
+	gap: 0.9em;
 	min-width: 0;
-	padding: 0.18em 0;
-	border-bottom: 1px dashed var(--wr-line-soft);
+	padding: 0.16em 0;
+	font-size: 12.5px;
+	line-height: 1.5;
 }
 .wr-dcard-key { color: var(--wr-fg-3); white-space: nowrap; }
 .wr-dcard-val {
@@ -802,6 +834,57 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	white-space: nowrap;
 }
 .wr-dcard-actions { display: flex; gap: 0.45em; flex-wrap: wrap; }
+
+/* --------------------------------------------------- internet schedule */
+.wr-sched {
+	border-top: 1px solid var(--wr-line);
+	margin-top: 1em;
+	padding-top: 0.8em;
+}
+.wr-sched-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	margin-bottom: 0.5em;
+}
+.wr-sched-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5em 0.8em;
+	margin-bottom: 0.55em;
+}
+.wr-sched-row > label { font-size: 12.5px; color: var(--wr-fg-3); }
+.wr-sched-row input[type='time'] {
+	font-family: inherit;
+	background: var(--wr-bg);
+	color: var(--wr-fg);
+	border: 1px solid var(--wr-line);
+	border-radius: 4px;
+	padding: 0.25em 0.4em;
+}
+.wr-sched-state { font-size: 12.5px; }
+.wr-sched-state.on { color: var(--wr-err); }
+.wr-sched-state.off { color: var(--wr-ok); }
+.wr-wd { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+.wr-wd-btn {
+	min-width: 2em;
+	font-size: 12px;
+	line-height: 1.4;
+	background: var(--wr-bg-2);
+	color: var(--wr-fg-3);
+	border: 1px solid var(--wr-line);
+	border-radius: 4px;
+	cursor: pointer;
+	padding: 0.2em 0.35em;
+}
+.wr-wd-btn.active {
+	background: var(--wr-primary);
+	color: #fff;
+	border-color: var(--wr-primary);
+}
 
 @media (max-width: 720px) {
 	.wr-cards { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }

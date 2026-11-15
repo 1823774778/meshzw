@@ -1809,6 +1809,90 @@ return view.extend({
 		return box;
 	},
 
+	/* 上网时段：设备详情内按终端设置断网时间 */
+	scheduleBox: function(n) {
+		var self = this;
+		var mn = n.id || String(n.mac || '').replace(/[^0-9a-f]/gi, '').toLowerCase();
+		var requestSeq = 0;
+		var btn = E('button', { 'class': 'btn cbi-button-positive', disabled: true }, _('Save'));
+		var ctl;
+
+		function refresh() {
+			var seq = ++requestSeq;
+			return wr.safeCall('ban_list').then(function(res) {
+				if (seq !== requestSeq) return;
+				if (!res || !res.ok) {
+					ctl.setBusy(true);
+					btn.disabled = true;
+					ctl.setStatus('', _('Configure on the main AP'));
+					return;
+				}
+				ctl.setBusy(false);
+				ctl.setEnabled(res.enabled !== false);
+				var rule = null;
+				(res.items || []).forEach(function(b) {
+					var bm = String(b.mac || '').replace(/[^0-9a-f]/gi, '').toLowerCase();
+					if (bm === mn) rule = b;
+				});
+				if (rule) ctl.load(rule);
+				else {
+					ctl.clear();
+					ctl.setStatus('', _('No rule yet'));
+				}
+				btn.disabled = false;
+			});
+		}
+
+		ctl = wr.scheduleControls({
+			mac: mn,
+			loading: true,
+			enabled: false,
+			onEnable: function(on) {
+				requestSeq++;
+				ctl.setBusy(true);
+				btn.disabled = true;
+				wr.call('set_ban', { enabled: on }).then(function(res) {
+					if (res && res.ok)
+						wr.notify('success', on ? _('Enabled') : _('Disabled'));
+					else
+						wr.notify('danger', _('Failed') + ': ' +
+							((res && res.error) || 'unknown'));
+					return refresh();
+				}).catch(function() {
+					wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
+					return refresh();
+				});
+			}
+		});
+
+		btn.addEventListener('click', function() {
+			if (!ctl.read().weekdays.length) {
+				wr.notify('danger', _('Select at least one day'));
+				return;
+			}
+			requestSeq++;
+			wr.setBusy(btn, true, _('Saving...'));
+			ctl.setBusy(true);
+			ctl.save({ name: n.name || '' }).then(function(res) {
+				wr.setBusy(btn, false);
+				if (res && res.ok) wr.notify('success', _('Saved'));
+				else
+					wr.notify('danger', _('Failed') + ': ' +
+						((res && res.error) || 'unknown'));
+				return refresh();
+			}).catch(function() {
+				wr.setBusy(btn, false);
+				wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
+				return refresh();
+			});
+		});
+
+		ctl.actions.appendChild(btn);
+		ctl.setStatus('', _('Loading...'));
+		refresh();
+		return ctl.el;
+	},
+
 	openDetail: function(n) {
 		var self = this;
 		this.modalOpen = true;
@@ -1929,6 +2013,8 @@ return view.extend({
 				});
 
 				var applyBlockText = function() {
+					blockBtn.className = 'btn ' +
+						(n.blocked ? 'cbi-button-positive' : 'cbi-button-negative');
 					blockBtn.textContent = n.blocked
 						? _('Resume internet') : _('Pause internet');
 					blockBtn.disabled = !(self.topo && self.topo.role === 'cap');
@@ -2065,6 +2151,7 @@ return view.extend({
 					upSpan, downSpan
 				]) : null,
 				self.statsBox(n),
+				self.scheduleBox(n),
 				self.appctlBox(n)
 			]);
 			btns = [ E('button', {

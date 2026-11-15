@@ -10,6 +10,26 @@
 wr.useOui(oui.data);
 
 var UI_KEY = 'wr_clients_ui';
+var SVGNS = 'http://www.w3.org/2000/svg';
+
+function pencilIcon() {
+	var el = document.createElementNS(SVGNS, 'svg');
+	el.setAttribute('viewBox', '0 0 24 24');
+	el.setAttribute('width', '16');
+	el.setAttribute('height', '16');
+	el.setAttribute('fill', 'none');
+	el.setAttribute('stroke', 'currentColor');
+	el.setAttribute('stroke-width', '1.8');
+	el.setAttribute('stroke-linecap', 'round');
+	el.setAttribute('stroke-linejoin', 'round');
+	var p1 = document.createElementNS(SVGNS, 'path');
+	p1.setAttribute('d', 'M12 20h9');
+	var p2 = document.createElementNS(SVGNS, 'path');
+	p2.setAttribute('d', 'M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z');
+	el.appendChild(p1);
+	el.appendChild(p2);
+	return el;
+}
 
 function loadUi() {
 	try {
@@ -424,33 +444,24 @@ return view.extend({
 		var wifi = c.conn && c.conn.type === 'wifi';
 		var conn = c.conn || {};
 		var blocked = !!c.blocked;
-		var level = sigLevel(conn.rssi);
-		var since = (online && conn.since) ? Math.max(0, now - conn.since) : null;
 		var v = wr.vendorOf(c.mac);
 
-		var statusText = !online ? _('Offline')
-			: (blocked ? _('Paused') : (wifi ? _('Online') : _('Wired')));
-		var statusCls = !online ? ' wr-dcard-offline'
-			: (blocked ? ' wr-dcard-paused' : '');
+		/* 图三布局：头像 + 名称 + 在线徽标 + 编辑铅笔 */
+		var badge = E('span', {
+			'class': 'wr-badge' + (blocked ? '' :
+				(online ? ' wr-badge-on' : ' wr-badge-off')),
+			style: blocked ? 'background:#c62828' : null
+		}, blocked ? _('Paused') : (online ? _('Online') : _('Offline')));
 
-		var sig = wifi
-			? E('span', { 'class': 'wr-sig ' + wr.rssiClass(conn.rssi) }, [
-				E('span', { 'class': 'wr-sig-bars' },
-					[0, 1, 2, 3].map(function(i) {
-						return E('i', {
-							'class': 'wr-sig-bar' + (i < level ? ' on' : '')
-						});
-					})),
-				E('span', {}, wr.rssiText(conn.rssi))
-			])
-			: '-';
-
-		var rate = wifi
-			? E('span', { 'class': 'wr-rate-cell' }, [
-				E('span', { 'class': 'wr-dev-up' }, '↑ ' + wr.fmtRate(conn.rx_speed)),
-				E('span', { 'class': 'wr-dev-down' }, '↓ ' + wr.fmtRate(conn.tx_speed))
-			])
-			: '-';
+		var editBtn = E('button', {
+			'class': 'wr-dcard-edit-btn',
+			title: _('Edit'),
+			'aria-label': _('Edit'),
+			click: function(ev) {
+				ev.stopPropagation();
+				self.openRename(c);
+			}
+		}, [ pencilIcon() ]);
 
 		var blockBtn = E('button', {
 			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
@@ -462,11 +473,6 @@ return view.extend({
 
 		if (self.blocking[c.mac])
 			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
-
-		var editBtn = E('button', {
-			'class': 'btn cbi-button-neutral',
-			click: function() { self.openRename(c); }
-		}, _('Rename'));
 
 		var wakeBtn = (!online && c.can_wake)
 			? E('button', {
@@ -482,45 +488,42 @@ return view.extend({
 			wr.setBusy(wakeBtn, true, _('Sending...'));
 
 		var name = (c.name && c.name !== c.mac) ? c.name : (c.hostname || c.mac);
-		var sub = [];
-		if (v && v.name) sub.push(v.name);
-		if (c.hostname && c.hostname !== name) sub.push(c.hostname);
-		/* 新功能信息放在副标题，保持 r91 卡片的 7 行布局不变 */
-		if (!online && c.last_online)
-			sub.push(_('Last online') + ' ' + wr.fmtAge(c.last_online));
-		if (c.pin)
-			sub.push(_('Pinned to %s').format(c.pin_name || c.pin));
 
 		var rows = [
 			this.cardRow(_('IP Address'), c.ip || '-'),
 			this.cardRow(_('MAC Address'),
 				E('span', { 'class': 'wr-mono' }, (c.mac || '-').toUpperCase())),
+			this.cardRow(_('Vendor'), v ? v.name : '-'),
+			this.cardRow(_('Connection'), online ? wr.connText(c.conn) : '-'),
 			this.cardRow(_('Attached AP'),
 				apNames[c.ap] || c.ap_name || c.ap || '-'),
-			this.cardRow(_('Connection'), wr.connText(c.conn)),
-			this.cardRow(_('Signal'), sig),
-			this.cardRow(_('Real-time rate'), rate),
-			this.cardRow(_('Online time'),
-				since != null ? wr.fmtDur(since) : '-')
+			this.cardRow(_('Signal'), wifi ? wr.rssiText(conn.rssi) : '-'),
+			this.cardRow(_('TX Rate (uplink)'),
+				wifi ? wr.fmtRate(conn.tx_rate) : '-'),
+			this.cardRow(_('Last online'), wr.fmtTime(c.last_online),
+				c.last_online
+					? E('span', { 'class': 'wr-hint' }, ' (' + wr.fmtAge(c.last_online) + ')')
+					: null),
+			this.cardRow(_('Last offline'), online ? '-' : wr.fmtTime(c.last_offline))
 		];
 
 		return E('div', {
-			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '')
+			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '') +
+				(online ? '' : ' wr-dcard-off')
 		}, [
 			E('div', { 'class': 'wr-dcard-head' }, [
 				this.avatar(c),
 				E('div', { 'class': 'wr-dcard-title-wrap' }, [
-					E('div', { 'class': 'wr-dcard-title' }, name),
-					E('div', { 'class': 'wr-dcard-sub' }, sub.join(' · ') || '-')
+					E('div', { 'class': 'wr-dcard-name' }, name),
+					c.pin ? E('div', { 'class': 'wr-dcard-pin-tag' },
+						_('Pinned to %s').format(c.pin_name || c.pin)) : null
 				]),
-				E('span', { 'class': 'wr-dcard-status' + statusCls }, [
-					E('i', { 'class': 'wr-dcard-dot' }),
-					statusText
-				])
+				badge,
+				editBtn
 			]),
 			E('div', { 'class': 'wr-dcard-rows' }, rows),
 			E('div', { 'class': 'wr-dcard-actions' }, [
-				editBtn, ' ', blockBtn,
+				blockBtn,
 				wakeBtn ? ' ' : null, wakeBtn
 			])
 		]);

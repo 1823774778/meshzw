@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 43;
+const DAEMON_VERSION = 44;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -217,6 +217,12 @@ const BLOCK_PATH = ALIAS_DIR + "/blocked.json";
 const BLOCK_TABLE = "wifiroam_acl";
 const ACL_NFT_FILE = "/tmp/wifiroam-acl.nft";
 
+// 上网时段（定时断网）：CAP 按终端 MAC 在 forward 链丢弃，跨午夜/按星期生效
+const BAN_TABLE = "wifiroam_sched";
+const BAN_NFT_FILE = "/tmp/wifiroam-sched.nft";
+const BAN_DEFAULT_ON = "22:00";
+const BAN_DEFAULT_OFF = "07:00";
+
 // 终端历史 / 固定 AP / 唤醒
 const DEVICES_PATH = ALIAS_DIR + "/devices.json";
 const DEVICES_FLUSH = 300;  // s：历史落盘最小间隔（last_online 每 5 分钟落盘一次）
@@ -299,6 +305,7 @@ let state = {
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
 	blocked: {},        // CAP: 被暂停联网的终端 macnorm -> true
+	ban: { enabled: false, list: [], active: {}, sig: "" }, // 上网时段（定时断网）
 	usage: { day: "", online: {}, ndata: {}, ndir: {} }, // CAP: 每终端每日在线秒数 / 总流量 / 上下行
 	_usage_snap: null,  // CAP: 上次 nft counter 快照 { mac: bytes }
 	_usage_station_snap: null, // CAP: 上次站点计数快照 { mac: { rx, tx } }
@@ -2709,6 +2716,162 @@ function acl_set(mn, on) {
 	if (state.cfg.role == "cap")
 		for (let pmn, p in state.peers)
 			if (p.authed) push_blocked_to(pmn);
+}
+
+// ---------------------------------------------------- internet schedule (ban)
+// 上网时段：uci wifiroam/ban 每个终端一条（mac/name/timeon/timeoff/weekdays）。
+// weekdays 为 "1 2 3"（1=周一 … 7=周日）；timeon > timeoff 表示跨午夜。
+function ban_hm(v) {
+	let m = match("" + (v ?? ""), /^([0-9]{1,2}):([0-9]{1,2})$/);
+	if (!m) return null;
+	let h = int(m[1]), mi = int(m[2]);
+	if (h < 0 || h > 23 || mi < 0 || mi > 59) return null;
+	return h * 60 + mi;
+}
+
+function ban_hm_str(mins) {
+	let h = int(mins / 60), mi = mins % 60;
+	return sprintf("%02d:%02d", h, mi);
+}
+
+function ban_weekdays(v) {
+	let s = (type(v) == "array") ? join("", v)
+		: replace("" + (v ?? ""), /[^0-9]/g, "");
+	let out = [];
+	for (let i = 0; i < length(s); i++) {
+		let d = int(substr(s, i, 1));
+		if (d >= 1 && d <= 7 && index(out, d) < 0) push(out, d);
+	}
+	sort(out, function(a, b) { return a - b; });
+	return out;
+}
+
+function ban_read() {
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	let leases = parse_leases();
+	let list = [];
+	let seen = {};
+	cur.foreach("wifiroam", "ban", function(s) {
+		let mn = macnorm(s.mac ?? "");
+		if (length(mn) != 12 || seen[mn]) return;
+		seen[mn] = true;
+		let on = ban_hm(s.timeon), off = ban_hm(s.timeoff);
+		let days = ban_weekdays(s.weekdays);
+		let al = state.aliases.map[mn];
+		push(list, {
+			sid: s[".name"], mac: mn,
+			name: (s.name ?? "") != "" ? s.name
+				: (al?.name ?? leases[mn]?.hostname ?? ""),
+			timeon: on == null ? BAN_DEFAULT_ON : ban_hm_str(on),
+			timeoff: off == null ? BAN_DEFAULT_OFF : ban_hm_str(off),
+			weekdays: length(days) ? days : [ 1, 2, 3, 4, 5, 6, 7 ],
+		});
+	});
+	state.ban.list = list;
+	return list;
+}
+
+/* 当前是否处于断网时段；起止时间相同视为全天生效 */
+function ban_in_window(b, lt, nowmin) {
+	if (!b.weekdays || !length(b.weekdays)) return false;
+	let on = ban_hm(b.timeon), off = ban_hm(b.timeoff);
+	if (on == null || off == null) return false;
+	let wd = (lt.wday == 0) ? 7 : lt.wday;
+	if (on == off) return index(b.weekdays, wd) >= 0;
+	if (on < off)
+		return index(b.weekdays, wd) >= 0 && nowmin >= on && nowmin < off;
+	/* 跨午夜：今天已过起始时间，或昨天是起始日且还没到结束时间 */
+	let prev = (wd == 1) ? 7 : wd - 1;
+	return (index(b.weekdays, wd) >= 0 && nowmin >= on) ||
+	       (index(b.weekdays, prev) >= 0 && nowmin < off);
+}
+
+/* 同步 nft：只在生效集合变化时重建，避免每轮 tick 刷链 */
+function ban_apply(force) {
+	let macs = [], blocked = {};
+	if (state.cfg.role == "cap" && state.ban.enabled) {
+		let lt = localtime(time());
+		let nowmin = lt.hour * 60 + lt.min;
+		for (let b in ban_read()) {
+			if (!ban_in_window(b, lt, nowmin)) continue;
+			if (blocked[b.mac]) continue;
+			blocked[b.mac] = true;
+			push(macs, b.mac);
+		}
+	}
+	sort(macs);
+	state.ban.active = blocked;
+
+	/* 只有 CAP 需要这张表；角色降级为 SAP 时清掉残留规则 */
+	if (state.cfg.role != "cap") {
+		if (force || state.ban.sig != "") {
+			cmd_output(sprintf("nft delete table inet %s 2>/dev/null", BAN_TABLE));
+			state.ban.sig = "";
+		}
+		return macs;
+	}
+
+	let sig = join(",", macs);
+	if (!force && sig == state.ban.sig) return macs;
+	state.ban.sig = sig;
+
+	if (!length(macs)) {
+		cmd_output(sprintf("nft delete table inet %s 2>/dev/null", BAN_TABLE));
+		return macs;
+	}
+
+	cmd_output(sprintf("nft add table inet %s 2>/dev/null", BAN_TABLE));
+	cmd_output(sprintf(
+		"nft add chain inet %s forward '{ type filter hook forward priority 10; policy accept; }' 2>/dev/null",
+		BAN_TABLE));
+	let script = sprintf("flush chain inet %s forward\n", BAN_TABLE);
+	for (let mn in macs)
+		script += sprintf(
+			"add rule inet %s forward ether saddr %s counter drop comment \"wr-sched:%s\"\n",
+			BAN_TABLE, maccolon(mn), mn);
+	fs.writefile(BAN_NFT_FILE, script);
+	cmd_output(sprintf("nft -f %s 2>/dev/null", BAN_NFT_FILE));
+	fs.unlink(BAN_NFT_FILE);
+
+	/* 已建立的连接/卸载流：删除 conntrack，让后续报文重新命中丢弃规则 */
+	let leases = parse_leases(), neigh = parse_neigh();
+	for (let mn in macs) {
+		let ip = leases[mn]?.ip ?? neigh[mn]?.ip ?? null;
+		if (ip) cmd_output(sprintf("conntrack -D -s %s 2>/dev/null", ip));
+	}
+	log(sprintf("ban: %d device(s) blocked", length(macs)));
+	return macs;
+}
+
+function ban_rule_count() {
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	let n = 0;
+	cur.foreach("wifiroam", "ban", function() { n++; });
+	return n;
+}
+
+/* 总开关：显式配置优先；从未设置时按是否存在时段规则决定默认值 */
+function ban_reload_enabled() {
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	let v = cur.get("wifiroam", "schedule", "enabled");
+	state.ban.enabled = (v == null) ? (ban_rule_count() > 0) : (v == "1");
+	return state.ban.enabled;
+}
+
+function ban_load() {
+	ban_reload_enabled();
+	ban_apply(true);
+}
+
+function ban_tick() {
+	try {
+		ban_apply(false);
+	} catch (e) {
+		log("ban tick failed: " + e);
+	}
 }
 
 
@@ -5370,6 +5533,11 @@ function factory_reset() {
 	cur.set("wifiroam", "devices", "max", "" + DEVICES_MAX);
 	cur.set("wifiroam", "devices", "ban", "" + (PIN_BAN_MS / 1000));
 	cur.set("wifiroam", "devices", "pin_enforce", "1");
+	/* 清除所有上网时段规则与总开关 */
+	let bans = [];
+	cur.foreach("wifiroam", "ban", function(s) { push(bans, s[".name"]); });
+	for (let sid in bans) cur.delete("wifiroam", sid);
+	cur.delete("wifiroam", "schedule");
 	cur.commit("wifiroam");
 
 	/* 清除别名、流量统计和运行态 */
@@ -5383,6 +5551,8 @@ function factory_reset() {
 	state._dev_dirty = false;
 	state._dev_saved = 0;
 	state.pin_last = {};
+	state.ban = { enabled: false, list: [], active: {}, sig: "" };
+	cmd_output(sprintf("nft delete table inet %s 2>/dev/null", BAN_TABLE));
 	acl_apply();
 	state.usage = { day: "", online: {}, ndata: {}, ndir: {} };
 	state.events = [];
@@ -5616,6 +5786,109 @@ let api_obj = {
 				devices_save(true);
 			}
 			return { ok: true, removed };
+		},
+	},
+	/* 上网时段：读取全部规则 + 当前是否生效（设备详情弹窗使用） */
+	ban_list: {
+		args: { ubus_rpc_session: "" },
+		call: function(req) {
+			let lt = localtime(time());
+			let nowmin = lt.hour * 60 + lt.min;
+			let items = [];
+			for (let b in ban_read())
+				push(items, {
+					mac: b.mac, name: b.name,
+					timeon: b.timeon, timeoff: b.timeoff,
+					weekdays: b.weekdays,
+					active: state.ban.enabled && ban_in_window(b, lt, nowmin),
+				});
+			return {
+				ok: state.cfg.role == "cap",
+				error: state.cfg.role == "cap" ? "" : "not_cap",
+				enabled: state.ban.enabled,
+				items,
+				blocked: keys(state.ban.active),
+			};
+		},
+	},
+	/* 上网时段总开关 */
+	set_ban: {
+		args: { ubus_rpc_session: "", enabled: false },
+		call: function(req) {
+			if (state.cfg.role != "cap") return { ok: false, error: "not_cap" };
+			let on = req.args.enabled ? true : false;
+			let cur = uci.cursor();
+			cur.load("wifiroam");
+			if (cur.get("wifiroam", "schedule") == null)
+				cur.set("wifiroam", "schedule", "schedule");
+			cur.set("wifiroam", "schedule", "enabled", on ? "1" : "0");
+			cur.commit("wifiroam");
+			state.ban.enabled = on;
+			ban_apply(true);
+			return { ok: true, enabled: on };
+		},
+	},
+	/* 保存某终端的上网时段 */
+	ban_set: {
+		args: { ubus_rpc_session: "", mac: "", name: "",
+		        timeon: "", timeoff: "", weekdays: "" },
+		call: function(req) {
+			if (state.cfg.role != "cap") return { ok: false, error: "not_cap" };
+			let a = req.args;
+			let mn = macnorm(a.mac ?? "");
+			if (length(mn) != 12) return { ok: false, error: "invalid_mac" };
+			let on = ban_hm(a.timeon), off = ban_hm(a.timeoff);
+			if (on == null || off == null) return { ok: false, error: "invalid_time" };
+			let days = ban_weekdays(a.weekdays);
+			if (!length(days)) return { ok: false, error: "invalid_weekdays" };
+			let name = a.name ?? "";
+			if (name == "")
+				name = state.aliases.map[mn]?.name ?? state.devices[mn]?.hostname ?? "";
+
+			let cur = uci.cursor();
+			cur.load("wifiroam");
+			let sid = null, old = [];
+			cur.foreach("wifiroam", "ban", function(s) {
+				if (macnorm(s.mac ?? "") == mn) {
+					if (!sid) sid = s[".name"];
+					push(old, s[".name"]);
+				}
+			});
+			if (!sid) sid = cur.add("wifiroam", "ban");
+			cur.set("wifiroam", sid, "mac", mn);
+			cur.set("wifiroam", sid, "name", name);
+			cur.set("wifiroam", sid, "timeon", ban_hm_str(on));
+			cur.set("wifiroam", sid, "timeoff", ban_hm_str(off));
+			cur.set("wifiroam", sid, "weekdays", join(" ", days));
+			for (let id in old)
+				if (id != sid) cur.delete("wifiroam", id);
+			cur.commit("wifiroam");
+
+			/* 首次保存时段时总开关默认开启（显式关闭的保持关闭） */
+			ban_reload_enabled();
+			ban_apply(true);
+			return { ok: true, mac: mn, blocked: !!state.ban.active[mn] };
+		},
+	},
+	/* 删除某终端的上网时段 */
+	ban_del: {
+		args: { ubus_rpc_session: "", mac: "" },
+		call: function(req) {
+			if (state.cfg.role != "cap") return { ok: false, error: "not_cap" };
+			let mn = macnorm(req.args.mac ?? "");
+			let cur = uci.cursor();
+			cur.load("wifiroam");
+			let old = [];
+			cur.foreach("wifiroam", "ban", function(s) {
+				if (macnorm(s.mac ?? "") == mn) push(old, s[".name"]);
+			});
+			if (!length(old)) return { ok: false, error: "not_found" };
+			for (let sid in old) cur.delete("wifiroam", sid);
+			cur.commit("wifiroam");
+			/* 删掉最后一个时段后，未显式配置的总开关回到默认关闭 */
+			ban_reload_enabled();
+			ban_apply(true);
+			return { ok: true };
 		},
 	},
 	reset: {
@@ -6647,6 +6920,7 @@ function main() {
 	devices_load();
 	usage_load();
 	acl_load();
+	ban_load();
 	detect_self();
 	ensure_token();
 	// 首次启用插件：按默认设置开启漫游（自动选中本机 SSID）
@@ -6679,6 +6953,7 @@ function main() {
 	uloop.interval(STEER_TICK, steer_tick);
 	uloop.interval(TICK_INTERVAL, devices_tick);
 	uloop.interval(TICK_INTERVAL, pin_tick);
+	uloop.interval(TICK_INTERVAL, ban_tick);
 	uloop.interval(RRM_SYNC_INTERVAL, rrm_sync_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
 	uloop.interval(USAGE_TICK, usage_tick);

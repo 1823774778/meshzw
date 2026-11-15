@@ -23,7 +23,7 @@ return baseclass.extend({
 		return E([]);
 	},
 
-	CSS_VER: '20261115f',
+	CSS_VER: '20261116a',
 
 	_role: null,
 
@@ -176,6 +176,193 @@ return baseclass.extend({
 	inlineStatus: function(kind, text) {
 		var cls = { ok: 'wr-apply-ok', fail: 'wr-apply-fail', pending: 'wr-apply-pending' }[kind];
 		return E('span', { 'class': cls || '' }, text);
+	},
+
+	/* ------------------------------------------------ 上网时段（定时断网） */
+	WD_SHORT: [ '一', '二', '三', '四', '五', '六', '日' ],
+
+	weekdayText: function(days) {
+		days = days || [];
+		if (days.length === 7) return _('Every day');
+		if (days.length === 0) return '-';
+		var key = days.slice().sort(function(a, b) { return a - b; }).join(',');
+		if (key === '1,2,3,4,5') return _('Weekdays');
+		if (key === '6,7') return _('Weekend');
+		return days.map(function(d) {
+			return this.WD_SHORT[d - 1] || d;
+		}, this).join(' ');
+	},
+
+	weekdayPicker: function(selected) {
+		var sel = (selected || []).slice();
+		var el = E('span', { 'class': 'wr-wd' });
+		var self = this;
+
+		this.WD_SHORT.forEach(function(lbl, i) {
+			var d = i + 1;
+			var btn = E('button', {
+				type: 'button',
+				'class': 'wr-wd-btn' + (sel.indexOf(d) >= 0 ? ' active' : ''),
+				click: function() {
+					var k = sel.indexOf(d);
+					if (k >= 0) sel.splice(k, 1);
+					else sel.push(d);
+					btn.classList.toggle('active', k < 0);
+				}
+			}, lbl);
+			el.appendChild(btn);
+		});
+
+		return {
+			el: el,
+			value: function() {
+				return sel.slice().sort(function(a, b) { return a - b; });
+			},
+			set: function(days) {
+				sel = (days || []).slice();
+				Array.prototype.forEach.call(el.children, function(b, i) {
+					b.classList.toggle('active', sel.indexOf(i + 1) >= 0);
+				});
+			}
+		};
+	},
+
+	/* 上网时段编辑器：设备详情弹窗复用 */
+	scheduleControls: function(opts) {
+		opts = opts || {};
+		var self = this;
+		var mac = String(opts.mac || '').replace(/[^0-9a-f]/gi, '').toLowerCase();
+		var devSel = null;
+		if (!mac && opts.devices) {
+			devSel = E('select', { 'class': 'cbi-input-select' },
+				opts.devices.map(function(d) {
+					return E('option', { value: d.mac }, d.name || d.mac);
+				}));
+		}
+
+		var onIn = E('input', { type: 'time', value: '22:00' });
+		var offIn = E('input', { type: 'time', value: '07:00' });
+		var wd = this.weekdayPicker([ 1, 2, 3, 4, 5, 6, 7 ]);
+		var stateEl = E('span', { 'class': 'wr-sched-state' });
+		var actions = E('div', { 'class': 'wr-sched-row' });
+		var currentRule = null;
+		var globalEnabled = opts.enabled !== false;
+
+		function currentMac() {
+			return devSel ? devSel.value || '' : mac;
+		}
+
+		var enableCb = E('input', {
+			type: 'checkbox', 'class': 'wr-switch-input',
+			change: function(ev) {
+				if (typeof opts.onEnable === 'function')
+					opts.onEnable(ev.target.checked, ev.target);
+			}
+		});
+		enableCb.checked = globalEnabled;
+		enableCb.disabled = opts.loading === true;
+
+		function showActive(rule) {
+			currentRule = rule;
+			stateEl.className = 'wr-sched-state';
+			stateEl.textContent = '';
+			if (!globalEnabled) {
+				stateEl.textContent = _('Disabled');
+				return;
+			}
+			if (!rule) return;
+			stateEl.classList.add(rule.active ? 'on' : 'off');
+			stateEl.textContent = rule.active ? _('Blocked now') : _('Allowed now');
+		}
+
+		var el = E('div', { 'class': 'wr-sched' }, [
+			E('div', { 'class': 'wr-sched-head' }, [
+				E('b', {}, _('Internet Schedule')),
+				E('label', { 'class': 'wr-appctl-switch' },
+					[ enableCb, ' ' + _('Enable') ])
+			]),
+			devSel ? E('div', { 'class': 'wr-sched-row' },
+				[ E('label', {}, _('Device')), devSel ]) : '',
+			E('div', { 'class': 'wr-sched-row' }, [
+				E('label', {}, _('Blocked hours')),
+				onIn, E('span', {}, '—'), offIn
+			]),
+			E('div', { 'class': 'wr-sched-row' },
+				[ E('label', {}, _('Days')), wd.el ]),
+			E('div', { 'class': 'wr-sched-row' }, [ stateEl ]),
+			E('div', { 'class': 'wr-hint' },
+				_('The schedule applies to every recognized MAC address of this device.')),
+			actions
+		]);
+
+		var ctl = {
+			el: el,
+			actions: actions,
+			mac: currentMac,
+			read: function() {
+				return {
+					mac: currentMac(),
+					timeon: onIn.value || '22:00',
+					timeoff: offIn.value || '07:00',
+					weekdays: wd.value().join(' ')
+				};
+			},
+			load: function(rule) {
+				rule = rule || {};
+				if (rule.mac && devSel) {
+					var have = false;
+					Array.prototype.forEach.call(devSel.options, function(o) {
+						if (o.value === rule.mac) have = true;
+					});
+					if (!have)
+						devSel.appendChild(E('option', { value: rule.mac },
+							rule.name || rule.mac));
+					devSel.value = rule.mac;
+					devSel.disabled = true;
+				}
+				onIn.value = rule.timeon || '22:00';
+				offIn.value = rule.timeoff || '07:00';
+				wd.set(rule.weekdays || [ 1, 2, 3, 4, 5, 6, 7 ]);
+				showActive(rule);
+			},
+			clear: function() {
+				if (devSel) devSel.disabled = false;
+				onIn.value = '22:00';
+				offIn.value = '07:00';
+				wd.set([ 1, 2, 3, 4, 5, 6, 7 ]);
+				showActive(null);
+			},
+			setEnabled: function(on) {
+				on = !!on;
+				var changed = (globalEnabled !== on);
+				globalEnabled = on;
+				enableCb.checked = on;
+				if (!changed) return;
+				showActive(currentRule);
+				if (on && !currentRule) stateEl.textContent = _('No rule yet');
+			},
+			setBusy: function(on) {
+				enableCb.disabled = !!on;
+			},
+			setStatus: function(kind, text) {
+				if (!globalEnabled) {
+					stateEl.className = 'wr-sched-state';
+					stateEl.textContent = _('Disabled');
+					return;
+				}
+				stateEl.className = 'wr-sched-state' + (kind ? ' ' + kind : '');
+				stateEl.textContent = text || '';
+			},
+			save: function(extra) {
+				var d = ctl.read();
+				if (extra) for (var k in extra) d[k] = extra[k];
+				return self.call('ban_set', d);
+			},
+			remove: function() {
+				return self.call('ban_del', { mac: currentMac() });
+			}
+		};
+		return ctl;
 	},
 
 	fmtBand: function(b) {
