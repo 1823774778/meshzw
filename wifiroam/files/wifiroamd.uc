@@ -219,7 +219,7 @@ const ACL_NFT_FILE = "/tmp/wifiroam-acl.nft";
 
 // 终端历史 / 固定 AP / 唤醒
 const DEVICES_PATH = ALIAS_DIR + "/devices.json";
-const DEVICES_FLUSH = 30;   // s：历史落盘最小间隔
+const DEVICES_FLUSH = 300;  // s：历史落盘最小间隔（last_online 每 5 分钟落盘一次）
 const DEVICES_MAX = 200;    // 条数上限
 const PIN_KICK_COOLDOWN = 30; // s：同一终端两次固定 AP 纠正的最小间隔
 const PIN_BAN_MS = 120000;    // ms：踢回目标 AP 时禁止立即重连的时间
@@ -291,7 +291,6 @@ let state = {
 	devices: {},        // macnorm -> 终端历史（在线/离线、首次/最后在线）
 	_dev_dirty: false,
 	_dev_saved: 0,
-	_dev_tick_ts: 0,
 	pin_last: {},       // macnorm -> 上次固定 AP 纠正时间
 	bss_list: null,     // SAP: CAP 下发的全网络 BSS 列表
 	_bss_cache: null,   // CAP: 全网络 BSS 列表缓存
@@ -3638,7 +3637,6 @@ function devices_tick() {
 
 /* 设备页数据：历史记录 + 本轮在线信息合并，在线优先、最近在线靠前 */
 function device_history_view() {
-	state._dev_tick_ts = time();
 	let live = devices_tick_impl();
 	let now = time();
 	let out = [];
