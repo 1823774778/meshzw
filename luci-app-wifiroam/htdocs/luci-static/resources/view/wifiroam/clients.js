@@ -62,6 +62,11 @@ return view.extend({
 		this.filterKind = ui.kind || '';
 		this.sortBy = ui.sort || 'name';
 
+		if (['', 'wifi', 'wired'].indexOf(this.filterKind) < 0)
+			this.filterKind = '';
+		if (['name', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
+			this.sortBy = 'name';
+
 		return wr.safeCall('topology');
 	},
 
@@ -407,6 +412,12 @@ return view.extend({
 		var apNames = wr.apNameMap(nodes);
 		var self = this;
 		var isCap = !!(data && data.role === 'cap');
+
+		/* 上次筛选的 AP 已离线/被移除时回到全部，避免页面空白 */
+		if (this.filterAp && !apNames[this.filterAp]) {
+			this.filterAp = '';
+			this.saveUi();
+		}
 
 		var search = E('input', {
 			type: 'text', 'class': 'cbi-input-text wr-search',
