@@ -1,0 +1,1000 @@
+[2026年11月15日 GMT+8 14:03:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:04:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:06:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:07:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:08:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:10:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:11:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:12:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:14:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:15:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:16:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:18:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:20:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:21:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:23:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:24:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:25:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:27:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:28:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:29:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:31:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:32:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:33:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:35:03] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.181 64:31:72:42:4a:d2
+[2026年11月15日 GMT+8 14:35:03] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.181 64:31:72:42:4a:d2
+[2026年11月15日 GMT+8 14:35:03] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 14:35:03] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 14:35:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:36:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:37:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:40:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:41:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:42:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:44:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:45:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:46:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:48:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:49:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:50:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:52:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:53:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:54:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:56:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:57:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 14:59:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:01:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:02:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:03:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:05:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:06:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:07:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:09:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:10:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:11:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:13:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:14:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:15:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:17:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:19:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:20:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:21:51] authpriv.info: dispatcher.uc: luci: accepted login on / for root from 192.168.10.227
+[2026年11月15日 GMT+8 15:22:04] daemon.info: ucode[4699]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.174 name=XWRT
+[2026年11月15日 GMT+8 15:22:04] daemon.info: ucode[4699]: wifiroam: discovery: DC:D8:7C:5B:79:70 at 192.168.10.112 name=XWRT
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:22:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:22:07] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e xiaomi-airc-h09h00_mibt6B9E
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:22:08] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:22:08] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:22:08] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:22:08] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月15日 GMT+8 15:22:08] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:22:08] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:23:14] daemon.info: ucode[22141]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT
+[2026年11月15日 GMT+8 15:23:14] daemon.info: ucode[22141]: wifiroam: started role=unconfigured
+[2026年11月15日 GMT+8 15:23:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:24:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:24:46] daemon.info: ucode[22141]: wifiroam: generated new network token
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]: Reference error: access to undeclared variable roam_default_init
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 4558, byte 20:
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:   called from function run ([C])
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:5495:12)
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:  `            if (r == "cap") roam_default_init();`
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:                               ^~~~~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:
+[2026年11月15日 GMT+8 15:24:46] daemon.err: ucode[22141]:
+[2026年11月15日 GMT+8 15:24:51] daemon.info: ucode[23532]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT
+[2026年11月15日 GMT+8 15:24:51] daemon.info: ucode[23532]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 15:24:51] daemon.info: ucode[23532]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 15:25:02] daemon.info: ucode[23532]: wifiroam: generated new network token
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]: Reference error: access to undeclared variable roam_default_init
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]: In [anonymous function](), file /usr/share/wifiroam/wifiroamd.uc, line 4558, byte 20:
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:   called from function run ([C])
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:   called from anonymous function (/usr/share/wifiroam/wifiroamd.uc:5495:12)
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:   (1 tail call frames omitted)
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:  `            if (r == "cap") roam_default_init();`
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:                               ^~~~~~~~~~~~~~~~~~~~
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:
+[2026年11月15日 GMT+8 15:25:02] daemon.err: ucode[23532]:
+[2026年11月15日 GMT+8 15:25:07] daemon.info: ucode[26523]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT
+[2026年11月15日 GMT+8 15:25:07] daemon.info: ucode[26523]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 15:25:07] daemon.info: ucode[26523]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 15:25:51] daemon.info: ucode[26523]: wifiroam: event paired DC:D8:7C:20:37:6B - 192.168.10.174
+[2026年11月15日 GMT+8 15:25:56] daemon.info: ucode[29564]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT
+[2026年11月15日 GMT+8 15:25:56] daemon.info: ucode[29564]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 15:25:56] daemon.info: ucode[29564]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 15:25:59] daemon.info: ucode[29564]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 15:26:01] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:26:01] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:26:01] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:26:01] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:26:01] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:26:01] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:26:02] daemon.info: ucode[29564]: wifiroam: event paired DC:D8:7C:5B:79:70 - 192.168.10.112
+[2026年11月15日 GMT+8 15:26:02] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:26:02] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:26:02] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:26:02] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:26:02] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:26:02] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:26:07] daemon.info: ucode[29747]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT
+[2026年11月15日 GMT+8 15:26:07] daemon.info: ucode[29747]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 15:26:07] daemon.info: ucode[29747]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 15:26:07] daemon.info: ucode[29747]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 15:26:09] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:26:09] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:26:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:26:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:26:09] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:26:09] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:26:09] daemon.info: ucode[29747]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 15:26:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:26:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:26:10] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:26:10] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:26:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:26:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:26:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:26:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:26:11] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:26:11] kern.info: [42881.724961] nss-wifi-drv 39000000.nss: peer cc:4d:75:fd:e8:06: id 16 ast_idx 23 ast_hash 0x17 vdev 3
+[2026年11月15日 GMT+8 15:26:11] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 15:26:11] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED cc:4d:75:fd:e8:06 auth_alg=open
+[2026年11月15日 GMT+8 15:26:11] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 RADIUS: starting accounting session 84EAB3584E2F97F9
+[2026年11月15日 GMT+8 15:26:11] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:fd:e8:06 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:26:11] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:26:11] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:26:11] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:26:11] kern.info: [42881.779219] nss-wifi-drv 39000000.nss: interface 34 protects frames with 6
+[2026年11月15日 GMT+8 15:26:11] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:26:11] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月15日 GMT+8 15:26:11] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:26:11] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:26:14] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:26:14] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e IEEE 802.11: associated (aid 3)
+[2026年11月15日 GMT+8 15:26:14] kern.info: [42884.631898] nss-wifi-drv 39000000.nss: peer cc:4d:75:34:6b:9e: id 17 ast_idx 494 ast_hash 0x1ee vdev 3
+[2026年11月15日 GMT+8 15:26:14] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED cc:4d:75:34:6b:9e auth_alg=open
+[2026年11月15日 GMT+8 15:26:14] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e RADIUS: starting accounting session CB57532B1238F41A
+[2026年11月15日 GMT+8 15:26:14] daemon.info: hostapd: phy1-ap0: STA cc:4d:75:34:6b:9e WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:26:14] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:26:14] kern.info: [42884.729128] nss-wifi-drv 39000000.nss: interface 34 protects frames with 6
+[2026年11月15日 GMT+8 15:26:14] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:26:14] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:26:14] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:26:14] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e xiaomi-airc-h09h00_mibt6B9E
+[2026年11月15日 GMT+8 15:26:14] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:26:14] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:26:17] daemon.info: ucode[29747]: wifiroam: event roam_move CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT → XWRT
+[2026年11月15日 GMT+8 15:26:17] daemon.info: ucode[29747]: wifiroam: event roam_move CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 XWRT → XWRT
+[2026年11月15日 GMT+8 15:26:17] daemon.info: ucode[29747]: wifiroam: event client_leave CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 XWRT
+[2026年11月15日 GMT+8 15:26:17] daemon.info: ucode[29747]: wifiroam: event client_leave CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT
+[2026年11月15日 GMT+8 15:26:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:27:19] daemon.info: ucode[29747]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 15:27:21] daemon.info: ucode[29747]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 15:27:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:27:30] daemon.err: ucode[29747]: nfq_unbind_pf v4: Invalid argument
+[2026年11月15日 GMT+8 15:27:30] daemon.err: ucode[29747]: nfq_bind_pf v4: Invalid argument
+[2026年11月15日 GMT+8 15:27:30] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 15:27:30] daemon.info: dnsmasq: jail (9955) exited with exit: 0
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 172.16.10.10 -- 172.16.10.109, lease time 12h
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 192.168.10.100 -- 192.168.10.249, lease time 12h
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using nameserver 221.7.128.68#53
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using nameserver 221.7.136.68#53
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using nameserver 2408:8001:4000:9000:221:7:128:68#53
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using nameserver 2408:8001:4010:9000:221:7:136:68#53
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月15日 GMT+8 15:27:34] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 15:27:34] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:27:34] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:28:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:30:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: offline.specialcdnstatus.com
+[2026年11月15日 GMT+8 15:30:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:31:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:32:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:32:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: tiktok-row.net
+[2026年11月15日 GMT+8 15:34:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:35:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:36:29] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 15:36:29] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.227 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月15日 GMT+8 15:36:29] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:36:29] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:36:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:38:30] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:38:30] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:38:30] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:30] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:30] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:38:30] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:38:30] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:38:30] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:38:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 15:38:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 15:38:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:38:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:38:33] kern.info: [43623.962064] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 18 ast_idx 0 ast_hash 0x0 vdev 2
+[2026年11月15日 GMT+8 15:38:33] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:38:33] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 15:38:33] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:20:37:6c auth_alg=open
+[2026年11月15日 GMT+8 15:38:33] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c RADIUS: starting accounting session 9E388CBBC98768A4
+[2026年11月15日 GMT+8 15:38:33] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:38:33] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 15:38:33] kern.info: [43624.034172] nss-wifi-drv 39000000.nss: interface 33 protects frames with 6
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:38:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 15:38:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 15:38:41] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43631.994338] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 19 ast_idx 575 ast_hash 0x23f vdev 2
+[2026年11月15日 GMT+8 15:38:41] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: associated (aid 2)
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:5b:79:71 auth_alg=open
+[2026年11月15日 GMT+8 15:38:41] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 RADIUS: starting accounting session 6D781FB8E40CED71
+[2026年11月15日 GMT+8 15:38:41] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43632.063994] nss-wifi-drv 39000000.nss: interface 33 protects frames with 6
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] qcom-wcss-secure-pil cd00000.remoteproc: fatal error received:
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] QC Image Version: QC_IMAGE_VERSION_STRING=WLAN.HK.2.12-01460-QCAHKSWPL_SILICONZ-1
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] Image Variant : IMAGE_VARIANT_STRING=6018.wlanfw.evalQ
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790]
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] wal_ast.c:2291 Assertion 0 failedparam0 :zero, param1 :zero, param2 :zero.
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] Thread ID      : 0x0000006b  Thread name    : WLAN RT0  Process ID     : 0
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] Register:
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] SP : 0x4ba92890
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] FP : 0x4ba92898
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] PC : 0x4ac07f9c
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] SSR : 0x00000008
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] BADVA : 0x00020000
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] LR : 0x4ac07738
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790]
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] Stack Dump
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] from : 0x4ba92890
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790] to   : 0x4ba92fd8
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.272790]
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.319206] remoteproc remoteproc0: crash detected in wcnss: type fatal error
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.319212] remoteproc remoteproc0: handling crash #1 in wcnss
+[2026年11月15日 GMT+8 15:38:41] kern.err: [43632.348388] remoteproc remoteproc0: recovering wcnss
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43632.379842] remoteproc remoteproc0: stopped remote processor wcnss
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.694268] remoteproc remoteproc0: remote processor wcnss is now up
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.746427] ath11k c000000.wifi: chip_id 0x0 chip_family 0x4 board_id 0xff soc_id 0xffffffff
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.746480] ath11k c000000.wifi: fw_version 0x2c0205b4 fw_build_timestamp 2024-10-04 16:15 fw_build_id WLAN.HK.2.12-01460-QCAHKSWPL_SILICONZ-1
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.823769] nss-wifi-drv 39000000.nss: peer dc:d8:7c:54:4a:1e: id 1 released from vdev 0
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.863761] nss-wifi-drv 39000000.nss: peer de:d8:7c:54:4a:1e: id 3 released from vdev 1
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.883801] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 5 released from vdev 2
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.883887] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 18 released from vdev 2
+[2026年11月15日 GMT+8 15:38:42] kern.err: [43632.891153] nss-wifi-drv 39000000.nss: interface 203 type 7 refused: 55
+[2026年11月15日 GMT+8 15:38:42] kern.warn: [43632.899138] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: delete failed: -71, record kept
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.943754] nss-wifi-drv 39000000.nss: peer dc:d8:7c:54:4a:1f: id 7 released from vdev 3
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.943927] nss-wifi-drv 39000000.nss: peer cc:4d:75:fd:e8:06: id 16 released from vdev 3
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.951019] nss-wifi-drv 39000000.nss: peer e8:4a:54:2c:34:69: id 15 released from vdev 3
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43632.959247] nss-wifi-drv 39000000.nss: peer cc:4d:75:34:6b:9e: id 17 released from vdev 3
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.003793] nss-wifi-drv 39000000.nss: peer de:d8:7c:54:4a:1f: id 9 released from vdev 4
+[2026年11月15日 GMT+8 15:38:42] kern.err: [43633.004051] nss-wifi-drv 39000000.nss: interface 203 type 7 refused: 55
+[2026年11月15日 GMT+8 15:38:42] kern.warn: [43633.011016] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: delete failed: -71, record kept
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.027691] nss-wifi-drv 39000000.nss: wifili 203: stopped, reset rc 0
+[2026年11月15日 GMT+8 15:38:42] kern.warn: [43633.167683] ath11k c000000.wifi: failed to process regulatory info -22
+[2026年11月15日 GMT+8 15:38:42] kern.warn: [43633.167869] ath11k c000000.wifi: failed to process regulatory info -22
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.187357] nss-wifi-drv: radio 0 rxdma id 128 base 0xf4ed0000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.198279] nss-wifi-drv: radio 1 rxdma id 143 base 0xf54b0000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.201885] nss-wifi-drv 39000000.nss: wifili: txdesc 0x00000000f79c0000 ext 0x00000000f80c0000, 6+11 pages, 2 pools, 3 tcl, 4 reo
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.206880] nss-wifi-drv 39000000.nss: wifili: tcl0 id 16 base 0xf49e8000 x512  txcomp id 106 base 0xf5300000 x32768 hw 0xca34910/0xca370c0  tclhw 0xca44510/0xca46000 tcle 8
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.218419] nss-wifi-drv 39000000.nss: wifili: tcl1 id 17 base 0xf49f0000 x512  txcomp id 107 base 0xf5500000 x32768 hw 0xca34968/0xca370c8  tclhw 0xca44568/0xca46008 tcle 8
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.233962] nss-wifi-drv 39000000.nss: wifili: tcl2 id 18 base 0xf49f8000 x512  txcomp id 108 base 0xf5700000 x32768 hw 0xca349c0/0xca370d0  tclhw 0xca445c0/0xca46010 tcle 8
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.249408] nss-wifi-drv 39000000.nss: wifili: shadow rd 0x43e8f000 wr 0x43e8e000 lmac from 128
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.264852] nss-wifi-drv 39000000.nss: wifili: reo0 id 0 base 0xf5480000 x2048 hw 0xca3829c/0xca3b038
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.273337] nss-wifi-drv 39000000.nss: wifili: reo1 id 1 base 0xf54c0000 x2048 hw 0xca382f4/0xca3b040
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.282726] nss-wifi-drv 39000000.nss: wifili: reo2 id 2 base 0xf5640000 x2048 hw 0xca3834c/0xca3b048
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.291923] nss-wifi-drv 39000000.nss: wifili: reo3 id 3 base 0xf5680000 x2048 hw 0xca383a4/0xca3b050
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.301121] nss-wifi-drv 39000000.nss: wifili: radio 0 rxdma id 128 base 0xf4ed0000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.310326] nss-wifi-drv 39000000.nss: wifili: radio 1 rxdma id 143 base 0xf54b0000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.339238] nss-wifi-drv 39000000.nss: Wi-Fi data plane resume: 0
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.353701] ieee80211 phy0: Hardware restart was requested
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.354398] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 41, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.362191] nss-wifi-drv 39000000.nss: peer dc:d8:7c:54:4a:1e: id 1 ast_idx 130 ast_hash 0x82 vdev 0
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.367000] nss-wifi-drv 39000000.nss: vdev 1 on radio 0 is interface 42, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.376199] nss-wifi-drv 39000000.nss: peer de:d8:7c:54:4a:1e: id 3 ast_idx 576 ast_hash 0x240 vdev 1
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.384241] nss-wifi-drv 39000000.nss: vdev 2 on radio 0 is interface 43, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.393434] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 5 ast_idx 289 ast_hash 0x121 vdev 2
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.401000] ieee80211 phy1: Hardware restart was requested
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.520084] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 6 ast_idx 0 ast_hash 0x0 vdev 2
+[2026年11月15日 GMT+8 15:38:42] kern.err: [43633.521918] nss-wifi-drv 39000000.nss: interface 203 type 7 refused: 26
+[2026年11月15日 GMT+8 15:38:42] kern.warn: [43633.527963] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: delete failed: -71, record kept
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.534698] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 7 ast_idx 575 ast_hash 0x23f vdev 2
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.545721] nss-wifi-drv 39000000.nss: interface 43 protects frames with 6
+[2026年11月15日 GMT+8 15:38:42] kern.info: [43633.552633] nss-wifi-drv 39000000.nss: interface 43 protects frames with 6
+[2026年11月15日 GMT+8 15:38:42] kern.warn: [43633.559236] ath11k c000000.wifi: pdev 1 successfully recovered
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.566907] nss-wifi-drv 39000000.nss: vdev 3 on radio 1 is interface 44, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.573475] nss-wifi-drv 39000000.nss: peer dc:d8:7c:54:4a:1f: id 9 ast_idx 47 ast_hash 0x2f vdev 3
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.580820] nss-wifi-drv 39000000.nss: vdev 4 on radio 1 is interface 45, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.590189] nss-wifi-drv 39000000.nss: peer de:d8:7c:54:4a:1f: id 11 ast_idx 749 ast_hash 0x2ed vdev 4
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.676839] nss-wifi-drv 39000000.nss: peer e8:4a:54:2c:34:69: id 12 ast_idx 133 ast_hash 0x85 vdev 3
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.679023] nss-wifi-drv 39000000.nss: peer cc:4d:75:fd:e8:06: id 13 ast_idx 23 ast_hash 0x17 vdev 3
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.687426] nss-wifi-drv 39000000.nss: peer cc:4d:75:34:6b:9e: id 14 ast_idx 494 ast_hash 0x1ee vdev 3
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.696699] nss-wifi-drv 39000000.nss: interface 44 protects frames with 6
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.703700] nss-wifi-drv 39000000.nss: interface 44 protects frames with 6
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.710525] nss-wifi-drv 39000000.nss: interface 44 protects frames with 6
+[2026年11月15日 GMT+8 15:38:43] kern.warn: [43633.717231] ath11k c000000.wifi: pdev 2 successfully recovered
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: phy0-ap2: AP-STA-DISCONNECTED da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43633.904220] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 7 released from vdev 2
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: phy0-ap2: AP-STA-DISCONNECTED da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43634.044254] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 6 released from vdev 2
+[2026年11月15日 GMT+8 15:38:43] user.notice: nss-wifi: renewed AP sessions on phy0 after firmware recovery
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43634.303939] nss-wifi-drv 39000000.nss: peer cc:4d:75:34:6b:9e: id 14 released from vdev 3
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43634.443954] nss-wifi-drv 39000000.nss: peer cc:4d:75:fd:e8:06: id 13 released from vdev 3
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43634.583924] nss-wifi-drv 39000000.nss: peer e8:4a:54:2c:34:69: id 12 released from vdev 3
+[2026年11月15日 GMT+8 15:38:44] user.notice: nss-wifi: renewed AP sessions on phy1 after firmware recovery
+[2026年11月15日 GMT+8 15:38:44] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43635.228072] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 15 ast_idx 0 ast_hash 0x0 vdev 2
+[2026年11月15日 GMT+8 15:38:44] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 15:38:44] kern.err: [43635.265267] nss-wifi-drv 39000000.nss: interface 203 type 7 refused: 26
+[2026年11月15日 GMT+8 15:38:44] kern.warn: [43635.265320] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: delete failed: -71, record kept
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43635.271126] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 16 ast_idx 575 ast_hash 0x23f vdev 2
+[2026年11月15日 GMT+8 15:38:44] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:38:44] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: associated (aid 2)
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:20:37:6c auth_alg=open
+[2026年11月15日 GMT+8 15:38:45] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c RADIUS: starting accounting session 28BA74EACE3A4D7E
+[2026年11月15日 GMT+8 15:38:45] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43635.903994] nss-wifi-drv 39000000.nss: interface 43 protects frames with 6
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:5b:79:71 auth_alg=open
+[2026年11月15日 GMT+8 15:38:45] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 RADIUS: starting accounting session BEF24245F934A788
+[2026年11月15日 GMT+8 15:38:45] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43635.943993] nss-wifi-drv 39000000.nss: interface 43 protects frames with 6
+[2026年11月15日 GMT+8 15:38:46] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 15:38:46] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 15:38:46] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 15:38:46] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.227 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月15日 GMT+8 15:38:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:38:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:38:47] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:38:47] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:38:47] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月15日 GMT+8 15:38:47] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e xiaomi-airc-h09h00_mibt6B9E
+[2026年11月15日 GMT+8 15:38:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:48] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 15:38:48] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 15:38:48] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月15日 GMT+8 15:38:48] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.137 e8:4a:54:2c:34:69 xiaomi-airc-h09r00_mibt3469
+[2026年11月15日 GMT+8 15:38:48] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:38:48] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 15:38:50] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:38:50] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:38:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月15日 GMT+8 15:38:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月15日 GMT+8 15:38:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 15:38:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:40:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:41:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:43:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:43:48] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 15:43:50] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 15:44:05] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 15:44:05] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: disassociated due to inactivity
+[2026年11月15日 GMT+8 15:44:06] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+[2026年11月15日 GMT+8 15:44:06] kern.info: [43957.437498] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 8 released from vdev 0
+[2026年11月15日 GMT+8 15:44:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:45:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.831164] nss-wifi-drv 39000000.nss: interface 203 type 31 refused: 75
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.831404] nss-wifi-drv 39000000.nss: interface 203 type 14 refused: 57
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44039.836999] ath11k c000000.wifi: WDS a2:ea:74:20:21:e5 peer da:d8:7c:5b:79:71 update failed: -71
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.843835] nss-wifi-drv 39000000.nss: interface 203 type 31 refused: 75
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.852585] nss-wifi-drv 39000000.nss: interface 203 type 14 refused: 57
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44039.859110] ath11k c000000.wifi: WDS a2:ea:74:20:21:e5 peer da:d8:7c:20:37:6c update failed: -71
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.865974] nss-wifi-drv 39000000.nss: interface 203 type 31 refused: 75
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.874725] nss-wifi-drv 39000000.nss: interface 203 type 14 refused: 57
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44039.881245] ath11k c000000.wifi: WDS a2:ea:74:20:21:e5 peer da:d8:7c:5b:79:71 update failed: -71
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.888116] nss-wifi-drv 39000000.nss: interface 203 type 31 refused: 75
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.896869] nss-wifi-drv 39000000.nss: interface 203 type 14 refused: 57
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44039.903453] ath11k c000000.wifi: WDS a2:ea:74:20:21:e5 peer da:d8:7c:20:37:6c update failed: -71
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44039.910431] nss-wifi-drv 39000000.nss: interface 203 type 15 refused: 60
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44039.918825] ath11k c000000.wifi: WDS map a2:ea:74:20:21:e5 ast 582 failed: -71
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44040.115957] nss-wifi-drv 39000000.nss: interface 203 type 31 refused: 75
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44040.116200] nss-wifi-drv 39000000.nss: interface 203 type 14 refused: 57
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44040.121754] ath11k c000000.wifi: WDS a2:ea:74:20:21:e5 peer da:d8:7c:20:37:6c update failed: -71
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44040.129068] nss-wifi-drv 39000000.nss: interface 203 type 31 refused: 75
+[2026年11月15日 GMT+8 15:45:29] kern.err: [44040.137730] nss-wifi-drv 39000000.nss: interface 203 type 14 refused: 57
+[2026年11月15日 GMT+8 15:45:29] kern.warn: [44040.143914] ath11k c000000.wifi: WDS a2:ea:74:20:21:e5 peer da:d8:7c:5b:79:71 update failed: -71
+[2026年11月15日 GMT+8 15:45:30] kern.warn: [44041.241051] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:31] kern.warn: [44041.615816] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:31] kern.warn: [44041.867792] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:31] kern.warn: [44041.981658] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.404952] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.405062] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.413966] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.424149] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.434084] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.444110] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.454192] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.464254] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.474325] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:36] kern.warn: [44047.484384] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:41] kern.warn: [44052.411741] net_ratelimit: 3 callbacks suppressed
+[2026年11月15日 GMT+8 15:45:41] kern.warn: [44052.411760] br-lan: received packet on lan1 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:42] kern.warn: [44053.279015] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:42] kern.info: [44053.455690] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 17 ast_idx 355 ast_hash 0x163 vdev 3
+[2026年11月15日 GMT+8 15:45:42] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 15:45:42] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 15:45:42] kern.warn: [44053.504033] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:43] daemon.notice: hostapd: phy1-ap0: AP-STA-CONNECTED fc:43:45:75:32:6f auth_alg=open
+[2026年11月15日 GMT+8 15:45:43] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f RADIUS: starting accounting session C2EBB29DE8482ECE
+[2026年11月15日 GMT+8 15:45:43] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 15:45:43] daemon.notice: hostapd: phy1-ap0: EAPOL-4WAY-HS-COMPLETED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 15:45:43] kern.info: [44053.585484] nss-wifi-drv 39000000.nss: interface 44 protects frames with 6
+[2026年11月15日 GMT+8 15:45:43] kern.warn: [44053.650634] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:43] kern.warn: [44053.997473] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:44] kern.warn: [44054.650999] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:44] kern.warn: [44054.766356] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:44] kern.warn: [44055.008092] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:44] kern.warn: [44055.320894] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:44] kern.warn: [44055.320893] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:46] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 15:45:46] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.110 fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 15:45:48] kern.warn: [44058.720384] net_ratelimit: 44 callbacks suppressed
+[2026年11月15日 GMT+8 15:45:48] kern.warn: [44058.720440] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:48] kern.warn: [44059.117570] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:49] kern.warn: [44059.994531] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:49] kern.warn: [44060.075745] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:50] kern.warn: [44061.309010] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:51] kern.warn: [44061.835535] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:54] kern.warn: [44065.133612] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:55] kern.warn: [44066.079634] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:55] kern.warn: [44066.463847] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:55] kern.warn: [44066.463987] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:55] kern.warn: [44066.472867] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:57] kern.warn: [44068.547548] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:57] kern.warn: [44068.547614] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:45:58] kern.warn: [44068.556521] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:01] kern.warn: [44072.027925] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:03] kern.warn: [44074.040735] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:06] kern.warn: [44076.908814] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:09] kern.warn: [44079.982584] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:09] kern.warn: [44080.313318] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:10] kern.warn: [44080.927192] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:10] kern.warn: [44080.956936] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:11] kern.warn: [44081.733183] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:11] kern.warn: [44082.129546] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:12] kern.warn: [44082.910941] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:12] kern.warn: [44083.085195] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:12] kern.warn: [44083.122213] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:12] kern.warn: [44083.310992] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:14] kern.warn: [44085.309025] net_ratelimit: 1 callbacks suppressed
+[2026年11月15日 GMT+8 15:46:14] kern.warn: [44085.309082] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:15] kern.warn: [44086.171029] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:15] kern.warn: [44086.550350] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:16] kern.warn: [44086.839600] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:16] kern.warn: [44087.409895] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:16] kern.warn: [44087.482709] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:17] kern.warn: [44087.923297] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:17] kern.warn: [44087.923444] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:17] kern.warn: [44087.932438] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:46:17] kern.warn: [44088.533662] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 15:47:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:48:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:49:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:50:52] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 15:51:01] daemon.notice: hostapd: phy1-ap0: AP-STA-DISCONNECTED fc:43:45:75:32:6f
+[2026年11月15日 GMT+8 15:51:01] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: disassociated due to inactivity
+[2026年11月15日 GMT+8 15:51:02] daemon.info: hostapd: phy1-ap0: STA fc:43:45:75:32:6f IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+[2026年11月15日 GMT+8 15:51:03] kern.info: [44373.539029] nss-wifi-drv 39000000.nss: peer fc:43:45:75:32:6f: id 17 released from vdev 3
+[2026年11月15日 GMT+8 15:51:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:51:36] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 15:52:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:53:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:55:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:55:59] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 15:56:49] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 15:56:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:57:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 15:59:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:01:06] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 16:01:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:01:59] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 16:02:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:04:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:05:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:06:06] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 16:06:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:07:11] daemon.notice: hostapd: phy0-ap2: AP-STA-POLL-OK da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 16:08:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:09:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f LiteMod11
+[2026年11月15日 GMT+8 16:09:53] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:09:53] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 16:09:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f LiteMod11
+[2026年11月15日 GMT+8 16:09:55] kern.warn: [45506.173053] br-lan: received packet on lan3 with own address as source address (addr:da:d8:7c:54:4a:1e, vlan:0)
+[2026年11月15日 GMT+8 16:10:29] authpriv.info: dispatcher.uc: luci: accepted login on / for root from 192.168.10.194
+[2026年11月15日 GMT+8 16:10:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:10:38] daemon.info: ucode[17338]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT
+[2026年11月15日 GMT+8 16:10:40] daemon.err: ucode[17338]: nfq_unbind_pf v4: Invalid argument
+[2026年11月15日 GMT+8 16:10:40] daemon.err: ucode[17338]: nfq_bind_pf v4: Invalid argument
+[2026年11月15日 GMT+8 16:10:40] daemon.info: ucode[17338]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 16:10:40] daemon.info: ucode[17338]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 16:10:47] daemon.info: ucode[17338]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: hostapd: phy0-ap2: AP-STA-DISCONNECTED da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 16:10:47] kern.info: [45558.374786] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 16 released from vdev 2
+[2026年11月15日 GMT+8 16:10:48] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:10:48] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:10:48] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:10:48] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:10:48] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:10:48] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:10:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:10:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:10:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:10:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:10:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:10:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:10:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:10:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:10:49] daemon.info: ucode[17338]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 16:10:50] daemon.notice: hostapd: phy0-ap2: AP-STA-DISCONNECTED da:d8:7c:20:37:6c
+[2026年11月15日 GMT+8 16:10:50] kern.info: [45560.645001] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 15 released from vdev 2
+[2026年11月15日 GMT+8 16:10:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 16:10:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 16:10:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:10:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:10:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 16:10:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 16:10:51] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 16:10:51] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 16:10:51] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:10:51] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:10:51] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 16:10:51] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 16:10:53] daemon.info: ucode[17338]: wifiroam: ban: 0 device(s) blocked
+[2026年11月15日 GMT+8 16:11:20] daemon.info: ucode[17338]: wifiroam: event ap_offline DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 16:11:20] daemon.info: ucode[17338]: wifiroam: event ap_offline DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event client_join 10:FF:E0:E5:11:9F LiteMod11 XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event client_join 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event client_join CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event client_join CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event client_join DC:D8:7C:20:37:6B XWRT XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event client_join DC:D8:7C:5B:79:70 DC:D8:7C:5B:79:70 XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event roam_move CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E DC:D8:7C:20:37:6B → XWRT
+[2026年11月15日 GMT+8 16:11:23] daemon.info: ucode[17338]: wifiroam: event roam_move CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 DC:D8:7C:20:37:6B → XWRT
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[17338]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[17338]: wifiroam: event roam_move 10:FF:E0:E5:11:9F LiteMod11 XWRT → XWRT
+[2026年11月15日 GMT+8 16:11:50] daemon.info: ucode[17338]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 16:11:53] daemon.info: ucode[17338]: wifiroam: event client_leave 10:FF:E0:E5:11:9F LiteMod11 XWRT
+[2026年11月15日 GMT+8 16:11:53] daemon.info: ucode[17338]: wifiroam: event client_leave 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月15日 GMT+8 16:11:53] daemon.info: ucode[17338]: wifiroam: event client_leave CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT
+[2026年11月15日 GMT+8 16:11:53] daemon.info: ucode[17338]: wifiroam: event client_leave CC:4D:75:FD:E8:06 midjd-fridge-bs41l_mibtE806 XWRT
+[2026年11月15日 GMT+8 16:11:53] daemon.info: ucode[17338]: wifiroam: event client_leave DC:D8:7C:20:37:6B XWRT XWRT
+[2026年11月15日 GMT+8 16:11:53] daemon.info: ucode[17338]: wifiroam: event client_leave DC:D8:7C:5B:79:70 DC:D8:7C:5B:79:70 XWRT
+[2026年11月15日 GMT+8 16:12:11] daemon.info: ucode[20316]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 16:12:11] daemon.info: ucode[20316]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 16:12:11] daemon.info: ucode[20316]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 16:12:11] daemon.info: ucode[20448]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 16:12:11] daemon.info: ucode[20448]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 16:12:11] daemon.info: ucode[20448]: wifiroam: started role=cap
+[2026年11月15日 GMT+8 16:12:17] daemon.info: ucode[20448]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 16:12:19] daemon.info: ucode[20448]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 16:12:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:12:55] daemon.info: ucode[20448]: wifiroam: event backhaul_apply  - ver=12 wireless
+[2026年11月15日 GMT+8 16:12:55] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:12:55] daemon.notice: wpa_supplicant[3159]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:12:55] daemon.notice: wpa_supplicant[3159]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 16:12:55] daemon.info: ucode[20448]: wifiroam: backhaul wifi reload rc=0
+[2026年11月15日 GMT+8 16:13:11] daemon.notice: netifd: Network device 'lan1' link is down
+[2026年11月15日 GMT+8 16:13:11] kern.info: [45701.932951] br-lan: port 1(lan1) entered disabled state
+[2026年11月15日 GMT+8 16:13:11] kern.info: [45701.951753] qca-ppe 3a000000.ppe lan1: Link is Down
+[2026年11月15日 GMT+8 16:13:22] kern.err: [45713.074301] nss-wifi-drv 39000000.nss: interface 203 type 7 refused: 26
+[2026年11月15日 GMT+8 16:13:22] kern.warn: [45713.074352] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: delete failed: -71, record kept
+[2026年11月15日 GMT+8 16:13:22] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45713.084535] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 18 ast_idx 575 ast_hash 0x23f vdev 2
+[2026年11月15日 GMT+8 16:13:22] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:5b:79:71 auth_alg=open
+[2026年11月15日 GMT+8 16:13:22] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 RADIUS: starting accounting session 561B31ED03591EFF
+[2026年11月15日 GMT+8 16:13:22] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45713.161810] nss-wifi-drv 39000000.nss: interface 43 protects frames with 6
+[2026年11月15日 GMT+8 16:13:29] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 16:13:29] kern.info: [45719.763904] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 9 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月15日 GMT+8 16:13:29] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 16:13:29] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月15日 GMT+8 16:13:29] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session 5EAC32438CD5C556
+[2026年11月15日 GMT+8 16:13:29] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 16:13:29] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 16:13:29] kern.info: [45719.863797] nss-wifi-drv 39000000.nss: interface 36 protects frames with 6
+[2026年11月15日 GMT+8 16:13:29] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.227 a2:ea:74:20:21:e5
+[2026年11月15日 GMT+8 16:13:29] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.227 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月15日 GMT+8 16:13:29] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:13:29] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:13:31] daemon.info: ucode[20448]: wifiroam: event client_join DA:D8:7C:5B:79:71 DA:D8:7C:5B:79:71 XWRT
+[2026年11月15日 GMT+8 16:13:31] daemon.info: ucode[20448]: wifiroam: event client_join A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月15日 GMT+8 16:13:32] daemon.err: dnsmasq[1]: nftset inet wifiroam jd_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:34] daemon.err: dnsmasq[1]: nftset inet wifiroam wechat_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:36] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:36] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:36] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:37] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:38] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:41] daemon.info: ucode[20448]: wifiroam: event ap_offline DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 16:13:48] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:48] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:48] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:13:48] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:11] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 16:14:11] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 2)
+[2026年11月15日 GMT+8 16:14:11] kern.info: [45762.010470] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 10 ast_idx 397 ast_hash 0x18d vdev 0
+[2026年11月15日 GMT+8 16:14:11] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED ac:36:1b:f3:15:d0 auth_alg=open
+[2026年11月15日 GMT+8 16:14:11] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 RADIUS: starting accounting session F7ADB05FD9F0105E
+[2026年11月15日 GMT+8 16:14:11] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 16:14:11] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:14:11] kern.info: [45762.092999] nss-wifi-drv 39000000.nss: interface 36 protects frames with 6
+[2026年11月15日 GMT+8 16:14:12] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 16:14:12] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 16:14:12] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月15日 GMT+8 16:14:12] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 16:14:12] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:12] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:15] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:16] daemon.err: dnsmasq[1]: nftset inet wifiroam douyin_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:14:18] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:14:18] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:14:19] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:14:19] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0 LiteMod11
+[2026年11月15日 GMT+8 16:14:19] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:19] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:20] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:14:20] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0 LiteMod11
+[2026年11月15日 GMT+8 16:14:20] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:20] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:21] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:14:21] kern.info: [45772.250641] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 10 released from vdev 0
+[2026年11月15日 GMT+8 16:14:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月15日 GMT+8 16:14:49] kern.info: [45799.693778] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 16:14:49] kern.info: [45799.693845] br-lan: port 1(lan1) entered blocking state
+[2026年11月15日 GMT+8 16:14:49] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月15日 GMT+8 16:14:49] kern.info: [45799.700277] br-lan: port 1(lan1) entered forwarding state
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:14:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:51] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 16:14:51] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月15日 GMT+8 16:14:51] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 8 names
+[2026年11月15日 GMT+8 16:14:51] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 16:14:51] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:51] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:51] daemon.info: ucode[20448]: wifiroam: event client_join 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月15日 GMT+8 16:14:51] daemon.info: ucode[20448]: wifiroam: event client_join DC:D8:7C:5B:79:70 XWRT XWRT
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[20448]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: hostapd: phy0-ap2: AP-STA-DISCONNECTED da:d8:7c:5b:79:71
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45808.409932] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 18 released from vdev 2
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[20448]: wifiroam: event roam_move 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT → XWRT
+[2026年11月15日 GMT+8 16:14:57] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:57] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:14:57] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:57] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:14:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月15日 GMT+8 16:14:59] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:59] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:14:59] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:59] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 16:14:59] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:59] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:14:59] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 16:14:59] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 16:15:01] daemon.info: ucode[20448]: wifiroam: event client_leave 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月15日 GMT+8 16:15:01] daemon.info: ucode[20448]: wifiroam: event client_leave DC:D8:7C:5B:79:70 XWRT XWRT
+[2026年11月15日 GMT+8 16:15:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月15日 GMT+8 16:15:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月15日 GMT+8 16:15:29] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:29] daemon.err: dnsmasq[1]: nftset inet wifiroam baidu_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:35] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:36] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:38] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v6 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:47] daemon.err: dnsmasq[1]: nftset inet wifiroam bilibili_v4 Error: No such file or directory; did you mean table 'wifiroam_ban' in family inet?
+[2026年11月15日 GMT+8 16:15:59] daemon.info: ucode[20448]: wifiroam: event client_leave DA:D8:7C:54:4A:1E DA:D8:7C:54:4A:1E XWRT

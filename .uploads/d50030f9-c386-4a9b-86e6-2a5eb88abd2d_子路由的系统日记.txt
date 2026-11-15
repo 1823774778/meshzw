@@ -1,0 +1,1000 @@
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: hostapd: Configuration file: <inline> (phy phy0) --> new PHY
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.947079] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 30, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.960658] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 44 ast_idx 924 ast_hash 0x39c vdev 0
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.962362] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.968961] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.974375] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.980299] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.986430] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43641.992407] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: hostapd: phy0-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: radio0 (23835): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: radio0 (23835): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: radio0 (23835): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: radio0 (23835): wifi-scripts: Preparing interface: phy0-sta0
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: radio0 (23835): wifi-scripts: Preparing interface: phy0-ap1
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.008699] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.089867] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.089908] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.094642] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.108436] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.110217] nss-wifi-drv 39000000.nss: vdev 1 on radio 0 is interface 31, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.115395] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 46 ast_idx 350 ast_hash 0x15e vdev 1
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.122643] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.131025] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.137135] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: hostapd: phy0-ap0: interface state COUNTRY_UPDATE->ENABLED
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: hostapd: phy0-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.149864] nss-wifi-drv 39000000.nss: vdev 4 on radio 0 is interface 35, encap 2 decap 2
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.162006] br-lan: port 7(phy0-sta0) entered blocking state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.162051] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.166778] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[2026年11月15日 GMT+8 15:38:38] kern.info: [43642.173058] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 15:38:38] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: wpa_supplicant[2987]: phy0-sta0: SME: Trying to authenticate with da:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.658852] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 48 ast_idx 289 ast_hash 0x121 vdev 4
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.659314] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.667073] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Trying to associate with da:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.679853] phy0-sta0: authenticated
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.688584] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: netifd: Network device 'phy0-sta0' link is up
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.691422] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x1011 status=0 aid=2)
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.695465] phy0-sta0: associated
+[2026年11月15日 GMT+8 15:38:41] kern.debug: [43644.701976] phy0-sta0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:d8:7c:54:4a:1e
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Associated with da:d8:7c:54:4a:1e
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.739011] nss-wifi-drv 39000000.nss: interface 35 protects frames with 6
+[2026年11月15日 GMT+8 15:38:41] kern.warn: [43644.748652] br-lan: received packet on wan with own address as source address (addr:da:d8:7c:5b:79:71, vlan:0)
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: wpa_supplicant[2987]: phy0-sta0: WPA: Key negotiation completed with da:d8:7c:54:4a:1e [PTK=CCMP GTK=CCMP]
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-CONNECTED - Connection to da:d8:7c:54:4a:1e completed [id=1 id_str=]
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.779484] br-lan: port 7(phy0-sta0) entered blocking state
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.779529] br-lan: port 7(phy0-sta0) entered forwarding state
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.789258] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.789869] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.796937] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 15:38:41] kern.info: [43644.801260] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 15:38:41] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: netifd: Network device 'phy0-sta0' link is down
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43646.420180] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 2=PREV_AUTH_NOT_VALID)
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43646.420310] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DISCONNECTED bssid=da:d8:7c:54:4a:1e reason=2
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Added BSSID da:d8:7c:54:4a:1e into ignore list, ignoring for 10 seconds
+[2026年11月15日 GMT+8 15:38:43] kern.info: [43646.539504] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 48 released from vdev 4
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:43] daemon.notice: hostapd: handle_probe_req: send failed
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: netifd: Network device 'phy0-ap1' link is down
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.488603] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.488888] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Removed BSSID da:d8:7c:54:4a:1e from ignore list (clear)
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: wpa_supplicant[2987]: phy0-sta0: SME: Trying to authenticate with da:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.930658] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 49 ast_idx 289 ast_hash 0x121 vdev 4
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.931118] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.938908] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Trying to associate with da:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.965019] phy0-sta0: authenticated
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.972965] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.975836] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x1011 status=0 aid=2)
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: netifd: Network device 'phy0-sta0' link is up
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Associated with da:d8:7c:54:4a:1e
+[2026年11月15日 GMT+8 15:38:44] kern.info: [43647.979886] phy0-sta0: associated
+[2026年11月15日 GMT+8 15:38:44] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[2026年11月15日 GMT+8 15:38:44] kern.debug: [43648.007687] phy0-sta0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:d8:7c:54:4a:1e
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.589075] nss-wifi-drv 39000000.nss: interface 35 protects frames with 6
+[2026年11月15日 GMT+8 15:38:45] kern.warn: [43648.628738] br-lan: received packet on wan with own address as source address (addr:da:d8:7c:5b:79:71, vlan:0)
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: wpa_supplicant[2987]: phy0-sta0: WPA: Key negotiation completed with da:d8:7c:54:4a:1e [PTK=CCMP GTK=CCMP]
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-CONNECTED - Connection to da:d8:7c:54:4a:1e completed [id=1 id_str=]
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.649500] br-lan: port 7(phy0-sta0) entered blocking state
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.649548] br-lan: port 7(phy0-sta0) entered forwarding state
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.665652] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.665706] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.671758] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 15:38:45] kern.info: [43648.675951] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 15:38:45] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月15日 GMT+8 15:38:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:38:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:38:52] kern.warn: [43655.627651] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:38:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:38:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:39:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:39:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:39:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:39:17] kern.warn: [43680.626211] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:39:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:39:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:39:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:39:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:39:37] kern.warn: [43700.625805] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:39:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:39:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:39:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:39:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:39:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:40:02] kern.warn: [43725.633714] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:40:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:40:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:40:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:40:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:40:22] kern.warn: [43745.625251] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:40:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:40:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:40:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:40:37] kern.warn: [43760.625806] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:40:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:40:42] kern.warn: [43765.625115] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:40:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:40:47] kern.warn: [43770.629170] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:40:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:40:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:40:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:41:02] kern.warn: [43785.625046] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:41:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:41:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:41:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:41:17] kern.warn: [43800.624895] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:41:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:41:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:41:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:41:32] kern.warn: [43815.625183] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:41:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:41:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:41:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:41:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:41:52] kern.warn: [43835.624682] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:41:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:41:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:42:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:42:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:42:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:42:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:42:22] kern.warn: [43865.624554] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:42:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:42:27] kern.warn: [43870.626511] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:42:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:42:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:42:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:42:42] kern.warn: [43885.624681] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:42:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:42:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:42:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:42:57] kern.warn: [43900.625587] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:42:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:43:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:43:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:43:12] kern.warn: [43915.624196] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:43:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:43:17] kern.warn: [43920.624646] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:43:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:43:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:43:27] kern.warn: [43930.624298] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:43:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:43:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:43:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:43:42] kern.warn: [43945.624511] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:43:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:43:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:43:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:43:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:44:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:44:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:44:12] kern.warn: [43975.624206] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:44:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:44:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:44:22] kern.warn: [43985.625260] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:44:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:44:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:44:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:44:37] kern.warn: [44000.624236] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:44:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:44:45] kern.warn: [44008.658750] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:44:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:44:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:44:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:44:57] kern.warn: [44020.623558] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:44:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:45:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:45:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:45:12] kern.warn: [44035.623417] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:45:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:45:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:45:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:45:27] kern.warn: [44050.624340] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:45:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:45:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:45:37] kern.warn: [44060.629953] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:45:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:45:42] kern.warn: [44065.625651] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:45:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:45:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:45:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:45:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:46:02] kern.warn: [44085.624092] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:46:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:46:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:46:12] kern.warn: [44095.622541] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:46:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:46:17] kern.warn: [44100.622528] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:46:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:46:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:46:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:46:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:46:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:46:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:46:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:46:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:46:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:47:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:47:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:47:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:47:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:47:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:47:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:47:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:47:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:47:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:47:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:47:52] kern.warn: [44195.623117] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:47:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:47:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:48:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:48:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:48:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:48:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:48:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:48:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:48:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:48:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:48:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:48:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:48:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:48:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:49:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:49:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:49:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:49:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:49:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:49:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:49:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:49:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:49:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:49:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:49:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:49:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:50:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:50:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:50:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:50:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:50:22] kern.warn: [44345.621502] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:50:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:50:27] kern.warn: [44350.621602] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:50:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:50:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:50:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:50:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:50:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:50:52] kern.warn: [44375.621373] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:50:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:50:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:51:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:51:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:51:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:51:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:51:22] kern.warn: [44405.621069] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:51:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:51:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:51:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:51:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:51:42] kern.warn: [44425.620939] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:51:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:51:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:51:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:51:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:52:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:52:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:52:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:52:17] kern.warn: [44460.620717] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:52:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:52:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:52:27] kern.warn: [44470.620993] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:52:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:52:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:52:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:52:42] kern.warn: [44485.620676] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:52:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:52:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:52:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:52:57] kern.warn: [44500.620423] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:52:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:53:02] kern.warn: [44505.620607] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:53:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:53:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:53:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:53:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:53:20] kern.warn: [44524.075772] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:53:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:53:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:53:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:53:37] kern.warn: [44540.620222] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:53:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:53:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:53:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:53:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:53:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:54:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:54:07] kern.warn: [44570.620535] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:54:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:54:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:54:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:54:22] kern.warn: [44585.620024] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:54:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:54:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:54:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:54:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:54:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:54:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:54:53] kern.warn: [44616.246389] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:54:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:54:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:55:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:55:07] kern.warn: [44630.619658] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:55:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:55:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:55:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:55:22] kern.warn: [44645.619853] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:55:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:55:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:55:32] kern.warn: [44655.619519] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:55:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:55:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:55:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:55:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:55:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:55:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:56:02] kern.warn: [44685.619385] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:56:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:56:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:56:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:56:17] kern.warn: [44700.618793] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:56:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:56:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:56:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:56:32] kern.warn: [44715.619692] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:56:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:56:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:56:42] kern.warn: [44725.619023] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:56:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:56:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:56:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:56:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:57:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:57:07] kern.warn: [44750.618960] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:57:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:57:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:57:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:57:22] kern.warn: [44765.618894] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:57:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:57:27] kern.warn: [44770.621720] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:57:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:57:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:57:37] kern.warn: [44780.618829] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:57:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:57:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:57:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:57:52] kern.warn: [44795.619381] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:57:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:57:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:58:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:58:07] kern.warn: [44810.619142] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:58:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:58:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:58:17] kern.warn: [44820.617921] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:58:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:58:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:58:27] kern.warn: [44830.618468] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:58:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:58:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:58:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:58:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:58:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:58:52] kern.warn: [44855.618324] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:58:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:58:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:59:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:59:07] kern.warn: [44870.618263] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:59:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:59:12] kern.warn: [44875.618105] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:59:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:59:17] kern.warn: [44880.618187] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:59:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:59:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:59:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:59:32] kern.warn: [44895.618037] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:59:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:59:37] kern.warn: [44900.618136] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:59:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:59:42] kern.warn: [44905.618059] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 15:59:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:59:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 15:59:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 15:59:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:00:02] kern.warn: [44925.617905] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:00:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:00:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:00:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:00:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:00:22] kern.warn: [44945.618291] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:00:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:00:27] kern.warn: [44950.617682] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:00:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:00:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:00:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:00:42] kern.warn: [44965.618154] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:00:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:00:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:00:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:00:57] kern.warn: [44980.618089] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:00:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:01:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:01:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:01:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:01:17] kern.warn: [45000.617404] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:01:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:01:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:01:27] kern.warn: [45010.617334] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:01:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:01:32] kern.warn: [45015.617339] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:01:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:01:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:01:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:01:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:01:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:01:57] kern.warn: [45040.617202] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:01:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:02:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:02:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:02:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:02:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:02:22] kern.warn: [45065.617593] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:02:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:02:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:02:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:02:37] kern.warn: [45080.616913] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:02:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:02:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:02:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:02:52] kern.warn: [45095.616847] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:02:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:02:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:03:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:03:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:03:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:03:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:03:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:03:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:03:32] kern.warn: [45135.616553] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:03:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:03:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:03:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:03:47] kern.warn: [45150.616492] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:03:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:03:52] kern.warn: [45155.616412] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:03:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:03:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:04:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:04:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:04:12] kern.warn: [45175.616886] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:04:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:04:17] kern.warn: [45180.616455] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:04:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:04:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:04:27] kern.warn: [45190.616557] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:04:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:04:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:04:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:04:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:04:47] kern.warn: [45210.616142] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:04:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:04:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:04:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:05:02] kern.warn: [45225.615989] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:05:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:05:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:05:12] kern.warn: [45235.616103] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:05:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:05:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:05:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:05:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:05:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:05:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:05:42] kern.warn: [45265.615714] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:05:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:05:47] kern.warn: [45270.615793] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:05:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:05:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:05:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:06:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:06:07] kern.warn: [45290.615561] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:06:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:06:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:06:17] kern.warn: [45300.615849] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:06:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:06:22] kern.warn: [45305.615498] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:06:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:06:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:06:32] kern.warn: [45315.615512] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:06:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:06:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:06:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:06:47] kern.warn: [45330.615360] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:06:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:06:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:06:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:07:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:07:07] kern.warn: [45350.616205] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:07:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:07:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:07:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:07:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:07:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:07:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:07:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:07:42] kern.warn: [45385.615276] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:07:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:07:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:07:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:07:57] kern.warn: [45400.614850] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:07:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:08:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:08:07] kern.warn: [45410.616023] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:08:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:08:12] kern.warn: [45415.614708] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:08:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:08:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:08:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:08:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:08:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:08:37] kern.warn: [45440.615001] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:08:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:08:42] kern.warn: [45445.615721] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:08:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:08:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:08:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:08:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:09:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:09:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:09:12] kern.warn: [45475.614445] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:09:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:09:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:09:22] kern.warn: [45485.615329] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:09:23] kern.info: [45486.770174] qca-ppe 3a000000.ppe lan2: Link is Up - 100Mbps/Full - flow control off
+[2026年11月15日 GMT+8 16:09:23] kern.info: [45486.770244] br-lan: port 2(lan2) entered blocking state
+[2026年11月15日 GMT+8 16:09:23] kern.info: [45486.776659] br-lan: port 2(lan2) entered forwarding state
+[2026年11月15日 GMT+8 16:09:23] daemon.notice: netifd: Network device 'lan2' link is up
+[2026年11月15日 GMT+8 16:09:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:09:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:09:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:09:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:09:42] kern.warn: [45505.614317] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:09:43] daemon.notice: netifd: Network device 'lan2' link is down
+[2026年11月15日 GMT+8 16:09:43] kern.info: [45506.517574] br-lan: port 2(lan2) entered disabled state
+[2026年11月15日 GMT+8 16:09:43] kern.info: [45506.536915] qca-ppe 3a000000.ppe lan2: Link is Down
+[2026年11月15日 GMT+8 16:09:45] kern.info: [45508.600042] qca-ppe 3a000000.ppe lan2: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 16:09:45] kern.info: [45508.600108] br-lan: port 2(lan2) entered blocking state
+[2026年11月15日 GMT+8 16:09:45] kern.info: [45508.606529] br-lan: port 2(lan2) entered forwarding state
+[2026年11月15日 GMT+8 16:09:45] daemon.notice: netifd: Network device 'lan2' link is up
+[2026年11月15日 GMT+8 16:09:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:09:47] kern.warn: [45510.614321] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:09:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:09:53] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月15日 GMT+8 16:09:53] kern.info: [45516.364888] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 50 ast_idx 909 ast_hash 0x38d vdev 0
+[2026年11月15日 GMT+8 16:09:53] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月15日 GMT+8 16:09:53] daemon.notice: hostapd: phy0-ap0: AP-STA-CONNECTED ac:36:1b:f3:15:d0 auth_alg=open
+[2026年11月15日 GMT+8 16:09:53] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 RADIUS: starting accounting session F9C5FF593254A9D9
+[2026年11月15日 GMT+8 16:09:53] daemon.info: hostapd: phy0-ap0: STA ac:36:1b:f3:15:d0 WPA: pairwise key handshake completed (RSN)
+[2026年11月15日 GMT+8 16:09:53] daemon.notice: hostapd: phy0-ap0: EAPOL-4WAY-HS-COMPLETED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:09:53] kern.info: [45516.427197] nss-wifi-drv 39000000.nss: interface 30 protects frames with 6
+[2026年11月15日 GMT+8 16:09:53] daemon.notice: hostapd: phy0-ap0: AP-STA-DISCONNECTED ac:36:1b:f3:15:d0
+[2026年11月15日 GMT+8 16:09:53] kern.info: [45516.807067] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 50 released from vdev 0
+[2026年11月15日 GMT+8 16:09:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:09:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:10:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:10:07] kern.warn: [45530.614706] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:10:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:10:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:10:17] kern.warn: [45540.614105] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:10:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:10:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:10:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:10:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:10:37] kern.warn: [45560.613954] br-lan: received packet on wan with own address as source address (addr:dc:d8:7c:5b:79:70, vlan:0)
+[2026年11月15日 GMT+8 16:10:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:10:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:10:47] daemon.info: ucode[4804]: wifiroam: event backhaul_link  - wired uplink detected, wireless STA paused
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:10:47] daemon.info: ucode[4804]: wifiroam: backhaul switch rc=0
+[2026年11月15日 GMT+8 16:10:47] daemon.info: ucode[4804]: wifiroam: event cap_connected  - 192.168.10.1
+[2026年11月15日 GMT+8 16:10:47] daemon.info: ucode[4804]: wifiroam: link to CAP established
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: netifd: radio0 (304): wifi-scripts: Starting
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: Remove interface phy0-sta0
+[2026年11月15日 GMT+8 16:10:47] kern.info: [45570.929932] phy0-sta0: deauthenticating from da:d8:7c:54:4a:1e by local choice (Reason: 3=DEAUTH_LEAVING)
+[2026年11月15日 GMT+8 16:10:47] kern.info: [45570.930082] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: netifd: Network device 'phy0-sta0' link is down
+[2026年11月15日 GMT+8 16:10:47] kern.info: [45571.067001] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 49 released from vdev 4
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DISCONNECTED bssid=da:d8:7c:54:4a:1e reason=3 locally_generated=1
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DSCP-POLICY clear_all
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DSCP-POLICY clear_all
+[2026年11月15日 GMT+8 16:10:47] daemon.notice: wpa_supplicant[2987]: nl80211: deinit ifname=phy0-sta0 disabled_11b_rates=0
+[2026年11月15日 GMT+8 16:10:47] daemon.err: wpa_supplicant[2987]: rmdir[ctrl_interface=/var/run/wpa_supplicant]: Permission denied
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.237433] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.296981] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.297034] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.303517] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: Restart interface for phy phy0
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: Remove interface 'phy0'
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: phy0-ap0: interface state ENABLED->DISABLED
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: phy0-ap1: AP-DISABLED
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: phy0-ap1: CTRL-EVENT-TERMINATING
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.466927] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 46 released from vdev 1
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.537346] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.606998] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.607051] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.613506] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: netifd: Network device 'phy0-ap1' link is down
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: nl80211: Failed to remove interface phy0-ap1 from bridge br-guest: No such device
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: phy0-ap0: AP-DISABLED
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: phy0-ap0: CTRL-EVENT-TERMINATING
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: hostapd: nl80211: deinit ifname=phy0-ap0 disabled_11b_rates=0
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.816607] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.816671] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.821849] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月15日 GMT+8 16:10:48] kern.info: [45571.867338] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 44 released from vdev 0
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:10:48] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.241998] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.242049] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.246449] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.253074] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.267044] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.267092] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.272295] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: radio0 (304): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: radio0 (304): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: radio0 (304): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: radio0 (304): wifi-scripts: Preparing interface: phy0-ap1
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: Configuration file: <inline> (phy phy0) --> new PHY
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.475694] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 32, encap 2 decap 2
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.489004] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 52 ast_idx 924 ast_hash 0x39c vdev 0
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.490686] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.497255] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.502735] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: phy0-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45572.508779] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: phy0-ap0: interface state COUNTRY_UPDATE->HT_SCAN
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.048148] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.048204] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.134433] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.134478] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.139270] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.145534] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.152932] nss-wifi-drv 39000000.nss: vdev 1 on radio 0 is interface 36, encap 2 decap 2
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.159066] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 54 ast_idx 350 ast_hash 0x15e vdev 1
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.165963] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.174732] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.181451] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.189206] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:10:49] kern.info: [45573.192125] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: phy0-ap0: interface state HT_SCAN->ENABLED
+[2026年11月15日 GMT+8 16:10:49] daemon.notice: hostapd: phy0-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[4804]: wifiroam: event cap_connected  - 192.168.10.1
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[4804]: wifiroam: link to CAP established
+[2026年11月15日 GMT+8 16:11:48] daemon.info: ucode[4804]: wifiroam: event client_join 10:FF:E0:E5:11:9F LiteMod11 XWRT
+[2026年11月15日 GMT+8 16:12:10] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:12:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:12:17] daemon.info: ucode[4804]: wifiroam: event cap_connected  - 192.168.10.1
+[2026年11月15日 GMT+8 16:12:17] daemon.info: ucode[4804]: wifiroam: link to CAP established
+[2026年11月15日 GMT+8 16:12:17] daemon.info: ucode[4804]: wifiroam: event roam_apply  - ver=7 ssids=2
+[2026年11月15日 GMT+8 16:12:18] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:12:18] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:12:18] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 16:12:18] daemon.info: ucode[4804]: wifiroam: wifi reload rc=0
+[2026年11月15日 GMT+8 16:12:55] daemon.info: ucode[4804]: wifiroam: event backhaul_apply  - ver=12 wireless
+[2026年11月15日 GMT+8 16:12:55] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:12:55] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:12:55] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 16:12:55] daemon.info: ucode[4804]: wifiroam: backhaul wifi reload rc=0
+[2026年11月15日 GMT+8 16:13:11] daemon.notice: netifd: Network device 'wan' link is down
+[2026年11月15日 GMT+8 16:13:11] kern.info: [45714.916287] br-lan: port 4(wan) entered disabled state
+[2026年11月15日 GMT+8 16:13:11] kern.info: [45714.935620] qca-ppe 3a000000.ppe wan: Link is Down
+[2026年11月15日 GMT+8 16:13:17] daemon.info: ucode[4804]: wifiroam: event backhaul_link  - cable removed, wireless backhaul enabled
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:13:17] daemon.info: ucode[4804]: wifiroam: backhaul switch rc=0
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: netifd: radio0 (1424): wifi-scripts: Starting
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: Restart interface for phy phy0
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: Remove interface 'phy0'
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: phy0-ap0: interface state ENABLED->DISABLED
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: phy0-ap1: AP-DISABLED
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: hostapd: phy0-ap1: CTRL-EVENT-TERMINATING
+[2026年11月15日 GMT+8 16:13:17] kern.info: [45721.066042] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 54 released from vdev 1
+[2026年11月15日 GMT+8 16:13:17] kern.info: [45721.126361] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:13:17] kern.info: [45721.146058] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[2026年11月15日 GMT+8 16:13:17] kern.info: [45721.146106] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[2026年11月15日 GMT+8 16:13:17] kern.info: [45721.152545] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:13:17] daemon.notice: netifd: Network device 'phy0-ap1' link is down
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: nl80211: Failed to remove interface phy0-ap1 from bridge br-guest: No such device
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: phy0-ap0: AP-DISABLED
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: phy0-ap0: CTRL-EVENT-TERMINATING
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: nl80211: deinit ifname=phy0-ap0 disabled_11b_rates=0
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.395692] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.395755] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.400943] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.436345] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 52 released from vdev 0
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.822798] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.822845] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.827419] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.833687] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.843749] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.845256] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.851833] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: Configuration file: <inline> (phy phy0) --> new PHY
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.921557] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 30, encap 2 decap 2
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.934892] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 56 ast_idx 924 ast_hash 0x39c vdev 0
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.936721] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.943122] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.948664] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.954553] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.961398] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45721.966676] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: phy0-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: radio0 (1424): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: radio0 (1424): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: radio0 (1424): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: radio0 (1424): wifi-scripts: Preparing interface: phy0-sta0
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: radio0 (1424): wifi-scripts: Preparing interface: phy0-ap1
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.082171] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: netifd: Interface 'lan' has lost the connection
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:ddf1::1#53
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 16:13:18] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.120187] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.120233] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.124967] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.132197] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.139340] ath11k c000000.wifi phy0-ap1: left allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.142987] ath11k c000000.wifi phy0-ap1: left promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.149408] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.158658] nss-wifi-drv 39000000.nss: vdev 1 on radio 0 is interface 31, encap 2 decap 2
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.162268] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 58 ast_idx 350 ast_hash 0x15e vdev 1
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.174887] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.178228] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.184025] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.190216] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: phy0-ap0: interface state COUNTRY_UPDATE->ENABLED
+[2026年11月15日 GMT+8 16:13:18] daemon.notice: hostapd: phy0-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.198651] nss-wifi-drv 39000000.nss: vdev 4 on radio 0 is interface 35, encap 2 decap 2
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.210971] br-lan: port 7(phy0-sta0) entered blocking state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.211021] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:13:18] kern.info: [45722.216010] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:13:19] kern.info: [45722.222440] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:13:19] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 16:13:20] daemon.crit: dropbear: Network interface 'lan' is not available!
+[2026年11月15日 GMT+8 16:13:20] authpriv.info: dropbear[7934]: Early exit: Terminated by signal
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: wpa_supplicant[2987]: phy0-sta0: SME: Trying to authenticate with da:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.766295] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 60 ast_idx 289 ast_hash 0x121 vdev 4
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.766761] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.774516] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Trying to associate with da:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.800878] phy0-sta0: authenticated
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.805576] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: netifd: Network device 'phy0-sta0' link is up
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.808594] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x1011 status=0 aid=1)
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.812473] phy0-sta0: associated
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: wpa_supplicant[2987]: phy0-sta0: Associated with da:d8:7c:54:4a:1e
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.865973] nss-wifi-drv 39000000.nss: interface 35 protects frames with 6
+[2026年11月15日 GMT+8 16:13:22] kern.debug: [45725.866208] phy0-sta0: Limiting TX power to 36 (36 - 0) dBm as advertised by da:d8:7c:54:4a:1e
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: wpa_supplicant[2987]: phy0-sta0: WPA: Key negotiation completed with da:d8:7c:54:4a:1e [PTK=CCMP GTK=CCMP]
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-CONNECTED - Connection to da:d8:7c:54:4a:1e completed [id=2 id_str=]
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.926397] br-lan: port 7(phy0-sta0) entered blocking state
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.926447] br-lan: port 7(phy0-sta0) entered forwarding state
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.936472] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.936782] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.943890] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:13:22] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月15日 GMT+8 16:13:22] kern.info: [45725.948168] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 16:13:37] daemon.info: ucode[4804]: wifiroam: event ap_offline DC:D8:7C:54:4A:1D - XWRT
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: CAP link report failed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: CAP link report failed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: CAP link report failed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: CAP link report failed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:13:47] daemon.info: ucode[4804]: wifiroam: event ap_offline DC:D8:7C:20:37:6B - XWRT
+[2026年11月15日 GMT+8 16:13:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:13:57] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:14:07] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:14:07] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:14:17] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:14:17] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:14:27] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:14:27] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:14:37] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:14:37] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:14:47] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:14:47] daemon.info: ucode[4804]: wifiroam: link to CAP closed
+[2026年11月15日 GMT+8 16:14:48] kern.info: [45811.638151] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 16:14:48] kern.info: [45811.638217] br-lan: port 4(wan) entered blocking state
+[2026年11月15日 GMT+8 16:14:48] kern.info: [45811.644636] br-lan: port 4(wan) entered forwarding state
+[2026年11月15日 GMT+8 16:14:48] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月15日 GMT+8 16:14:49] daemon.notice: netifd: lan (4895): udhcpc: broadcasting select for 192.168.10.112, server 192.168.10.1
+[2026年11月15日 GMT+8 16:14:49] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:14:49] daemon.notice: netifd: Interface 'lan' is now up
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using nameserver 192.168.10.1#53
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c60:ddf1::1#53
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 16:14:49] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 16:14:49] user.notice: firewall: Reloading firewall due to ifup of lan (br-lan)
+[2026年11月15日 GMT+8 16:14:51] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月15日 GMT+8 16:14:51] user.info: : Binding to interface 'br-lan'
+[2026年11月15日 GMT+8 16:14:51] authpriv.info: dropbear[2871]: Not backgrounding
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[4804]: wifiroam: connecting to CAP 192.168.10.1
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[4804]: wifiroam: event backhaul_link  - wired uplink detected, wireless STA paused
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: netifd: radio0 (2996): wifi-scripts: Starting
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[4804]: wifiroam: backhaul switch rc=0
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[4804]: wifiroam: event cap_connected  - 192.168.10.1
+[2026年11月15日 GMT+8 16:14:57] daemon.info: ucode[4804]: wifiroam: link to CAP established
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: Set new config for phy phy0
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: Remove interface phy0-sta0
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45820.902465] phy0-sta0: deauthenticating from da:d8:7c:54:4a:1e by local choice (Reason: 3=DEAUTH_LEAVING)
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45820.902624] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45820.936711] nss-wifi-drv 39000000.nss: peer da:d8:7c:54:4a:1e: id 60 released from vdev 4
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DISCONNECTED bssid=da:d8:7c:54:4a:1e reason=3 locally_generated=1
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: netifd: Network device 'phy0-sta0' link is down
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DSCP-POLICY clear_all
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: phy0-sta0: CTRL-EVENT-DSCP-POLICY clear_all
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: wpa_supplicant[2987]: nl80211: deinit ifname=phy0-sta0 disabled_11b_rates=0
+[2026年11月15日 GMT+8 16:14:57] daemon.err: wpa_supplicant[2987]: rmdir[ctrl_interface=/var/run/wpa_supplicant]: Permission denied
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45821.135842] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45821.155427] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45821.155477] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[2026年11月15日 GMT+8 16:14:57] kern.info: [45821.161915] br-lan: port 7(phy0-sta0) entered disabled state
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:14:57] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: Restart interface for phy phy0
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: Remove interface 'phy0'
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: phy0-ap0: interface state ENABLED->DISABLED
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: phy0-ap1: AP-DISABLED
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: phy0-ap1: CTRL-EVENT-TERMINATING
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.385381] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 58 released from vdev 1
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.425845] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.495421] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.495470] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.502162] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: netifd: Network device 'phy0-ap1' link is down
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: nl80211: Failed to remove interface phy0-ap1 from bridge br-guest: No such device
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: phy0-ap0: AP-DISABLED
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: phy0-ap0: CTRL-EVENT-TERMINATING
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: hostapd: nl80211: deinit ifname=phy0-ap0 disabled_11b_rates=0
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.675050] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.675113] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.680349] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45821.725578] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 56 released from vdev 0
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:14:58] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.140456] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.140504] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.144891] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.151523] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.161110] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.162916] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月15日 GMT+8 16:14:58] kern.info: [45822.169299] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: radio0 (2996): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: radio0 (2996): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: radio0 (2996): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: radio0 (2996): wifi-scripts: Preparing interface: phy0-ap1
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: wpa_supplicant[2987]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: Configuration file: <inline> (phy phy0) --> new PHY
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.346805] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 32, encap 2 decap 2
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.361598] nss-wifi-drv 39000000.nss: peer dc:d8:7c:5b:79:71: id 62 ast_idx 924 ast_hash 0x39c vdev 0
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.363677] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.370070] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.375414] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.381333] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: phy0-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: phy0-ap0: interface state COUNTRY_UPDATE->HT_SCAN
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: lan (4895): udhcpc: sending renew to server 192.168.10.1
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: lan (4895): udhcpc: lease of 192.168.10.112 obtained from 192.168.10.1, lease time 43200
+[2026年11月15日 GMT+8 16:14:59] authpriv.info: dispatcher.uc: luci: accepted login on / for root from 192.168.10.194
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.958183] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45822.958227] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.043899] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.043945] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.048952] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.056750] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.070160] nss-wifi-drv 39000000.nss: vdev 1 on radio 0 is interface 36, encap 2 decap 2
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.072969] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 64 ast_idx 350 ast_hash 0x15e vdev 1
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.078394] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.086598] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.093192] br-guest: port 1(phy0-ap1) entered disabled state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.101386] br-guest: port 1(phy0-ap1) entered blocking state
+[2026年11月15日 GMT+8 16:14:59] kern.info: [45823.104003] br-guest: port 1(phy0-ap1) entered forwarding state
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: phy0-ap0: interface state HT_SCAN->ENABLED
+[2026年11月15日 GMT+8 16:14:59] daemon.notice: hostapd: phy0-ap0: AP-ENABLED
