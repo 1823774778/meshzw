@@ -346,24 +346,19 @@ return view.extend({
 		});
 
 		var traffic = this.todayTraffic();
+		var st = this.status || {};
 
-		function card(label, value, cls) {
-			return E('div', { 'class': 'wr-card' + (cls ? ' ' + cls : '') }, [
-				E('div', { 'class': 'wr-card-value' }, value),
-				E('div', { 'class': 'wr-card-label' }, label)
-			]);
-		}
-
-		dom.content(box, [
-			card(_('APs online'),
+		/* 原状态条字段并入卡片；成员 AP/客户端已有同义统计，不再重复 */
+		dom.content(box, wr.statusCards(st, { members: true, clients: true }).concat([
+			wr.card(_('APs online'),
 				this.topo ? '%d / %d'.format(online, aps.length) : '-'),
-			card(_('Clients'),
+			wr.card(_('Clients'),
 				this.topo ? String(clients.length) : '-'),
-			card(_('Wireless / Wired'),
+			wr.card(_('Wireless / Wired'),
 				this.topo ? ('%d / %d'.format(wifi, wired)) : '-'),
-			card(_('Paused'), String(paused), paused ? 'wr-card-warn' : ''),
-			card(_('Traffic today'), traffic != null ? wr.fmtBytes(traffic) : '-')
-		]);
+			wr.card(_('Paused'), String(paused), paused ? 'wr-card-warn' : ''),
+			wr.card(_('Traffic today'), traffic != null ? wr.fmtBytes(traffic) : '-')
+		]));
 	},
 
 	matchNode: function(n) {
@@ -409,6 +404,43 @@ return view.extend({
 	resetZoom: function() {
 		this.zoom = 1;
 		this.applyZoom();
+	},
+
+	/* 鼠标按住空白处拖动平移画布；触屏使用浏览器原生滑动 */
+	enablePan: function(box) {
+		if (!box || box._wrPanBound) return;
+		box._wrPanBound = true;
+
+		var sx = 0, sy = 0, sl = 0, st = 0, active = false;
+
+		box.addEventListener('pointerdown', function(ev) {
+			if (ev.pointerType === 'touch' || (ev.button != null && ev.button !== 0))
+				return;
+			if (ev.target.closest &&
+			    ev.target.closest('.wr-node, .wr-pencil, button, a'))
+				return;
+
+			active = true;
+			sx = ev.clientX; sy = ev.clientY;
+			sl = box.scrollLeft; st = box.scrollTop;
+			box.classList.add('wr-dragging');
+			ev.preventDefault();
+		});
+
+		box.addEventListener('pointermove', function(ev) {
+			if (!active) return;
+			box.scrollLeft = sl - (ev.clientX - sx);
+			box.scrollTop = st - (ev.clientY - sy);
+		});
+
+		function stop() {
+			active = false;
+			box.classList.remove('wr-dragging');
+		}
+
+		box.addEventListener('pointerup', stop);
+		box.addEventListener('pointercancel', stop);
+		box.addEventListener('pointerleave', stop);
 	},
 
 	/* ---------------------------------------------------------- layout */
@@ -786,6 +818,8 @@ return view.extend({
 			width: '100%'
 		});
 		root.style.height = 'auto';
+		/* 画布比容器宽时保留可读尺寸，由外层横向/纵向滑动查看 */
+		root.style.minWidth = lay.W + 'px';
 
 		/* defs：渐变 + 阴影 */
 		var defs = svg('defs');
@@ -1081,9 +1115,6 @@ return view.extend({
 		}
 
 		dom.content(box, root);
-
-		var sb = document.getElementById('wr-status');
-		if (sb && this.status) dom.content(sb, wr.statusBar(this.status));
 
 		this.renderLog();
 	},
@@ -2067,6 +2098,9 @@ return view.extend({
 			return sel;
 		}
 
+		var topoBox = E('div', { 'class': 'wr-topo-wrap', id: 'wr-topo' });
+		this.enablePan(topoBox);
+
 		window.setTimeout(L.bind(function() {
 			this.redraw();
 			this.updateSummary();
@@ -2075,7 +2109,6 @@ return view.extend({
 		return E('div', {}, [
 			wr.css(),
 			E('h2', {}, _('网络拓扑')),
-			E('div', { id: 'wr-status' }, wr.statusBar(this.status || {})),
 			E('div', { id: 'wr-topo-summary', 'class': 'wr-cards' }),
 			hint,
 			failed,
@@ -2120,14 +2153,15 @@ return view.extend({
 						click: L.bind(function() { this.resetZoom(); }, this)
 					}, '⟲')
 				]),
-				E('div', { 'class': 'wr-topo-wrap', id: 'wr-topo' })
+				topoBox
 			]),
 			E('div', { 'class': 'wr-legend' }, [
 				E('span', { 'class': 'wr-lg-wired' }, _('Wired backhaul')),
 				E('span', { 'class': 'wr-lg-wifi' }, _('Wireless link')),
 				E('span', { 'class': 'wr-lg-good' }, _('Signal good')),
 				E('span', { 'class': 'wr-lg-mid' }, _('Signal fair')),
-				E('span', { 'class': 'wr-lg-bad' }, _('Signal weak'))
+				E('span', { 'class': 'wr-lg-bad' }, _('Signal weak')),
+				E('div', { 'class': 'wr-hint' }, _('Drag or scroll to pan the topology'))
 			]),
 			E('div', { 'class': 'cbi-section', style: 'margin-top:1em' }, [
 				E('h3', {}, _('Roaming Event Log')),

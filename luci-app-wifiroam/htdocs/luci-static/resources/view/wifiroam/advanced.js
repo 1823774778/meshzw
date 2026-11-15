@@ -591,7 +591,7 @@ return view.extend({
 			self.st = st;
 
 			var sb = document.getElementById('wr-status');
-			if (sb) dom.content(sb, wr.statusBar(st));
+			if (sb) dom.content(sb, wr.statusCards(st));
 
 			self.renderApply();
 			self.renderBackhaulApply();
@@ -857,7 +857,7 @@ return view.extend({
 		var page = E('div', { id: 'wr-adv' }, [
 			wr.css(),
 			E('h2', {}, _('高级设置')),
-			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
+			E('div', { id: 'wr-status', 'class': 'wr-cards' }, wr.statusCards(this.st || {})),
 			notice,
 			E('div', { id: 'wr-pre' }, this.renderChecklist()),
 			form,

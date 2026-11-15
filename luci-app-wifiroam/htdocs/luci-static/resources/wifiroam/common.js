@@ -23,7 +23,7 @@ return baseclass.extend({
 		return E([]);
 	},
 
-	CSS_VER: '20261116d',
+	CSS_VER: '20261116e',
 
 	_role: null,
 
@@ -681,19 +681,42 @@ return baseclass.extend({
 		return this._devices ? this._devices.vendorKind(name) : null;
 	},
 
-	statusBar: function(st) {
-		this.checkRole(st && st.role);
-		var roamOn = st.roam && st.roam.enabled;
-		return E('div', { 'class': 'wr-statusbar' }, [
-			E('span', { 'class': 'wr-item' }, [ _('Role'), this.roleBadge(st.role) ]),
-			E('span', { 'class': 'wr-item' }, [ _('Device'), E('b', {}, st.name || '-') ]),
-			E('span', { 'class': 'wr-item' }, [ _('IP'), E('b', {}, st.ip || '-') ]),
-			E('span', { 'class': 'wr-item' }, [ _('Member APs'),
-				E('b', {}, '%d / %d'.format(st.peers_online || 0, st.peers_total || 0)) ]),
-			E('span', { 'class': 'wr-item' }, [ _('Clients'), E('b', {}, '' + (st.clients_total || 0)) ]),
-			E('span', { 'class': 'wr-item' }, [ _('Seamless Roaming'),
-				E('span', { 'class': 'wr-badge ' + (roamOn ? 'wr-badge-on' : 'wr-badge-off') },
-					roamOn ? _('Enabled') : _('Disabled')) ]),
+	/* 概览数据卡片：状态信息统一用卡片展示，不再单独放状态条 */
+	card: function(label, value, cls) {
+		return E('div', { 'class': 'wr-card' + (cls ? ' ' + cls : '') }, [
+			E('div', { 'class': 'wr-card-value' }, value),
+			E('div', { 'class': 'wr-card-label' }, label)
 		]);
+	},
+
+	/* 角色/设备/IP/成员 AP/客户端/无缝漫游卡片。
+	   skip 用于页面已有同义统计卡片时避免重复（如拓扑页的 AP/客户端统计）。 */
+	statusCards: function(st, skip) {
+		st = st || {};
+		skip = skip || {};
+
+		this.checkRole(st.role);
+
+		var roamOn = !!(st.roam && st.roam.enabled);
+		var out = [];
+
+		if (!skip.role)
+			out.push(this.card(_('Role'),
+				st.role ? this.roleBadge(st.role) : '-', 'wr-card-role'));
+		if (!skip.device)
+			out.push(this.card(_('Device'), st.name || '-'));
+		if (!skip.ip)
+			out.push(this.card(_('IP'), st.ip || '-'));
+		if (!skip.members)
+			out.push(this.card(_('Member APs'),
+				'%d / %d'.format(st.peers_online || 0, st.peers_total || 0)));
+		if (!skip.clients)
+			out.push(this.card(_('Clients'), String(st.clients_total || 0)));
+		if (!skip.roam)
+			out.push(this.card(_('Seamless Roaming'),
+				E('span', { 'class': 'wr-badge ' + (roamOn ? 'wr-badge-on' : 'wr-badge-off') },
+					roamOn ? _('Enabled') : _('Disabled'))));
+
+		return out;
 	},
 });

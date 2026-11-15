@@ -694,7 +694,7 @@ return view.extend({
 
 			var sb = document.getElementById('wr-status');
 			if (sb && self.st)
-				dom.content(sb, wr.statusBar(self.st));
+				dom.content(sb, wr.statusCards(self.st));
 
 			self.refreshOffload();
 
@@ -1030,7 +1030,7 @@ return view.extend({
 		return E('div', { id: 'wr-set' }, [
 			wr.css(),
 			E('h2', {}, _('无线设置')),
-			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
+			E('div', { id: 'wr-status', 'class': 'wr-cards' }, wr.statusCards(this.st || {})),
 			this.renderWifiPanel(),
 			this.renderGuestPanel(),
 			this.renderOffload(),
