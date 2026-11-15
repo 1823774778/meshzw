@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 49;
+var REQUIRED_VERSION = 50;
 
 return view.extend({
 	st: null,
@@ -150,6 +150,7 @@ return view.extend({
 		var st = this.st || {};
 		var roleText = { cap: _('Main AP'), sap: _('Sub AP'),
 		                 unconfigured: _('Unconfigured') }[st.role] || '-';
+		var roamOn = !!(st.roam && st.roam.enabled);
 
 		function card(label, value, cls) {
 			return E('div', { 'class': 'wr-card' + (cls ? ' ' + cls : '') }, [
@@ -158,12 +159,18 @@ return view.extend({
 			]);
 		}
 
+		/* 原顶部状态条已合并进卡片：没有的补上，已有的不重复 */
 		dom.content(box, [
 			card(_('Role'), roleText, 'wr-card-role'),
+			card(_('Device'), st.name || '-'),
+			card(_('IP'), st.ip || '-'),
 			card(_('APs online'),
 				this.topo ? '%d / %d'.format(apOnline, aps.length) : '-'),
 			card(_('Clients'),
 				this.topo ? String(clients.length) : '-'),
+			card(_('Seamless Roaming'),
+				E('span', { 'class': 'wr-badge ' + (roamOn ? 'wr-badge-on' : 'wr-badge-off') },
+					roamOn ? _('Enabled') : _('Disabled'))),
 			card(_('Wireless / Wired'),
 				this.topo ? ('%d / %d'.format(wifi, wired)) : '-'),
 			card(_('Paused'), String(blocked), blocked ? 'wr-card-warn' : ''),
@@ -342,11 +349,7 @@ return view.extend({
 	},
 
 	updateStatusDom: function() {
-		var sb = document.getElementById('wr-status');
-		if (sb)
-			dom.content(sb, wr.statusBar(this.st || {}));
-
-		/* 角色/运行时长随 status 变化，概览卡片同步刷新 */
+		/* 状态条已合并进概览卡片，这里只刷新概览 */
 		if (document.getElementById('wr-overview'))
 			this.renderOverview();
 
@@ -567,8 +570,6 @@ return view.extend({
 					click: L.bind(this.openDonate, this)
 				}, '用得爽，打个赏')
 			]),
-			E('div', { id: 'wr-status' },
-				E('div', { 'class': 'wr-hint' }, _('正在读取网络状态...'))),
 			E('div', { id: 'wr-overview', 'class': 'wr-cards' }),
 			E('div', {
 				id: 'wr-home-warn',
