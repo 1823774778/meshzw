@@ -414,6 +414,10 @@ return view.extend({
 			style: blocked ? 'background:#c62828' : null
 		}, blocked ? _('Paused') : (online ? _('Online') : _('Offline')));
 
+		/* 如果这条记录本身就是主路由/子路由，显示对应身份徽标 */
+		var roleBadge = (c.device_role === 'cap' || c.device_role === 'sap')
+			? wr.roleBadge(c.device_role) : null;
+
 		var editBtn = E('button', {
 			'class': 'wr-dcard-edit-btn',
 			title: _('Edit'),
@@ -576,6 +580,7 @@ return view.extend({
 					(!editing && c.pin) ? E('div', { 'class': 'wr-dcard-pin-tag' },
 						_('Pinned to %s').format(c.pin_name || c.pin)) : null
 				]),
+				roleBadge,
 				badge,
 				editing ? null : editBtn
 			]),

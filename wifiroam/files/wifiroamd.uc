@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 48;
+const DAEMON_VERSION = 49;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -3835,6 +3835,16 @@ function devices_live() {
 	return live;
 }
 
+/* 终端历史里如果出现的是本机/成员 AP，返回其组网身份（cap/sap），
+   用于终端页显示「主路由 / 子路由」标识。 */
+function device_ap_role(mn) {
+	let self_mn = macnorm(state.self.mac);
+	if (mn == self_mn) return state.cfg.role;
+	let p = state.peers[mn];
+	if (!p) return null;
+	return p.info?.role ?? p.role ?? "sap";
+}
+
 function devices_tick_impl() {
 	let now = time();
 	let live = devices_live();
@@ -3849,6 +3859,8 @@ function devices_tick_impl() {
 		d.hostname = it.c.hostname ?? d.hostname ?? null;
 		d.ap = it.ap;
 		d.conn = it.c.type ?? null;
+		let role = device_ap_role(key);
+		if (role == "cap" || role == "sap") d.device_role = role;
 		state._dev_dirty = true;
 	}
 	for (let key, d in state.devices) {
@@ -3886,6 +3898,8 @@ function device_history_view() {
 			node?.mac ?? d.mac ?? maccolon(macnorm(key));
 		let ap = it?.ap ?? d.ap ?? null;
 		let pin = pin_of(key);
+		let role = device_ap_role(key) ?? d.device_role ?? null;
+		if (role != "cap" && role != "sap") role = null;
 		push(out, {
 			id: key,
 			mac: node?.mac ?? d.mac ?? key,
@@ -3901,6 +3915,7 @@ function device_history_view() {
 			icon: al?.icon ?? null, note: al?.note ?? null,
 			blocked: !!state.blocked[key],
 			pin, pin_name: pin ? ap_name_of(pin) : null,
+			device_role: role,
 			can_wake: !it,
 		});
 	}
