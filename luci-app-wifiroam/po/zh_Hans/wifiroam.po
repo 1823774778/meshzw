@@ -1099,3 +1099,72 @@ msgstr "强制重连"
 
 msgid "Below this level the AP sends 802.11v BTM with candidate APs; aggressive mode forces the transition immediately, and after 3 unsuccessful attempts the client is disconnected once (no repeat within 30 minutes)."
 msgstr "低于此值时 AP 会带候选列表发送 802.11v BTM；积极模式直接强制切换，连续 3 次未成功后断开终端一次（30 分钟内不再重复断开）。"
+
+msgid "Total devices"
+msgstr "设备总数"
+
+msgid "Sort: status"
+msgstr "排序：状态"
+
+msgid "All status"
+msgstr "全部状态"
+
+msgid "Last AP"
+msgstr "最后连接 AP"
+
+msgid "Pinned AP"
+msgstr "固定 AP"
+
+msgid "Auto (no pin)"
+msgstr "自动（不固定）"
+
+msgid "Pinned to %s"
+msgstr "已固定到 %s"
+
+msgid "A pinned client is disconnected and blocked for 2 minutes when it connects to another AP."
+msgstr "已固定的终端连到其它 AP 时会被断开，并禁入 2 分钟。"
+
+msgid "Device not found in history"
+msgstr "历史记录中找不到该设备"
+
+msgid "Device is already online"
+msgstr "设备已在线"
+
+msgid "Failed to send magic packet"
+msgstr "魔术包发送失败"
+
+msgid "Invalid MAC address"
+msgstr "MAC 地址无效"
+
+msgid "Invalid AP"
+msgstr "AP 无效"
+
+msgid "Unknown AP"
+msgstr "未知 AP"
+
+msgid "Link to main AP is down"
+msgstr "与主路由的连接已断开"
+
+msgid "Magic packet sent to %s"
+msgstr "已向 %s 发送魔术包"
+
+msgid "Wake failed"
+msgstr "唤醒失败"
+
+msgid "Wake on LAN"
+msgstr "网络唤醒"
+
+msgid "Sending..."
+msgstr "发送中..."
+
+msgid "Last online"
+msgstr "最后在线"
+
+msgid "Last offline"
+msgstr "最后离线"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Pinned AP enforced"
+msgstr "固定 AP 已纠正"

@@ -89,6 +89,7 @@ var EVENT_TEXT = {
 	roam_move:    _('Roamed'),
 	roam_steer:   _('Steering requested'),
 	roam_kick:    _('Forced reconnect'),
+	pin_kick:     _('Pinned AP enforced'),
 	ap_online:    _('AP online'),
 	ap_offline:   _('AP offline'),
 	paired:       _('Paired'),

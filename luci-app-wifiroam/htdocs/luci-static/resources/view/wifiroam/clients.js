@@ -1,4 +1,4 @@
-// wifiroam client list view
+// wifiroam client devices view (online + offline history, pinned AP, Wake on LAN)
 'use strict';
 'require view';
 'require ui';
@@ -35,51 +35,58 @@ function ipValue(ip) {
 	return n;
 }
 
-function vendorDot(mac) {
-	var v = wr.vendorOf(mac);
-	var color = (v && v.color) || '#90a4ae';
-	var text = (v && v.initial) || '?';
-
-	return E('span', {
-		'class': 'wr-dev-dot',
-		style: 'background:' + color,
-		title: (v && v.name) || _('Unknown vendor')
-	}, text);
+function errText(e) {
+	return {
+		unknown_device: _('Device not found in history'),
+		already_online: _('Device is already online'),
+		send_failed: _('Failed to send magic packet'),
+		invalid_mac: _('Invalid MAC address'),
+		invalid_ap: _('Invalid AP'),
+		unknown_ap: _('Unknown AP'),
+		link_down: _('Link to main AP is down'),
+		not_cap: _('Only the main AP can pause clients')
+	}[e] || e || _('unknown');
 }
 
 return view.extend({
-	topo: null,
+	data: null,
 	filterAp: '',
 	filterText: '',
 	filterKind: '',
-	sortBy: 'name',
+	filterStatus: '',
+	sortBy: 'status',
 	blocking: {},
+	waking: {},
 
 	load: function() {
 		var ui = loadUi();
 		this.filterAp = ui.ap || '';
 		this.filterText = ui.text || '';
 		this.filterKind = ui.kind || '';
-		this.sortBy = ui.sort || 'name';
+		this.filterStatus = ui.status || '';
+		this.sortBy = ui.sort || 'status';
 
 		if (['', 'wifi', 'wired'].indexOf(this.filterKind) < 0)
 			this.filterKind = '';
-		if (['name', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
-			this.sortBy = 'name';
+		if (['', 'online', 'offline'].indexOf(this.filterStatus) < 0)
+			this.filterStatus = '';
+		if (['status', 'name', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
+			this.sortBy = 'status';
 
-		return wr.safeCall('topology');
+		return wr.safeCall('device_history');
 	},
 
 	saveUi: function() {
 		try {
 			sessionStorage.setItem(UI_KEY, JSON.stringify({
 				ap: this.filterAp, text: this.filterText,
-				kind: this.filterKind, sort: this.sortBy
+				kind: this.filterKind, status: this.filterStatus,
+				sort: this.sortBy
 			}));
 		} catch (e) { /* private mode */ }
 	},
 
-	/* 表格里是否正在输入：有焦点就绝不重建，否则会吞掉用户正在打的字 */
+	/* 列表里是否正在输入：有焦点就绝不重建，否则会吞掉用户正在打的字 */
 	hasFocusInTable: function() {
 		var box = document.getElementById('wr-clients');
 		var el = document.activeElement;
@@ -89,13 +96,12 @@ return view.extend({
 	},
 
 	refresh: function() {
-		return wr.safeCall('topology').then(L.bind(function(t) {
-			if (!t) return;
+		return wr.safeCall('device_history').then(L.bind(function(d) {
+			if (!d) return;
 
-			this.topo = t;
+			this.data = d;
 
-			if (Object.keys(this.blocking).length ||
-			    this.hasFocusInTable())
+			if (Object.keys(this.blocking).length || this.hasFocusInTable())
 				return;
 
 			this.renderAll();
@@ -103,27 +109,36 @@ return view.extend({
 	},
 
 	clients: function() {
-		return ((this.topo && this.topo.nodes) || []).filter(function(n) {
-			return n.type === 'client';
+		return (this.data && this.data.devices) || [];
+	},
+
+	apNames: function() {
+		var map = {};
+		((this.data && this.data.aps) || []).forEach(function(a) {
+			if (a && a.id) map[a.id] = a.name || a.id;
 		});
+		return map;
 	},
 
 	filtered: function() {
 		var fAp = this.filterAp, fText = (this.filterText || '').toLowerCase();
-		var fKind = this.filterKind;
+		var fKind = this.filterKind, fStatus = this.filterStatus;
 
 		var list = this.clients().filter(function(c) {
-			if (fAp && c.parent !== fAp) return false;
-			if (fKind && (c.conn && c.conn.type) !== fKind) return false;
+			if (fAp && c.ap !== fAp) return false;
+			if (fKind && (!c.conn || c.conn.type !== fKind)) return false;
+			if (fStatus === 'online' && !c.online) return false;
+			if (fStatus === 'offline' && c.online) return false;
 			if (fText) {
 				var hay = ((c.name || '') + ' ' + (c.ip || '') + ' ' +
-					(c.mac || '') + ' ' + (c.hostname || '')).toLowerCase();
+					(c.mac || '') + ' ' + (c.hostname || '') + ' ' +
+					(c.ap_name || '')).toLowerCase();
 				if (hay.indexOf(fText) < 0) return false;
 			}
 			return true;
 		});
 
-		var apNames = wr.apNameMap((this.topo && this.topo.nodes) || []);
+		var apNames = this.apNames();
 		var sort = this.sortBy;
 
 		list.sort(function(a, b) {
@@ -132,20 +147,26 @@ return view.extend({
 			case 'ip':
 				return ipValue(a.ip) - ipValue(b.ip);
 			case 'signal':
+				if (a.online !== b.online) return a.online ? -1 : 1;
 				av = (a.conn && a.conn.rssi != null) ? a.conn.rssi : -999;
 				bv = (b.conn && b.conn.rssi != null) ? b.conn.rssi : -999;
 				return bv - av;
 			case 'rate':
+				if (a.online !== b.online) return a.online ? -1 : 1;
 				av = a.conn ? Math.max(a.conn.rx_speed || 0, a.conn.tx_speed || 0) : 0;
 				bv = b.conn ? Math.max(b.conn.rx_speed || 0, b.conn.tx_speed || 0) : 0;
 				return bv - av;
 			case 'online':
-				return (a.conn && a.conn.since ? a.conn.since : 0) -
-				       (b.conn && b.conn.since ? b.conn.since : 0);
+				if (a.online !== b.online) return a.online ? -1 : 1;
+				return (b.conn && b.conn.since ? b.conn.since : 0) -
+				       (a.conn && a.conn.since ? a.conn.since : 0);
 			case 'ap':
-				return (apNames[a.parent] || '').localeCompare(apNames[b.parent] || '');
-			default:
+				return (apNames[a.ap] || a.ap || '').localeCompare(apNames[b.ap] || b.ap || '');
+			case 'name':
 				return (a.name || '').localeCompare(b.name || '');
+			default:
+				if (a.online !== b.online) return a.online ? -1 : 1;
+				return (b.last_online || 0) - (a.last_online || 0);
 			}
 		});
 		return list;
@@ -153,15 +174,15 @@ return view.extend({
 
 	summary: function() {
 		var list = this.clients();
-		var wifi = 0, wired = 0, blocked = 0;
+		var online = 0, offline = 0, blocked = 0;
 
 		list.forEach(function(c) {
-			if (c.conn && c.conn.type === 'wifi') wifi++;
-			else wired++;
+			if (c.online) online++;
+			else offline++;
 			if (c.blocked) blocked++;
 		});
 
-		return { total: list.length, wifi: wifi, wired: wired, blocked: blocked };
+		return { total: list.length, online: online, offline: offline, blocked: blocked };
 	},
 
 	renderSummary: function() {
@@ -170,7 +191,7 @@ return view.extend({
 
 		var s = this.summary();
 		var shown = this.filtered().length;
-		var isCap = !!(this.topo && this.topo.role === 'cap');
+		var isCap = !!(this.data && this.data.role === 'cap');
 
 		function card(label, value, cls) {
 			return E('div', { 'class': 'wr-card' + (cls ? ' ' + cls : '') }, [
@@ -180,9 +201,9 @@ return view.extend({
 		}
 
 		dom.content(box, [
-			card(_('Total clients'), s.total),
-			card(_('Wireless'), s.wifi),
-			card(_('Wired'), s.wired),
+			card(_('Total devices'), s.total),
+			card(_('Online'), s.online, s.online ? 'wr-card-ok' : ''),
+			card(_('Offline'), s.offline),
 			card(_('Paused'), s.blocked, s.blocked ? 'wr-card-warn' : ''),
 			E('div', { 'class': 'wr-card wr-card-note' }, [
 				E('div', { 'class': 'wr-card-value' },
@@ -198,7 +219,8 @@ return view.extend({
 		this.renderCards();
 	},
 
-	openRename: function(c) {
+	/* 编辑弹窗：自定义名称 + 固定 AP（pin）。两项都改了才一次提交。 */
+	openEdit: function(c) {
 		var self = this;
 		var input = E('input', {
 			type: 'text', 'class': 'cbi-input-text',
@@ -207,28 +229,53 @@ return view.extend({
 			style: 'width:100%'
 		});
 
+		var sel = E('select', { 'class': 'cbi-input-select', style: 'width:100%' }, [
+			E('option', { value: '' }, _('Auto (no pin)'))
+		]);
+		var known = {};
+		((this.data && this.data.aps) || []).forEach(function(a) {
+			known[a.id] = true;
+			sel.appendChild(E('option', { value: a.id }, a.name || a.id));
+		});
+		if (c.pin && !known[c.pin])
+			sel.appendChild(E('option', { value: c.pin }, c.pin_name || c.pin));
+		sel.value = c.pin || '';
+
 		var save = E('button', {
 			'class': 'btn cbi-button-positive',
 			click: function() {
+				var name = (input.value || '').trim();
+				var pin = sel.value || '';
+				var jobs = [];
+
+				if (name !== (c.custom_name || ''))
+					jobs.push(wr.call('set_alias', { mac: c.id, name: name }));
+				if (pin !== (c.pin || ''))
+					jobs.push(wr.call('set_pin', { mac: c.id, ap: pin }));
+
+				if (!jobs.length) {
+					ui.hideModal();
+					return;
+				}
+
 				wr.setBusy(save, true, _('Saving...'));
-				return wr.call('set_alias', {
-					mac: c.mac, name: input.value
-				}).then(function(res) {
-					if (res && res.ok) {
-						c.custom_name = input.value || null;
-						c.name = input.value || c.hostname || c.mac;
-						ui.hideModal();
-						wr.notify('success', _('Name saved'));
-						self.renderCards();
-					}
-					else {
-						wr.setBusy(save, false);
-						wr.notify('danger', _('Failed') + ': ' +
-							((res && res.error) || 'unknown'));
-					}
-				}).catch(function() {
+				return Promise.all(jobs).then(function(res) {
+					var err = null;
+					(res || []).forEach(function(r) {
+						if (r && r.ok === false && !err) err = r.error;
+					});
+					if (err) throw { error: err };
+					c.custom_name = name || null;
+					c.name = name || c.hostname || c.mac;
+					c.pin = pin || null;
+					c.pin_name = pin ? (self.apNames()[pin] || pin) : null;
+					ui.hideModal();
+					wr.notify('success', _('Saved'));
+					self.refresh();
+				}).catch(function(e) {
 					wr.setBusy(save, false);
-					wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
+					wr.notify('danger', _('Failed') + ': ' +
+						errText(e && e.error));
 				});
 			}
 		}, _('Save'));
@@ -240,11 +287,16 @@ return view.extend({
 			}
 		});
 
-		ui.showModal(_('Rename') + ' - ' + (c.name || c.mac), [
+		ui.showModal(_('Edit') + ' - ' + (c.name || c.mac), [
 			E('div', {}, [
 				E('div', { 'class': 'wr-hint', style: 'margin-bottom:0.4em' },
 					_('Custom name')),
-				input
+				input,
+				E('div', { 'class': 'wr-hint', style: 'margin:0.7em 0 0.4em' },
+					_('Pinned AP')),
+				sel,
+				E('div', { 'class': 'wr-hint', style: 'margin-top:0.4em' },
+					_('A pinned client is disconnected and blocked for 2 minutes when it connects to another AP.'))
 			]),
 			E('div', { 'class': 'right' }, [
 				E('button', {
@@ -261,15 +313,15 @@ return view.extend({
 	toggleBlock: function(c, btn) {
 		var self = this;
 
-		if (this.blocking[c.mac]) return;
+		if (this.blocking[c.id]) return;
 
-		if (!this.topo || this.topo.role !== 'cap') {
+		if (!this.data || this.data.role !== 'cap') {
 			wr.notify('warning', _('Only the main AP can pause clients'));
 			return;
 		}
 
 		var want = !c.blocked;
-		this.blocking[c.mac] = true;
+		this.blocking[c.id] = true;
 		wr.setBusy(btn, true, want ? _('Pausing...') : _('Resuming...'));
 
 		return wr.call('set_client_block', { mac: c.mac, block: want }).then(function(res) {
@@ -281,27 +333,46 @@ return view.extend({
 			}
 			else {
 				wr.notify('danger', _('Failed') + ': ' +
-					((res && (res.error === 'not_cap'
-						? _('Only the main AP can pause clients')
-						: res.error)) || 'unknown'));
+					((res && errText(res.error)) || 'unknown'));
 			}
 		}).catch(function() {
 			wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
 		}).then(function() {
-			delete self.blocking[c.mac];
+			delete self.blocking[c.id];
 			wr.setBusy(btn, false);
-			/* 重新拉取拓扑：暂停状态已同步到子 AP，页面立即刷新 */
+			/* 重新拉取设备历史：暂停状态已同步到子 AP，页面立即刷新 */
 			self.refresh();
+		});
+	},
+
+	wake: function(c, btn) {
+		var self = this;
+		if (this.waking[c.id]) return;
+
+		this.waking[c.id] = true;
+		wr.setBusy(btn, true, _('Sending...'));
+
+		return wr.call('wake', { mac: c.id }).then(function(res) {
+			if (res && res.ok)
+				wr.notify('success',
+					_('Magic packet sent to %s').format(c.mac || c.id));
+			else
+				wr.notify('danger', _('Wake failed') +
+					(res && res.error ? ': ' + errText(res.error) : ''));
+		}).catch(function() {
+			wr.notify('danger', _('Wake failed') + ': ' + _('request rejected'));
+		}).then(function() {
+			delete self.waking[c.id];
+			wr.setBusy(btn, false);
 		});
 	},
 
 	renderCards: function() {
 		var box = document.getElementById('wr-clients');
-		if (!box || !this.topo) return;
+		if (!box || !this.data) return;
 
 		var self = this;
-		var nodes = this.topo.nodes || [];
-		var apNames = wr.apNameMap(nodes);
+		var apNames = this.apNames();
 		var list = this.filtered();
 		var now = Math.floor(Date.now() / 1000);
 
@@ -358,15 +429,18 @@ return view.extend({
 
 	clientCard: function(c, apNames, now) {
 		var self = this;
+		var online = !!c.online;
 		var wifi = c.conn && c.conn.type === 'wifi';
 		var conn = c.conn || {};
 		var blocked = !!c.blocked;
 		var level = sigLevel(conn.rssi);
-		var since = conn.since ? Math.max(0, now - conn.since) : null;
+		var since = (online && conn.since) ? Math.max(0, now - conn.since) : null;
 		var v = wr.vendorOf(c.mac);
 
-		var statusText = blocked ? _('Paused') : (wifi ? _('Online') : _('Wired'));
-		var statusCls = blocked ? ' wr-dcard-paused' : '';
+		var statusText = !online ? _('Offline')
+			: (blocked ? _('Paused') : (wifi ? _('Online') : _('Wired')));
+		var statusCls = !online ? ' wr-dcard-offline'
+			: (blocked ? ' wr-dcard-paused' : '');
 
 		var sig = wifi
 			? E('span', { 'class': 'wr-sig ' + wr.rssiClass(conn.rssi) }, [
@@ -389,27 +463,67 @@ return view.extend({
 
 		var blockBtn = E('button', {
 			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
-			disabled: (self.topo.role !== 'cap') || !!self.blocking[c.mac],
+			disabled: (self.data.role !== 'cap') || !!self.blocking[c.id],
 			click: function(ev) {
 				return self.toggleBlock(c, ev.currentTarget);
 			}
 		}, blocked ? _('Resume') : _('Pause'));
 
-		if (self.blocking[c.mac])
+		if (self.blocking[c.id])
 			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
 
 		var editBtn = E('button', {
 			'class': 'btn cbi-button-neutral',
-			click: function() { self.openRename(c); }
-		}, _('Rename'));
+			click: function() { self.openEdit(c); }
+		}, _('Edit'));
+
+		var wakeBtn = (!online && c.can_wake)
+			? E('button', {
+				'class': 'btn cbi-button-action',
+				disabled: !!self.waking[c.id],
+				click: function(ev) {
+					return self.wake(c, ev.currentTarget);
+				}
+			}, _('Wake on LAN'))
+			: null;
+
+		if (self.waking[c.id])
+			wr.setBusy(wakeBtn, true, _('Sending...'));
 
 		var name = (c.name && c.name !== c.mac) ? c.name : (c.hostname || c.mac);
 		var sub = [];
 		if (v && v.name) sub.push(v.name);
 		if (c.hostname && c.hostname !== name) sub.push(c.hostname);
+		if (c.pin) sub.push(_('Pinned to %s').format(c.pin_name || c.pin));
+
+		var rows = [
+			this.cardRow(_('IP Address'), c.ip || '-'),
+			this.cardRow(_('MAC Address'),
+				E('span', { 'class': 'wr-mono' }, (c.mac || '-').toUpperCase())),
+			this.cardRow(online ? _('Attached AP') : _('Last AP'),
+				(c.ap_name || apNames[c.ap] || c.ap || '-')),
+			this.cardRow(_('Pinned AP'), c.pin_name || '-')
+		];
+
+		if (online) {
+			rows.push(this.cardRow(_('Connection'), wr.connText(c.conn)));
+			rows.push(this.cardRow(_('Signal'), sig));
+			rows.push(this.cardRow(_('Real-time rate'), rate));
+			rows.push(this.cardRow(_('Online time'),
+				since != null ? wr.fmtDur(since) : '-'));
+		}
+		else {
+			rows.push(this.cardRow(_('Last online'),
+				wr.fmtTime(c.last_online),
+				c.last_online
+					? E('span', { 'class': 'wr-hint' }, ' (' + wr.fmtAge(c.last_online) + ')')
+					: null));
+			rows.push(this.cardRow(_('Last offline'), wr.fmtTime(c.last_offline)));
+		}
 
 		return E('div', {
-			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '')
+			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '') +
+				(online ? '' : ' wr-dcard-off')
 		}, [
 			E('div', { 'class': 'wr-dcard-head' }, [
 				this.avatar(c),
@@ -422,34 +536,28 @@ return view.extend({
 					statusText
 				])
 			]),
-			E('div', { 'class': 'wr-dcard-rows' }, [
-				this.cardRow(_('IP Address'), c.ip || '-'),
-				this.cardRow(_('MAC Address'),
-					E('span', { 'class': 'wr-mono' }, (c.mac || '-').toUpperCase())),
-				this.cardRow(_('Attached AP'), apNames[c.parent] || c.parent || '-'),
-				this.cardRow(_('Connection'), wr.connText(c.conn)),
-				this.cardRow(_('Signal'), sig),
-				this.cardRow(_('Real-time rate'), rate),
-				this.cardRow(_('Online time'),
-					since != null ? wr.fmtDur(since) : '-')
-			]),
+			E('div', { 'class': 'wr-dcard-rows' }, rows),
 			E('div', { 'class': 'wr-dcard-actions' }, [
-				editBtn, ' ', blockBtn
+				editBtn, ' ', blockBtn,
+				wakeBtn ? ' ' : null, wakeBtn
 			])
 		]);
 	},
 
 	render: function(data) {
-		this.topo = data;
+		this.data = data;
 		poll.add(L.bind(this.refresh, this), 15);
 
-		var nodes = (data && data.nodes) || [];
-		var apNames = wr.apNameMap(nodes);
+		var devices = (data && data.devices) || [];
 		var self = this;
 		var isCap = !!(data && data.role === 'cap');
 
-		/* 上次筛选的 AP 已离线/被移除时回到全部，避免页面空白 */
-		if (this.filterAp && !apNames[this.filterAp]) {
+		/* 上次筛选的 AP 已不在历史里时回到全部，避免页面空白 */
+		var used = {};
+		devices.forEach(function(c) {
+			if (c.ap) used[c.ap] = c.ap_name || c.ap;
+		});
+		if (this.filterAp && !used[this.filterAp]) {
 			this.filterAp = '';
 			this.saveUi();
 		}
@@ -473,11 +581,35 @@ return view.extend({
 				self.renderAll();
 			}
 		}, [ E('option', { value: '' }, _('All APs')) ]);
-		Object.keys(apNames).forEach(function(id) {
-			var opt = E('option', { value: id }, apNames[id]);
+		var aps = (data && data.aps) || [];
+		var added = {};
+		aps.forEach(function(a) {
+			if (!used[a.id] || added[a.id]) return;
+			added[a.id] = true;
+			var opt = E('option', { value: a.id }, a.name || a.id);
+			if (self.filterAp === a.id) opt.selected = true;
+			apSel.appendChild(opt);
+		});
+		Object.keys(used).forEach(function(id) {
+			if (added[id]) return;
+			var opt = E('option', { value: id }, used[id]);
 			if (self.filterAp === id) opt.selected = true;
 			apSel.appendChild(opt);
 		});
+
+		var statusSel = E('select', {
+			'class': 'cbi-input-select',
+			change: function(ev) {
+				self.filterStatus = ev.target.value;
+				self.saveUi();
+				self.renderAll();
+			}
+		}, [
+			E('option', { value: '' }, _('All status')),
+			E('option', { value: 'online' }, _('Online')),
+			E('option', { value: 'offline' }, _('Offline'))
+		]);
+		statusSel.value = this.filterStatus;
 
 		var kindSel = E('select', {
 			'class': 'cbi-input-select',
@@ -501,6 +633,7 @@ return view.extend({
 				self.renderAll();
 			}
 		}, [
+			E('option', { value: 'status' }, _('Sort: status')),
 			E('option', { value: 'name' }, _('Sort: name')),
 			E('option', { value: 'ip' }, _('Sort: IP')),
 			E('option', { value: 'signal' }, _('Sort: signal')),
@@ -527,7 +660,7 @@ return view.extend({
 
 			body.push(
 				E('div', { 'class': 'wr-toolbar wr-toolbar-wrap' }, [
-					search, apSel, kindSel, sortSel,
+					search, apSel, statusSel, kindSel, sortSel,
 					E('button', {
 						'class': 'btn',
 						click: L.bind(function(ev) {

@@ -724,6 +724,13 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	border-color: var(--wr-err);
 	background: rgba(198, 40, 40, 0.05);
 }
+/* 已离线终端：卡片整体降低对比度，状态与设备页的「离线」一致 */
+.wr-dcard-off {
+	background: var(--wr-bg-2);
+	opacity: 0.9;
+}
+.wr-dcard-offline { color: var(--wr-fg-3); }
+.wr-dcard-offline .wr-dcard-dot { background: var(--wr-fg-3); }
 .wr-dcard-head { display: flex; align-items: center; gap: 0.65em; }
 .wr-dcard-avatar {
 	display: flex;

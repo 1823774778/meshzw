@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 40;
+const DAEMON_VERSION = 41;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -217,6 +217,13 @@ const BLOCK_PATH = ALIAS_DIR + "/blocked.json";
 const BLOCK_TABLE = "wifiroam_acl";
 const ACL_NFT_FILE = "/tmp/wifiroam-acl.nft";
 
+// 终端历史 / 固定 AP / 唤醒
+const DEVICES_PATH = ALIAS_DIR + "/devices.json";
+const DEVICES_FLUSH = 30;   // s：历史落盘最小间隔
+const DEVICES_MAX = 200;    // 条数上限
+const PIN_KICK_COOLDOWN = 30; // s：同一终端两次固定 AP 纠正的最小间隔
+const PIN_BAN_MS = 120000;    // ms：踢回目标 AP 时禁止立即重连的时间
+
 // ------------------------------------------------------------------ globals
 let daemon_started = time();  // 进程启动时刻，用于识别「重启后仍是旧进程」
 let ubusc;              // ubus connection
@@ -246,7 +253,7 @@ let state = {
 	brdev: "br-lan",
 	peers: {},          // macnorm -> AP peer (hello + report merged)
 	discovered: {},     // macnorm -> unconfigured device seen
-	aliases: { ver: 0, map: {} },
+	aliases: { ver: 0, map: {}, pin: {} },
 	link: null,         // SAP: outgoing channel to CAP {sock,chan,authed}
 	cap_learned: null,  // CAP ip learned from hello
 	cap_lost_since: null, // SAP: 首次发现主 AP 丢失配置的时间
@@ -281,6 +288,11 @@ let state = {
 	steer_tries: {},    // macnorm -> 连续 BTM 无果次数
 	steer_mute: {},     // macnorm -> 强制断开后的静默截止时间
 	kick_last: {},      // macnorm -> 上次强制断开时间
+	devices: {},        // macnorm -> 终端历史（在线/离线、首次/最后在线）
+	_dev_dirty: false,
+	_dev_saved: 0,
+	_dev_tick_ts: 0,
+	pin_last: {},       // macnorm -> 上次固定 AP 纠正时间
 	bss_list: null,     // SAP: CAP 下发的全网络 BSS 列表
 	_bss_cache: null,   // CAP: 全网络 BSS 列表缓存
 	_bss_sig: "",       // SAP: CAP 下发的 BSS 列表签名，变化时立即同步 11k 邻居库
@@ -521,6 +533,7 @@ function alias_load() {
 		let data = json(fs.readfile(ALIAS_PATH));
 		if (type(data) == "object") {
 			state.aliases.map = data.map ?? {};
+			state.aliases.pin = data.pin ?? {};
 			if ((data.ver ?? 0) > state.aliases.ver)
 				state.aliases.ver = data.ver;
 		}
@@ -536,6 +549,50 @@ function alias_save() {
 	cur.commit("wifiroam");
 }
 
+/* 版本号单调递增：同一秒内连续改名 + 固定 AP 时，
+   SAP 侧「ver 变大才更新」的判断仍能收到第二次变更 */
+function alias_bump() {
+	let now = time();
+	state.aliases.ver = (state.aliases.ver >= now) ? state.aliases.ver + 1 : now;
+}
+
+// ---------------------------------------------------------- AP pinning
+function ap_name_of(mn) {
+	let self_mn = macnorm(state.self.mac);
+	if (mn == self_mn || mn == "") return state.self.name;
+	let p = state.peers[mn];
+	if (!p) return mn;
+	let al = state.aliases.map[mn];
+	return (al?.name != null && al.name != "") ? al.name
+		: (p.info?.name ?? p.name ?? mn);
+}
+
+function pin_of(mn) {
+	return state.aliases.pin?.[mn] ?? null;
+}
+
+function pin_apply(mac, ap) {
+	let mn = macnorm(mac);
+	if (length(mn) != 12) return { ok: false, error: "invalid_mac" };
+
+	ap = trim("" + (ap ?? ""));
+	let target = "";
+	if (ap != "") {
+		target = macnorm(ap);
+		if (length(target) != 12) return { ok: false, error: "invalid_ap" };
+		let self_mn = macnorm(state.self.mac);
+		if (target != self_mn && !state.peers[target])
+			return { ok: false, error: "unknown_ap" };
+	}
+
+	if (!state.aliases.pin) state.aliases.pin = {};
+	if (target == "") delete state.aliases.pin[mn];
+	else state.aliases.pin[mn] = target;
+	alias_bump();
+	alias_save();
+	return { ok: true, mac: mn, ap: target };
+}
+
 function alias_apply(mac, name, icon, note) {
 	let mn = macnorm(mac);
 	if (length(mn) != 12) return false;
@@ -545,7 +602,7 @@ function alias_apply(mac, name, icon, note) {
 		state.aliases.map[mn] = {
 			name: name ?? "", icon: icon ?? null, note: note ?? null,
 		};
-	state.aliases.ver = time();
+	alias_bump();
 	alias_save();
 	return true;
 }
@@ -3407,6 +3464,8 @@ function client_node(mn, c, parent) {
 		},
 		icon: al?.icon ?? null, note: al?.note ?? null,
 		blocked: !!state.blocked[mn],
+		pin: pin_of(mn),
+		pin_name: pin_of(mn) ? ap_name_of(pin_of(mn)) : null,
 	};
 }
 
@@ -3470,6 +3529,237 @@ function build_topology() {
 		push(ap_nodes[ap].clients, mn);
 	}
 	return { nodes, self: self_mn, role: state.cfg.role, now: time() };
+}
+
+// --------------------------------------------------------- device history
+// 终端历史：在线状态由本机 + 对端上报的客户端表推导，离线记录保留供
+// 设备页展示与网络唤醒使用，落盘 /etc/wifiroam/devices.json。
+
+function devices_load() {
+	let data;
+	try { data = json(fs.readfile(DEVICES_PATH)); } catch (e) { return; }
+	if (type(data) != "object") return;
+	for (let key, d in data) {
+		if (type(d) != "object") continue;
+		/* 重启后先全部置为离线，本轮扫描到的会立即标回在线；
+		   这样断电期间产生的「最后离线时间」不会被伪造 */
+		d.online = false;
+		state.devices[key] = d;
+	}
+}
+
+function devices_save(force) {
+	if (!state._dev_dirty) return;
+	let now = time();
+	if (!force && now - state._dev_saved < DEVICES_FLUSH) return;
+	try {
+		fs.mkdir(ALIAS_DIR);
+		fs.writefile(DEVICES_PATH, sprintf("%.J", state.devices));
+		state._dev_saved = now;
+		state._dev_dirty = false;
+	} catch (e) {
+		log("devices save failed");
+	}
+}
+
+/* 历史条数上限：优先淘汰最久未上线、且没有被手动命名的记录 */
+function devices_trim() {
+	let total = length(keys(state.devices));
+	if (total <= DEVICES_MAX) return;
+	let cand = [];
+	for (let key, d in state.devices) {
+		if (d.online) continue;
+		if (state.aliases.map?.[key]) continue;
+		if (state.aliases.pin?.[key]) continue;
+		push(cand, { key, ts: d.last_online ?? d.first_seen ?? 0 });
+	}
+	sort(cand, function(a, b) { return a.ts - b.ts; });
+	for (let i = 0; i < length(cand) && total > DEVICES_MAX; i++, total--)
+		delete state.devices[cand[i].key];
+}
+
+/* 当前全网络在线终端：归属规则与 build_topology 一致，
+   SAP 缺失的 IP/主机名由 CAP 的租约/ARP/名称表补全 */
+function devices_live() {
+	let my = local_clients_cached();
+	let self_mn = macnorm(state.self.mac);
+	let owner = compute_owner(my, self_mn);
+	let leases = parse_leases();
+	let neigh = parse_neigh();
+	let live = {};
+	for (let mn, ap in owner) {
+		let c = (ap == self_mn ? my : (state.peers[ap]?.clients ?? {}))[mn];
+		if (!c) continue;
+		if (c.ip == null)
+			c.ip = leases[mn]?.ip ?? neigh[mn]?.ip ?? state.net_names?.[mn]?.ip ?? null;
+		if (c.hostname == null)
+			c.hostname = leases[mn]?.hostname ?? state.net_names?.[mn]?.hostname ?? null;
+		live[mn] = { mn, c, ap };
+	}
+	return live;
+}
+
+function devices_tick_impl() {
+	let now = time();
+	let live = devices_live();
+	for (let key, it in live) {
+		let d = state.devices[key];
+		if (!d) d = state.devices[key] = { first_seen: now };
+		if (!d.first_seen) d.first_seen = now;
+		d.online = true;
+		d.last_online = now;   // 在线期间持续刷新：语义是「最后一次在线时间」
+		d.mac = maccolon(it.mn);
+		d.ip = it.c.ip ?? d.ip ?? null;
+		d.hostname = it.c.hostname ?? d.hostname ?? null;
+		d.ap = it.ap;
+		d.conn = it.c.type ?? null;
+		state._dev_dirty = true;
+	}
+	for (let key, d in state.devices) {
+		if (!live[key] && d.online) {
+			d.online = false;
+			d.last_offline = now;
+			state._dev_dirty = true;
+		}
+	}
+	devices_trim();
+	devices_save(false);
+	return live;
+}
+
+function devices_tick() {
+	if (state.cfg.role == "unconfigured") return;
+	try {
+		devices_tick_impl();
+	} catch (e) {
+		log("devices tick failed: " + e);
+	}
+}
+
+/* 设备页数据：历史记录 + 本轮在线信息合并，在线优先、最近在线靠前 */
+function device_history_view() {
+	state._dev_tick_ts = time();
+	let live = devices_tick_impl();
+	let now = time();
+	let out = [];
+	for (let key, d in state.devices) {
+		let it = live[key];
+		let node = it ? client_node(it.mn, it.c, it.ap) : null;
+		let al = state.aliases.map[key];
+		let custom = (al?.name != null && al.name != "") ? al.name : null;
+		let name = custom ?? node?.hostname ?? d.hostname ??
+			node?.mac ?? d.mac ?? maccolon(macnorm(key));
+		let ap = it?.ap ?? d.ap ?? null;
+		let pin = pin_of(key);
+		push(out, {
+			id: key,
+			mac: node?.mac ?? d.mac ?? key,
+			name, custom_name: custom,
+			hostname: node?.hostname ?? d.hostname ?? null,
+			ip: node?.ip ?? d.ip ?? null,
+			online: !!it,
+			first_seen: d.first_seen ?? null,
+			last_online: it ? now : (d.last_online ?? null),
+			last_offline: d.last_offline ?? null,
+			ap, ap_name: ap ? ap_display(ap) : null,
+			conn: node?.conn ?? null,
+			icon: al?.icon ?? null, note: al?.note ?? null,
+			blocked: !!state.blocked[key],
+			pin, pin_name: pin ? ap_name_of(pin) : null,
+			can_wake: !it,
+		});
+	}
+	sort(out, function(a, b) {
+		if (a.online != b.online) return a.online ? -1 : 1;
+		return (b.last_online ?? 0) - (a.last_online ?? 0);
+	});
+
+	/* 固定 AP 下拉框候选：本机 + 已知对端 */
+	let aps = [ { id: macnorm(state.self.mac), name: state.self.name } ];
+	for (let mn in keys(state.peers))
+		push(aps, { id: mn, name: ap_name_of(mn) });
+	sort(aps, function(a, b) {
+		return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0);
+	});
+
+	return { now, role: state.cfg.role, devices: out, aps };
+}
+
+// ------------------------------------------------------------ wake on LAN
+// 直接在本机发魔术包：6×0xFF + 16×目标 MAC，UDP 广播到 7/9 端口。
+// 不依赖 etherwake/wakeonlan，SAP 与 CAP 都能用；广播域相同即可达。
+function hex_bytes(s) {
+	let out = "";
+	for (let i = 0; i < length(s); i += 2) {
+		let hi = index("0123456789abcdef", lc(substr(s, i, 1)));
+		let lo = index("0123456789abcdef", lc(substr(s, i + 1, 1)));
+		if (hi < 0 || lo < 0) return null;
+		out += chr(hi * 16 + lo);
+	}
+	return out;
+}
+
+function wol_send(mn) {
+	let raw = hex_bytes(mn);
+	if (!raw || length(raw) != 6) return 0;
+	let pkt = "";
+	for (let i = 0; i < 6; i++) pkt += chr(255);
+	for (let i = 0; i < 16; i++) pkt += raw;
+
+	let sock = null, sent = 0;
+	try {
+		sock = socket.create(socket.AF_INET, socket.SOCK_DGRAM, 0);
+		sock.setopt(socket.SOL_SOCKET, socket.SO_BROADCAST, true);
+	} catch (e) {
+		sock = null;
+	}
+	if (!sock) return 0;
+
+	let targets = [
+		{ address: "255.255.255.255", port: 9 },
+		{ address: "255.255.255.255", port: 7 },
+	];
+	/* 本机网段广播地址更容易被交换机/AP 转发（部分设备丢弃 255.255.255.255） */
+	if (state.bcast && state.bcast != "255.255.255.255")
+		push(targets, { address: state.bcast, port: 9 });
+	for (let t in targets) {
+		try { sock.send(pkt, 0, t); sent++; }
+		catch (e) { /* 单个目标失败不影响其它目标 */ }
+	}
+	try { sock.close(); } catch (e) {}
+	return sent;
+}
+
+// ---------------------------------------------------------- pin enforcement
+/* 固定 AP 的本机执行：连到非目标 AP 的终端直接断开并禁入一段时间。
+   每台 AP 各自纠正直连终端，CAP 不需要跨设备下发。 */
+function pin_tick() {
+	if (state.cfg.role == "unconfigured") return;
+	let pin = state.aliases.pin;
+	if (!pin || !length(keys(pin))) return;
+	let self_mn = macnorm(state.self.mac);
+	let now = time();
+	let clients = wifi_clients();
+	for (let mn, c in clients) {
+		if (c.type != "wifi" || !c.ifname) continue;
+		let ap = pin_of(mn);
+		if (!ap || ap == self_mn) continue;
+		/* 目标 AP 已离线/退网时不再纠正，避免终端被反复踢下线 */
+		if (!state.peers[ap]?.authed) continue;
+		if (now - (state.pin_last[mn] ?? 0) < PIN_KICK_COOLDOWN) continue;
+		try {
+			ubusc.call("hostapd." + c.ifname, "del_client", {
+				addr: maccolon(mn), deauth: true, reason: 1,
+				ban_time: PIN_BAN_MS,
+			});
+			state.pin_last[mn] = now;
+			push_event("pin_kick", maccolon(mn),
+				sprintf("%s → %s", ap_display(self_mn), ap_display(ap)),
+				client_name_of(mn, clients));
+		} catch (e) {
+			log("pin kick " + mn + " failed");
+		}
+	}
 }
 
 // --------------------------------------------------------- roam configurator
@@ -4544,6 +4834,15 @@ function srv_rx(conn, req) {
 			req.reply({ ok: false });
 		}
 		break;
+	case "pin_update":
+		if (state.cfg.role == "cap" &&
+		    pin_apply(args.mac, args.ap ?? "").ok) {
+			alias_broadcast();
+			req.reply({ ok: true });
+		} else {
+			req.reply({ ok: false });
+		}
+		break;
 	default:
 		req.reply({ ok: false, error: "unknown_method" });
 	}
@@ -4973,8 +5272,13 @@ function factory_reset() {
 	try { fs.unlink(ALIAS_PATH); } catch (e) {}
 	try { fs.unlink(USAGE_PATH); } catch (e) {}
 	try { fs.unlink(BLOCK_PATH); } catch (e) {}
-	state.aliases = { ver: 0, map: {} };
+	try { fs.unlink(DEVICES_PATH); } catch (e) {}
+	state.aliases = { ver: 0, map: {}, pin: {} };
 	state.blocked = {};
+	state.devices = {};
+	state._dev_dirty = false;
+	state._dev_saved = 0;
+	state.pin_last = {};
 	acl_apply();
 	state.usage = { day: "", online: {}, ndata: {}, ndir: {} };
 	state.events = [];
@@ -5124,6 +5428,50 @@ let api_obj = {
 			acl_set(mn, on);
 			log(sprintf("client block %s -> %s", maccolon(mn), on ? "on" : "off"));
 			return { ok: true, blocked: on };
+		},
+	},
+	/* 终端历史（含已离线设备）：设备页卡片与网络唤醒的数据源 */
+	device_history: {
+		args: { ubus_rpc_session: "" },
+		call: function(req) { return device_history_view(); },
+	},
+	wake: {
+		args: { ubus_rpc_session: "", mac: "" },
+		call: function(req) {
+			let mn = macnorm(req.args.mac ?? "");
+			if (length(mn) != 12) return libubus.STATUS_INVALID_ARGUMENT;
+			let d = state.devices[mn];
+			if (!d) return { ok: false, error: "unknown_device" };
+			/* 只唤醒曾经在线过的设备（历史白名单），在线设备直接拒绝 */
+			if (d.online) return { ok: false, error: "already_online" };
+			let sent = wol_send(mn);
+			if (!sent) return { ok: false, error: "send_failed" };
+			return { ok: true, sent, mac: maccolon(mn) };
+		},
+	},
+	/* 固定 AP：让终端只连指定 AP（空字符串取消固定）。
+	   SAP 侧改动统一转发给 CAP 保存并广播，避免各 AP 记录不一致。 */
+	set_pin: {
+		args: { ubus_rpc_session: "", mac: "", ap: "" },
+		call: function(req) {
+			let a = req.args;
+			if (!a.mac) return libubus.STATUS_INVALID_ARGUMENT;
+			if (state.cfg.role == "sap" && state.link?.authed) {
+				try {
+					state.link.chan.defer({
+						method: "pin_update",
+						data: { mac: a.mac, ap: a.ap ?? "" },
+						data_cb: function() {}, cb: function() {},
+					});
+				} catch (e) {
+					sap_disconnect();
+					return { ok: false, error: "link_down" };
+				}
+				return { ok: true, forwarded: true };
+			}
+			let r = pin_apply(a.mac, a.ap ?? "");
+			if (r.ok) alias_broadcast();
+			return r;
 		},
 	},
 	reset: {
@@ -6146,6 +6494,7 @@ function main() {
 	if (state.cfg.role == "sap")
 		enable_relay_ap_mode();
 	alias_load();
+	devices_load();
 	usage_load();
 	acl_load();
 	detect_self();
@@ -6178,6 +6527,8 @@ function main() {
 	/* 有线/环路检测需要更快响应：2s 一次，其余巡检仍用 TICK_INTERVAL */
 	uloop.interval(2000, backhaul_tick);
 	uloop.interval(STEER_TICK, steer_tick);
+	uloop.interval(TICK_INTERVAL, devices_tick);
+	uloop.interval(TICK_INTERVAL, pin_tick);
 	uloop.interval(RRM_SYNC_INTERVAL, rrm_sync_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
 	uloop.interval(USAGE_TICK, usage_tick);
