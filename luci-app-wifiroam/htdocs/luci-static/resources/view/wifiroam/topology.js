@@ -1364,6 +1364,8 @@ return view.extend({
 		var self = this;
 		var box = E('div', { 'class': 'wr-appctl' });
 		let saving = false;
+		/* 应用列表默认折叠，点击标题旁按钮展开 */
+		let expanded = false;
 
 		function render(force) {
 			// 用户正在操作下拉框 / 开关时不打断
@@ -1441,8 +1443,20 @@ return view.extend({
 				enableCb.checked = !!ac.enabled;
 			}
 
+			var titleKids = [ E('b', {}, _('App Usage & Access Control')) ];
+			if (ac && ac.ok) {
+				titleKids.push(E('button', {
+					'class': 'btn wr-app-toggle',
+					type: 'button',
+					click: function() {
+						expanded = !expanded;
+						render(true);
+					}
+				}, expanded ? _('Collapse active apps') : _('Show all active apps')));
+			}
+
 			var head = E('div', { 'class': 'wr-appctl-head' }, [
-				E('b', {}, _('App Usage & Access Control')),
+				E('div', { 'class': 'wr-appctl-title' }, titleKids),
 				enableCb
 					? E('label', { 'class': 'wr-appctl-switch' }, [
 						enableCb, ' ' + _('Enable')
@@ -1593,9 +1607,13 @@ return view.extend({
 			if (!ac.enabled)
 				children.push(E('div', { 'class': 'wr-muted', style: 'margin:0.4em 0' },
 					_('Turn on app control to collect usage and enforce rules')));
-			children.push(list);
-			children.push(E('div', { 'class': 'wr-appctl-tip' },
-				_('Identified by DNS lookups; encrypted DNS may bypass detection.')));
+			children.push(E('div', {
+				'class': 'wr-app-body' + (expanded ? '' : ' wr-app-body-collapsed')
+			}, [
+				list,
+				E('div', { 'class': 'wr-appctl-tip' },
+					_('Identified by DNS lookups; encrypted DNS may bypass detection.'))
+			]));
 
 			dom.content(box, children);
 		}
@@ -2086,12 +2104,14 @@ return view.extend({
 				]),
 				E('div', { 'class': 'wr-dev-info' }, infoLines),
 				nameEditRow,
-				blockBtn ? E('div', { 'class': 'wr-dev-actions' }, [
-					blockBtn, ' ', blockStatus
-				]) : null,
 				E('div', { 'class': 'wr-dev-actions' }, [
 					E('span', { 'class': 'wr-hint' }, _('Pinned AP') + ':'),
-					pinSel, ' ', pinBtn, ' ', pinStatus, ' ', wakeBtn
+					pinSel, ' ', pinBtn, ' ', pinStatus, ' ',
+					blockBtn ? blockBtn : null,
+					blockBtn ? ' ' : null,
+					wakeBtn,
+					blockBtn ? ' ' : null,
+					blockBtn ? blockStatus : null
 				]),
 				wifi ? E('div', { 'class': 'wr-dev-rates' }, [
 					/* 设备视角实时速率：↑发送=终端→AP，↓接收=AP→终端；

@@ -640,6 +640,12 @@ msgstr "自动修复后版本仍不一致，请更新插件软件包。"
 msgid "App Usage & Access Control"
 msgstr "应用使用与访问控制"
 
+msgid "Show all active apps"
+msgstr "展开全部活跃应用"
+
+msgid "Collapse active apps"
+msgstr "收起活跃应用"
+
 msgid "Enable"
 msgstr "启用"
 

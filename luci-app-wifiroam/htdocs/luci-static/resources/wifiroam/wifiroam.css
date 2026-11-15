@@ -269,6 +269,14 @@
 	flex-wrap: wrap;
 	gap: 0.5em;
 }
+.wr-appctl-title {
+	display: flex;
+	align-items: center;
+	gap: 0.6em;
+	flex-wrap: wrap;
+}
+.wr-app-toggle { font-size: 12.5px; padding: 0.22em 0.7em; }
+.wr-app-body-collapsed { display: none; }
 .wr-appctl-switch {
 	display: inline-flex;
 	align-items: center;
@@ -935,21 +943,39 @@ button.wr-wake-btn:disabled {
 .wr-sched-state.on { color: var(--wr-err); }
 .wr-sched-state.off { color: var(--wr-ok); }
 .wr-wd { display: inline-flex; gap: 3px; flex-wrap: wrap; }
-.wr-wd-btn {
-	min-width: 2em;
+/* 日期按钮：与「网络唤醒」按钮同款黄绿描边，选中态加深 */
+button.wr-wd-btn {
+	min-width: 2.2em;
 	font-size: 12px;
+	font-weight: 600;
 	line-height: 1.4;
-	background: var(--wr-bg-2);
-	color: var(--wr-fg-3);
-	border: 1px solid var(--wr-line);
+	background: transparent;
+	color: #5f7a00;
+	border: 1px solid #8aa61b;
 	border-radius: 4px;
 	cursor: pointer;
-	padding: 0.2em 0.35em;
+	padding: 0.25em 0.45em;
+	opacity: 0.55;
 }
-.wr-wd-btn.active {
-	background: var(--wr-primary);
-	color: #fff;
-	border-color: var(--wr-primary);
+button.wr-wd-btn:hover { background: rgba(154, 187, 42, 0.12); }
+button.wr-wd-btn.active {
+	opacity: 1;
+	background: rgba(154, 187, 42, 0.18);
+	color: #5f7a00;
+	border-color: #8aa61b;
+}
+body.wr-dark button.wr-wd-btn,
+:root[data-darkmode='true'] button.wr-wd-btn {
+	color: #c7e34a;
+	border-color: #b5d334;
+}
+body.wr-dark button.wr-wd-btn:hover,
+:root[data-darkmode='true'] button.wr-wd-btn:hover {
+	background: rgba(181, 211, 52, 0.12);
+}
+body.wr-dark button.wr-wd-btn.active,
+:root[data-darkmode='true'] button.wr-wd-btn.active {
+	background: rgba(181, 211, 52, 0.2);
 }
 
 /* ------------------------------------------------------------ responsive */
