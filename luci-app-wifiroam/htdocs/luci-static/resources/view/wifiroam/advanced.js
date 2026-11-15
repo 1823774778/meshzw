@@ -824,7 +824,7 @@ return view.extend({
 					rssiSel, ' ', rssiVal, ' dBm',
 				]),
 				E('div', { 'class': 'wr-hint' },
-					_('Below this level the AP sends an advisory 802.11v BTM first; it only forces a transition when the signal stays critical and a candidate AP is known.')),
+					_('Below this level the AP sends 802.11v BTM with candidate APs; aggressive mode forces the transition immediately, and after 3 unsuccessful attempts the client is disconnected once (no repeat within 30 minutes).')),
 			]),
 			isCap ? E('div', {}, [ saveBtn ]) : '',
 		]);

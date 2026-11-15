@@ -35,12 +35,15 @@ const MAX_EVENTS = 100;
 const CONN_AUTH_TIMEOUT = 15;   // s：未认证 TCP 连接最长存活时间
 const MAX_UNAUTH_CONNS = 16;    // 未认证连接上限，避免 fd 被耗尽
 const WIRED_TTL = 300;    // s wired client stays listed after last FDB sighting
-const STEER_COOLDOWN = 30;  // s 同一终端两次建议式 BSS Transition 引导的最小间隔
+const STEER_COOLDOWN = 30;  // s 同一终端两次引导/断开尝试的最小间隔
 const MIN_STEER_ASSOC = 10; // s 终端入网后至少稳定这么久才允许被引导
 const STEER_CONFIRM = 2;    // 连续低于阈值的采样次数（steer_tick 每 3s）
 const STEER_CRITICAL_DROP = 5;    // 低于阈值多少 dBm 视为临界
 const STEER_CRITICAL_CONFIRM = 3; // 临界信号需要连续采样次数
-const STEER_CRITICAL_DELAY = 8;   // 建议式 BTM 后多久仍未改善才强制
+const STEER_KICK_AFTER = 3;       // 连续 BTM 无果次数，达到后强制断开
+const STEER_KICK_COOLDOWN = 1800; // s 同一终端两次强制断开的最小间隔
+const STEER_FORCE_TIMER = 10;     // TBTT：强制 BTM 的 disassociation timer（约 1s）
+const STEER_VALIDITY = 30;        // TBTT：BTM 候选有效期
 const STEER_TICK = 3000;    // ms：steering 采样间隔（只走 ubus，不扫 iw）
 const RRM_SYNC_INTERVAL = 15000; // ms：向 hostapd 同步 11k 邻居库的间隔
 const BACKHAUL_SECTION = "wifiroam_bh";
@@ -69,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 39;
+const DAEMON_VERSION = 40;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -227,7 +230,7 @@ let _sec_cache = {};
 let _clients_cache = { ts: 0, data: null };
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
-let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
+let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_blocked_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
 let sap_self_reset, sap_disconnect, roam_default_init, backhaul_stp_ensure;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
@@ -275,6 +278,9 @@ let state = {
 	steer_last: {},     // macnorm -> 上次 BSS Transition 引导时间
 	steer_low: {},      // macnorm -> 连续低于阈值的采样次数
 	steer_stage: {},    // macnorm -> 0/1/2（建议/强制阶段）
+	steer_tries: {},    // macnorm -> 连续 BTM 无果次数
+	steer_mute: {},     // macnorm -> 强制断开后的静默截止时间
+	kick_last: {},      // macnorm -> 上次强制断开时间
 	bss_list: null,     // SAP: CAP 下发的全网络 BSS 列表
 	_bss_cache: null,   // CAP: 全网络 BSS 列表缓存
 	_bss_sig: "",       // SAP: CAP 下发的 BSS 列表签名，变化时立即同步 11k 邻居库
@@ -2607,6 +2613,11 @@ function acl_set(mn, on) {
 	}
 	acl_save();
 	acl_apply();
+
+	/* 暂停状态立即同步到各子 AP，子 AP 页面无需等下一轮拓扑轮询 */
+	if (state.cfg.role == "cap")
+		for (let pmn, p in state.peers)
+			if (p.authed) push_blocked_to(pmn);
 }
 
 
@@ -4027,6 +4038,18 @@ function sap_rx(req) {
 		req.reply({ ok: true, ver: state.aliases.ver });
 		break;
 	}
+	case "block_sync": {
+		/* CAP 同步暂停联网列表：只更新展示状态，实际丢包在主 AP 执行 */
+		let b = req.args.blocked;
+		if (type(b) == "object") {
+			state.blocked = {};
+			for (let mn, v in b)
+				if (v && length(mn) == 12) state.blocked[mn] = true;
+			acl_save();
+		}
+		req.reply({ ok: true });
+		break;
+	}
 	case "push_backhaul_config": {
 		let r = apply_backhaul_local(req.args.backhaul ?? {}, "sap");
 		req.reply({ ok: r.ok, ver: r.ver, error: r.error });
@@ -4414,6 +4437,8 @@ function srv_rx(conn, req) {
 				push_guest_to(mn, ga);
 			if (state.cfg.role == "cap")
 				push_offload_to(mn);
+			if (state.cfg.role == "cap")
+				push_blocked_to(mn);
 			/* 旧版 SAP 不发送 wifi_sig，保持原有「保存 Wi-Fi 时才推送」的行为 */
 			return 0;
 		}
@@ -4828,6 +4853,22 @@ push_offload_to = function(mn) {
 	}
 };
 
+/* CAP：把暂停联网列表同步给子 AP。子 AP 不执行 nft 丢弃（转发在主 AP），
+   只更新本地状态，让子 AP 页面/拓扑显示一致的「已暂停」。 */
+push_blocked_to = function(mn) {
+	let p = state.peers[mn];
+	if (!p?.authed || !p.chan) return;
+	try {
+		p.chan.defer({
+			method: "block_sync",
+			data: { blocked: state.blocked },
+			data_cb: function() {}, cb: function() {},
+		});
+	} catch (e) {
+		peer_link_dead(mn, "push_blocked");
+	}
+};
+
 // ------------------------------------------------------------------ ubus API
 function find_client(mn) {
 	let local = local_clients_cached();
@@ -4947,6 +4988,9 @@ function factory_reset() {
 	state.steer_last = {};
 	state.steer_low = {};
 	state.steer_stage = {};
+	state.steer_tries = {};
+	state.steer_mute = {};
+	state.kick_last = {};
 	state.bss_list = null;
 	state._bss_cache = null;
 	state.last_apply = null;
@@ -5701,23 +5745,26 @@ let api_obj = {
 };
 
 // ------------------------------------------------------- RSSI steering (11v)
-// 先建议式 BTM（不断线），只有连续低信号且低于临界值时才强制。
-// 候选 BSS 来自 steer_bss_all()；强制前必须有候选，避免把终端踢到空处。
-function steer_neighbors(c, all) {
+// 信号低于阈值时优先发强制 BTM（带候选）；连续 3 次仍不迁移则断开终端，
+// 让它重新扫描选 AP。候选 BSS 来自 steer_bss_all()；没有候选时绝不踢。
+function steer_neighbors(c, all, owner_mn) {
 	let band = channel_band_key(c.band);
-	let self_mn = macnorm(state.self.mac);
-	let out = [];
+	let self_mn = owner_mn ?? macnorm(state.self.mac);
+	let same = [], cross = [];
 	for (let b in all) {
 		if (!b.bssid || int(b.channel ?? 0) <= 0) continue;
 		if (b.ssid != c.ssid) continue;
-		if (channel_band_key(b.band) != band) continue;
-		/* 排除当前 AP 自己的 BSS，只保留其它 AP 的候选 */
-		if (b.ap_mac == self_mn) continue;
-		if (!b.ap_mac && b.ifname && c.ifname && b.ifname == c.ifname) continue;
-		push(out, b);
-		if (length(out) >= 4) break;
+		/* 只排除终端当前所在的 BSS；同一台 AP 的其它频段/SSID 仍可作为
+		   候选（2.4G 弱信号可引导到本机 5G，不必跨到另一台 AP）。 */
+		if (b.ap_mac == self_mn &&
+		    (!b.ifname || !c.ifname || b.ifname == c.ifname)) continue;
+		/* 同频段优先；没有同频段候选时允许跨频段（例如 2.4G 设备
+		   只能看到另一台 AP 的 5G BSS，否则会完全没有候选可引导） */
+		if (channel_band_key(b.band) == band) push(same, b);
+		else push(cross, b);
 	}
-	return out;
+	let out = same.concat(cross);
+	return slice(out, 0, 4);
 }
 
 /* 5GHz/6GHz 操作类（IEEE 802.11 全局操作类）：
@@ -5831,13 +5878,27 @@ function steer_btm(c, mn, imminent, timer, validity, neighbors) {
 	}
 }
 
+/* 连续 BTM 无效后的兜底：断开终端，让它重新扫描并选择信号更好的 AP。
+   必须已有候选（btm_neigh 非空），否则会把终端踢到空处。 */
+function steer_kick(c, mn) {
+	try {
+		ubusc.call("hostapd." + c.ifname, "del_client", {
+			addr: maccolon(mn), deauth: true, reason: 1, ban_time: 0,
+		});
+		return true;
+	} catch (e) {
+		log("steer kick " + mn + " failed");
+		return false;
+	}
+}
+
 function steer_tick_impl() {
 	if (state.cfg.role == "unconfigured") return;
 	let roam = current_roam_cfg();
 	if (!roam.enabled || !roam.v_bss_transition) return;
 	let threshold = roam.rssi_threshold;
 	if (threshold == null || threshold >= 0) return;
-	if (!length(roam.ssids)) return;
+	/* ssids 为空时视为对所有非访客 SSID 生效；非空时只处理用户勾选的 SSID */
 
 	let has_peer = false;
 	for (let mn, p in state.peers)
@@ -5853,10 +5914,12 @@ function steer_tick_impl() {
 	for (let mn, c in clients) {
 		seen[mn] = true;
 		if (c.type != "wifi" || !c.ifname || c.guest ||
-		    c.ssid == null || index(roam.ssids, c.ssid) < 0 ||
+		    c.ssid == null ||
+		    (length(roam.ssids) && index(roam.ssids, c.ssid) < 0) ||
 		    c.rssi == null) {
 			delete state.steer_low[mn];
 			delete state.steer_stage[mn];
+			delete state.steer_tries[mn];
 			continue;
 		}
 
@@ -5864,53 +5927,61 @@ function steer_tick_impl() {
 		if (rssi >= threshold) {
 			delete state.steer_low[mn];
 			delete state.steer_stage[mn];
+			delete state.steer_tries[mn];
 			continue;
 		}
 		if (c.connected_time != null && int(c.connected_time) < MIN_STEER_ASSOC) {
 			delete state.steer_low[mn];
 			delete state.steer_stage[mn];
+			delete state.steer_tries[mn];
 			continue;
 		}
 
 		let low = (state.steer_low[mn] ?? 0) + 1;
 		state.steer_low[mn] = low;
 		let critical = rssi <= critical_at;
-		let stage = state.steer_stage[mn] ?? 0;
 		let last = state.steer_last[mn] ?? 0;
 		let since = now - last;
-
+		let tries = state.steer_tries[mn] ?? 0;
 		let btm_neigh = steer_btm_neighbors(steer_neighbors(c, all));
+		let force = (roam.rssi_profile == "aggressive") || critical;
 
-		if (stage == 0) {
-			if (low < (critical ? STEER_CRITICAL_CONFIRM : STEER_CONFIRM))
+		if (low < (critical ? STEER_CRITICAL_CONFIRM : STEER_CONFIRM))
+			continue;
+		if (since < STEER_COOLDOWN)
+			continue;
+
+		/* 连续多次 BTM 都没效果：断开终端，让它重新扫描并选更好的 AP。
+		   没有候选时绝不踢，避免把终端踢到空处。 */
+		if (tries >= STEER_KICK_AFTER) {
+			if ((state.steer_mute[mn] ?? 0) > now || !length(btm_neigh))
 				continue;
-			/* validity 单位是 TBTT（约 100ms/个），150 ≈ 15s */
-			if (steer_btm(c, mn, false, 0, 150, btm_neigh)) {
+			if (steer_kick(c, mn)) {
+				state.kick_last[mn] = now;
+				state.steer_mute[mn] = now + STEER_KICK_COOLDOWN;
+				state.steer_tries[mn] = 0;
 				state.steer_last[mn] = now;
-				state.steer_stage[mn] = 1;
-				push_event("roam_steer", maccolon(mn),
-					sprintf("rssi=%d < %d advisory", rssi, threshold),
+				state.steer_stage[mn] = 0;
+				push_event("roam_kick", maccolon(mn),
+					sprintf("rssi=%d < %d cand=%d", rssi, threshold,
+						length(btm_neigh)),
 					client_name_of(mn, clients));
 			}
+			continue;
 		}
-		else if (stage == 1 && critical &&
-		         low >= STEER_CRITICAL_CONFIRM &&
-		         since >= STEER_CRITICAL_DELAY) {
-			/* 只有存在明确候选时才强制，避免把终端踢下线 */
-			if (!length(btm_neigh)) continue;
-			/* disassociation_timer 也是 TBTT：30 ≈ 3s，给终端留出切换时间 */
-			if (steer_btm(c, mn, true, 30, 150, btm_neigh)) {
-				state.steer_last[mn] = now;
-				state.steer_stage[mn] = 2;
-				push_event("roam_steer", maccolon(mn),
-					sprintf("rssi=%d < %d forced", rssi, threshold),
-					client_name_of(mn, clients));
-			}
-		}
-		else if (stage == 1 && since >= STEER_COOLDOWN) {
-			/* 终端没接受建议，再发一次建议式 BTM */
-			if (steer_btm(c, mn, false, 0, 150, btm_neigh))
-				state.steer_last[mn] = now;
+
+		/* 积极模式 / 临界信号直接发强制 BTM（带候选），
+		   其它模式先用建议式，避免普通终端被频繁打断。 */
+		let imminent = force && length(btm_neigh) > 0;
+		let timer = imminent ? STEER_FORCE_TIMER : 0;
+		if (steer_btm(c, mn, imminent, timer, STEER_VALIDITY, btm_neigh)) {
+			state.steer_last[mn] = now;
+			state.steer_stage[mn] = imminent ? 2 : 1;
+			state.steer_tries[mn] = tries + 1;
+			push_event("roam_steer", maccolon(mn),
+				sprintf("rssi=%d < %d %s cand=%d", rssi, threshold,
+					imminent ? "forced" : "advisory", length(btm_neigh)),
+				client_name_of(mn, clients));
 		}
 	}
 
@@ -5919,7 +5990,13 @@ function steer_tick_impl() {
 			delete state.steer_low[mn];
 			delete state.steer_stage[mn];
 			delete state.steer_last[mn];
+			delete state.steer_tries[mn];
 		}
+
+	/* 静默期过期的记录清掉，避免长期运行后 map 无限增长 */
+	for (let mn in keys(state.steer_mute))
+		if (state.steer_mute[mn] <= now)
+			delete state.steer_mute[mn];
 }
 
 function steer_tick() {
@@ -6007,6 +6084,9 @@ reconfigure = function() {
 	state.steer_last = {};
 	state.steer_low = {};
 	state.steer_stage = {};
+	state.steer_tries = {};
+	state.steer_mute = {};
+	state.kick_last = {};
 	state.bss_list = null;
 	state._bss_cache = null;
 	state._bss_sig = "";

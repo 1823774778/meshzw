@@ -9,6 +9,7 @@
 'require wifiroam.oui as oui';
 'require wifiroam.logos as logos';
 'require wifiroam.devices as devices';
+'require wifiroam.modelart as modelart';
 
 var SVGNS = 'http://www.w3.org/2000/svg';
 
@@ -17,16 +18,77 @@ wr.useVendorLogos(logos.data);
 wr.useDevices(devices);
 
 var LAY = {
-	rootY: 100, apY: 306, clY0: 470, clStep: 92,
-	laneW: 212, minW: 840,
+	rootY: 100, apY: 306, clY0: 470, clStep: 104,
+	laneW: 212, minW: 840, margin: 18,
 	clGap: 118, clPerRow: 5   /* 终端并联：横向间距与每行上限 */
 };
+
+/* 布局主题：与上传源码一致，cap/ap 渐变、AP 卡片/图标、终端卡片/徽标 */
+var THEMES = {
+	classic: {
+		label: _('Classic'), ap: 'icon', client: 'card', linkTop: 86,
+		apG: ['#ffffff', '#e3edfb'], capG: ['#ffffff', '#dff2e3'],
+		apStroke: '#1565c0', capStroke: '#2e7d32'
+	},
+	map: {
+		label: _('Map'), ap: 'card', client: 'badge', linkTop: 52,
+		apG: ['#ffffff', '#f8fafc'], capG: ['#ffffff', '#f6f2ff'],
+		apStroke: '#3f9e8a', capStroke: '#7a5cf0'
+	},
+	dark: {
+		label: _('Dark'), ap: 'icon', client: 'card', linkTop: 86,
+		apG: ['#1b2c46', '#122036'], capG: ['#133a2b', '#0f2b21'],
+		apStroke: '#4b7fbf', capStroke: '#3fae8f'
+	},
+	minimal: {
+		label: _('Minimal'), ap: 'icon', client: 'card', linkTop: 86,
+		apG: ['#ffffff', '#f5f8fc'], capG: ['#ffffff', '#f4faf6'],
+		apStroke: '#b9c7d6', capStroke: '#9bd0b6'
+	}
+};
+var THEME_IDS = [ 'classic', 'map', 'dark', 'minimal' ];
+
+var ROUTER_ART = [
+	{ name: 'Super Gateway S20P', re: /s20p|super\s*gateway/i,
+	  body: '#37474f', edge: '#263238', panel: '#51646e', ants: 4,
+	  tower: false, led: '#4fc3f7', ledN: 4 },
+	{ name: 'JDCloud RE-CS-02', re: /re[-_\s]?cs[-_\s]?02/i,
+	  body: '#ffffff', edge: '#9fb0c2', panel: '#dde6f0', ants: 2,
+	  tower: true, led: '#e1251b', ledN: 1 },
+	{ name: 'JDCloud RE-SS-01', re: /re[-_\s]?ss[-_\s]?01/i,
+	  body: '#ffffff', edge: '#9fb0c2', panel: '#dde6f0', ants: 0,
+	  tower: false, led: '#34a853', ledN: 1 }
+];
+var ROUTER_ART_FALLBACK = {
+	name: '', body: '#ffffff', edge: '#b0bec5', panel: '#eceff1',
+	ants: 2, tower: false, led: '#4fc3f7', ledN: 2
+};
+
+function routerArtSpec(model) {
+	var m = String(model || '');
+	for (var i = 0; i < ROUTER_ART.length; i++)
+		if (ROUTER_ART[i].re.test(m)) return ROUTER_ART[i];
+	return ROUTER_ART_FALLBACK;
+}
+
+function routerPhoto(model) {
+	var m = String(model || '');
+	if (!m) return null;
+	if (modelart.map[m]) return modelart.map[m];
+	var low = m.toLowerCase();
+	for (var i = 0; i < modelart.tokens.length; i++) {
+		var t = modelart.tokens[i];
+		if (low.indexOf(t[0]) >= 0 && low.indexOf(t[1]) >= 0) return t[2];
+	}
+	return null;
+}
 
 var EVENT_TEXT = {
 	client_join:  _('Client joined'),
 	client_leave: _('Client left'),
 	roam_move:    _('Roamed'),
 	roam_steer:   _('Steering requested'),
+	roam_kick:    _('Forced reconnect'),
 	ap_online:    _('AP online'),
 	ap_offline:   _('AP offline'),
 	paired:       _('Paired'),
@@ -165,6 +227,7 @@ return view.extend({
 	collapsed: {},
 	zoom: 1,
 	search: '',
+	themeId: null,
 
 	load: function() {
 		return Promise.all([
@@ -389,8 +452,8 @@ return view.extend({
 		});
 
 		/* 不足最小宽度时整体居中 */
-		var W = Math.max(LAY.minW, x);
-		var shift = (W - x) / 2;
+		var W = Math.max(LAY.minW, x + 2 * LAY.margin);
+		var shift = LAY.margin + (W - 2 * LAY.margin - x) / 2;
 		if (shift > 0)
 			Object.keys(pos).forEach(function(id) { pos[id].x += shift; });
 
@@ -452,65 +515,114 @@ return view.extend({
 	},
 
 	/* ---------------------------------------------------------- icons */
-	apIcon: function(g, p, a) {
-		var isCap = (a.role === 'cap');
-		var w = 48, h = 48, accent = isCap ? '#2e7d32' : '#1565c0';
+	/* AP 外观：优先用 modelart 内置的实拍图，其次按型号画风格化路由器 */
+	routerArt: function(g, cx, cy, k, a, isCap, accent, withBadge) {
+		var photo = routerPhoto(a.model);
+		if (photo) {
+			this.routerPhotoArt(g, cx, cy, k, a, isCap, accent, withBadge, photo);
+			return;
+		}
+		var sp = routerArtSpec(a.model);
+		function X(v) { return cx + v * k; }
+		function Y(v) { return cy + v * k; }
+		function S(v) { return v * k; }
+		var sw = Math.max(1, 1.5 * k);
+		var art = svg('g', { 'class': 'wr-ap-art' });
+		art.appendChild(svg('title', {}, sp.name || a.model || (isCap ? 'CAP' : 'AP')));
 
-		[-12, 12].forEach(function(dx) {
-			g.appendChild(svg('line', {
-				x1: p.x + dx, y1: p.y - h / 2 + 4,
-				x2: p.x + dx, y2: p.y - h / 2 - 11,
-				stroke: accent, 'stroke-width': 2.4, 'stroke-linecap': 'round'
+		if (sp.ants > 0) {
+			var xs = sp.tower ? [ -15, 15 ]
+				: sp.ants >= 4 ? [ -20, -13, 13, 20 ] : [ -19, 19 ];
+			var tipY = sp.tower ? -19 : -18;
+			var baseY = sp.tower ? -8 : 2;
+			xs.forEach(function(dx) {
+				art.appendChild(svg('line', {
+					x1: X(dx), y1: Y(baseY), x2: X(dx), y2: Y(tipY),
+					stroke: sp.edge, 'stroke-width': sw, 'stroke-linecap': 'round'
+				}));
+				art.appendChild(svg('circle', {
+					cx: X(dx), cy: Y(tipY), r: S(1.5), fill: sp.edge, stroke: 'none'
+				}));
+			});
+		}
+
+		var bw = sp.tower ? 22 : 38;
+		var bh = sp.tower ? 28 : 16;
+		var by = sp.tower ? -10 : 1;
+		art.appendChild(svg('rect', {
+			x: X(-bw / 2), y: Y(by), width: S(bw), height: S(bh),
+			rx: S(sp.tower ? 4 : 3), fill: sp.body, stroke: sp.edge,
+			'stroke-width': sw, filter: k >= 0.85 ? 'url(#wrShadow)' : null
+		}));
+		art.appendChild(svg('rect', {
+			x: X(-bw / 2 + 2), y: Y(by + 2), width: S(bw - 4),
+			height: S(sp.tower ? 7 : 4), rx: S(1.6),
+			fill: sp.panel, stroke: 'none',
+			opacity: sp.body === '#ffffff' ? '0.85' : '0.55'
+		}));
+
+		if (!sp.tower) {
+			for (var v = 0; v < 3; v++)
+				art.appendChild(svg('line', {
+					x1: X(-14), y1: Y(by + 7 + v * 3.2),
+					x2: X(-5), y2: Y(by + 7 + v * 3.2),
+					stroke: sp.edge, 'stroke-width': Math.max(0.9, 1.3 * k),
+					'stroke-linecap': 'round', opacity: '0.8'
+				}));
+		}
+
+		for (var i = 0; i < sp.ledN; i++) {
+			var lx = sp.tower ? 0 : 12 - i * 4.5;
+			art.appendChild(svg('circle', {
+				cx: X(lx), cy: Y(by + bh - 4), r: S(1.4),
+				fill: sp.led, stroke: 'none'
 			}));
-			g.appendChild(svg('circle', {
-				cx: p.x + dx, cy: p.y - h / 2 - 13, r: 2.6,
-				fill: accent, stroke: 'none'
+		}
+
+		if (withBadge) {
+			art.appendChild(svg('circle', {
+				cx: X(-bw / 2 + 2), cy: Y(by + 3), r: S(7.6),
+				fill: accent, stroke: '#fff',
+				'stroke-width': Math.max(1.2, 1.6 * k)
 			}));
-		});
+			art.appendChild(svg('text', {
+				x: X(-bw / 2 + 2), y: Y(by + 3) + S(3.2),
+				style: 'fill:#fff;stroke:none;font-size:' +
+					Math.max(8, S(9)) + 'px;font-weight:700;text-anchor:middle'
+			}, isCap ? 'C' : 'S'));
+		}
+		g.appendChild(art);
+	},
 
-		g.appendChild(svg('rect', {
-			x: p.x - w / 2, y: p.y - h / 2, width: w, height: h, rx: 5,
-			fill: isCap ? 'url(#wrGCap)' : 'url(#wrGAp)',
-			stroke: accent, 'stroke-width': 1.8, filter: 'url(#wrShadow)'
+	routerPhotoArt: function(g, cx, cy, k, a, isCap, accent, withBadge, file) {
+		var w = 104 * k, h = 56 * k;
+		var art = svg('g', { 'class': 'wr-ap-art wr-ap-photo' });
+		art.appendChild(svg('title', {}, a.model || (isCap ? 'CAP' : 'AP')));
+		art.appendChild(svg('image', {
+			href: L.resource(modelart.base + encodeURIComponent(file)),
+			x: cx - w / 2, y: cy - h / 2, width: w, height: h,
+			preserveAspectRatio: 'xMidYMid meet',
+			filter: k >= 0.85 ? 'url(#wrShadow)' : null
 		}));
-		g.appendChild(svg('rect', {
-			x: p.x - w / 2 + 2, y: p.y - h / 2 + 2, width: w - 4, height: 13, rx: 4,
-			'class': 'wr-ap-gloss',
-			fill: '#ffffff', opacity: '0.55', stroke: 'none'
-		}));
-		g.appendChild(svg('rect', {
-			x: p.x - w / 2 + 7, y: p.y + h / 2 - 6, width: w - 14, height: 2.6, rx: 1.3,
-			fill: accent, opacity: '0.35', stroke: 'none'
-		}));
-
-		[-1.5, 2.5, 6.5].forEach(function(r) {
-			g.appendChild(svg('path', {
-				d: 'M ' + (p.x - r) + ' ' + (p.y + 2) +
-				   ' A ' + r + ' ' + r + ' 0 0 1 ' + (p.x + r) + ' ' + (p.y + 2),
-				fill: 'none', stroke: accent, 'stroke-width': 1.5,
-				'stroke-linecap': 'round', opacity: '0.75'
+		if (withBadge) {
+			var bx = cx - w / 2 + 2, by = cy - h / 2 + 3;
+			art.appendChild(svg('circle', {
+				cx: bx, cy: by, r: 8 * k, fill: accent,
+				stroke: '#fff', 'stroke-width': Math.max(1.2, 1.6 * k)
 			}));
-		});
-		g.appendChild(svg('circle', {
-			cx: p.x, cy: p.y + 2, r: 1.5, fill: accent, opacity: '0.9', stroke: 'none'
-		}));
+			art.appendChild(svg('text', {
+				x: bx, y: by + 3.4 * k,
+				style: 'fill:#fff;stroke:none;font-size:' +
+					Math.max(8, 9 * k) + 'px;font-weight:700;text-anchor:middle'
+			}, isCap ? 'C' : 'S'));
+		}
+		g.appendChild(art);
+	},
 
-		['#43a047', '#43a047', '#ffb300'].forEach(function(col, i) {
-			g.appendChild(svg('circle', {
-				cx: p.x - w / 2 + 10 + i * 6.5, cy: p.y - h / 2 + 8.5, r: 1.7,
-				fill: col, stroke: 'none', opacity: '0.9'
-			}));
-		});
-
-		/* C/S 角徽标固定在左上角（右上角留给重命名小笔） */
-		g.appendChild(svg('circle', {
-			cx: p.x - w / 2 + 2, cy: p.y - h / 2 + 2, r: 8,
-			fill: accent, stroke: '#fff', 'stroke-width': 1.5
-		}));
-		g.appendChild(svg('text', {
-			x: p.x - w / 2 + 2, y: p.y - h / 2 + 5.5,
-			style: 'fill:#fff;stroke:none;font-size:9px;font-weight:700'
-		}, isCap ? 'C' : 'S'));
+	apIcon: function(g, p, a, color) {
+		var isCap = a.role === 'cap';
+		var accent = color || (isCap ? '#2e7d32' : '#1565c0');
+		this.routerArt(g, p.x, p.y + 2, 0.92, a, isCap, accent, true);
 	},
 
 	glyph: function(g, x, y, kind) {
@@ -797,6 +909,12 @@ return view.extend({
 		var pos = lay.pos;
 		var self = this;
 		this._lay = lay;
+		var th = THEMES[this.themeId] || THEMES.map;
+
+		THEME_IDS.forEach(function(id) {
+			box.classList.toggle('wr-theme-' + id,
+				!!(THEMES[self.themeId] && id === self.themeId));
+		});
 
 		var z = this.zoom || 1;
 		var vw = lay.W / z, vh = lay.H / z;
@@ -812,12 +930,12 @@ return view.extend({
 		var defs = svg('defs');
 		defs.innerHTML =
 			'<linearGradient id="wrGAp" x1="0" y1="0" x2="0" y2="1">' +
-				'<stop offset="0%" stop-color="#ffffff"/>' +
-				'<stop offset="100%" stop-color="#e3edfb"/>' +
+				'<stop offset="0%" stop-color="' + th.apG[0] + '"/>' +
+				'<stop offset="100%" stop-color="' + th.apG[1] + '"/>' +
 			'</linearGradient>' +
 			'<linearGradient id="wrGCap" x1="0" y1="0" x2="0" y2="1">' +
-				'<stop offset="0%" stop-color="#ffffff"/>' +
-				'<stop offset="100%" stop-color="#dff2e3"/>' +
+				'<stop offset="0%" stop-color="' + th.capG[0] + '"/>' +
+				'<stop offset="100%" stop-color="' + th.capG[1] + '"/>' +
 			'</linearGradient>' +
 			'<filter id="wrShadow" x="-50%" y="-50%" width="200%" height="200%">' +
 				'<feDropShadow dx="0" dy="2" stdDeviation="2.4" flood-color="#1c3b5a" flood-opacity="0.16"/>' +
@@ -867,13 +985,12 @@ return view.extend({
 				if (!rp || !sp) return;
 				var dir = sp.x < rp.x ? -1 : 1;
 				var lvl = sideLvl[dir]++;
-				/* 水平干线避开 CAP 名称与收展按钮（按钮占 rp.y+67~81），
-				   落在按钮下方、终端总线上方的干净区域 */
-				var bhY = rp.y + 94 + lvl * 14;
-				var d = 'M ' + rp.x + ' ' + (rp.y + 24) +
+				var startY = rp.y + th.linkTop;
+				var bhY = startY + 8 + lvl * 14;
+				var d = 'M ' + rp.x + ' ' + startY +
 				        ' L ' + rp.x + ' ' + bhY +
 				        ' L ' + sp.x + ' ' + bhY +
-				        ' L ' + sp.x + ' ' + (sp.y - 24);
+				        ' L ' + sp.x + ' ' + (sp.y - (th.ap === 'card' ? 48 : 24));
 				var wireless = a.uplink && a.uplink.type === 'wireless';
 				root.appendChild(svg('path', {
 					d: d,
@@ -897,7 +1014,7 @@ return view.extend({
 					else wired.push(c);
 				});
 
-				var linkTop = pp.y + 78, linkBot = LAY.clY0 - 18;
+				var linkTop = pp.y + th.linkTop, linkBot = LAY.clY0 - 18;
 				var busY = Math.round(linkTop + (linkBot - linkTop) * 0.35);
 				var hasBoth = wifi.length && wired.length;
 
@@ -940,7 +1057,8 @@ return view.extend({
 							cls += ' ' + wr.rssiClass(c.conn.rssi);
 					}
 					root.appendChild(svg('line', {
-						x1: cp.x, y1: busY, x2: cp.x, y2: cp.y - 18,
+						x1: cp.x, y1: busY, x2: cp.x,
+						y2: cp.y - (th.client === 'badge' ? 14 : 18),
 						'class': cls
 					}));
 				});
@@ -956,17 +1074,43 @@ return view.extend({
 					((self.search && !self.matchNode(a)) ? ' wr-dim' : ''),
 				'data-id': a.id
 			});
-			self.apIcon(g, p, a);
-
-			label(g, p.x, p.y + 44, a.name || a.mac || a.id, 'wr-label', 168);
-			if (a.ip)
-				label(g, p.x, p.y + 60, a.ip, 'wr-sub', 168);
-
-			self.pencilButton(g, p.x + 24, p.y - 24, a);
-
+			var isCap = a.role === 'cap';
+			var accent = isCap ? th.capStroke : th.apStroke;
 			var kids = (lay.byParent[a.id] || []).length;
-			if (kids > 0)
-				self.toggleButton(g, p.x, p.y + 74, a.id, kids);
+
+			if (th.ap === 'card') {
+				var w = 138, h = 96;
+				g.appendChild(svg('rect', {
+					'class': 'wr-ap-box',
+					x: p.x - w / 2, y: p.y - h / 2, width: w, height: h, rx: 8,
+					fill: isCap ? 'url(#wrGCap)' : 'url(#wrGAp)',
+					stroke: accent, 'stroke-width': 1.4
+				}));
+				self.routerArt(g, p.x, p.y - 25, 0.78, a, isCap, accent, false);
+				g.appendChild(svg('circle', {
+					cx: p.x - w / 2 + 14, cy: p.y - h / 2 + 14, r: 8,
+					fill: accent, stroke: '#fff', 'stroke-width': 1.5
+				}));
+				g.appendChild(svg('text', {
+					x: p.x - w / 2 + 14, y: p.y - h / 2 + 17.5,
+					style: 'fill:#fff;stroke:none;font-size:9px;font-weight:700'
+				}, isCap ? 'C' : 'S'));
+				label(g, p.x, p.y + 9, a.name || a.mac || a.id, 'wr-label', w - 26);
+				if (a.ip)
+					label(g, p.x, p.y + 26, a.ip, 'wr-sub', w - 26);
+				self.pencilButton(g, p.x + w / 2 - 13, p.y - h / 2 + 13, a);
+				if (kids > 0)
+					self.toggleButton(g, p.x + w / 2 - 13, p.y + h / 2 - 13, a.id, kids);
+			}
+			else {
+				self.apIcon(g, p, a, accent);
+				label(g, p.x, p.y + 44, a.name || a.mac || a.id, 'wr-label', 168);
+				if (a.ip)
+					label(g, p.x, p.y + 60, a.ip, 'wr-sub', 168);
+				self.pencilButton(g, p.x + 24, p.y - 24, a);
+				if (kids > 0)
+					self.toggleButton(g, p.x, p.y + 74, a.id, kids);
+			}
 
 			g.addEventListener('click', function() { self.openDetail(a); });
 			return g;
@@ -983,18 +1127,34 @@ return view.extend({
 				'data-id': c.id
 			});
 			var wifi = c.conn && c.conn.type === 'wifi';
+			var stroke = c.blocked ? '#e53935'
+				: (wifi ? signalColor(c.conn.rssi) : '#cfd8dc');
+			var badge = th.client === 'badge';
+			var vx, vy, vr, vfs, textY, subY, pn;
 
-			g.appendChild(svg('rect', {
-				x: p.x - 17, y: p.y - 17, width: 34, height: 34, rx: 5,
-				'class': 'wr-client-box',
-				fill: '#ffffff',
-				stroke: c.blocked ? '#e53935'
-					: (wifi ? signalColor(c.conn.rssi) : '#cfd8dc'),
-				'stroke-width': 2, filter: 'url(#wrShadow)'
-			}));
-			self.glyph(g, p.x, p.y, deviceKind(c));
-			if (wifi)
-				self.sigBars(g, p.x + 24, p.y - 9, c.conn.rssi);
+			if (badge) {
+				g.appendChild(svg('circle', {
+					'class': 'wr-cl-card',
+					cx: p.x, cy: p.y, r: 17,
+					fill: '#ffffff', stroke: stroke, 'stroke-width': 1.8
+				}));
+				self.glyph(g, p.x, p.y, deviceKind(c));
+				if (wifi) self.sigBars(g, p.x + 21, p.y - 8, c.conn.rssi);
+				vx = p.x + 12; vy = p.y + 12; vr = 6.5; vfs = 7;
+				textY = p.y + 33; subY = p.y + 47; pn = 14;
+			}
+			else {
+				g.appendChild(svg('rect', {
+					'class': 'wr-cl-card',
+					x: p.x - 17, y: p.y - 17, width: 34, height: 34, rx: 5,
+					fill: '#ffffff', stroke: stroke, 'stroke-width': 2,
+					filter: 'url(#wrShadow)'
+				}));
+				self.glyph(g, p.x, p.y, deviceKind(c));
+				if (wifi) self.sigBars(g, p.x + 24, p.y - 9, c.conn.rssi);
+				vx = p.x + 15; vy = p.y + 14; vr = 7.5; vfs = 8;
+				textY = p.y + 35; subY = p.y + 49; pn = 17;
+			}
 
 			/* 暂停联网角标：红色圆形 + 两条暂停竖线 */
 			if (c.blocked) {
@@ -1015,33 +1175,32 @@ return view.extend({
 			var v = wr.vendorOf(c.mac);
 			if (v) {
 				g.appendChild(svg('circle', {
-					cx: p.x + 15, cy: p.y + 14, r: 7.5,
+					cx: vx, cy: vy, r: vr,
 					fill: v.color, stroke: '#fff', 'stroke-width': 1.2
 				}));
 				if (v.logo) {
-					/* 24x24 的 path 缩放为 9px，居中叠在 15px 圆点上 */
 					g.appendChild(svg('path', {
 						d: v.logo, fill: '#fff',
-						transform: 'translate(' + (p.x + 10.5) + ' ' + (p.y + 9.5) + ') scale(0.375)'
+						transform: 'translate(' + (vx - 4.5) + ' ' + (vy - 4.5) + ') scale(0.375)'
 					}));
 				}
 				else {
 					g.appendChild(svg('text', {
-						x: p.x + 15, y: p.y + 17.5,
-						style: 'fill:#fff;stroke:none;font-size:8px;font-weight:700;text-anchor:middle'
+						x: vx, y: vy + 2.5,
+						style: 'fill:#fff;stroke:none;font-size:' + vfs +
+							'px;font-weight:700;text-anchor:middle'
 					}, v.initial));
 				}
 			}
 
-			label(g, p.x, p.y + 35, c.name || c.mac || c.id, 'wr-label', 104);
+			label(g, p.x, textY, c.name || c.mac || c.id, 'wr-label', 104);
 
 			var sub = wifi ? wr.rssiText(c.conn.rssi)
 			               : ((c.conn && c.conn.port) || c.ip || '');
 			if (sub)
-				label(g, p.x, p.y + 49, sub, 'wr-sub', 104);
+				label(g, p.x, subY, sub, 'wr-sub', 104);
 
-			self.pencilButton(g, p.x + 17, p.y - 17, c);
-
+			self.pencilButton(g, p.x + pn, p.y - pn, c);
 			g.addEventListener('click', function() { self.openDetail(c); });
 			return g;
 		}
@@ -1846,6 +2005,12 @@ return view.extend({
 		this.usage = data[3] || null;
 		this.logFilter = this.logFilter || { type: '', name: '', mac: '', info: '' };
 
+		if (!this.themeId) {
+			var saved = null;
+			try { saved = window.localStorage.getItem('wr.topo.theme'); } catch (e) {}
+			this.themeId = THEMES[saved] ? saved : 'map';
+		}
+
 		poll.add(L.bind(this.fetch, this), 10);
 
 		var hint = null;
@@ -1866,7 +2031,27 @@ return view.extend({
 					bad.map(function(r) { return r.name || r.ap; }).join(', '));
 		}
 
-		window.setTimeout(L.bind(this.updateSummary, this), 0);
+		function themeSelect(vm) {
+			var sel = E('select', {
+				'class': 'cbi-input-select wr-theme-sel',
+				change: function(ev) {
+					var v = ev.target.value;
+					if (!THEMES[v]) return;
+					vm.themeId = v;
+					try { window.localStorage.setItem('wr.topo.theme', v); } catch (e) {}
+					vm.redraw();
+				}
+			}, THEME_IDS.map(function(id) {
+				return E('option', { value: id }, THEMES[id].label);
+			}));
+			sel.value = vm.themeId;
+			return sel;
+		}
+
+		window.setTimeout(L.bind(function() {
+			this.redraw();
+			this.updateSummary();
+		}, this), 0);
 
 		return E('div', {}, [
 			wr.css(),
@@ -1892,6 +2077,10 @@ return view.extend({
 					'class': 'btn',
 					click: L.bind(function() { this.collapseAll(false); }, this)
 				}, _('Expand all')),
+				E('label', { 'class': 'wr-theme-pick' }, [
+					E('span', { 'class': 'wr-hint' }, _('Theme')),
+					themeSelect(this)
+				]),
 				E('button', {
 					'class': 'btn',
 					click: L.bind(function(ev) { this.refresh(ev.currentTarget); }, this)

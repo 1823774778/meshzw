@@ -1078,3 +1078,24 @@ msgstr "加载中..."
 
 msgid "Only the main AP can pause clients"
 msgstr "只有主路由可以暂停终端联网"
+
+msgid "Classic"
+msgstr "经典"
+
+msgid "Map"
+msgstr "拓扑地图"
+
+msgid "Dark"
+msgstr "深色"
+
+msgid "Minimal"
+msgstr "极简"
+
+msgid "Theme"
+msgstr "主题"
+
+msgid "Forced reconnect"
+msgstr "强制重连"
+
+msgid "Below this level the AP sends 802.11v BTM with candidate APs; aggressive mode forces the transition immediately, and after 3 unsuccessful attempts the client is disconnected once (no repeat within 30 minutes)."
+msgstr "低于此值时 AP 会带候选列表发送 802.11v BTM；积极模式直接强制切换，连续 3 次未成功后断开终端一次（30 分钟内不再重复断开）。"

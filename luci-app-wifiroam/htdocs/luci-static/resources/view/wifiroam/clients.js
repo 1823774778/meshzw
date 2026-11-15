@@ -195,7 +195,7 @@ return view.extend({
 
 	renderAll: function() {
 		this.renderSummary();
-		this.renderTable();
+		this.renderCards();
 	},
 
 	openRename: function(c) {
@@ -219,7 +219,7 @@ return view.extend({
 						c.name = input.value || c.hostname || c.mac;
 						ui.hideModal();
 						wr.notify('success', _('Name saved'));
-						self.renderTable();
+						self.renderCards();
 					}
 					else {
 						wr.setBusy(save, false);
@@ -290,11 +290,12 @@ return view.extend({
 		}).then(function() {
 			delete self.blocking[c.mac];
 			wr.setBusy(btn, false);
-			self.renderAll();
+			/* 重新拉取拓扑：暂停状态已同步到子 AP，页面立即刷新 */
+			self.refresh();
 		});
 	},
 
-	renderTable: function() {
+	renderCards: function() {
 		var box = document.getElementById('wr-clients');
 		if (!box || !this.topo) return;
 
@@ -304,96 +305,13 @@ return view.extend({
 		var list = this.filtered();
 		var now = Math.floor(Date.now() / 1000);
 
-		var table = E('table', { 'class': 'table cbi-section-table wr-cl-table' }, [
-			E('tr', { 'class': 'tr table-titles' }, [
-				E('th', {}, _('Device')),
-				E('th', {}, _('IP Address')),
-				E('th', {}, _('MAC Address')),
-				E('th', {}, _('Connection')),
-				E('th', {}, _('Attached AP')),
-				E('th', {}, _('Signal')),
-				E('th', {}, _('Real-time rate')),
-				E('th', {}, _('Online time')),
-				E('th', { 'class': 'wr-col-actions' }, _('Actions'))
-			])
-		]);
-
-		list.forEach(function(c) {
-			var wifi = c.conn && c.conn.type === 'wifi';
-			var conn = c.conn || {};
-			var level = sigLevel(conn.rssi);
-			var since = conn.since ? Math.max(0, now - conn.since) : null;
-
-			var bars = E('span', { 'class': 'wr-sig ' + wr.rssiClass(conn.rssi) }, [
-				E('span', { 'class': 'wr-sig-bars' },
-					[0, 1, 2, 3].map(function(i) {
-						return E('i', {
-							'class': 'wr-sig-bar' + (i < level ? ' on' : '')
-						});
-					})),
-				E('span', {}, wifi ? wr.rssiText(conn.rssi) : '-')
-			]);
-
-			var online = E('span', {},
-				since != null ? wr.fmtDur(since) : '-');
-
-			var blocked = !!c.blocked;
-			var blockBtn = E('button', {
-				'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-action'),
-				disabled: (self.topo.role !== 'cap') || !!self.blocking[c.mac],
-				click: function(ev) {
-					return self.toggleBlock(c, ev.currentTarget);
-				}
-			}, blocked ? _('Resume') : _('Pause'));
-
-			if (self.blocking[c.mac])
-				wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
-
-			var rate = wifi
-				? E('div', { 'class': 'wr-rate-cell' }, [
-					E('span', { 'class': 'wr-dev-up' },
-						'↑ ' + wr.fmtRate(conn.rx_speed)),
-					E('span', { 'class': 'wr-dev-down' },
-						'↓ ' + wr.fmtRate(conn.tx_speed))
-				])
-				: E('span', {}, '-');
-
-			var nameCell = E('div', { 'class': 'wr-cl-name' }, [
-				vendorDot(c.mac),
-				E('div', { 'class': 'wr-cl-name-text' }, [
-					E('div', { 'class': 'wr-cl-name-main' },
-						(c.name && c.name !== c.mac) ? c.name : (c.hostname || c.mac)),
-					c.hostname && c.name !== c.hostname
-						? E('div', { 'class': 'wr-cl-name-sub' }, c.hostname)
-						: null
-				])
-			]);
-
-			table.appendChild(E('tr', { 'class': 'tr' + (blocked ? ' wr-row-blocked' : '') }, [
-				E('td', {}, nameCell),
-				E('td', {}, c.ip || '-'),
-				E('td', { 'class': 'wr-mono' }, (c.mac || '-').toUpperCase()),
-				E('td', {}, wr.connText(c.conn)),
-				E('td', {}, apNames[c.parent] || c.parent || '-'),
-				E('td', {}, bars),
-				E('td', {}, rate),
-				E('td', {}, online),
-				E('td', { 'class': 'wr-col-actions' }, [
-					E('button', {
-						'class': 'btn cbi-button-neutral',
-						click: function() { self.openRename(c); }
-					}, _('Rename')),
-					' ', blockBtn
-				])
-			]));
+		var cards = list.map(function(c) {
+			return self.clientCard(c, apNames, now);
 		});
 
-		if (!list.length)
-			table.appendChild(E('tr', { 'class': 'tr placeholder' }, [
-				E('td', { colspan: 9 }, _('No clients found')),
-			]));
-
-		dom.content(box, E('div', { 'class': 'wr-table-wrap' }, table));
+		dom.content(box, cards.length
+			? E('div', { 'class': 'wr-dcard-grid' }, cards)
+			: E('div', { 'class': 'wr-empty' }, _('No clients found')));
 
 		var cnt = document.getElementById('wr-count');
 		if (cnt) {
@@ -402,6 +320,123 @@ return view.extend({
 				? _('%d clients').format(all)
 				: '%d / %d'.format(list.length, all);
 		}
+	},
+
+	/* 厂商头像：有品牌 logo 时画 24x24 白色 path，否则用品牌色 + 首字母 */
+	avatar: function(c) {
+		var v = wr.vendorOf(c.mac);
+		var color = (v && v.color) || '#90a4ae';
+		var inner = null;
+
+		if (v && v.logo) {
+			var ns = 'http://www.w3.org/2000/svg';
+			var el = document.createElementNS(ns, 'svg');
+			el.setAttribute('viewBox', '0 0 24 24');
+			el.setAttribute('width', '22');
+			el.setAttribute('height', '22');
+			el.setAttribute('fill', '#fff');
+			var p = document.createElementNS(ns, 'path');
+			p.setAttribute('d', v.logo);
+			el.appendChild(p);
+			inner = el;
+		}
+		else {
+			inner = E('span', { 'class': 'wr-dcard-initial' },
+				(v && v.initial) || (c.name || c.mac || '?').charAt(0).toUpperCase());
+		}
+
+		return E('div', { 'class': 'wr-dcard-avatar', style: 'background:' + color },
+			inner);
+	},
+
+	cardRow: function(label, value, extra) {
+		return E('div', { 'class': 'wr-dcard-row' }, [
+			E('span', { 'class': 'wr-dcard-key' }, label),
+			E('span', { 'class': 'wr-dcard-val' }, [ value, extra ])
+		]);
+	},
+
+	clientCard: function(c, apNames, now) {
+		var self = this;
+		var wifi = c.conn && c.conn.type === 'wifi';
+		var conn = c.conn || {};
+		var blocked = !!c.blocked;
+		var level = sigLevel(conn.rssi);
+		var since = conn.since ? Math.max(0, now - conn.since) : null;
+		var v = wr.vendorOf(c.mac);
+
+		var statusText = blocked ? _('Paused') : (wifi ? _('Online') : _('Wired'));
+		var statusCls = blocked ? ' wr-dcard-paused' : '';
+
+		var sig = wifi
+			? E('span', { 'class': 'wr-sig ' + wr.rssiClass(conn.rssi) }, [
+				E('span', { 'class': 'wr-sig-bars' },
+					[0, 1, 2, 3].map(function(i) {
+						return E('i', {
+							'class': 'wr-sig-bar' + (i < level ? ' on' : '')
+						});
+					})),
+				E('span', {}, wr.rssiText(conn.rssi))
+			])
+			: '-';
+
+		var rate = wifi
+			? E('span', { 'class': 'wr-rate-cell' }, [
+				E('span', { 'class': 'wr-dev-up' }, '↑ ' + wr.fmtRate(conn.rx_speed)),
+				E('span', { 'class': 'wr-dev-down' }, '↓ ' + wr.fmtRate(conn.tx_speed))
+			])
+			: '-';
+
+		var blockBtn = E('button', {
+			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
+			disabled: (self.topo.role !== 'cap') || !!self.blocking[c.mac],
+			click: function(ev) {
+				return self.toggleBlock(c, ev.currentTarget);
+			}
+		}, blocked ? _('Resume') : _('Pause'));
+
+		if (self.blocking[c.mac])
+			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
+
+		var editBtn = E('button', {
+			'class': 'btn cbi-button-neutral',
+			click: function() { self.openRename(c); }
+		}, _('Rename'));
+
+		var name = (c.name && c.name !== c.mac) ? c.name : (c.hostname || c.mac);
+		var sub = [];
+		if (v && v.name) sub.push(v.name);
+		if (c.hostname && c.hostname !== name) sub.push(c.hostname);
+
+		return E('div', {
+			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '')
+		}, [
+			E('div', { 'class': 'wr-dcard-head' }, [
+				this.avatar(c),
+				E('div', { 'class': 'wr-dcard-title-wrap' }, [
+					E('div', { 'class': 'wr-dcard-title' }, name),
+					E('div', { 'class': 'wr-dcard-sub' }, sub.join(' · ') || '-')
+				]),
+				E('span', { 'class': 'wr-dcard-status' + statusCls }, [
+					E('i', { 'class': 'wr-dcard-dot' }),
+					statusText
+				])
+			]),
+			E('div', { 'class': 'wr-dcard-rows' }, [
+				this.cardRow(_('IP Address'), c.ip || '-'),
+				this.cardRow(_('MAC Address'),
+					E('span', { 'class': 'wr-mono' }, (c.mac || '-').toUpperCase())),
+				this.cardRow(_('Attached AP'), apNames[c.parent] || c.parent || '-'),
+				this.cardRow(_('Connection'), wr.connText(c.conn)),
+				this.cardRow(_('Signal'), sig),
+				this.cardRow(_('Real-time rate'), rate),
+				this.cardRow(_('Online time'),
+					since != null ? wr.fmtDur(since) : '-')
+			]),
+			E('div', { 'class': 'wr-dcard-actions' }, [
+				editBtn, ' ', blockBtn
+			])
+		]);
 	},
 
 	render: function(data) {

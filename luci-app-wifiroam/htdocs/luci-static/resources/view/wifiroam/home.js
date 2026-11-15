@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 39;
+var REQUIRED_VERSION = 40;
 
 return view.extend({
 	st: null,
@@ -566,14 +566,6 @@ return view.extend({
 			E('div', { id: 'wr-status' },
 				E('div', { 'class': 'wr-hint' }, _('正在读取网络状态...'))),
 			E('div', { id: 'wr-overview', 'class': 'wr-cards' }),
-			E('div', { 'class': 'wr-quick' }, [
-				E('a', { 'class': 'btn cbi-button-action',
-					href: '#/admin/mesh/management/topology' }, _('View topology')),
-				E('a', { 'class': 'btn',
-					href: '#/admin/mesh/management/clients' }, _('Manage clients')),
-				E('a', { 'class': 'btn',
-					href: '#/admin/mesh/management/settings' }, _('Wireless settings'))
-			]),
 			E('div', {
 				id: 'wr-home-warn',
 				'class': 'alert-message warning',
