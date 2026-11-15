@@ -97,7 +97,7 @@ return view.extend({
 
 		if (['', 'wifi', 'wired'].indexOf(this.filterKind) < 0)
 			this.filterKind = '';
-		if (['name', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
+		if (['name', 'status', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
 			this.sortBy = 'name';
 
 		return wr.safeCall('device_history');
@@ -182,6 +182,9 @@ return view.extend({
 			case 'online':
 				return (a.conn && a.conn.since ? a.conn.since : 0) -
 				       (b.conn && b.conn.since ? b.conn.since : 0);
+			case 'status':
+				if (a.online !== b.online) return a.online ? -1 : 1;
+				return (a.name || '').localeCompare(b.name || '');
 			case 'ap':
 				return (apNames[a.ap] || '').localeCompare(apNames[b.ap] || '');
 			default:
@@ -578,7 +581,12 @@ return view.extend({
 			E('div', { 'class': 'wr-dcard-head' }, [
 				this.tile(c),
 				E('div', { 'class': 'wr-dcard-title-wrap' }, [
-					E('div', { 'class': 'wr-dcard-name' }, name),
+					E('div', { 'class': 'wr-dcard-name' }, [
+						name,
+						(wifi && conn.ssid)
+							? E('span', { 'class': 'wr-dcard-wifi' }, ' · ' + conn.ssid)
+							: null
+					]),
 					(!editing && c.pin) ? E('div', { 'class': 'wr-dcard-pin-tag' },
 						_('Pinned to %s').format(c.pin_name || c.pin)) : null
 				]),
@@ -658,6 +666,7 @@ return view.extend({
 			}
 		}, [
 			E('option', { value: 'name' }, _('Sort: name')),
+			E('option', { value: 'status' }, _('Sort: online first')),
 			E('option', { value: 'ip' }, _('Sort: IP')),
 			E('option', { value: 'signal' }, _('Sort: signal')),
 			E('option', { value: 'rate' }, _('Sort: rate')),

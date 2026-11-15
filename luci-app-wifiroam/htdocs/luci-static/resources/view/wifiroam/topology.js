@@ -1209,10 +1209,31 @@ return view.extend({
 		}
 
 		var lc = function(s) { return (s || '').toLowerCase(); };
+
+		/* 名称以拓扑中的当前名称为准：改名后历史事件也显示新名称；
+		   同时带上设备当前连接的 WiFi（无线回程 AP 取回程 SSID）。 */
+		var nameMap = {};
+		((this.topo && this.topo.nodes) || []).forEach(function(n) {
+			var mac = String(n.mac || n.id || '').toLowerCase().replace(/[^0-9a-f]/g, '');
+			if (!mac) return;
+			var ssid = (n.conn && n.conn.ssid) ||
+				(n.uplink && n.uplink.type === 'wireless' ? n.uplink.ssid : null);
+			nameMap[mac] = { name: n.name || '', ssid: ssid || '' };
+		});
+		function evName(ev) {
+			var mac = String(ev.mac || '').toLowerCase().replace(/[^0-9a-f]/g, '');
+			var cur = mac ? nameMap[mac] : null;
+			return (cur && cur.name) || ev.name || ev.mac || '';
+		}
+		function evSsid(ev) {
+			var mac = String(ev.mac || '').toLowerCase().replace(/[^0-9a-f]/g, '');
+			return (mac && nameMap[mac] && nameMap[mac].ssid) || '';
+		}
+
 		var list = (this.logs || []).filter(function(ev) {
 			var tlabel = EVENT_TEXT[ev.type] || ev.type || '';
 			if (f.type && tlabel !== f.type) return false;
-			if (f.name && lc(ev.name).indexOf(lc(f.name)) < 0) return false;
+			if (f.name && lc(evName(ev)).indexOf(lc(f.name)) < 0) return false;
 			if (f.mac && lc(ev.mac).indexOf(lc(f.mac)) < 0) return false;
 			if (f.info && lc(ev.info).indexOf(lc(f.info)) < 0) return false;
 			return true;
@@ -1222,11 +1243,16 @@ return view.extend({
 			.sort(function(a, b) { return (b.ts || 0) - (a.ts || 0); })
 			.map(function(ev) {
 			var t = wr.fmtTime(ev.ts);
+			var nm = evName(ev);
+			var ssid = evSsid(ev);
 			return E('tr', {}, [
 				E('td', { style: 'white-space:nowrap;color:var(--wr-fg-3)' }, t),
 				E('td', { style: 'white-space:nowrap' }, EVENT_TEXT[ev.type] || ev.type || '-'),
 				E('td', { style: 'white-space:nowrap;max-width:12em;overflow:hidden;text-overflow:ellipsis',
-				         title: ev.name || '' }, ev.name || '-'),
+				         title: nm + (ssid ? ' · ' + ssid : '') }, [
+					nm || '-',
+					ssid ? E('span', { 'class': 'wr-log-ssid' }, ' · ' + ssid) : null
+				]),
 				E('td', { style: 'font-family:monospace;font-size:12px' }, ev.mac || '-'),
 				E('td', {}, ev.info || '-')
 			]);

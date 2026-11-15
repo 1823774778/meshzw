@@ -23,7 +23,7 @@ return baseclass.extend({
 		return E([]);
 	},
 
-	CSS_VER: '20261116i',
+	CSS_VER: '20261116j',
 
 	_role: null,
 
@@ -450,7 +450,10 @@ return baseclass.extend({
 		if (!conn) return '-';
 		if (conn.type === 'wired')
 			return _('Wired') + (conn.port ? ' (' + conn.port + ')' : '');
-		return this.fmtBand(conn.band) + (conn.ssid ? ' ' + conn.ssid : '');
+		var parts = [];
+		if (conn.band) parts.push(this.fmtBand(conn.band));
+		if (conn.ssid) parts.push(conn.ssid);
+		return parts.length ? parts.join(' ') : '-';
 	},
 
 	apNameMap: function(nodes) {

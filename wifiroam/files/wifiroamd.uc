@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 52;
+const DAEMON_VERSION = 53;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -375,8 +375,12 @@ function cached_sec(key, fn) {
 	return data;
 }
 
-function push_event(type, mac, info, name) {
-	push(state.events, { ts: time(), type, mac: mac ?? "", name: name ?? "", info: info ?? "" });
+function push_event(type, mac, info, name, extra) {
+	let ev = { ts: time(), type, mac: mac ?? "", name: name ?? "", info: info ?? "" };
+	if (extra != null)
+		for (let k, v in extra)
+			ev[k] = v;
+	push(state.events, ev);
 	if (length(state.events) > MAX_EVENTS)
 		state.events = slice(state.events, length(state.events) - MAX_EVENTS);
 	log(sprintf("event %s %s %s %s", type, mac ?? "-", name ?? "-", info ?? ""));
@@ -1463,7 +1467,7 @@ function detect_uplink() {
 	// 本插件托管的无线回程已关联时，回程类型以它为准（即使物理上还有网线）
 	if (wl && (wl.port == BACKHAUL_SECTION || current_backhaul_cfg().enabled))
 		return { type: "wireless", port: wl.port, gw, ssid: wl.ssid,
-		         bssid: wl.bssid, rssi: wl.rssi };
+		         bssid: wl.bssid, rssi: wl.rssi, band: wl.band };
 	return { type: wireless ? "wireless" : "wired", port: dev, gw };
 }
 
@@ -3639,7 +3643,7 @@ function owner_events(my) {
 			if (old != null && old != ap)
 				push_event("roam_move", maccolon(mn),
 					sprintf("%s → %s", ap_display(old), ap_display(ap)),
-					client_name_of(mn, my));
+					client_name_of(mn, my), { from: old, to: ap });
 		}
 	state.prev_owner = owner;
 }
@@ -3914,6 +3918,7 @@ function devices_tick() {
 function device_history_view() {
 	let live = devices_tick_impl();
 	let now = time();
+	let self_mn = macnorm(state.self.mac);
 	let out = [];
 	for (let key, d in state.devices) {
 		let it = live[key];
@@ -3928,6 +3933,22 @@ function device_history_view() {
 		let role = liveRole ?? d.device_role ?? null;
 		if (role != "cap" && role != "sap") role = null;
 		let apOnline = !!liveRole;
+
+		/* 子路由自身的连接 = 回程：有线显示端口，无线显示 SSID/信号，
+		   与普通终端的连接信息保持一致 */
+		let apConn = null;
+		if (apOnline && role == "sap") {
+			let up = (key == self_mn) ? detect_uplink()
+				: (state.peers[key]?.info?.uplink ?? null);
+			if (up) {
+				if (up.type == "wireless")
+					apConn = { type: "wifi", ssid: up.ssid ?? null,
+					           band: up.band ?? null, rssi: up.rssi ?? null };
+				else
+					apConn = { type: "wired", port: up.port ?? null };
+			}
+		}
+
 		push(out, {
 			id: key,
 			mac: node?.mac ?? d.mac ?? key,
@@ -3939,7 +3960,7 @@ function device_history_view() {
 			last_online: (it || apOnline) ? now : (d.last_online ?? null),
 			last_offline: d.last_offline ?? null,
 			ap, ap_name: ap ? ap_display(ap) : null,
-			conn: node?.conn ?? null,
+			conn: (role == "sap" && apConn) ? apConn : (node?.conn ?? null),
 			icon: al?.icon ?? null, note: al?.note ?? null,
 			blocked: !!state.blocked[key],
 			pin, pin_name: pin ? ap_name_of(pin) : null,
@@ -3953,7 +3974,6 @@ function device_history_view() {
 	});
 
 	/* 固定 AP 下拉框候选：本机 + 已知对端 */
-	let self_mn = macnorm(state.self.mac);
 	let aps = [ { id: self_mn, name: ap_name_of(self_mn) } ];
 	for (let mn in keys(state.peers))
 		push(aps, { id: mn, name: ap_name_of(mn) });
@@ -6472,7 +6492,23 @@ let api_obj = {
 			let ev = state.events;
 			if (length(ev) > limit)
 				ev = slice(ev, length(ev) - limit);
-			return { events: ev };
+			/* 名称按当前别名回填：拓扑里改名后，历史事件也显示新名称 */
+			let out = [];
+			for (let e in ev) {
+				let item = {};
+				for (let k, v in e)
+					item[k] = v;
+				let mac = e.mac ? macnorm(e.mac) : "";
+				let al = mac ? state.aliases.map[mac] : null;
+				if (al?.name != null && al.name != "")
+					item.name = al.name;
+				/* 漫游迁移详情里的来源/目标 AP 名称也按当前名称重算 */
+				if (item.type == "roam_move" && item.from && item.to)
+					item.info = sprintf("%s → %s", ap_display(item.from),
+						ap_display(item.to));
+				push(out, item);
+			}
+			return { events: out };
 		},
 	},
 	/* 上网统计：每终端每日在线时长与总流量（仅主 AP 采集） */

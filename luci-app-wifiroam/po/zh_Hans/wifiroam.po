@@ -1040,6 +1040,9 @@ msgstr "排序：速率"
 msgid "Sort: online time"
 msgstr "排序：在线时长"
 
+msgid "Sort: online first"
+msgstr "排序：在线优先"
+
 msgid "Sort: AP"
 msgstr "排序：所属 AP"
 

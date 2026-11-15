@@ -565,6 +565,7 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 .wr-log-filter .btn { padding: 0.28em 0.9em; font-size: 12.5px; }
 .wr-log-count { color: var(--wr-fg-3); font-size: 12px; margin-bottom: 0.35em; }
+.wr-log-ssid { color: var(--wr-fg-3); font-size: 0.9em; }
 
 /* 打赏入口：标题旁的绿色胶囊按钮 + 弹窗内容居中 */
 .wr-donate-btn {
@@ -746,6 +747,11 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+.wr-dcard-wifi {
+	font-size: 0.78em;
+	font-weight: 500;
+	color: var(--wr-fg-3);
 }
 .wr-dcard-edit-btn {
 	flex: none;
