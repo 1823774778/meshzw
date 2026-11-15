@@ -23,7 +23,7 @@ return baseclass.extend({
 		return E([]);
 	},
 
-	CSS_VER: '20261116c',
+	CSS_VER: '20261116d',
 
 	_role: null,
 

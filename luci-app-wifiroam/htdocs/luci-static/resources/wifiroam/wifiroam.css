@@ -945,8 +945,113 @@ button.wr-wake-btn:disabled {
 	border-color: var(--wr-primary);
 }
 
+/* ------------------------------------------------------------ responsive */
+/* 触摸设备上所有横向滚动区域开启惯性滑动 */
+.wr-table-wrap,
+.wr-topo-wrap,
+.wr-log-scroll {
+	-webkit-overflow-scrolling: touch;
+}
+
+/* 平板 / 窄窗口 */
+@media (max-width: 900px) {
+	.wr-cards { grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); }
+	.wr-dcard-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+	.wr-search { max-width: none; }
+	.wr-theme-pick { margin-left: 0; }
+}
+
 @media (max-width: 720px) {
+	/* 概览/汇总卡片 */
 	.wr-cards { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
 	.wr-card-value { font-size: 1.15em; }
-	.wr-search { max-width: none; }
+
+	/* 工具栏：搜索框独占一行，下拉框与按钮均分换行 */
+	.wr-toolbar { gap: 0.5em; }
+	.wr-search { flex: 1 1 100%; max-width: none; min-width: 0; }
+	.wr-toolbar-wrap select,
+	.wr-toolbar-wrap .cbi-input-select {
+		flex: 1 1 calc(50% - 0.4em);
+		min-width: 0;
+		max-width: none;
+	}
+	.wr-theme-pick { flex: 1 1 100%; }
+	.wr-toolbar-wrap .wr-theme-sel { flex: 1 1 auto; min-width: 0; }
+	.wr-svc-row { gap: 0.4em; }
+	.wr-svc-auto { margin-left: 0; }
+
+	/* 终端卡片：单列，避免 300px 最小宽度在窄屏溢出 */
+	.wr-dcard-grid { grid-template-columns: minmax(0, 1fr); }
+	.wr-dcard { padding: 0.75em 0.8em; }
+
+	/* 设备详情 */
+	.wr-detail-table td:first-child { width: auto; white-space: normal; }
+	.wr-dev-title { font-size: 16px; }
+	.wr-dev-rates { gap: 1.4em; font-size: 15px; flex-wrap: wrap; }
+	.wr-dev-online .wr-big { font-size: 22px; }
+	.wr-stats-online { gap: 1.6em; }
+
+	/* 设置/高级设置中的表格改为横向滑动，不压缩列宽 */
+	.wr-ap-table { overflow-x: auto; }
+	.wr-ap-table > table { min-width: 620px; }
+	#wr-set .cbi-section,
+	#wr-adv .cbi-section { overflow-x: auto; }
+	#wr-set .cbi-section > table.cbi-section-table,
+	#wr-adv .cbi-section > table.cbi-section-table { min-width: 600px; }
+
+	/* 表单控件不超过可用宽度 */
+	.wr-form-row input,
+	.wr-form-row select,
+	.wr-guest-row input,
+	.wr-guest-row select { max-width: 100%; box-sizing: border-box; }
+	.wr-guest-row .wr-guest-ctrl { flex: 1 1 100%; justify-content: flex-start; }
+	.wr-ssid-group { padding: 0.5em 0.6em; }
+
+	/* 日志过滤栏与表格 */
+	.wr-log-filter .cbi-input-text,
+	.wr-log-filter .cbi-input-select { flex: 1 1 8em; min-width: 0; }
+	.wr-log-scroll { overflow-x: auto; }
+
+	/* 应用使用时长行 */
+	.wr-app-row { flex-wrap: wrap; }
+	.wr-app-dur { margin-left: auto; }
+	.wr-app-sel { max-width: 100%; }
+
+	/* 上网时段控件 */
+	.wr-sched-row { align-items: flex-start; gap: 0.4em 0.6em; }
+	.wr-sched-row input[type='time'] { max-width: 100%; }
+
+	/* 拓扑：缩放按钮与图例缩小，避免遮挡画布 */
+	.wr-zoom { top: 0.4em; right: 0.4em; gap: 0.25em; }
+	.wr-zoom .btn { min-width: 1.8em; padding: 0.05em 0.35em; font-size: 1em; }
+	.wr-legend { gap: 0.8em; font-size: 0.8em; padding: 0.3em 0.1em; }
+}
+
+@media (max-width: 480px) {
+	/* 首页 10 张概览卡片固定两列，避免单列过长 */
+	.wr-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5em; }
+	.wr-card { padding: 0.6em 0.65em; }
+	.wr-card-value { font-size: 1.05em; }
+	.wr-card-label { font-size: 0.75em; }
+
+	/* 服务操作按钮两列排布，触控热区更大 */
+	.wr-toolbar > .btn { flex: 1 1 calc(50% - 0.3em); }
+	.wr-svc-auto { flex: 1 1 100%; }
+	.wr-donate-btn { margin-left: 0.4em; }
+
+	/* 终端卡片 */
+	.wr-dcard-name { font-size: 14px; }
+	.wr-dcard-row { font-size: 12px; gap: 0.6em; }
+	.wr-dcard-actions .btn { flex: 1 1 auto; }
+	.wr-dcard-edit-actions .btn { flex: 1 1 auto; }
+
+	/* 设备详情 */
+	.wr-dev-rates { gap: 0.4em 1.2em; }
+	.wr-dev-head { align-items: flex-start; }
+	.wr-dev-edit { white-space: normal; }
+	.wr-chart { max-width: 100%; }
+
+	/* 提示条移到底部，避免遮挡标题与操作按钮 */
+	.wr-toast-host { top: auto; bottom: 0.8em; left: 0.8em; right: 0.8em; }
+	.wr-toast { max-width: none; }
 }

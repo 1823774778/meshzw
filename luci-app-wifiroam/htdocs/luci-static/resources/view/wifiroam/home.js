@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 50;
+var REQUIRED_VERSION = 51;
 
 return view.extend({
 	st: null,
@@ -358,6 +358,14 @@ return view.extend({
 			warn.style.display = (this.st && this.st.role) ? 'none' : '';
 	},
 
+	/* 服务操作会改变主/子路由角色与服务状态，仅刷新局部 DOM 仍会保留旧角色，
+	   这里整页重载，让导航、概览与各页面都按最新状态重建。 */
+	reloadSoon: function(delay) {
+		window.setTimeout(function() {
+			window.location.reload();
+		}, delay || 1000);
+	},
+
 	afterServiceChange: function(repaired, action) {
 		var self = this;
 
@@ -376,6 +384,8 @@ return view.extend({
 				wr.notify('success', _('插件服务已停止。'));
 			else
 				wr.notify('success', _('插件服务已启动。'));
+
+			self.reloadSoon(repaired === false ? 2400 : 1000);
 		});
 	},
 
@@ -414,7 +424,9 @@ return view.extend({
 			wr.setBusy(btn, false);
 			wr.notify('danger', _('服务操作失败') + ': ' +
 				(e && e.message ? e.message : action));
-			return self.refreshService();
+			return self.refreshService().then(function() {
+				self.reloadSoon(2200);
+			});
 		});
 	},
 
@@ -436,12 +448,16 @@ return view.extend({
 			self.busy = false;
 			wr.setBusy(btn, false);
 			wr.notify('success', _('已重置为初始状态并重启服务。'));
-			return self.refreshService();
+			return self.refreshService().then(function() {
+				self.reloadSoon(1200);
+			});
 		}).catch(function(e) {
 			self.busy = false;
 			wr.setBusy(btn, false);
 			wr.notify('danger', _('重置失败') + ': ' + (e && e.message ? e.message : ''));
-			return self.refreshService();
+			return self.refreshService().then(function() {
+				self.reloadSoon(2200);
+			});
 		});
 	},
 
