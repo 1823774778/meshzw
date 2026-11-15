@@ -331,8 +331,12 @@ return view.extend({
 		});
 
 		var online = 0, wifi = 0, wired = 0, paused = 0;
+		var selfMn = this.topo && this.topo.self;
 		aps.forEach(function(a) {
-			if (a.role === 'cap' || a.authed) online++;
+			/* 优先用后端 online；兼容旧数据时按 CAP/authed/本机判断 */
+			var on = (a.online != null) ? a.online
+				: (a.role === 'cap' || a.authed || (selfMn && a.id === selfMn));
+			if (on) online++;
 		});
 		clients.forEach(function(c) {
 			if (c.conn && c.conn.type === 'wifi') wifi++;
@@ -382,6 +386,23 @@ return view.extend({
 
 		this.collapsed = col;
 		this.redraw();
+	},
+
+	/* 全部展开/折叠合并为一个按钮：当前全部折叠则展开，否则折叠 */
+	allCollapsed: function() {
+		var nodes = (this.topo && this.topo.nodes) || [];
+		var aps = nodes.filter(function(n) { return n.type === 'ap'; });
+		if (!aps.length) return false;
+		for (var i = 0; i < aps.length; i++)
+			if (!this.collapsed[aps[i].id]) return false;
+		return true;
+	},
+
+	toggleCollapseAll: function(btn) {
+		var on = !this.allCollapsed();
+		this.collapseAll(on);
+		if (btn)
+			btn.textContent = on ? _('Expand all') : _('Collapse all');
 	},
 
 	resetZoom: function() {
@@ -2072,12 +2093,10 @@ return view.extend({
 				}),
 				E('button', {
 					'class': 'btn',
-					click: L.bind(function() { this.collapseAll(true); }, this)
-				}, _('Collapse all')),
-				E('button', {
-					'class': 'btn',
-					click: L.bind(function() { this.collapseAll(false); }, this)
-				}, _('Expand all')),
+					click: L.bind(function(ev) {
+						this.toggleCollapseAll(ev.currentTarget);
+					}, this)
+				}, this.allCollapsed() ? _('Expand all') : _('Collapse all')),
 				E('label', { 'class': 'wr-theme-pick' }, [
 					E('span', { 'class': 'wr-hint' }, _('Theme')),
 					themeSelect(this)

@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 41;
+const DAEMON_VERSION = 42;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -237,7 +237,7 @@ let _sec_cache = {};
 let _clients_cache = { ts: 0, data: null };
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
-let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_blocked_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
+let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_blocked_to, push_devices_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
 let sap_self_reset, sap_disconnect, roam_default_init, backhaul_stp_ensure;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
@@ -3483,6 +3483,7 @@ function build_topology() {
 		ip: state.self.ip, mac: state.self.mac,
 		parent: null, uplink: detect_uplink(),
 		firmware: state.self.firmware, uptime: self_uptime(),
+		online: true,
 		clients: [],
 	};
 	push(nodes, self_node);
@@ -3505,6 +3506,8 @@ function build_topology() {
 			firmware: p.info?.firmware ?? null,
 			uptime: p.info?.uptime ?? null,
 			authed: !!p.authed,
+			/* 能留在 peers 里说明 30s 内收到过 hello（含 SAP 视角的其它子 AP） */
+			online: true,
 			clients: [],
 		};
 		push(nodes, n);
@@ -3561,10 +3564,46 @@ function devices_save(force) {
 	}
 }
 
+/* 终端管理设置：历史条数上限、固定 AP 纠正开关与禁入时长。
+   保存在 uci wifiroam/devices，CAP 保存后同步给所有子 AP。 */
+function devices_cfg() {
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	let max = int(cur.get("wifiroam", "devices", "max") ?? DEVICES_MAX);
+	let ban = int(cur.get("wifiroam", "devices", "ban") ?? (PIN_BAN_MS / 1000));
+	if (max < 20) max = 20;
+	if (max > 2000) max = 2000;
+	if (ban < 10) ban = 10;
+	if (ban > 3600) ban = 3600;
+	return {
+		max,
+		ban,
+		pin_enforce: cur.get("wifiroam", "devices", "pin_enforce") != "0",
+	};
+}
+
+/* SAP：应用 CAP 下发的终端管理设置（仅在值变化时写 uci） */
+function devices_cfg_apply(d) {
+	if (type(d) != "object") return;
+	let cur = uci.cursor();
+	cur.load("wifiroam");
+	let changed = false;
+	for (let k in [ "max", "ban", "pin_enforce" ]) {
+		if (d[k] == null) continue;
+		let v = (k == "pin_enforce") ? (d[k] ? "1" : "0") : ("" + int(d[k]));
+		if (cur.get("wifiroam", "devices", k) != v) {
+			cur.set("wifiroam", "devices", k, v);
+			changed = true;
+		}
+	}
+	if (changed) cur.commit("wifiroam");
+}
+
 /* 历史条数上限：优先淘汰最久未上线、且没有被手动命名的记录 */
 function devices_trim() {
+	let max = devices_cfg().max;
 	let total = length(keys(state.devices));
-	if (total <= DEVICES_MAX) return;
+	if (total <= max) return;
 	let cand = [];
 	for (let key, d in state.devices) {
 		if (d.online) continue;
@@ -3573,7 +3612,7 @@ function devices_trim() {
 		push(cand, { key, ts: d.last_online ?? d.first_seen ?? 0 });
 	}
 	sort(cand, function(a, b) { return a.ts - b.ts; });
-	for (let i = 0; i < length(cand) && total > DEVICES_MAX; i++, total--)
+	for (let i = 0; i < length(cand) && total > max; i++, total--)
 		delete state.devices[cand[i].key];
 }
 
@@ -3733,6 +3772,8 @@ function wol_send(mn) {
    每台 AP 各自纠正直连终端，CAP 不需要跨设备下发。 */
 function pin_tick() {
 	if (state.cfg.role == "unconfigured") return;
+	let cfg = devices_cfg();
+	if (!cfg.pin_enforce) return;
 	let pin = state.aliases.pin;
 	if (!pin || !length(keys(pin))) return;
 	let self_mn = macnorm(state.self.mac);
@@ -3742,13 +3783,14 @@ function pin_tick() {
 		if (c.type != "wifi" || !c.ifname) continue;
 		let ap = pin_of(mn);
 		if (!ap || ap == self_mn) continue;
-		/* 目标 AP 已离线/退网时不再纠正，避免终端被反复踢下线 */
-		if (!state.peers[ap]?.authed) continue;
+		/* 目标 AP 已离线/退网时不再纠正，避免终端被反复踢下线
+		   （SAP 侧其它成员 AP 只有 UDP 心跳，不一定有 TCP authed） */
+		if (!state.peers[ap]) continue;
 		if (now - (state.pin_last[mn] ?? 0) < PIN_KICK_COOLDOWN) continue;
 		try {
 			ubusc.call("hostapd." + c.ifname, "del_client", {
 				addr: maccolon(mn), deauth: true, reason: 1,
-				ban_time: PIN_BAN_MS,
+				ban_time: cfg.ban * 1000,
 			});
 			state.pin_last[mn] = now;
 			push_event("pin_kick", maccolon(mn),
@@ -4278,7 +4320,8 @@ function sap_rx(req) {
 						link.authed = true;
 						link.last_pong = time();
 						state.net_names = m.names ?? {};
-						if (m.roster) state.roster = m.roster;
+						if (m?.roster) state.roster = m.roster;
+						if (m?.devices) devices_cfg_apply(m.devices);
 						// 让 SAP 侧 status/peers_online 反映 CAP 在线
 						if (link.cap_mac) {
 							let cp = state.peers[link.cap_mac] ??= { clients: {} };
@@ -4335,6 +4378,13 @@ function sap_rx(req) {
 				if (v && length(mn) == 12) state.blocked[mn] = true;
 			acl_save();
 		}
+		req.reply({ ok: true });
+		break;
+	}
+	case "devices_config": {
+		/* CAP 同步终端管理设置：历史上限 / 固定 AP 纠正 / 禁入时长 */
+		if (state.cfg.role == "sap")
+			devices_cfg_apply(args.devices ?? {});
 		req.reply({ ok: true });
 		break;
 	}
@@ -4527,6 +4577,7 @@ sap_report = function() {
 				link.last_pong = time();
 				if (m?.names) state.net_names = m.names;
 				if (m?.roster) state.roster = m.roster;
+				if (m?.devices) devices_cfg_apply(m.devices);
 				if (m?.usage) state.cap_usage = m.usage;
 				/* CAP 汇总的最近应用结果同步到本机，供 SAP 页面展示 */
 				state.last_apply = m?.last_apply ?? null;
@@ -4691,6 +4742,7 @@ function srv_rx(conn, req) {
 				names: state.cfg.role == "cap" ? client_names() : {},
 				// 全网络 AP/SSID 概览：子 AP 的开启前检查与主 AP 保持一致
 				roster: state.cfg.role == "cap" ? ap_overview() : null,
+				devices: state.cfg.role == "cap" ? devices_cfg() : null,
 			});
 			if ((args.alias_ver ?? 0) < state.aliases.ver)
 				push_aliases_to(mn);
@@ -4787,6 +4839,7 @@ function srv_rx(conn, req) {
 		            roam_ver: roam.config_ver, backhaul_ver: bh.config_ver,
 		            names: state.cfg.role == "cap" ? client_names() : {},
 		            roster: state.cfg.role == "cap" ? ap_overview() : null,
+		            devices: state.cfg.role == "cap" ? devices_cfg() : null,
 		            usage: state.cfg.role == "cap" ? usage_for_clients(p.clients) : null,
 		            bss: state.cfg.role == "cap" ? steer_bss_all() : null,
 		            /* 最近一次漫游/无线回程应用结果：SAP 页面也显示全网络结果 */
@@ -5166,6 +5219,21 @@ push_blocked_to = function(mn) {
 	}
 };
 
+/* CAP：把终端管理设置同步给子 AP（固定 AP 纠正由各 AP 本地执行） */
+push_devices_to = function(mn) {
+	let p = state.peers[mn];
+	if (!p?.authed || !p.chan) return;
+	try {
+		p.chan.defer({
+			method: "devices_config",
+			data: { devices: devices_cfg() },
+			data_cb: function() {}, cb: function() {},
+		});
+	} catch (e) {
+		peer_link_dead(mn, "push_devices");
+	}
+};
+
 // ------------------------------------------------------------------ ubus API
 function find_client(mn) {
 	let local = local_clients_cached();
@@ -5264,6 +5332,9 @@ function factory_reset() {
 	cur.set("wifiroam", "guest", "config_ver", "0");
 
 	cur.set("wifiroam", "alias_sync", "ver", "0");
+	cur.set("wifiroam", "devices", "max", "" + DEVICES_MAX);
+	cur.set("wifiroam", "devices", "ban", "" + (PIN_BAN_MS / 1000));
+	cur.set("wifiroam", "devices", "pin_enforce", "1");
 	cur.commit("wifiroam");
 
 	/* 清除别名、流量统计和运行态 */
@@ -5337,19 +5408,18 @@ let api_obj = {
 	status: {
 		args: { ubus_rpc_session: "" },
 		call: function(req) {
-			let online = 0, nclients = 0;
-			for (let mn, p in state.peers) {
-				if (p.authed) online++;
+			/* 能留在 peers 里说明 30s 内收到过 hello，与首页/拓扑口径一致 */
+			let nclients = 0;
+			for (let mn, p in state.peers)
 				nclients += length(keys(p.clients ?? {}));
-			}
 			nclients += length(keys(local_clients_cached()));
+			let peers_total = 1 + length(keys(state.peers));
+			let online = peers_total;
 			// SAP 以 CAP 下发的概览为准，成员 AP 计数与主AP保持一致
-			let peers_total = length(keys(state.peers));
-			if (state.cfg.role == "sap" && type(state.roster?.aps) == "array") {
+			if (state.cfg.role == "sap" && type(state.roster?.aps) == "array" &&
+			    length(state.roster.aps)) {
 				let o = 0, t = 0;
-				let self_mn = macnorm(state.self.mac);
 				for (let a in state.roster.aps) {
-					if (a.id == self_mn) continue;
 					t++;
 					if (a.online) o++;
 				}
@@ -5368,6 +5438,7 @@ let api_obj = {
 				clients_total: nclients,
 				roam: current_roam_cfg(),
 				backhaul: current_backhaul_cfg(),
+				devices: devices_cfg(),
 				alias_ver: state.aliases.ver,
 				last_apply: state.last_apply,
 				last_backhaul: state.last_backhaul,
@@ -5470,6 +5541,46 @@ let api_obj = {
 			let r = pin_apply(a.mac, a.ap ?? "");
 			if (r.ok) alias_broadcast();
 			return r;
+		},
+	},
+	/* 终端管理设置：CAP 保存后持久化并同步到全部子 AP */
+	set_devices: {
+		args: { ubus_rpc_session: "", max: 0, ban: 0, pin_enforce: true },
+		call: function(req) {
+			if (state.cfg.role != "cap") return { ok: false, error: "not_cap" };
+			let max = int(req.args.max ?? 0);
+			let ban = int(req.args.ban ?? 0);
+			if (max < 20 || max > 2000) return { ok: false, error: "invalid_max" };
+			if (ban < 10 || ban > 3600) return { ok: false, error: "invalid_ban" };
+
+			let cur = uci.cursor();
+			cur.load("wifiroam");
+			cur.set("wifiroam", "devices", "max", "" + max);
+			cur.set("wifiroam", "devices", "ban", "" + ban);
+			cur.set("wifiroam", "devices", "pin_enforce",
+				req.args.pin_enforce ? "1" : "0");
+			cur.commit("wifiroam");
+
+			for (let mn, p in state.peers)
+				if (p.authed) push_devices_to(mn);
+			return { ok: true, devices: devices_cfg() };
+		},
+	},
+	/* 清除已离线终端的历史记录（在线设备与固定 AP 记录保留） */
+	clear_device_history: {
+		args: { ubus_rpc_session: "" },
+		call: function(req) {
+			let removed = 0;
+			for (let key, d in state.devices) {
+				if (d.online) continue;
+				delete state.devices[key];
+				removed++;
+			}
+			if (removed) {
+				state._dev_dirty = true;
+				devices_save(true);
+			}
+			return { ok: true, removed };
 		},
 	},
 	reset: {

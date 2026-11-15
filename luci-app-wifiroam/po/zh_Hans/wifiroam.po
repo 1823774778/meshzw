@@ -1168,3 +1168,42 @@ msgstr "编辑"
 
 msgid "Pinned AP enforced"
 msgstr "固定 AP 已纠正"
+
+msgid "Device History & Pinned AP"
+msgstr "终端历史与固定 AP"
+
+msgid "Enforce pinned AP"
+msgstr "强制固定 AP"
+
+msgid "A client connected to another AP is disconnected and blocked for the configured time."
+msgstr "终端连到其它 AP 时会被断开，并按设定时长禁入。"
+
+msgid "History limit"
+msgstr "历史记录上限"
+
+msgid "Older offline records are removed first. Range 20-2000."
+msgstr "优先删除最久未上线的离线记录，范围 20-2000。"
+
+msgid "Pin ban time (seconds)"
+msgstr "固定 AP 禁入时长（秒）"
+
+msgid "How long the client is blocked on the wrong AP. Range 10-3600."
+msgstr "连错 AP 时终端被禁入的时长，范围 10-3600 秒。"
+
+msgid "Clear offline history"
+msgstr "清除离线记录"
+
+msgid "Clearing..."
+msgstr "清除中..."
+
+msgid "Removed %d offline device(s)"
+msgstr "已清除 %d 条离线设备记录"
+
+msgid "History limit must be between 20 and 2000"
+msgstr "历史记录上限必须在 20-2000 之间"
+
+msgid "Ban time must be between 10 and 3600"
+msgstr "禁入时长必须在 10-3600 秒之间"
+
+msgid "Only the main AP can change this setting"
+msgstr "只有主路由可以修改此设置"

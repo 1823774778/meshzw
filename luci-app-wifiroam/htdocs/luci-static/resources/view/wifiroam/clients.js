@@ -1,4 +1,4 @@
-// wifiroam client devices view (online + offline history, pinned AP, Wake on LAN)
+// wifiroam client devices view (r91 layout + history, pinned AP, Wake on LAN)
 'use strict';
 'require view';
 'require ui';
@@ -53,8 +53,7 @@ return view.extend({
 	filterAp: '',
 	filterText: '',
 	filterKind: '',
-	filterStatus: '',
-	sortBy: 'status',
+	sortBy: 'name',
 	blocking: {},
 	waking: {},
 
@@ -63,15 +62,12 @@ return view.extend({
 		this.filterAp = ui.ap || '';
 		this.filterText = ui.text || '';
 		this.filterKind = ui.kind || '';
-		this.filterStatus = ui.status || '';
-		this.sortBy = ui.sort || 'status';
+		this.sortBy = ui.sort || 'name';
 
 		if (['', 'wifi', 'wired'].indexOf(this.filterKind) < 0)
 			this.filterKind = '';
-		if (['', 'online', 'offline'].indexOf(this.filterStatus) < 0)
-			this.filterStatus = '';
-		if (['status', 'name', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
-			this.sortBy = 'status';
+		if (['name', 'ip', 'signal', 'rate', 'online', 'ap'].indexOf(this.sortBy) < 0)
+			this.sortBy = 'name';
 
 		return wr.safeCall('device_history');
 	},
@@ -80,8 +76,7 @@ return view.extend({
 		try {
 			sessionStorage.setItem(UI_KEY, JSON.stringify({
 				ap: this.filterAp, text: this.filterText,
-				kind: this.filterKind, status: this.filterStatus,
-				sort: this.sortBy
+				kind: this.filterKind, sort: this.sortBy
 			}));
 		} catch (e) { /* private mode */ }
 	},
@@ -101,7 +96,8 @@ return view.extend({
 
 			this.data = d;
 
-			if (Object.keys(this.blocking).length || this.hasFocusInTable())
+			if (Object.keys(this.blocking).length ||
+			    this.hasFocusInTable())
 				return;
 
 			this.renderAll();
@@ -122,13 +118,11 @@ return view.extend({
 
 	filtered: function() {
 		var fAp = this.filterAp, fText = (this.filterText || '').toLowerCase();
-		var fKind = this.filterKind, fStatus = this.filterStatus;
+		var fKind = this.filterKind;
 
 		var list = this.clients().filter(function(c) {
 			if (fAp && c.ap !== fAp) return false;
-			if (fKind && (!c.conn || c.conn.type !== fKind)) return false;
-			if (fStatus === 'online' && !c.online) return false;
-			if (fStatus === 'offline' && c.online) return false;
+			if (fKind && (c.conn && c.conn.type) !== fKind) return false;
 			if (fText) {
 				var hay = ((c.name || '') + ' ' + (c.ip || '') + ' ' +
 					(c.mac || '') + ' ' + (c.hostname || '') + ' ' +
@@ -147,26 +141,20 @@ return view.extend({
 			case 'ip':
 				return ipValue(a.ip) - ipValue(b.ip);
 			case 'signal':
-				if (a.online !== b.online) return a.online ? -1 : 1;
 				av = (a.conn && a.conn.rssi != null) ? a.conn.rssi : -999;
 				bv = (b.conn && b.conn.rssi != null) ? b.conn.rssi : -999;
 				return bv - av;
 			case 'rate':
-				if (a.online !== b.online) return a.online ? -1 : 1;
 				av = a.conn ? Math.max(a.conn.rx_speed || 0, a.conn.tx_speed || 0) : 0;
 				bv = b.conn ? Math.max(b.conn.rx_speed || 0, b.conn.tx_speed || 0) : 0;
 				return bv - av;
 			case 'online':
-				if (a.online !== b.online) return a.online ? -1 : 1;
-				return (b.conn && b.conn.since ? b.conn.since : 0) -
-				       (a.conn && a.conn.since ? a.conn.since : 0);
+				return (a.conn && a.conn.since ? a.conn.since : 0) -
+				       (b.conn && b.conn.since ? b.conn.since : 0);
 			case 'ap':
-				return (apNames[a.ap] || a.ap || '').localeCompare(apNames[b.ap] || b.ap || '');
-			case 'name':
-				return (a.name || '').localeCompare(b.name || '');
+				return (apNames[a.ap] || '').localeCompare(apNames[b.ap] || '');
 			default:
-				if (a.online !== b.online) return a.online ? -1 : 1;
-				return (b.last_online || 0) - (a.last_online || 0);
+				return (a.name || '').localeCompare(b.name || '');
 			}
 		});
 		return list;
@@ -174,15 +162,15 @@ return view.extend({
 
 	summary: function() {
 		var list = this.clients();
-		var online = 0, offline = 0, blocked = 0;
+		var wifi = 0, wired = 0, blocked = 0;
 
 		list.forEach(function(c) {
-			if (c.online) online++;
-			else offline++;
+			if (c.conn && c.conn.type === 'wifi') wifi++;
+			else if (c.conn) wired++;
 			if (c.blocked) blocked++;
 		});
 
-		return { total: list.length, online: online, offline: offline, blocked: blocked };
+		return { total: list.length, wifi: wifi, wired: wired, blocked: blocked };
 	},
 
 	renderSummary: function() {
@@ -201,9 +189,9 @@ return view.extend({
 		}
 
 		dom.content(box, [
-			card(_('Total devices'), s.total),
-			card(_('Online'), s.online, s.online ? 'wr-card-ok' : ''),
-			card(_('Offline'), s.offline),
+			card(_('Total clients'), s.total),
+			card(_('Wireless'), s.wifi),
+			card(_('Wired'), s.wired),
 			card(_('Paused'), s.blocked, s.blocked ? 'wr-card-warn' : ''),
 			E('div', { 'class': 'wr-card wr-card-note' }, [
 				E('div', { 'class': 'wr-card-value' },
@@ -219,8 +207,8 @@ return view.extend({
 		this.renderCards();
 	},
 
-	/* 编辑弹窗：自定义名称 + 固定 AP（pin）。两项都改了才一次提交。 */
-	openEdit: function(c) {
+	/* 改名弹窗：保留 r91 的名称编辑，并追加固定 AP（pin）选择 */
+	openRename: function(c) {
 		var self = this;
 		var input = E('input', {
 			type: 'text', 'class': 'cbi-input-text',
@@ -229,26 +217,27 @@ return view.extend({
 			style: 'width:100%'
 		});
 
-		var sel = E('select', { 'class': 'cbi-input-select', style: 'width:100%' }, [
+		var pinSel = E('select', { 'class': 'cbi-input-select', style: 'width:100%' }, [
 			E('option', { value: '' }, _('Auto (no pin)'))
 		]);
 		var known = {};
 		((this.data && this.data.aps) || []).forEach(function(a) {
 			known[a.id] = true;
-			sel.appendChild(E('option', { value: a.id }, a.name || a.id));
+			pinSel.appendChild(E('option', { value: a.id }, a.name || a.id));
 		});
 		if (c.pin && !known[c.pin])
-			sel.appendChild(E('option', { value: c.pin }, c.pin_name || c.pin));
-		sel.value = c.pin || '';
+			pinSel.appendChild(E('option', { value: c.pin }, c.pin_name || c.pin));
+		pinSel.value = c.pin || '';
 
 		var save = E('button', {
 			'class': 'btn cbi-button-positive',
 			click: function() {
 				var name = (input.value || '').trim();
-				var pin = sel.value || '';
+				var pin = pinSel.value || '';
+				var nameChanged = (name !== (c.custom_name || ''));
 				var jobs = [];
 
-				if (name !== (c.custom_name || ''))
+				if (nameChanged)
 					jobs.push(wr.call('set_alias', { mac: c.id, name: name }));
 				if (pin !== (c.pin || ''))
 					jobs.push(wr.call('set_pin', { mac: c.id, ap: pin }));
@@ -265,17 +254,17 @@ return view.extend({
 						if (r && r.ok === false && !err) err = r.error;
 					});
 					if (err) throw { error: err };
+
 					c.custom_name = name || null;
 					c.name = name || c.hostname || c.mac;
 					c.pin = pin || null;
 					c.pin_name = pin ? (self.apNames()[pin] || pin) : null;
 					ui.hideModal();
-					wr.notify('success', _('Saved'));
+					wr.notify('success', nameChanged ? _('Name saved') : _('Saved'));
 					self.refresh();
 				}).catch(function(e) {
 					wr.setBusy(save, false);
-					wr.notify('danger', _('Failed') + ': ' +
-						errText(e && e.error));
+					wr.notify('danger', _('Failed') + ': ' + errText(e && e.error));
 				});
 			}
 		}, _('Save'));
@@ -287,14 +276,14 @@ return view.extend({
 			}
 		});
 
-		ui.showModal(_('Edit') + ' - ' + (c.name || c.mac), [
+		ui.showModal(_('Rename') + ' - ' + (c.name || c.mac), [
 			E('div', {}, [
 				E('div', { 'class': 'wr-hint', style: 'margin-bottom:0.4em' },
 					_('Custom name')),
 				input,
 				E('div', { 'class': 'wr-hint', style: 'margin:0.7em 0 0.4em' },
 					_('Pinned AP')),
-				sel,
+				pinSel,
 				E('div', { 'class': 'wr-hint', style: 'margin-top:0.4em' },
 					_('A pinned client is disconnected and blocked for 2 minutes when it connects to another AP.'))
 			]),
@@ -313,7 +302,7 @@ return view.extend({
 	toggleBlock: function(c, btn) {
 		var self = this;
 
-		if (this.blocking[c.id]) return;
+		if (this.blocking[c.mac]) return;
 
 		if (!this.data || this.data.role !== 'cap') {
 			wr.notify('warning', _('Only the main AP can pause clients'));
@@ -321,7 +310,7 @@ return view.extend({
 		}
 
 		var want = !c.blocked;
-		this.blocking[c.id] = true;
+		this.blocking[c.mac] = true;
 		wr.setBusy(btn, true, want ? _('Pausing...') : _('Resuming...'));
 
 		return wr.call('set_client_block', { mac: c.mac, block: want }).then(function(res) {
@@ -333,14 +322,16 @@ return view.extend({
 			}
 			else {
 				wr.notify('danger', _('Failed') + ': ' +
-					((res && errText(res.error)) || 'unknown'));
+					((res && (res.error === 'not_cap'
+						? _('Only the main AP can pause clients')
+						: errText(res.error))) || 'unknown'));
 			}
 		}).catch(function() {
 			wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
 		}).then(function() {
-			delete self.blocking[c.id];
+			delete self.blocking[c.mac];
 			wr.setBusy(btn, false);
-			/* 重新拉取设备历史：暂停状态已同步到子 AP，页面立即刷新 */
+			/* 重新拉取历史：暂停状态已同步到子 AP，页面立即刷新 */
 			self.refresh();
 		});
 	},
@@ -463,19 +454,19 @@ return view.extend({
 
 		var blockBtn = E('button', {
 			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
-			disabled: (self.data.role !== 'cap') || !!self.blocking[c.id],
+			disabled: (self.data.role !== 'cap') || !!self.blocking[c.mac],
 			click: function(ev) {
 				return self.toggleBlock(c, ev.currentTarget);
 			}
 		}, blocked ? _('Resume') : _('Pause'));
 
-		if (self.blocking[c.id])
+		if (self.blocking[c.mac])
 			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
 
 		var editBtn = E('button', {
 			'class': 'btn cbi-button-neutral',
-			click: function() { self.openEdit(c); }
-		}, _('Edit'));
+			click: function() { self.openRename(c); }
+		}, _('Rename'));
 
 		var wakeBtn = (!online && c.can_wake)
 			? E('button', {
@@ -494,32 +485,28 @@ return view.extend({
 		var sub = [];
 		if (v && v.name) sub.push(v.name);
 		if (c.hostname && c.hostname !== name) sub.push(c.hostname);
-		if (c.pin) sub.push(_('Pinned to %s').format(c.pin_name || c.pin));
 
 		var rows = [
 			this.cardRow(_('IP Address'), c.ip || '-'),
 			this.cardRow(_('MAC Address'),
 				E('span', { 'class': 'wr-mono' }, (c.mac || '-').toUpperCase())),
-			this.cardRow(online ? _('Attached AP') : _('Last AP'),
-				(c.ap_name || apNames[c.ap] || c.ap || '-')),
-			this.cardRow(_('Pinned AP'), c.pin_name || '-')
+			this.cardRow(_('Attached AP'),
+				apNames[c.ap] || c.ap_name || c.ap || '-'),
+			this.cardRow(_('Connection'), wr.connText(c.conn)),
+			this.cardRow(_('Signal'), sig),
+			this.cardRow(_('Real-time rate'), rate),
+			this.cardRow(_('Online time'),
+				since != null ? wr.fmtDur(since) : '-')
 		];
 
-		if (online) {
-			rows.push(this.cardRow(_('Connection'), wr.connText(c.conn)));
-			rows.push(this.cardRow(_('Signal'), sig));
-			rows.push(this.cardRow(_('Real-time rate'), rate));
-			rows.push(this.cardRow(_('Online time'),
-				since != null ? wr.fmtDur(since) : '-'));
-		}
-		else {
-			rows.push(this.cardRow(_('Last online'),
-				wr.fmtTime(c.last_online),
+		/* 离线终端：沿用 r91 卡片结构，只追加最后在线时间与固定 AP 状态 */
+		if (!online)
+			rows.push(this.cardRow(_('Last online'), wr.fmtTime(c.last_online),
 				c.last_online
 					? E('span', { 'class': 'wr-hint' }, ' (' + wr.fmtAge(c.last_online) + ')')
 					: null));
-			rows.push(this.cardRow(_('Last offline'), wr.fmtTime(c.last_offline)));
-		}
+		if (c.pin)
+			rows.push(this.cardRow(_('Pinned AP'), c.pin_name || c.pin));
 
 		return E('div', {
 			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '') +
@@ -548,16 +535,12 @@ return view.extend({
 		this.data = data;
 		poll.add(L.bind(this.refresh, this), 15);
 
-		var devices = (data && data.devices) || [];
 		var self = this;
 		var isCap = !!(data && data.role === 'cap');
+		var apNames = this.apNames();
 
-		/* 上次筛选的 AP 已不在历史里时回到全部，避免页面空白 */
-		var used = {};
-		devices.forEach(function(c) {
-			if (c.ap) used[c.ap] = c.ap_name || c.ap;
-		});
-		if (this.filterAp && !used[this.filterAp]) {
+		/* 上次筛选的 AP 已离线/被移除时回到全部，避免页面空白 */
+		if (this.filterAp && !apNames[this.filterAp]) {
 			this.filterAp = '';
 			this.saveUi();
 		}
@@ -581,35 +564,11 @@ return view.extend({
 				self.renderAll();
 			}
 		}, [ E('option', { value: '' }, _('All APs')) ]);
-		var aps = (data && data.aps) || [];
-		var added = {};
-		aps.forEach(function(a) {
-			if (!used[a.id] || added[a.id]) return;
-			added[a.id] = true;
-			var opt = E('option', { value: a.id }, a.name || a.id);
-			if (self.filterAp === a.id) opt.selected = true;
-			apSel.appendChild(opt);
-		});
-		Object.keys(used).forEach(function(id) {
-			if (added[id]) return;
-			var opt = E('option', { value: id }, used[id]);
+		Object.keys(apNames).forEach(function(id) {
+			var opt = E('option', { value: id }, apNames[id]);
 			if (self.filterAp === id) opt.selected = true;
 			apSel.appendChild(opt);
 		});
-
-		var statusSel = E('select', {
-			'class': 'cbi-input-select',
-			change: function(ev) {
-				self.filterStatus = ev.target.value;
-				self.saveUi();
-				self.renderAll();
-			}
-		}, [
-			E('option', { value: '' }, _('All status')),
-			E('option', { value: 'online' }, _('Online')),
-			E('option', { value: 'offline' }, _('Offline'))
-		]);
-		statusSel.value = this.filterStatus;
 
 		var kindSel = E('select', {
 			'class': 'cbi-input-select',
@@ -633,7 +592,6 @@ return view.extend({
 				self.renderAll();
 			}
 		}, [
-			E('option', { value: 'status' }, _('Sort: status')),
 			E('option', { value: 'name' }, _('Sort: name')),
 			E('option', { value: 'ip' }, _('Sort: IP')),
 			E('option', { value: 'signal' }, _('Sort: signal')),
@@ -660,7 +618,7 @@ return view.extend({
 
 			body.push(
 				E('div', { 'class': 'wr-toolbar wr-toolbar-wrap' }, [
-					search, apSel, statusSel, kindSel, sortSel,
+					search, apSel, kindSel, sortSel,
 					E('button', {
 						'class': 'btn',
 						click: L.bind(function(ev) {

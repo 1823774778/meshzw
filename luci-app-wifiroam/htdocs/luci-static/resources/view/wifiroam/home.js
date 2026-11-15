@@ -18,7 +18,7 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 41;
+var REQUIRED_VERSION = 42;
 
 return view.extend({
 	st: null,
@@ -131,8 +131,12 @@ return view.extend({
 		});
 
 		var apOnline = 0;
+		var selfMn = this.topo && this.topo.self;
 		aps.forEach(function(a) {
-			if (a.role === 'cap' || a.authed) apOnline++;
+			/* 优先用后端 online；兼容旧数据时按 CAP/authed/本机判断 */
+			var on = (a.online != null) ? a.online
+				: (a.role === 'cap' || a.authed || (selfMn && a.id === selfMn));
+			if (on) apOnline++;
 		});
 
 		var wifi = 0, wired = 0, blocked = 0;
