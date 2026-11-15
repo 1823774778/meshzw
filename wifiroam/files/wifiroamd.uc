@@ -69,7 +69,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 36;
+const DAEMON_VERSION = 37;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -90,7 +90,7 @@ let conn_seq = 0;
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
-let sap_self_reset, sap_disconnect, roam_default_init;
+let sap_self_reset, sap_disconnect, roam_default_init, backhaul_stp_ensure;
 // 访客网络：前向声明后置赋值函数（ucode 不提升函数声明）
 let guest_after_reload, apply_guest_local, guest_save_local, guest_tick;
 let write_roam_iface, guest_fw4_sync;
@@ -2773,6 +2773,8 @@ function apply_backhaul_local(bh, role) {
 	wc.set("wifiroam", "backhaul", "config_ver", "" + ver);
 	wc.commit("wifiroam");
 	state.backhaul_ver_applied = ver;
+	if (role == "cap" && bh.enabled)
+		backhaul_stp_ensure();
 
 	uloop.process("/sbin/wifi", [ "reload" ], null,
 		function(res) { log("backhaul wifi reload rc=" + res); });
@@ -2794,6 +2796,57 @@ function apply_backhaul_local(bh, role) {
 	push_event("backhaul_apply", "",
 		sprintf("ver=%d %s", ver, bh.enabled ? "wireless" : "off"));
 	return { ok: true, ver };
+}
+
+// 回程启用期间给 LAN 网桥打开 STP，作为有线/无线同时存在时的兜底。
+// 运行时用 brctl 立即生效，uci 只写一次 stp=1 供重启后保留。
+backhaul_stp_ensure = function() {
+	if (state._bh_stp_done) return;
+	state._bh_stp_done = true;
+	cmd_output("brctl stp " + state.brdev + " on 2>/dev/null");
+	let nc = uci.cursor();
+	nc.load("network");
+	let hit = false;
+	nc.foreach("network", "device", function(s) {
+		if ((s.name ?? "") != state.brdev) return;
+		nc.set("network", s[".name"], "stp", "1");
+		hit = true;
+	});
+	if (!hit) {
+		nc.foreach("network", "interface", function(s) {
+			if (hit) return;
+			if (s[".name"] == "lan" &&
+			    ((s.device ?? "") == state.brdev || s.type == "bridge")) {
+				nc.set("network", s[".name"], "stp", "1");
+				hit = true;
+			}
+		});
+	}
+	if (hit) nc.commit("network");
+};
+
+/* 回程 STA 的 netdev MAC：用于不依赖主路由 MAC 的环路检测 */
+function backhaul_sta_mac() {
+	let ws = ubusc.call("network.wireless", "status") ?? {};
+	for (let rname, r in ws)
+		for (let ifc in r.interfaces ?? [])
+			if (ifc.section == BACKHAUL_SECTION && ifc.ifname) {
+				let mac = trim(fs.readfile(
+					`/sys/class/net/${ifc.ifname}/address`) ?? "");
+				return macnorm(mac);
+			}
+	return "";
+}
+
+/* STA 自己的 MAC 若出现在有线端口的 FDB 上，说明有线/无线已形成环路 */
+function backhaul_loop_port() {
+	let mac = backhaul_sta_mac();
+	if (length(mac) != 12) return null;
+	let port = parse_fdb()[mac];
+	if (port && index(port, "phy") != 0 && index(port, "wl") != 0 &&
+	    index(port, "vap") != 0 && index(port, "br") != 0)
+		return port;
+	return null;
 }
 
 // SAP 侧：有线/无线回程互斥。网线在位时 STA 保持 disabled，拔线后自动启用；
@@ -2823,6 +2876,22 @@ function backhaul_tick() {
 			length(wkey), length(bh.key ?? ""), bh.config_ver ?? 0));
 		apply_backhaul_local(bh, "sap");
 		return;
+	}
+	backhaul_stp_ensure();
+	/* 插回网线时主路由 MAC 可能仍只学到无线 STA 口，FDB 判据会漏检；
+	   若 STA 自己的 MAC 出现在有线口，说明两条路径都通，立即暂停 STA */
+	let disabled = (cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "1";
+	if (!disabled) {
+		let lp = backhaul_loop_port();
+		if (lp != null) {
+			log("backhaul loop detected on " + lp + ", pausing wireless STA");
+			cur.set("wireless", BACKHAUL_SECTION, "disabled", "1");
+			cur.commit("wireless");
+			push_event("backhaul_link", "", "loop detected, wireless STA paused");
+			uloop.process("/sbin/wifi", [ "reload" ], null,
+				function(res) { log("backhaul switch rc=" + res); });
+			return;
+		}
 	}
 	let want = ethernet_uplink_port() ? "1" : "0";
 	if ((cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == want) return;
@@ -4991,7 +5060,8 @@ function main() {
 	uloop.interval(TICK_INTERVAL, sap_report);
 	uloop.interval(TICK_INTERVAL, expire_tick);
 	uloop.interval(10000, conn_cleanup);
-	uloop.interval(TICK_INTERVAL, backhaul_tick);
+	/* 有线/环路检测需要更快响应：2s 一次，其余巡检仍用 TICK_INTERVAL */
+	uloop.interval(2000, backhaul_tick);
 	uloop.interval(STEER_TICK, steer_tick);
 	uloop.interval(RRM_SYNC_INTERVAL, rrm_sync_tick);
 	uloop.interval(TICK_INTERVAL, guest_tick);
