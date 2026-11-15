@@ -148,8 +148,6 @@ return view.extend({
 
 		var traffic = this.todayTraffic();
 		var st = this.st || {};
-		var roleText = { cap: _('Main AP'), sap: _('Sub AP'),
-		                 unconfigured: _('Unconfigured') }[st.role] || '-';
 		var roamOn = !!(st.roam && st.roam.enabled);
 
 		function card(label, value, cls) {
@@ -161,7 +159,7 @@ return view.extend({
 
 		/* 原顶部状态条已合并进卡片：没有的补上，已有的不重复 */
 		dom.content(box, [
-			card(_('Role'), roleText, 'wr-card-role'),
+			card(_('Role'), st.role ? wr.roleBadge(st.role) : '-', 'wr-card-role'),
 			card(_('Device'), st.name || '-'),
 			card(_('IP'), st.ip || '-'),
 			card(_('APs online'),
@@ -175,8 +173,7 @@ return view.extend({
 				this.topo ? ('%d / %d'.format(wifi, wired)) : '-'),
 			card(_('Paused'), String(blocked), blocked ? 'wr-card-warn' : ''),
 			card(_('Traffic today'),
-				traffic != null ? wr.fmtBytes(traffic) : '-'),
-			card(_('Uptime'), wr.fmtUptime(st.uptime))
+				traffic != null ? wr.fmtBytes(traffic) : '-')
 		]);
 	},
 
