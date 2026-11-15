@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 42;
+const DAEMON_VERSION = 43;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -307,7 +307,7 @@ let state = {
 	_usage_dirty: false,
 	_usage_saved: 0,
 	_usage_track: null,
-	appctl: { enabled: false, enhanced: false, devices: {}, stats: {}, day: "", online: {}, ndata: {} },
+	appctl: { enabled: false, enhanced: false, strict: false, devices: {}, stats: {}, day: "", online: {}, ndata: {} },
 	_nft_snap: null,    // CAP: 上次 nft 计数快照 { "<mac>|<app>": { pk, by } }
 	_dnslock_on: null,  // CAP: DNS 出口锁定链当前状态（null = 未同步，首轮强制对齐）
 	_appstat_ts: 0,     // CAP: 上次采样时刻
@@ -761,6 +761,12 @@ function appctl_enhanced() {
 	return state.appctl.enhanced == true;
 }
 
+/* 严格模式（高级设置开关）：对启用了应用管控的终端，额外阻断可绕过
+   DNS/SNI 识别的通道（QUIC、外部 DNS、已知 DoH），提高拦截准确率。 */
+function appctl_strict() {
+	return state.appctl.strict == true;
+}
+
 function appctl_timeout() {
 	return appctl_enhanced() ? APP_SET_TIMEOUT_ENH : APP_SET_TIMEOUT;
 }
@@ -840,6 +846,34 @@ function appctl_apply_rules() {
 		script += sprintf(
 			"add rule inet %s forward ether saddr %s counter comment \"wr:%s:*:total\"\n",
 			APPCTL_TABLE, maccolon(mn), mn);
+		// 严格模式：在 DPI 队列之前丢弃可绕过识别的通道。必须排在
+		// ct mark accept 快速路径之前，否则已被 DPI 放行的流会跳过这些规则。
+		if (has_block && appctl_strict()) {
+			let gw = state.self.ip ?? "";
+			// QUIC：阻断 UDP 443，迫使应用回落 TCP/TLS，便于按 SNI 识别
+			script += sprintf(
+				"add rule inet %s forward ether saddr %s udp dport 443 counter drop\n",
+				APPCTL_TABLE, maccolon(mn));
+			// 外部 DNS：只允许发往本机 dnsmasq（v6 地址不固定，直接全禁）
+			if (match(gw, /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/)) {
+				script += sprintf(
+					"add rule inet %s forward ether saddr %s udp dport 53 ip daddr != %s counter drop\n" +
+					"add rule inet %s forward ether saddr %s tcp dport 53 ip daddr != %s counter drop\n",
+					APPCTL_TABLE, maccolon(mn), gw,
+					APPCTL_TABLE, maccolon(mn), gw);
+			}
+			script += sprintf(
+				"add rule inet %s forward ether saddr %s meta nfproto ipv6 udp dport 53 counter drop\n" +
+				"add rule inet %s forward ether saddr %s meta nfproto ipv6 tcp dport 53 counter drop\n",
+				APPCTL_TABLE, maccolon(mn),
+				APPCTL_TABLE, maccolon(mn));
+			// 静态 DoH 地址（Cloudflare 1.1.1.1 同时承载网页服务，清单里未收录）
+			script += sprintf(
+				"add rule inet %s forward ether saddr %s ip daddr { %s } tcp dport 443 counter drop\n" +
+				"add rule inet %s forward ether saddr %s ip6 daddr { %s } tcp dport 443 counter drop\n",
+				APPCTL_TABLE, maccolon(mn), join(", ", APP_DOH_V4),
+				APPCTL_TABLE, maccolon(mn), join(", ", APP_DOH_V6));
+		}
 		// 对有被禁应用的终端，把新建连接首包送 DPI 解析 SNI：
 		//   - ct mark 0x1 = 已放行 (dpi 返回 accept 时携带)，命中即走快速路径
 		//   - 被拦截的包 dpi 直接 drop，不设 mark，靠其流缓存丢弃后续重传
@@ -1268,6 +1302,7 @@ function appctl_load() {
 	cur.load("wifiroam");
 	state.appctl.enabled = cur.get("wifiroam", "appctl", "enabled") == "1";
 	state.appctl.enhanced = cur.get("wifiroam", "appctl", "enhanced") == "1";
+	state.appctl.strict = cur.get("wifiroam", "appctl", "strict") == "1";
 	appctl_read_devices();
 	appstats_load();
 	if (state.cfg.role == "cap") appctl_apply();
@@ -6096,6 +6131,7 @@ let api_obj = {
 				error: state.cfg.role == "cap" ? "" : "not_cap",
 				enabled: state.appctl.enabled,
 				enhanced: state.appctl.enhanced == true,
+				strict: state.appctl.strict == true,
 				day: state.appctl.day,
 				apps, devices, stats: state.appctl.stats,
 				online: state.appctl.online, ndata: state.appctl.ndata,
@@ -6144,9 +6180,9 @@ let api_obj = {
 		},
 	},
 	set_appctl: {
-		// 调用方必须显式传 enhanced（ubus 参数是白名单校验，未声明的参数会被拒；
-		// 默认值取 false，类型可推断，publish 正常）
-		args: { ubus_rpc_session: "", enabled: false, enhanced: false },
+		// 调用方必须显式传 enhanced / strict（ubus 参数是白名单校验，
+		// 未声明的参数会被拒）；strict 用字符串 '1'/'0' 表示，留空保持原值。
+		args: { ubus_rpc_session: "", enabled: false, enhanced: false, strict: "" },
 		call: function(req) {
 			if (state.cfg.role != "cap")
 				return { ok: false, error: "not_cap" };
@@ -6158,13 +6194,18 @@ let api_obj = {
 				cur.set("wifiroam", "appctl", "appctl");
 			// enhanced 为必填调用参数（前端所有调用点都显式传当前值）
 			let enh = req.args.enhanced ? true : false;
+			let strict = state.appctl.strict == true;
+			if (req.args.strict === "1") strict = true;
+			else if (req.args.strict === "0") strict = false;
 			cur.set("wifiroam", "appctl", "enabled", on ? "1" : "0");
 			cur.set("wifiroam", "appctl", "enhanced", enh ? "1" : "0");
+			cur.set("wifiroam", "appctl", "strict", strict ? "1" : "0");
 			cur.commit("wifiroam");
 			state.appctl.enabled = on;
 			state.appctl.enhanced = enh;
+			state.appctl.strict = strict;
 			appctl_apply();
-			return { ok: true, enabled: on, enhanced: enh };
+			return { ok: true, enabled: on, enhanced: enh, strict };
 		},
 	},
 	set_app_policy: {

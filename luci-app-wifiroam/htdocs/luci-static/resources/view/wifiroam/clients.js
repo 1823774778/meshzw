@@ -485,6 +485,11 @@ return view.extend({
 		var sub = [];
 		if (v && v.name) sub.push(v.name);
 		if (c.hostname && c.hostname !== name) sub.push(c.hostname);
+		/* 新功能信息放在副标题，保持 r91 卡片的 7 行布局不变 */
+		if (!online && c.last_online)
+			sub.push(_('Last online') + ' ' + wr.fmtAge(c.last_online));
+		if (c.pin)
+			sub.push(_('Pinned to %s').format(c.pin_name || c.pin));
 
 		var rows = [
 			this.cardRow(_('IP Address'), c.ip || '-'),
@@ -499,18 +504,8 @@ return view.extend({
 				since != null ? wr.fmtDur(since) : '-')
 		];
 
-		/* 离线终端：沿用 r91 卡片结构，只追加最后在线时间与固定 AP 状态 */
-		if (!online)
-			rows.push(this.cardRow(_('Last online'), wr.fmtTime(c.last_online),
-				c.last_online
-					? E('span', { 'class': 'wr-hint' }, ' (' + wr.fmtAge(c.last_online) + ')')
-					: null));
-		if (c.pin)
-			rows.push(this.cardRow(_('Pinned AP'), c.pin_name || c.pin));
-
 		return E('div', {
-			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '') +
-				(online ? '' : ' wr-dcard-off')
+			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '')
 		}, [
 			E('div', { 'class': 'wr-dcard-head' }, [
 				this.avatar(c),

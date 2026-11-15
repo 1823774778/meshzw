@@ -1972,6 +1972,72 @@ return view.extend({
 				});
 			}
 
+			/* 新增功能：固定 AP + 网络唤醒（设备详情内直接操作） */
+			var apNodes = ((self.topo && self.topo.nodes) || []).filter(function(x) {
+				return x.type === 'ap';
+			});
+			var pinSel = E('select', { 'class': 'cbi-input-select' }, [
+				E('option', { value: '' }, _('Auto (no pin)'))
+			]);
+			apNodes.forEach(function(a) {
+				pinSel.appendChild(E('option', { value: a.id },
+					a.name || a.mac || a.id));
+			});
+			pinSel.value = n.pin || '';
+
+			var pinStatus = E('span', { 'class': 'wr-hint' });
+			var pinBtn = E('button', {
+				'class': 'btn cbi-button-positive',
+				click: function() {
+					pinBtn.disabled = true;
+					dom.content(pinStatus, wr.inlineStatus('pending', _('Saving...')));
+					return wr.call('set_pin', { mac: n.id, ap: pinSel.value })
+						.then(function(res) {
+							pinBtn.disabled = false;
+							if (res && res.ok) {
+								n.pin = pinSel.value || null;
+								n.pin_name = n.pin
+									? (pinSel.options[pinSel.selectedIndex] || {}).text
+									: null;
+								dom.content(pinStatus, wr.inlineStatus('ok', _('Saved')));
+								wr.notify('success', _('Saved'));
+								self.fetch();
+							}
+							else {
+								dom.content(pinStatus, wr.inlineStatus('fail',
+									'✗ ' + ((res && res.error) || _('Failed'))));
+							}
+						})
+						.catch(function() {
+							pinBtn.disabled = false;
+							dom.content(pinStatus, wr.inlineStatus('fail',
+								'✗ ' + _('request rejected')));
+						});
+				}
+			}, _('Save'));
+
+			var wakeBtn = E('button', {
+				'class': 'btn cbi-button-action',
+				disabled: n.online !== false,
+				title: n.online !== false ? _('Only offline devices can be woken') : ''
+			}, _('Wake on LAN'));
+			wakeBtn.addEventListener('click', function() {
+				if (n.online !== false) return;
+				wakeBtn.disabled = true;
+				wr.call('wake', { mac: n.id }).then(function(res) {
+					wakeBtn.disabled = false;
+					if (res && res.ok)
+						wr.notify('success',
+							_('Magic packet sent to %s').format(n.mac || n.id));
+					else
+						wr.notify('danger', _('Wake failed') +
+							(res && res.error ? ': ' + res.error : ''));
+				}).catch(function() {
+					wakeBtn.disabled = false;
+					wr.notify('danger', _('Wake failed') + ': ' + _('request rejected'));
+				});
+			});
+
 			body = E('div', { 'class': 'wr-dev' }, [
 				E('div', { 'class': 'wr-dev-head' }, [
 					iconSvg,
@@ -1989,6 +2055,10 @@ return view.extend({
 				blockBtn ? E('div', { 'class': 'wr-dev-actions' }, [
 					blockBtn, ' ', blockStatus
 				]) : null,
+				E('div', { 'class': 'wr-dev-actions' }, [
+					E('span', { 'class': 'wr-hint' }, _('Pinned AP') + ':'),
+					pinSel, ' ', pinBtn, ' ', pinStatus, ' ', wakeBtn
+				]),
 				wifi ? E('div', { 'class': 'wr-dev-rates' }, [
 					/* 设备视角实时速率：↑发送=终端→AP，↓接收=AP→终端；
 					   span 引用存下来，轮询时随最新拓扑数据刷新（见 _ratesRedraw） */

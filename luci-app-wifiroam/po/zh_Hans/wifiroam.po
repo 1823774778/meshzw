@@ -1207,3 +1207,12 @@ msgstr "禁入时长必须在 10-3600 秒之间"
 
 msgid "Only the main AP can change this setting"
 msgstr "只有主路由可以修改此设置"
+
+msgid "Strict enforcement"
+msgstr "严格拦截模式"
+
+msgid "For devices with blocked apps: drop QUIC (UDP 443) to force TCP/TLS fallback, block DNS queries that bypass this router, and block well-known DoH providers. Improves blocking accuracy at the cost of stricter traffic handling."
+msgstr "对被禁止应用的终端：阻断 QUIC（UDP 443）强制回落到 TCP/TLS，拦截绕过本路由的 DNS 查询，并阻断已知 DoH 服务商。可提高拦截准确率，但流量处理会更严格。"
+
+msgid "Only offline devices can be woken"
+msgstr "只有离线设备可以唤醒"

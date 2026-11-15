@@ -601,6 +601,8 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 	grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
 	gap: 0.6em;
 	margin: 0.6em 0 1em;
+	width: 100%;
+	box-sizing: border-box;
 }
 .wr-card {
 	padding: 0.7em 0.8em;

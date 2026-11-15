@@ -609,12 +609,16 @@ return view.extend({
 		var cb = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
 		cb.checked = (ac.enhanced === true);
 
+		var strictCb = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
+		strictCb.checked = (ac.strict === true);
+
 		var btn = E('button', {
 			'class': 'btn cbi-button-positive',
 			click: function() {
 				wr.setBusy(btn, true, _('Applying...'));
 				wr.call('set_appctl', {
 					enabled: ac.enabled, enhanced: cb.checked,
+					strict: strictCb.checked ? '1' : '0',
 				}).then(function(res) {
 					wr.setBusy(btn, false);
 					if (!res || !res.ok) {
@@ -623,6 +627,7 @@ return view.extend({
 						return;
 					}
 					ac.enhanced = (res.enhanced === true);
+					ac.strict = (res.strict === true);
 					wr.notify('success', cb.checked
 						? _('Precise mode enabled. Hardware flow offload was suspended to keep counters complete.')
 						: _('Precise mode disabled. Reverted to the lenient mode.'));
@@ -643,11 +648,19 @@ return view.extend({
 					  'expires DNS-to-app mapping in 30 minutes to avoid stale CDN attribution; ' +
 					  'suspends hardware flow offload while enabled so traffic counters stay complete (restored on disable).')),
 			]),
+			E('div', { 'class': 'wr-form-row' }, [
+				E('label', {}, [ strictCb, ' ', _('Strict enforcement') ]),
+				E('div', { 'class': 'wr-hint' },
+					_('For devices with blocked apps: drop QUIC (UDP 443) to force TCP/TLS fallback, ' +
+					  'block DNS queries that bypass this router, and block well-known DoH providers. ' +
+					  'Improves blocking accuracy at the cost of stricter traffic handling.')),
+			]),
 			isCap ? E('div', {}, [ btn ]) : '',
 		];
 
 		if (!usable) {
 			cb.disabled = true;
+			strictCb.disabled = true;
 			btn.disabled = true;
 			kids.splice(1, 0, E('div', { 'class': 'wr-hint' },
 				!isCap
@@ -656,104 +669,6 @@ return view.extend({
 		}
 
 		return E('div', { 'class': 'cbi-section' }, kids);
-	},
-
-	/* 终端历史 / 固定 AP（新增功能的高级设置入口） */
-	renderDevicesPanel: function(isCap) {
-		var self = this;
-		var d = (this.st && this.st.devices) || {};
-
-		var enforce = E('input', { type: 'checkbox', 'class': 'wr-switch-input' });
-		enforce.checked = d.pin_enforce !== false;
-
-		var maxIn = E('input', {
-			type: 'number', min: '20', max: '2000', step: '10',
-			'class': 'cbi-input-text', style: 'width:7em',
-		});
-		maxIn.value = d.max != null ? d.max : 200;
-
-		var banIn = E('input', {
-			type: 'number', min: '10', max: '3600', step: '10',
-			'class': 'cbi-input-text', style: 'width:7em',
-		});
-		banIn.value = d.ban != null ? d.ban : 120;
-
-		var errText = function(e) {
-			return {
-				invalid_max: _('History limit must be between 20 and 2000'),
-				invalid_ban: _('Ban time must be between 10 and 3600'),
-				not_cap: _('Only the main AP can change this setting')
-			}[e] || e || 'unknown';
-		};
-
-		var saveBtn = E('button', {
-			'class': 'btn cbi-button-positive',
-			click: function() {
-				wr.setBusy(saveBtn, true, _('Saving...'));
-				return wr.call('set_devices', {
-					max: +maxIn.value || 0,
-					ban: +banIn.value || 0,
-					pin_enforce: enforce.checked,
-				}).then(function(res) {
-					if (res && res.ok) {
-						self.st.devices = res.devices || self.st.devices;
-						wr.notify('success', _('Saved'));
-					}
-					else {
-						wr.notify('danger', _('Failed') + ': ' +
-							errText(res && res.error));
-					}
-				}).catch(function() {
-					wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
-				}).then(function() {
-					wr.setBusy(saveBtn, false);
-				});
-			}
-		}, _('Save'));
-
-		var clearBtn = E('button', {
-			'class': 'btn cbi-button-negative',
-			click: function() {
-				wr.setBusy(clearBtn, true, _('Clearing...'));
-				return wr.call('clear_device_history', {}).then(function(res) {
-					if (res && res.ok)
-						wr.notify('success',
-							_('Removed %d offline device(s)').format(res.removed || 0));
-					else
-						wr.notify('danger', _('Failed') + ': ' +
-							errText(res && res.error));
-				}).catch(function() {
-					wr.notify('danger', _('Failed') + ': ' + _('request rejected'));
-				}).then(function() {
-					wr.setBusy(clearBtn, false);
-				});
-			}
-		}, _('Clear offline history'));
-
-		var panel = E('div', { 'class': 'cbi-section' }, [
-			E('h3', {}, _('Device History & Pinned AP')),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, [ enforce, ' ', _('Enforce pinned AP') ]),
-				E('div', { 'class': 'wr-hint' },
-					_('A client connected to another AP is disconnected and blocked for the configured time.')),
-			]),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, _('History limit')), maxIn,
-				E('div', { 'class': 'wr-hint' },
-					_('Older offline records are removed first. Range 20-2000.')),
-			]),
-			E('div', { 'class': 'wr-form-row' }, [
-				E('label', {}, _('Pin ban time (seconds)')), banIn,
-				E('div', { 'class': 'wr-hint' },
-					_('How long the client is blocked on the wrong AP. Range 10-3600.')),
-			]),
-			E('div', {}, [ saveBtn, ' ', clearBtn ]),
-		]);
-
-		if (!isCap)
-			wr.setFormDisabled(panel, true);
-
-		return panel;
 	},
 
 	render: function(data) {
@@ -945,7 +860,6 @@ return view.extend({
 			E('div', { id: 'wr-status' }, wr.statusBar(this.st || {})),
 			notice,
 			E('div', { id: 'wr-pre' }, this.renderChecklist()),
-			this.renderDevicesPanel(isCap),
 			form,
 			this.renderAppctlPanel(isCap),
 			E('div', { id: 'wr-apply' }, this.renderApplyResults(this.st.last_apply)),
