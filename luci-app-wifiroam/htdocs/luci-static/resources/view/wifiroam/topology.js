@@ -286,10 +286,12 @@ return view.extend({
 		}
 
 		dom.content(box, [
-			card(_('APs online'), aps.length ? '%d / %d'.format(online, aps.length) : '-'),
-			card(_('Clients'), clients.length ? String(clients.length) : '-'),
+			card(_('APs online'),
+				this.topo ? '%d / %d'.format(online, aps.length) : '-'),
+			card(_('Clients'),
+				this.topo ? String(clients.length) : '-'),
 			card(_('Wireless / Wired'),
-				clients.length ? ('%d / %d'.format(wifi, wired)) : '-'),
+				this.topo ? ('%d / %d'.format(wifi, wired)) : '-'),
 			card(_('Paused'), String(paused), paused ? 'wr-card-warn' : ''),
 			card(_('Traffic today'), traffic != null ? wr.fmtBytes(traffic) : '-')
 		]);
