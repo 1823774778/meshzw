@@ -12,7 +12,7 @@ define Package/wifiroam
   CATEGORY:=Network
   SUBMENU:=Wireless
   TITLE:=WiFi seamless roaming orchestration daemon (802.11k/v/r)
-  DEPENDS:=+ucode +ucode-mod-ubus +ucode-mod-uloop +ucode-mod-socket +ucode-mod-fs +ucode-mod-uci +ucode-mod-digest +libnetfilter-queue +libmnl +libnfnetlink +tc +kmod-sched-core +firewall4 +nftables
+  DEPENDS:=+ucode +ucode-mod-ubus +ucode-mod-uloop +ucode-mod-socket +ucode-mod-fs +ucode-mod-uci +ucode-mod-digest +libnetfilter-queue +libmnl +libnfnetlink +conntrack +tc +kmod-sched-core +firewall4 +nftables
 endef
 
 define Package/wifiroam/description

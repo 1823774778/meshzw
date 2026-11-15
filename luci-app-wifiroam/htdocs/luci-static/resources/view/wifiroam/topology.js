@@ -1473,13 +1473,11 @@ return view.extend({
 		self._appRedraw = render;
 		render();
 
-		/* 应用统计按需加载：打开详情时再拉全量数据，不拖慢拓扑轮询 */
-		if (!self.appctl) {
-			self.refreshAppctl().then(function() {
-				if (self._appRedraw)
-					self._appRedraw(true);
-			});
-		}
+		/* 应用统计按需加载：每次打开详情都刷新一次，失败后也能自动重试 */
+		self.refreshAppctl().then(function() {
+			if (self._appRedraw)
+				self._appRedraw(true);
+		});
 
 		return box;
 	},

@@ -2595,13 +2595,12 @@ function acl_apply() {
 function acl_set(mn, on) {
 	if (on) {
 		state.blocked[mn] = true;
-		/* 已卸载到 flowtable 的连接会绕过 forward 链：先清掉 conntrack /
-		   fw4 flowtable，让该终端的后续报文重新经过 ACL 被丢弃。 */
+		/* 已卸载到 flowtable 的连接会绕过 forward 链：先清掉该终端的
+		   conntrack 条目，让后续报文重新经过 ACL 被丢弃。 */
 		try {
 			let ip = parse_leases()[mn]?.ip ?? parse_neigh()[mn]?.ip ?? null;
 			if (ip) cmd_output(sprintf("conntrack -D -s %s 2>/dev/null", ip));
 		} catch (e) {}
-		cmd_output("nft flush flowtable inet fw4 ft 2>/dev/null");
 	}
 	else {
 		delete state.blocked[mn];
@@ -4960,6 +4959,8 @@ function factory_reset() {
 	state.client_seen = {};
 	state.client_bytes = {};
 	state.bytes_cache = {};
+	_clients_cache = { ts: 0, data: null };
+	_sec_cache = {};
 	state.net_names = {};
 	state.roster = null;
 	state.cap_learned = null;
