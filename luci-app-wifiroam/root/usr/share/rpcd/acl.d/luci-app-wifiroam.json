@@ -3,14 +3,14 @@
 		"description": "Grant access to wifiroam seamless roaming management",
 		"read": {
 			"ubus": {
-				"wifiroam": [ "status", "topology", "client_detail", "get_roam", "precheck", "discover", "roam_log", "get_backhaul", "usage_stats", "offload_status", "get_wifi", "get_guest" ],
+				"wifiroam": [ "status", "topology", "client_detail", "get_roam", "precheck", "discover", "roam_log", "get_backhaul", "get_appctl", "appctl_status", "offload_status", "usage_stats", "get_wifi", "get_guest" ],
 				"service": [ "list" ],
 				"rc": [ "list" ]
 			}
 		},
 		"write": {
 			"ubus": {
-				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "pair", "unpair", "set_offload", "set_wifi", "set_guest", "reset" ],
+				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "pair", "unpair", "set_appctl", "set_app_policy", "set_offload", "set_wifi", "set_guest", "reset" ],
 				"rc": [ "init" ]
 			}
 		}
