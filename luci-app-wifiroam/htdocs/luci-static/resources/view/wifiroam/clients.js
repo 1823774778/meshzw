@@ -514,26 +514,32 @@ return view.extend({
 			]);
 		}
 
-		var blockBtn = E('button', {
+		/* 注意：不能传 disabled:false —— LuCI 的 E() 会把它写成
+		   disabled="false"，按钮仍然处于禁用状态 */
+		var blockAttrs = {
 			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
-			disabled: !!self.blocking[c.mac],
 			click: function(ev) {
 				return self.toggleBlock(c, ev.currentTarget);
 			}
-		}, blocked ? _('Resume') : _('Pause'));
+		};
+		if (self.blocking[c.mac]) blockAttrs.disabled = true;
+		var blockBtn = E('button', blockAttrs,
+			blocked ? _('Resume') : _('Pause'));
 
 		if (self.blocking[c.mac])
 			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
 
-		var wakeBtn = (!online)
-			? E('button', {
+		var wakeBtn = null;
+		if (!online) {
+			var wakeAttrs = {
 				'class': 'btn cbi-button-action wr-wake-btn',
-				disabled: !!self.waking[c.id],
 				click: function(ev) {
 					return self.wake(c, ev.currentTarget);
 				}
-			}, _('Wake on LAN'))
-			: null;
+			};
+			if (self.waking[c.id]) wakeAttrs.disabled = true;
+			wakeBtn = E('button', wakeAttrs, _('Wake on LAN'));
+		}
 
 		if (self.waking[c.id])
 			wr.setBusy(wakeBtn, true, _('Sending...'));
