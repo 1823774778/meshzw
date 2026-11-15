@@ -24,7 +24,8 @@ var LAY = {
 	clGap: 118, clPerRow: 5   /* 终端并联：横向间距与每行上限 */
 };
 
-/* 布局主题：与上传源码一致，cap/ap 渐变、AP 卡片/图标、终端卡片/徽标 */
+/* 布局主题：与上传源码一致，cap/ap 渐变、AP 卡片/图标、终端卡片/徽标。
+   深色不再作为可选主题：跟随固件明暗自动套用 DARK_PALETTE。 */
 var THEMES = {
 	classic: {
 		label: _('Classic'), ap: 'icon', client: 'card', linkTop: 86,
@@ -36,18 +37,21 @@ var THEMES = {
 		apG: ['#ffffff', '#f8fafc'], capG: ['#ffffff', '#f6f2ff'],
 		apStroke: '#3f9e8a', capStroke: '#7a5cf0'
 	},
-	dark: {
-		label: _('Dark'), ap: 'icon', client: 'card', linkTop: 86,
-		apG: ['#1b2c46', '#122036'], capG: ['#133a2b', '#0f2b21'],
-		apStroke: '#4b7fbf', capStroke: '#3fae8f'
-	},
 	minimal: {
 		label: _('Minimal'), ap: 'icon', client: 'card', linkTop: 86,
-		apG: ['#ffffff', '#f5f8fc'], capG: ['#ffffff', '#f4faf6'],
-		apStroke: '#b9c7d6', capStroke: '#9bd0b6'
+		apG: ['#ffffff', '#ffffff'], capG: ['#ffffff', '#ffffff'],
+		apStroke: '#b0bec5', capStroke: '#90a4ae',
+		flat: true
 	}
 };
-var THEME_IDS = [ 'classic', 'map', 'dark', 'minimal' ];
+
+/* 固件为深色时套用的配色（原「深色」主题的图标包，保留下来自动使用） */
+var DARK_PALETTE = {
+	apG: ['#1b2c46', '#122036'], capG: ['#133a2b', '#0f2b21'],
+	apStroke: '#4b7fbf', capStroke: '#3fae8f'
+};
+
+var THEME_IDS = [ 'classic', 'map', 'minimal' ];
 
 var ROUTER_ART = [
 	{ name: 'Super Gateway S20P', re: /s20p|super\s*gateway/i,
@@ -114,6 +118,39 @@ function svg(tag, attrs, text) {
 	if (text != null)
 		n.textContent = text;
 	return n;
+}
+
+/* 判断当前固件（LuCI 主题）是否深色：优先看主题标记，再看实际背景亮度 */
+function uiIsDark() {
+	var html = document.documentElement;
+	var body = document.body;
+
+	if (html && html.getAttribute('data-darkmode') === 'true')
+		return true;
+	if (body && (body.classList.contains('darkmode') ||
+	             body.classList.contains('dark')))
+		return true;
+
+	function bgLum(el) {
+		if (!el || !window.getComputedStyle) return null;
+		var m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(
+			window.getComputedStyle(el).backgroundColor || '');
+		if (!m) return null;
+		return (+m[1]) * 0.299 + (+m[2]) * 0.587 + (+m[3]) * 0.114;
+	}
+
+	var lum = bgLum(body);
+	if (lum == null)
+		lum = bgLum(html);
+	if (lum != null)
+		return lum < 128;
+
+	try {
+		return !!(window.matchMedia &&
+			window.matchMedia('(prefers-color-scheme: dark)').matches);
+	} catch (e) {
+		return false;
+	}
 }
 
 /* 按设备名/主机名与厂商归类推断设备类型，用于挑选图标；
@@ -591,12 +628,22 @@ return view.extend({
 	/* ---------------------------------------------------------- icons */
 	/* AP 外观：优先用 modelart 内置的实拍图，其次按型号画风格化路由器 */
 	routerArt: function(g, cx, cy, k, a, isCap, accent, withBadge) {
-		var photo = routerPhoto(a.model);
+		/* 极简主题：不用实拍图，画一个无阴影的单色路由器线稿 */
+		var flat = !!(this._theme && this._theme.flat);
+		var dark = !!(this._theme && this._theme.dark);
+		var photo = flat ? null : routerPhoto(a.model);
 		if (photo) {
 			this.routerPhotoArt(g, cx, cy, k, a, isCap, accent, withBadge, photo);
 			return;
 		}
-		var sp = routerArtSpec(a.model);
+		var sp = flat
+			? { name: a.model || (isCap ? 'CAP' : 'AP'),
+			    body: dark ? '#1b2c46' : '#ffffff',
+			    edge: dark ? '#78909c' : '#b0bec5',
+			    panel: dark ? '#122036' : '#eceff1',
+			    ants: 2, tower: false,
+			    led: dark ? '#90a4ae' : '#b0bec5', ledN: 1 }
+			: routerArtSpec(a.model);
 		function X(v) { return cx + v * k; }
 		function Y(v) { return cy + v * k; }
 		function S(v) { return v * k; }
@@ -626,7 +673,7 @@ return view.extend({
 		art.appendChild(svg('rect', {
 			x: X(-bw / 2), y: Y(by), width: S(bw), height: S(bh),
 			rx: S(sp.tower ? 4 : 3), fill: sp.body, stroke: sp.edge,
-			'stroke-width': sw, filter: k >= 0.85 ? 'url(#wrShadow)' : null
+			'stroke-width': sw, filter: (!flat && k >= 0.85) ? 'url(#wrShadow)' : null
 		}));
 		art.appendChild(svg('rect', {
 			x: X(-bw / 2 + 2), y: Y(by + 2), width: S(bw - 4),
@@ -821,12 +868,21 @@ return view.extend({
 		var pos = lay.pos;
 		var self = this;
 		this._lay = lay;
+
+		/* 固件深色时自动套用原深色主题的配色（图标包不变），浅色用白色卡片；
+		   极简主题保持中性灰，只跟随明暗切换线稿与描边 */
+		var dark = uiIsDark();
 		var th = THEMES[this.themeId] || THEMES.map;
+		th = Object.assign({}, th, { dark: dark });
+		if (dark && !th.flat)
+			th = Object.assign(th, DARK_PALETTE);
+		this._theme = th;
 
 		THEME_IDS.forEach(function(id) {
 			box.classList.toggle('wr-theme-' + id,
 				!!(THEMES[self.themeId] && id === self.themeId));
 		});
+		box.classList.toggle('wr-theme-dark', dark);
 
 		var z = this.zoom || 1;
 		var vw = lay.W / z, vh = lay.H / z;
@@ -1041,8 +1097,10 @@ return view.extend({
 				'data-id': c.id
 			});
 			var wifi = c.conn && c.conn.type === 'wifi';
+			var flat = !!th.flat;
 			var stroke = c.blocked ? '#e53935'
-				: (wifi ? signalColor(c.conn.rssi) : '#cfd8dc');
+				: (flat ? (th.dark ? '#78909c' : '#cfd8dc')
+				        : (wifi ? signalColor(c.conn.rssi) : '#cfd8dc'));
 			var badge = th.client === 'badge';
 			var vx, vy, vr, vfs, textY, subY, pn;
 
@@ -1061,8 +1119,8 @@ return view.extend({
 				g.appendChild(svg('rect', {
 					'class': 'wr-cl-card',
 					x: p.x - 17, y: p.y - 17, width: 34, height: 34, rx: 5,
-					fill: '#ffffff', stroke: stroke, 'stroke-width': 2,
-					filter: 'url(#wrShadow)'
+					fill: '#ffffff', stroke: stroke, 'stroke-width': flat ? 1.3 : 2,
+					filter: flat ? null : 'url(#wrShadow)'
 				}));
 				self.glyph(g, p.x, p.y, deviceKind(c));
 				if (wifi) self.sigBars(g, p.x + 24, p.y - 9, c.conn.rssi);
@@ -2077,7 +2135,7 @@ return view.extend({
 		if (!this.themeId) {
 			var saved = null;
 			try { saved = window.localStorage.getItem('wr.topo.theme'); } catch (e) {}
-			this.themeId = THEMES[saved] ? saved : 'map';
+			this.themeId = (saved && THEME_IDS.indexOf(saved) >= 0) ? saved : 'map';
 		}
 
 		poll.add(L.bind(this.fetch, this), 10);
@@ -2105,7 +2163,7 @@ return view.extend({
 				'class': 'cbi-input-select wr-theme-sel',
 				change: function(ev) {
 					var v = ev.target.value;
-					if (!THEMES[v]) return;
+					if (THEME_IDS.indexOf(v) < 0) return;
 					vm.themeId = v;
 					try { window.localStorage.setItem('wr.topo.theme', v); } catch (e) {}
 					vm.redraw();
