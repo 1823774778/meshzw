@@ -71,7 +71,8 @@
 /* ---------------------------------------------------------------- topology */
 .wr-topo-wrap {
 	overflow: auto;
-	max-height: 78vh;
+	height: clamp(320px, 68vh, 720px);
+	overscroll-behavior: contain;
 	cursor: grab;
 	border: 1px solid var(--wr-line);
 	border-radius: 6px;

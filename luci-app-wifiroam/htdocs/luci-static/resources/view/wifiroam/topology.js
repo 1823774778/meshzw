@@ -406,36 +406,55 @@ return view.extend({
 		this.applyZoom();
 	},
 
-	/* 鼠标按住空白处拖动平移画布；触屏使用浏览器原生滑动 */
+	/* 按住画布拖动即可上下左右平移；触屏使用浏览器原生滑动。
+	   从节点上起手也可以拖动，位移超过阈值时抑制随后的节点点击。 */
 	enablePan: function(box) {
 		if (!box || box._wrPanBound) return;
 		box._wrPanBound = true;
 
-		var sx = 0, sy = 0, sl = 0, st = 0, active = false;
+		var sx = 0, sy = 0, sl = 0, st = 0, active = false, moved = false;
 
 		box.addEventListener('pointerdown', function(ev) {
 			if (ev.pointerType === 'touch' || (ev.button != null && ev.button !== 0))
 				return;
-			if (ev.target.closest &&
-			    ev.target.closest('.wr-node, .wr-pencil, button, a'))
+			if (ev.target.closest && ev.target.closest('.wr-pencil, button, a, select'))
 				return;
 
 			active = true;
+			moved = false;
 			sx = ev.clientX; sy = ev.clientY;
 			sl = box.scrollLeft; st = box.scrollTop;
 			box.classList.add('wr-dragging');
-			ev.preventDefault();
 		});
 
 		box.addEventListener('pointermove', function(ev) {
 			if (!active) return;
-			box.scrollLeft = sl - (ev.clientX - sx);
-			box.scrollTop = st - (ev.clientY - sy);
+
+			var dx = ev.clientX - sx, dy = ev.clientY - sy;
+			if (!moved && Math.abs(dx) + Math.abs(dy) < 5)
+				return;
+
+			moved = true;
+			box.scrollLeft = sl - dx;
+			box.scrollTop = st - dy;
 		});
 
+		/* 拖动画布后不触发节点详情；下一次正常点击不受影响 */
+		box.addEventListener('click', function(ev) {
+			if (!moved) return;
+			moved = false;
+			ev.stopPropagation();
+			ev.preventDefault();
+		}, true);
+
+		box.addEventListener('dragstart', function(ev) { ev.preventDefault(); });
+
 		function stop() {
+			if (!active) return;
 			active = false;
 			box.classList.remove('wr-dragging');
+			if (moved)
+				window.setTimeout(function() { moved = false; }, 300);
 		}
 
 		box.addEventListener('pointerup', stop);
