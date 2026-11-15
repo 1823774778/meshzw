@@ -6,8 +6,11 @@
 'require dom';
 'require wifiroam.common as wr';
 'require wifiroam.oui as oui';
+'require wifiroam.devices as devices';
+'require wifiroam.glyphs as glyphs';
 
 wr.useOui(oui.data);
+wr.useDevices(devices);
 
 var UI_KEY = 'wr_clients_ui';
 var SVGNS = 'http://www.w3.org/2000/svg';
@@ -46,6 +49,13 @@ function sigLevel(rssi) {
 	return 1;
 }
 
+function signalColor(rssi) {
+	if (rssi == null) return '#cfd8dc';
+	if (rssi >= -60) return '#43a047';
+	if (rssi >= -72) return '#fb8c00';
+	return '#e53935';
+}
+
 function ipValue(ip) {
 	var p = String(ip || '').split('.');
 	if (p.length !== 4) return 4294967295;
@@ -76,6 +86,7 @@ return view.extend({
 	sortBy: 'name',
 	blocking: {},
 	waking: {},
+	editing: {},
 
 	load: function() {
 		var ui = loadUi();
@@ -227,97 +238,6 @@ return view.extend({
 		this.renderCards();
 	},
 
-	/* 改名弹窗：保留 r91 的名称编辑，并追加固定 AP（pin）选择 */
-	openRename: function(c) {
-		var self = this;
-		var input = E('input', {
-			type: 'text', 'class': 'cbi-input-text',
-			value: c.custom_name || '',
-			placeholder: c.hostname || c.mac,
-			style: 'width:100%'
-		});
-
-		var pinSel = E('select', { 'class': 'cbi-input-select', style: 'width:100%' }, [
-			E('option', { value: '' }, _('Auto (no pin)'))
-		]);
-		var known = {};
-		((this.data && this.data.aps) || []).forEach(function(a) {
-			known[a.id] = true;
-			pinSel.appendChild(E('option', { value: a.id }, a.name || a.id));
-		});
-		if (c.pin && !known[c.pin])
-			pinSel.appendChild(E('option', { value: c.pin }, c.pin_name || c.pin));
-		pinSel.value = c.pin || '';
-
-		var save = E('button', {
-			'class': 'btn cbi-button-positive',
-			click: function() {
-				var name = (input.value || '').trim();
-				var pin = pinSel.value || '';
-				var nameChanged = (name !== (c.custom_name || ''));
-				var jobs = [];
-
-				if (nameChanged)
-					jobs.push(wr.call('set_alias', { mac: c.id, name: name }));
-				if (pin !== (c.pin || ''))
-					jobs.push(wr.call('set_pin', { mac: c.id, ap: pin }));
-
-				if (!jobs.length) {
-					ui.hideModal();
-					return;
-				}
-
-				wr.setBusy(save, true, _('Saving...'));
-				return Promise.all(jobs).then(function(res) {
-					var err = null;
-					(res || []).forEach(function(r) {
-						if (r && r.ok === false && !err) err = r.error;
-					});
-					if (err) throw { error: err };
-
-					c.custom_name = name || null;
-					c.name = name || c.hostname || c.mac;
-					c.pin = pin || null;
-					c.pin_name = pin ? (self.apNames()[pin] || pin) : null;
-					ui.hideModal();
-					wr.notify('success', nameChanged ? _('Name saved') : _('Saved'));
-					self.refresh();
-				}).catch(function(e) {
-					wr.setBusy(save, false);
-					wr.notify('danger', _('Failed') + ': ' + errText(e && e.error));
-				});
-			}
-		}, _('Save'));
-
-		input.addEventListener('keydown', function(ev) {
-			if (ev.key === 'Enter') {
-				ev.preventDefault();
-				save.click();
-			}
-		});
-
-		ui.showModal(_('Rename') + ' - ' + (c.name || c.mac), [
-			E('div', {}, [
-				E('div', { 'class': 'wr-hint', style: 'margin-bottom:0.4em' },
-					_('Custom name')),
-				input,
-				E('div', { 'class': 'wr-hint', style: 'margin:0.7em 0 0.4em' },
-					_('Pinned AP')),
-				pinSel,
-				E('div', { 'class': 'wr-hint', style: 'margin-top:0.4em' },
-					_('A pinned client is disconnected and blocked for 2 minutes when it connects to another AP.'))
-			]),
-			E('div', { 'class': 'right' }, [
-				E('button', {
-					'class': 'btn',
-					click: function() { ui.hideModal(); }
-				}, _('Cancel')),
-				' ', save
-			])
-		]);
-
-		window.setTimeout(function() { input.focus(); input.select(); }, 50);
-	},
 
 	toggleBlock: function(c, btn) {
 		var self = this;
@@ -404,31 +324,71 @@ return view.extend({
 		}
 	},
 
-	/* 厂商头像：有品牌 logo 时画 24x24 白色 path，否则用品牌色 + 首字母 */
-	avatar: function(c) {
+	/* 设备图标：与拓扑节点一致的圆角方块 + 设备 glyph + 厂商徽标 */
+	tile: function(c) {
 		var v = wr.vendorOf(c.mac);
-		var color = (v && v.color) || '#90a4ae';
-		var inner = null;
+		var kind = wr.kindOf(v && v.name,
+			((c.name || '') + ' ' + (c.hostname || '')));
+		if (!kind)
+			kind = (c.conn && c.conn.type !== 'wifi') ? 'wired' : 'generic';
 
-		if (v && v.logo) {
-			var ns = 'http://www.w3.org/2000/svg';
-			var el = document.createElementNS(ns, 'svg');
-			el.setAttribute('viewBox', '0 0 24 24');
-			el.setAttribute('width', '22');
-			el.setAttribute('height', '22');
-			el.setAttribute('fill', '#fff');
-			var p = document.createElementNS(ns, 'path');
-			p.setAttribute('d', v.logo);
-			el.appendChild(p);
-			inner = el;
-		}
-		else {
-			inner = E('span', { 'class': 'wr-dcard-initial' },
-				(v && v.initial) || (c.name || c.mac || '?').charAt(0).toUpperCase());
+		var wifi = c.conn && c.conn.type === 'wifi';
+		var stroke = c.blocked ? '#e53935'
+			: (wifi ? signalColor(c.conn.rssi) : '#cfd8dc');
+
+		var el = document.createElementNS(SVGNS, 'svg');
+		el.setAttribute('viewBox', '0 0 40 40');
+		el.setAttribute('width', '40');
+		el.setAttribute('height', '40');
+		el.setAttribute('class', 'wr-dev-tile');
+
+		var bg = document.createElementNS(SVGNS, 'rect');
+		bg.setAttribute('x', '1');
+		bg.setAttribute('y', '1');
+		bg.setAttribute('width', '38');
+		bg.setAttribute('height', '38');
+		bg.setAttribute('rx', '10');
+		bg.setAttribute('class', 'wr-dev-tile-bg');
+		bg.setAttribute('stroke', stroke);
+		bg.setAttribute('stroke-width', '2');
+		el.appendChild(bg);
+
+		var g = document.createElementNS(SVGNS, 'g');
+		glyphs.draw(g, 20, 19, kind);
+		el.appendChild(g);
+
+		/* 右下角厂商徽标：品牌色圆形 + logo/首字母，与拓扑一致 */
+		if (v) {
+			var cx = 31, cy = 31;
+			var circle = document.createElementNS(SVGNS, 'circle');
+			circle.setAttribute('cx', cx);
+			circle.setAttribute('cy', cy);
+			circle.setAttribute('r', '6');
+			circle.setAttribute('fill', v.color || '#90a4ae');
+			circle.setAttribute('stroke', '#fff');
+			circle.setAttribute('stroke-width', '1.2');
+			el.appendChild(circle);
+
+			if (v.logo) {
+				var p = document.createElementNS(SVGNS, 'path');
+				p.setAttribute('d', v.logo);
+				p.setAttribute('fill', '#fff');
+				p.setAttribute('transform',
+					'translate(' + (cx - 4.5) + ' ' + (cy - 4.5) + ') scale(0.375)');
+				el.appendChild(p);
+			}
+			else {
+				var t = document.createElementNS(SVGNS, 'text');
+				t.setAttribute('x', cx);
+				t.setAttribute('y', cy + 2.5);
+				t.setAttribute('style',
+					'fill:#fff;stroke:none;font-size:7px;font-weight:700;text-anchor:middle');
+				t.textContent = v.initial || '?';
+				el.appendChild(t);
+			}
 		}
 
-		return E('div', { 'class': 'wr-dcard-avatar', style: 'background:' + color },
-			inner);
+		return el;
 	},
 
 	cardRow: function(label, value, extra) {
@@ -445,6 +405,7 @@ return view.extend({
 		var conn = c.conn || {};
 		var blocked = !!c.blocked;
 		var v = wr.vendorOf(c.mac);
+		var editing = !!this.editing[c.id];
 
 		/* 图三布局：头像 + 名称 + 在线徽标 + 编辑铅笔 */
 		var badge = E('span', {
@@ -459,9 +420,99 @@ return view.extend({
 			'aria-label': _('Edit'),
 			click: function(ev) {
 				ev.stopPropagation();
-				self.openRename(c);
+				self.editing[c.id] = true;
+				self.renderCards();
 			}
 		}, [ pencilIcon() ]);
+
+		/* 图一：点铅笔后在卡片内展开改名 + 固定 AP 编辑框 */
+		var editPanel = null;
+		if (editing) {
+			var nameIn = E('input', {
+				type: 'text', 'class': 'cbi-input-text wr-dcard-input',
+				value: c.custom_name || '',
+				placeholder: c.name || c.mac || ''
+			});
+			var pinSel = E('select', {
+				'class': 'cbi-input-select wr-dcard-pin-sel'
+			}, [ E('option', { value: '' }, _('Auto (no pin)')) ]);
+			var known = {};
+			((self.data && self.data.aps) || []).forEach(function(a) {
+				known[a.id] = true;
+				pinSel.appendChild(E('option', { value: a.id }, a.name || a.id));
+			});
+			if (c.pin && !known[c.pin])
+				pinSel.appendChild(E('option', { value: c.pin }, c.pin_name || c.pin));
+			pinSel.value = c.pin || '';
+
+			var status = E('span', { 'class': 'wr-hint' });
+			var saveBtn = E('button', {
+				'class': 'btn cbi-button-positive',
+				click: function() {
+					var name = (nameIn.value || '').trim();
+					var pin = pinSel.value || '';
+					var nameChanged = (name !== (c.custom_name || ''));
+					var jobs = [];
+
+					if (nameChanged)
+						jobs.push(wr.call('set_alias', { mac: c.id, name: name }));
+					if (pin !== (c.pin || ''))
+						jobs.push(wr.call('set_pin', { mac: c.id, ap: pin }));
+
+					if (!jobs.length) {
+						delete self.editing[c.id];
+						self.renderCards();
+						return;
+					}
+
+					wr.setBusy(saveBtn, true, _('Saving...'));
+					dom.content(status, wr.inlineStatus('pending', _('Saving...')));
+					return Promise.all(jobs).then(function(res) {
+						var err = null;
+						(res || []).forEach(function(r) {
+							if (r && r.ok === false && !err) err = r.error;
+						});
+						if (err) throw { error: err };
+						c.custom_name = name || null;
+						c.name = name || c.hostname || c.mac;
+						c.pin = pin || null;
+						c.pin_name = pin ? (self.apNames()[pin] || pin) : null;
+						delete self.editing[c.id];
+						wr.notify('success', nameChanged ? _('Name saved') : _('Saved'));
+						self.refresh();
+					}).catch(function(e) {
+						wr.setBusy(saveBtn, false);
+						dom.content(status, wr.inlineStatus('fail',
+							'✗ ' + _('Failed') + ': ' + errText(e && e.error)));
+					});
+				}
+			}, _('Save'));
+			var cancelBtn = E('button', {
+				'class': 'btn',
+				click: function() {
+					delete self.editing[c.id];
+					self.renderCards();
+				}
+			}, _('Cancel'));
+
+			nameIn.addEventListener('keydown', function(ev) {
+				if (ev.key === 'Enter') {
+					ev.preventDefault();
+					saveBtn.click();
+				}
+			});
+
+			editPanel = E('div', { 'class': 'wr-dcard-edit' }, [
+				nameIn,
+				E('div', { 'class': 'wr-dcard-pin' }, [
+					E('span', { 'class': 'wr-dcard-key' }, _('Pinned AP')),
+					pinSel
+				]),
+				E('div', { 'class': 'wr-dcard-edit-actions' }, [
+					saveBtn, cancelBtn, status
+				])
+			]);
+		}
 
 		var blockBtn = E('button', {
 			'class': 'btn ' + (blocked ? 'cbi-button-positive' : 'cbi-button-negative'),
@@ -476,7 +527,7 @@ return view.extend({
 
 		var wakeBtn = (!online && c.can_wake)
 			? E('button', {
-				'class': 'btn cbi-button-action',
+				'class': 'btn cbi-button-action wr-wake-btn',
 				disabled: !!self.waking[c.id],
 				click: function(ev) {
 					return self.wake(c, ev.currentTarget);
@@ -509,18 +560,20 @@ return view.extend({
 
 		return E('div', {
 			'class': 'wr-dcard' + (blocked ? ' wr-dcard-blocked' : '') +
-				(online ? '' : ' wr-dcard-off')
+				(online ? '' : ' wr-dcard-off') +
+				(editing ? ' wr-dcard-editing' : '')
 		}, [
 			E('div', { 'class': 'wr-dcard-head' }, [
-				this.avatar(c),
+				this.tile(c),
 				E('div', { 'class': 'wr-dcard-title-wrap' }, [
 					E('div', { 'class': 'wr-dcard-name' }, name),
-					c.pin ? E('div', { 'class': 'wr-dcard-pin-tag' },
+					(!editing && c.pin) ? E('div', { 'class': 'wr-dcard-pin-tag' },
 						_('Pinned to %s').format(c.pin_name || c.pin)) : null
 				]),
 				badge,
-				editBtn
+				editing ? null : editBtn
 			]),
+			editPanel,
 			E('div', { 'class': 'wr-dcard-rows' }, rows),
 			E('div', { 'class': 'wr-dcard-actions' }, [
 				blockBtn,

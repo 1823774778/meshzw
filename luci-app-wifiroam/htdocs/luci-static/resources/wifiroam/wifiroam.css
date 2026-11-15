@@ -835,6 +835,53 @@ input.wr-switch-input:disabled { opacity: 0.45; cursor: not-allowed; }
 }
 .wr-dcard-actions { display: flex; gap: 0.45em; flex-wrap: wrap; }
 
+/* 网络唤醒：始终使用高亮主色，避免主题把 action 按钮渲染成灰色不可点 */
+button.wr-wake-btn,
+button.wr-wake-btn:hover {
+	background: var(--wr-primary) !important;
+	border-color: var(--wr-primary) !important;
+	color: #fff !important;
+}
+button.wr-wake-btn:disabled {
+	opacity: 0.55;
+}
+
+/* 设备图标：与拓扑节点同款圆角方块 */
+.wr-dev-tile { flex: 0 0 40px; width: 40px; height: 40px; }
+.wr-dev-tile-bg { fill: var(--wr-bg-2); }
+
+/* 卡片内联编辑（图一） */
+.wr-dcard-editing {
+	box-shadow: 0 0 0 3px rgba(47, 111, 221, 0.1);
+	border-color: var(--wr-primary);
+}
+.wr-dcard-edit {
+	margin-top: 0.7em;
+	border: 1px solid var(--wr-line);
+	border-radius: 8px;
+	background: var(--wr-bg-2);
+	display: flex;
+	flex-direction: column;
+	gap: 0.45em;
+	padding: 0.55em 0.6em;
+}
+.wr-dcard-input, .wr-dcard-pin-sel { width: 100%; min-width: 0; }
+.wr-dcard-pin {
+	display: flex;
+	align-items: center;
+	gap: 0.4em;
+	margin-top: 0.45em;
+	flex-wrap: wrap;
+}
+.wr-dcard-pin .wr-dcard-key { flex: 0 0 auto; }
+.wr-dcard-pin .wr-dcard-pin-sel { flex: 1 1 auto; width: auto; }
+.wr-dcard-edit-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.45em;
+	flex-wrap: wrap;
+}
+
 /* --------------------------------------------------- internet schedule */
 .wr-sched {
 	border-top: 1px solid var(--wr-line);

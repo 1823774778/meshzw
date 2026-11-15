@@ -4,6 +4,7 @@
  * 没有名字线索时再按厂商主营产品归类。
  * 类别需与拓扑视图 glyph() 支持的图标一致：
  *   laptop / tablet / phone / tv / nas / camera / printer / speaker / router / iot
+ *   以及家电：ac（空调）/ fridge（冰箱）/ washer（洗衣机）
  */
 'require baseclass';
 return baseclass.extend({
@@ -16,6 +17,9 @@ return baseclass.extend({
 		[/\bcam\b|\bipc\b|监控|摄像|camera|webcam/, 'camera'],
 		[/print|打印机|scanner|扫描仪/, 'printer'],
 		[/speaker|soundbar|音箱|音响|homepod|echo|小爱|\bsound\b/, 'speaker'],
+		[/空调|air.?condition|conditioner|\bac\b|climate|hvac/, 'ac'],
+		[/冰箱|fridge|refrigerator|freezer/, 'fridge'],
+		[/洗衣机|washer|washing.?machine/, 'washer'],
 		[/iphone|android|galaxy|pixel|redmi|mi-?\d|小米|华为|honor|手机|phone/, 'phone'],
 		[/router|gateway|mesh|access.?point|\bap-?\d|网关|路由/, 'router'],
 		[/sensor|plug|switchbot|zigbee|\biot\b|传感器|插座/, 'iot'],
@@ -28,6 +32,8 @@ return baseclass.extend({
 		[/canon|epson|brother|xerox|ricoh|kyocera|lexmark|zebra|datalogic|konica|minolta|seiko epson/, 'printer'],
 
 		[/sonos|bose|harman|\bjbl\b|\bakg\b|denon|yamaha|sennheiser|audio-technica|technics|onkyo|marantz|bang & olufsen|klipsch|devialet|marshall/, 'speaker'],
+
+		[/daikin|gree|\baux\b|chigo|kelon|carrier|york|trane|lennox|viessmann|midea/, 'ac'],
 
 		[/synology|qnap|asustor|buffalo|terra.?master|western digital|seagate|netapp|drobo|\biodata\b|readynas/, 'nas'],
 
