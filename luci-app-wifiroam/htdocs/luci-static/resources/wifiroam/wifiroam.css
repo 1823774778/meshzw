@@ -70,9 +70,9 @@
 
 /* ---------------------------------------------------------------- topology */
 .wr-topo-wrap {
-	overflow: auto;
+	overflow: hidden;
 	height: clamp(320px, 68vh, 720px);
-	overscroll-behavior: contain;
+	touch-action: none;
 	cursor: grab;
 	border: 1px solid var(--wr-line);
 	border-radius: 6px;
@@ -85,7 +85,7 @@
 	-webkit-user-select: none;
 	user-select: none;
 }
-.wr-topo-wrap svg { display: block; width: 100%; height: auto; }
+.wr-topo-wrap svg { display: block; width: 100%; height: 100%; }
 
 /* 拓扑缩放按钮：画布右上角 */
 .wr-topo-outer { position: relative; }
@@ -113,16 +113,6 @@
 	margin-left: auto;
 }
 .wr-theme-sel { width: auto; min-width: 6.5em; }
-.wr-topo-wrap.wr-theme-dark {
-	background-color: #0f1720;
-	background-image: radial-gradient(#263238 1px, transparent 1px);
-}
-.wr-theme-dark .wr-node text { fill: #eceff1; }
-.wr-theme-dark .wr-node .wr-sub { fill: #b0bec5; }
-.wr-theme-dark .wr-node .wr-label { fill: #eceff1; stroke: #122036; }
-.wr-theme-dark .wr-client .wr-cl-card { fill: #1b2c46; }
-.wr-theme-dark .wr-link.wr-clink { stroke: #607d8b; }
-.wr-theme-dark .wr-link.wr-aplink { stroke: #90a4ae; }
 
 /* 极简主题：纯色底、细线、无阴影/无动画，与默认主题明显区分 */
 .wr-topo-wrap.wr-theme-minimal {

@@ -24,8 +24,7 @@ var LAY = {
 	clGap: 118, clPerRow: 5   /* 终端并联：横向间距与每行上限 */
 };
 
-/* 布局主题：与上传源码一致，cap/ap 渐变、AP 卡片/图标、终端卡片/徽标。
-   深色不再作为可选主题：跟随固件明暗自动套用 DARK_PALETTE。 */
+/* 布局主题：cap/ap 渐变、AP 卡片/图标、终端卡片/徽标 */
 var THEMES = {
 	classic: {
 		label: _('Classic'), ap: 'icon', client: 'card', linkTop: 86,
@@ -43,12 +42,6 @@ var THEMES = {
 		apStroke: '#b0bec5', capStroke: '#90a4ae',
 		flat: true
 	}
-};
-
-/* 固件为深色时套用的配色（原「深色」主题的图标包，保留下来自动使用） */
-var DARK_PALETTE = {
-	apG: ['#1b2c46', '#122036'], capG: ['#133a2b', '#0f2b21'],
-	apStroke: '#4b7fbf', capStroke: '#3fae8f'
 };
 
 var THEME_IDS = [ 'classic', 'map', 'minimal' ];
@@ -118,39 +111,6 @@ function svg(tag, attrs, text) {
 	if (text != null)
 		n.textContent = text;
 	return n;
-}
-
-/* 判断当前固件（LuCI 主题）是否深色：优先看主题标记，再看实际背景亮度 */
-function uiIsDark() {
-	var html = document.documentElement;
-	var body = document.body;
-
-	if (html && html.getAttribute('data-darkmode') === 'true')
-		return true;
-	if (body && (body.classList.contains('darkmode') ||
-	             body.classList.contains('dark')))
-		return true;
-
-	function bgLum(el) {
-		if (!el || !window.getComputedStyle) return null;
-		var m = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(
-			window.getComputedStyle(el).backgroundColor || '');
-		if (!m) return null;
-		return (+m[1]) * 0.299 + (+m[2]) * 0.587 + (+m[3]) * 0.114;
-	}
-
-	var lum = bgLum(body);
-	if (lum == null)
-		lum = bgLum(html);
-	if (lum != null)
-		return lum < 128;
-
-	try {
-		return !!(window.matchMedia &&
-			window.matchMedia('(prefers-color-scheme: dark)').matches);
-	} catch (e) {
-		return false;
-	}
 }
 
 /* 按设备名/主机名与厂商归类推断设备类型，用于挑选图标；
@@ -440,19 +400,41 @@ return view.extend({
 
 	resetZoom: function() {
 		this.zoom = 1;
+		this.panX = 0;
+		this.panY = 0;
 		this.applyZoom();
 	},
 
-	/* 按住画布拖动即可上下左右平移；触屏使用浏览器原生滑动。
-	   从节点上起手也可以拖动，位移超过阈值时抑制随后的节点点击。 */
+	/* 当前视窗（viewBox）：缩放 + 平移。平移允许少量越界，
+	   保证图完整显示时也能上下左右拖动；⟲ 可复位。 */
+	viewBox: function(lay, z) {
+		var vw = lay.W / z, vh = lay.H / z;
+		var rx = Math.max(0, (lay.W - vw) / 2) + vw * 0.35;
+		var ry = Math.max(0, (lay.H - vh) / 2) + vh * 0.35;
+		var px = Math.max(-rx, Math.min(rx, this.panX || 0));
+		var py = Math.max(-ry, Math.min(ry, this.panY || 0));
+
+		this.panX = px;
+		this.panY = py;
+		this._view = { w: vw, h: vh };
+
+		return {
+			x: (lay.W - vw) / 2 + px,
+			y: (lay.H - vh) / 2 + py,
+			w: vw, h: vh
+		};
+	},
+
+	/* 鼠标或手指按住画布即可上下左右拖动；超过阈值后抑制节点点击。 */
 	enablePan: function(box) {
 		if (!box || box._wrPanBound) return;
 		box._wrPanBound = true;
 
-		var sx = 0, sy = 0, sl = 0, st = 0, active = false, moved = false;
+		var self = this;
+		var sx = 0, sy = 0, px0 = 0, py0 = 0, active = false, moved = false;
 
 		box.addEventListener('pointerdown', function(ev) {
-			if (ev.pointerType === 'touch' || (ev.button != null && ev.button !== 0))
+			if (ev.button != null && ev.button !== 0 && ev.pointerType !== 'touch')
 				return;
 			if (ev.target.closest && ev.target.closest('.wr-pencil, button, a, select'))
 				return;
@@ -460,7 +442,7 @@ return view.extend({
 			active = true;
 			moved = false;
 			sx = ev.clientX; sy = ev.clientY;
-			sl = box.scrollLeft; st = box.scrollTop;
+			px0 = self.panX || 0; py0 = self.panY || 0;
 			box.classList.add('wr-dragging');
 		});
 
@@ -471,9 +453,21 @@ return view.extend({
 			if (!moved && Math.abs(dx) + Math.abs(dy) < 5)
 				return;
 
+			/* 确认是拖动后再捕获指针，避免影响普通点击/节点详情 */
+			if (!moved && box.setPointerCapture) {
+				try { box.setPointerCapture(ev.pointerId); } catch (e) {}
+			}
 			moved = true;
-			box.scrollLeft = sl - dx;
-			box.scrollTop = st - dy;
+
+			var vw = (self._view && self._view.w) || 1;
+			var vh = (self._view && self._view.h) || 1;
+			var kx = vw / Math.max(1, box.clientWidth);
+			var ky = vh / Math.max(1, box.clientHeight);
+
+			/* 向右拖 → 视窗左移；向下拖 → 视窗上移 */
+			self.panX = px0 - dx * kx;
+			self.panY = py0 - dy * ky;
+			self.applyZoom();
 		});
 
 		/* 拖动画布后不触发节点详情；下一次正常点击不受影响 */
@@ -486,17 +480,20 @@ return view.extend({
 
 		box.addEventListener('dragstart', function(ev) { ev.preventDefault(); });
 
-		function stop() {
+		function stop(ev) {
 			if (!active) return;
 			active = false;
 			box.classList.remove('wr-dragging');
+
+			if (box.releasePointerCapture && ev && ev.pointerId != null) {
+				try { box.releasePointerCapture(ev.pointerId); } catch (e) {}
+			}
 			if (moved)
 				window.setTimeout(function() { moved = false; }, 300);
 		}
 
 		box.addEventListener('pointerup', stop);
 		box.addEventListener('pointercancel', stop);
-		box.addEventListener('pointerleave', stop);
 	},
 
 	/* ---------------------------------------------------------- layout */
@@ -630,19 +627,14 @@ return view.extend({
 	routerArt: function(g, cx, cy, k, a, isCap, accent, withBadge) {
 		/* 极简主题：不用实拍图，画一个无阴影的单色路由器线稿 */
 		var flat = !!(this._theme && this._theme.flat);
-		var dark = !!(this._theme && this._theme.dark);
 		var photo = flat ? null : routerPhoto(a.model);
 		if (photo) {
 			this.routerPhotoArt(g, cx, cy, k, a, isCap, accent, withBadge, photo);
 			return;
 		}
 		var sp = flat
-			? { name: a.model || (isCap ? 'CAP' : 'AP'),
-			    body: dark ? '#1b2c46' : '#ffffff',
-			    edge: dark ? '#78909c' : '#b0bec5',
-			    panel: dark ? '#122036' : '#eceff1',
-			    ants: 2, tower: false,
-			    led: dark ? '#90a4ae' : '#b0bec5', ledN: 1 }
+			? { name: a.model || (isCap ? 'CAP' : 'AP'), body: '#ffffff', edge: '#b0bec5',
+			    panel: '#eceff1', ants: 2, tower: false, led: '#b0bec5', ledN: 1 }
 			: routerArtSpec(a.model);
 		function X(v) { return cx + v * k; }
 		function Y(v) { return cy + v * k; }
@@ -848,10 +840,9 @@ return view.extend({
 		var root = box ? box.querySelector('svg') : null;
 		var lay = this._lay;
 		if (!root || !lay) return;
-		var z = this.zoom || 1;
-		var w = lay.W / z, h = lay.H / z;
+		var v = this.viewBox(lay, this.zoom || 1);
 		root.setAttribute('viewBox',
-			((lay.W - w) / 2) + ' ' + ((lay.H - h) / 2) + ' ' + w + ' ' + h);
+			v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
 	},
 
 	redraw: function() {
@@ -868,33 +859,20 @@ return view.extend({
 		var pos = lay.pos;
 		var self = this;
 		this._lay = lay;
-
-		/* 固件深色时自动套用原深色主题的配色（图标包不变），浅色用白色卡片；
-		   极简主题保持中性灰，只跟随明暗切换线稿与描边 */
-		var dark = uiIsDark();
 		var th = THEMES[this.themeId] || THEMES.map;
-		th = Object.assign({}, th, { dark: dark });
-		if (dark && !th.flat)
-			th = Object.assign(th, DARK_PALETTE);
 		this._theme = th;
 
 		THEME_IDS.forEach(function(id) {
 			box.classList.toggle('wr-theme-' + id,
 				!!(THEMES[self.themeId] && id === self.themeId));
 		});
-		box.classList.toggle('wr-theme-dark', dark);
 
-		var z = this.zoom || 1;
-		var vw = lay.W / z, vh = lay.H / z;
-		var vx = (lay.W - vw) / 2, vy = (lay.H - vh) / 2;
+		var v = this.viewBox(lay, this.zoom || 1);
 		var root = svg('svg', {
-			viewBox: vx + ' ' + vy + ' ' + vw + ' ' + vh,
+			viewBox: v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h,
 			preserveAspectRatio: 'xMidYMin meet',
-			width: '100%'
+			width: '100%', height: '100%'
 		});
-		root.style.height = 'auto';
-		/* 画布比容器宽时保留可读尺寸，由外层横向/纵向滑动查看 */
-		root.style.minWidth = lay.W + 'px';
 
 		/* defs：渐变 + 阴影 */
 		var defs = svg('defs');
@@ -1099,7 +1077,7 @@ return view.extend({
 			var wifi = c.conn && c.conn.type === 'wifi';
 			var flat = !!th.flat;
 			var stroke = c.blocked ? '#e53935'
-				: (flat ? (th.dark ? '#78909c' : '#cfd8dc')
+				: (flat ? '#cfd8dc'
 				        : (wifi ? signalColor(c.conn.rssi) : '#cfd8dc'));
 			var badge = th.client === 'badge';
 			var vx, vy, vr, vfs, textY, subY, pn;

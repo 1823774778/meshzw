@@ -327,8 +327,10 @@ return view.extend({
 	/* 设备图标：与拓扑节点一致的圆角方块 + 设备 glyph + 厂商徽标 */
 	tile: function(c) {
 		var v = wr.vendorOf(c.mac);
-		var kind = wr.kindOf(v && v.name,
-			((c.name || '') + ' ' + (c.hostname || '')));
+		/* 子路由固定用与拓扑极简主题一致的路由线稿，避免被识别成普通终端 */
+		var kind = (c.device_role === 'sap') ? 'router'
+			: wr.kindOf(v && v.name,
+				((c.name || '') + ' ' + (c.hostname || '')));
 		if (!kind)
 			kind = (c.conn && c.conn.type !== 'wifi') ? 'wired' : 'generic';
 

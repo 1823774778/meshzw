@@ -35,12 +35,12 @@ const MAX_EVENTS = 100;
 const CONN_AUTH_TIMEOUT = 15;   // s：未认证 TCP 连接最长存活时间
 const MAX_UNAUTH_CONNS = 16;    // 未认证连接上限，避免 fd 被耗尽
 const WIRED_TTL = 300;    // s wired client stays listed after last FDB sighting
-const STEER_COOLDOWN = 30;  // s 同一终端两次引导/断开尝试的最小间隔
-const MIN_STEER_ASSOC = 10; // s 终端入网后至少稳定这么久才允许被引导
-const STEER_CONFIRM = 2;    // 连续低于阈值的采样次数（steer_tick 每 3s）
+const STEER_COOLDOWN = 15;  // s 同一终端两次引导/断开尝试的最小间隔
+const MIN_STEER_ASSOC = 5;  // s 终端入网后至少稳定这么久才允许被引导
+const STEER_CONFIRM = 1;    // 连续低于阈值的采样次数（steer_tick 每 3s）
 const STEER_CRITICAL_DROP = 5;    // 低于阈值多少 dBm 视为临界
-const STEER_CRITICAL_CONFIRM = 3; // 临界信号需要连续采样次数
-const STEER_KICK_AFTER = 3;       // 连续 BTM 无果次数，达到后强制断开
+const STEER_CRITICAL_CONFIRM = 2; // 临界信号需要连续采样次数
+const STEER_KICK_AFTER = 2;       // 连续 BTM 无果次数，达到后强制断开
 const STEER_KICK_COOLDOWN = 1800; // s 同一终端两次强制断开的最小间隔
 const STEER_FORCE_TIMER = 10;     // TBTT：强制 BTM 的 disassociation timer（约 1s）
 const STEER_VALIDITY = 30;        // TBTT：BTM 候选有效期
@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 51;
+const DAEMON_VERSION = 52;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -564,13 +564,13 @@ function alias_bump() {
 
 // ---------------------------------------------------------- AP pinning
 function ap_name_of(mn) {
-	let self_mn = macnorm(state.self.mac);
-	if (mn == self_mn || mn == "") return state.self.name;
+	if (mn == "") return state.self.name;
+	let al = state.aliases.map[mn];
+	if (al?.name != null && al.name != "") return al.name;
+	if (mn == macnorm(state.self.mac)) return state.self.name;
 	let p = state.peers[mn];
 	if (!p) return mn;
-	let al = state.aliases.map[mn];
-	return (al?.name != null && al.name != "") ? al.name
-		: (p.info?.name ?? p.name ?? mn);
+	return p.info?.name ?? p.name ?? mn;
 }
 
 function pin_of(mn) {
@@ -3604,6 +3604,9 @@ function setup_udp() {
 
 // ---------------------------------------------------------- topology build
 function ap_display(mn) {
+	if (mn == "") return state.self.name;
+	let al = state.aliases.map[mn];
+	if (al?.name != null && al.name != "") return al.name;
 	if (mn == macnorm(state.self.mac)) return state.self.name;
 	let p = state.peers[mn];
 	return p ? (p.info?.name ?? p.name ?? maccolon(mn)) : maccolon(mn);
@@ -3870,6 +3873,29 @@ function devices_tick_impl() {
 			state._dev_dirty = true;
 		}
 	}
+
+	/* 本机与已配对成员 AP 不一定出现在 FDB 客户端表里，
+	   按组网关系补其在线状态与名称，避免终端页把子路由显示成离线。 */
+	let self_mn = macnorm(state.self.mac);
+	let ap_mns = [ self_mn ];
+	for (let mn in state.peers)
+		push(ap_mns, mn);
+
+	for (let mn in ap_mns) {
+		let d = state.devices[mn];
+		if (!d) {
+			d = state.devices[mn] = { first_seen: now };
+			d.mac = maccolon(mn);
+		}
+		if (!d.first_seen) d.first_seen = now;
+		d.online = true;
+		d.last_online = now;
+		d.hostname = ap_display(mn);
+		let role = device_ap_role(mn);
+		if (role == "cap" || role == "sap") d.device_role = role;
+		state._dev_dirty = true;
+	}
+
 	devices_trim();
 	devices_save(false);
 	return live;
@@ -3898,17 +3924,19 @@ function device_history_view() {
 			node?.mac ?? d.mac ?? maccolon(macnorm(key));
 		let ap = it?.ap ?? d.ap ?? null;
 		let pin = pin_of(key);
-		let role = device_ap_role(key) ?? d.device_role ?? null;
+		let liveRole = device_ap_role(key);   // 本机或在线成员 AP 才有值
+		let role = liveRole ?? d.device_role ?? null;
 		if (role != "cap" && role != "sap") role = null;
+		let apOnline = !!liveRole;
 		push(out, {
 			id: key,
 			mac: node?.mac ?? d.mac ?? key,
 			name, custom_name: custom,
 			hostname: node?.hostname ?? d.hostname ?? null,
 			ip: node?.ip ?? d.ip ?? null,
-			online: !!it,
+			online: !!it || apOnline,
 			first_seen: d.first_seen ?? null,
-			last_online: it ? now : (d.last_online ?? null),
+			last_online: (it || apOnline) ? now : (d.last_online ?? null),
 			last_offline: d.last_offline ?? null,
 			ap, ap_name: ap ? ap_display(ap) : null,
 			conn: node?.conn ?? null,
@@ -3916,7 +3944,7 @@ function device_history_view() {
 			blocked: !!state.blocked[key],
 			pin, pin_name: pin ? ap_name_of(pin) : null,
 			device_role: role,
-			can_wake: !it,
+			can_wake: !it && !apOnline,
 		});
 	}
 	sort(out, function(a, b) {
@@ -3925,7 +3953,8 @@ function device_history_view() {
 	});
 
 	/* 固定 AP 下拉框候选：本机 + 已知对端 */
-	let aps = [ { id: macnorm(state.self.mac), name: state.self.name } ];
+	let self_mn = macnorm(state.self.mac);
+	let aps = [ { id: self_mn, name: ap_name_of(self_mn) } ];
 	for (let mn in keys(state.peers))
 		push(aps, { id: mn, name: ap_name_of(mn) });
 	sort(aps, function(a, b) {
@@ -6787,7 +6816,8 @@ function steer_tick_impl() {
 		let since = now - last;
 		let tries = state.steer_tries[mn] ?? 0;
 		let btm_neigh = steer_btm_neighbors(steer_neighbors(c, all));
-		let force = (roam.rssi_profile == "aggressive") || critical;
+		let force = (roam.rssi_profile == "aggressive") || critical ||
+		            rssi <= threshold - 3;
 
 		if (low < (critical ? STEER_CRITICAL_CONFIRM : STEER_CONFIRM))
 			continue;
