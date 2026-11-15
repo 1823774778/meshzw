@@ -69,7 +69,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 35;
+const DAEMON_VERSION = 36;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -2727,6 +2727,10 @@ function apply_backhaul_local(bh, role) {
 	if (bh.enabled) {
 		let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
 		if (!dev) return { ok: false, error: "no_radio" };
+		/* CAP 侧强制重建回程 AP：旧接口可能因 netifd/NSS 未真正创建
+		   或未挂进 br-lan，只改选项再 reload 不会重新建接口 */
+		if (role == "cap" && exists)
+			cur.delete("wireless", BACKHAUL_SECTION);
 		/* 命名段必须先声明 uci 类型为 wifi-iface，否则 wifi reload
 		   会忽略这段，STA/AP 都不会真正创建 */
 		let sd = cur.get_all("wireless", BACKHAUL_SECTION);
@@ -2772,6 +2776,21 @@ function apply_backhaul_local(bh, role) {
 
 	uloop.process("/sbin/wifi", [ "reload" ], null,
 		function(res) { log("backhaul wifi reload rc=" + res); });
+	/* 8s 后检查 netifd 是否真的建出接口，定位“配置存在但 br-lan
+	   里没有回程接口”的情况 */
+	uloop.timer(8000, function() {
+		let ws = ubusc.call("network.wireless", "status") ?? {};
+		let hit = null;
+		for (let rname, r in ws)
+			for (let ifc in r.interfaces ?? [])
+				if (ifc.section == BACKHAUL_SECTION) hit = ifc;
+		if (hit == null)
+			log("backhaul iface missing from wireless status");
+		else
+			log(sprintf("backhaul iface: ifname=%s up=%s mode=%s",
+				hit.ifname ?? "?", hit.up ? "1" : "0",
+				hit.config?.mode ?? "?"));
+	});
 	push_event("backhaul_apply", "",
 		sprintf("ver=%d %s", ver, bh.enabled ? "wireless" : "off"));
 	return { ok: true, ver };
