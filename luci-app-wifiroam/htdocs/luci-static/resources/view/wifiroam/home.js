@@ -18,12 +18,14 @@ var callRcInit = rpc.declare({
 });
 
 /* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 38;
+var REQUIRED_VERSION = 39;
 
 return view.extend({
 	st: null,
 	svc: null,
 	rclist: null,
+	topo: null,
+	usage: null,
 	loaded: false,
 	rcLoaded: false,
 	busy: false,
@@ -71,6 +73,7 @@ return view.extend({
 			});
 
 		poll.add(function() { return self.refreshService(false); }, 5);
+		poll.add(function() { return self.refreshOverview(); }, 20);
 		/* 角色变化（例如被主路由配对成子路由）时及时刷新页面结构 */
 		poll.add(function() {
 			return wr.safeCall('status').then(function(st) {
@@ -85,7 +88,83 @@ return view.extend({
 
 		return Promise.all([ serviceP, statusP, rcP ]).then(function() {
 			self.maybeAutoStartService();
+			return self.refreshOverview();
 		});
+	},
+
+	/* ------------------------------------------------------ overview cards */
+	todayTraffic: function() {
+		var u = this.usage;
+		if (!u || !u.day || !u.ndata) return null;
+
+		var total = 0, any = false;
+		Object.keys(u.ndata).forEach(function(mac) {
+			var v = u.ndata[mac] && u.ndata[mac][u.day];
+			if (v) { total += +v || 0; any = true; }
+		});
+		return any ? total : 0;
+	},
+
+	refreshOverview: function() {
+		var self = this;
+
+		return Promise.all([
+			wr.safeCall('topology'),
+			wr.safeCall('usage_stats')
+		]).then(function(res) {
+			if (self.actionStarted && self.busy) return;
+			self.topo = res[0] || null;
+			self.usage = res[1] || null;
+			self.renderOverview();
+		});
+	},
+
+	renderOverview: function() {
+		var box = document.getElementById('wr-overview');
+		if (!box) return;
+
+		var nodes = (this.topo && this.topo.nodes) || [];
+		var aps = [], clients = [];
+		nodes.forEach(function(n) {
+			if (n.type === 'ap') aps.push(n);
+			else if (n.type === 'client') clients.push(n);
+		});
+
+		var apOnline = 0;
+		aps.forEach(function(a) {
+			if (a.role === 'cap' || a.authed) apOnline++;
+		});
+
+		var wifi = 0, wired = 0, blocked = 0;
+		clients.forEach(function(c) {
+			if (c.conn && c.conn.type === 'wifi') wifi++;
+			else wired++;
+			if (c.blocked) blocked++;
+		});
+
+		var traffic = this.todayTraffic();
+		var st = this.st || {};
+		var roleText = { cap: _('Main AP'), sap: _('Sub AP'),
+		                 unconfigured: _('Unconfigured') }[st.role] || '-';
+
+		function card(label, value, cls) {
+			return E('div', { 'class': 'wr-card' + (cls ? ' ' + cls : '') }, [
+				E('div', { 'class': 'wr-card-value' }, value),
+				E('div', { 'class': 'wr-card-label' }, label)
+			]);
+		}
+
+		dom.content(box, [
+			card(_('Role'), roleText, 'wr-card-role'),
+			card(_('APs online'), aps.length ? '%d / %d'.format(apOnline, aps.length) : '-'),
+			card(_('Clients'), clients.length ? String(clients.length) : '-'),
+			card(_('Wireless / Wired'),
+				clients.length ? ('%d / %d'.format(wifi, wired)) : '-'),
+			card(_('Paused'), String(blocked), blocked ? 'wr-card-warn' : ''),
+			card(_('Traffic today'),
+				traffic != null ? wr.fmtBytes(traffic) : '-'),
+			card(_('Uptime'), wr.fmtUptime(st.uptime))
+		]);
 	},
 
 	/* ------------------------------------------------------ service state */
@@ -480,6 +559,15 @@ return view.extend({
 			]),
 			E('div', { id: 'wr-status' },
 				E('div', { 'class': 'wr-hint' }, _('正在读取网络状态...'))),
+			E('div', { id: 'wr-overview', 'class': 'wr-cards' }),
+			E('div', { 'class': 'wr-quick' }, [
+				E('a', { 'class': 'btn cbi-button-action',
+					href: '#/admin/mesh/management/topology' }, _('View topology')),
+				E('a', { 'class': 'btn',
+					href: '#/admin/mesh/management/clients' }, _('Manage clients')),
+				E('a', { 'class': 'btn',
+					href: '#/admin/mesh/management/settings' }, _('Wireless settings'))
+			]),
 			E('div', {
 				id: 'wr-home-warn',
 				'class': 'alert-message warning',

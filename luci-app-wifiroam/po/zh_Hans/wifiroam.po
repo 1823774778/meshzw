@@ -955,3 +955,126 @@ msgstr "超时"
 
 msgid "waiting for the device to join..."
 msgstr "正在等待设备加入..."
+
+msgid "APs online"
+msgstr "在线 AP"
+
+msgid "Traffic today"
+msgstr "今日流量"
+
+msgid "Wireless / Wired"
+msgstr "无线 / 有线"
+
+msgid "Paused"
+msgstr "已暂停"
+
+msgid "View topology"
+msgstr "查看拓扑"
+
+msgid "Manage clients"
+msgstr "管理终端"
+
+msgid "Wireless settings"
+msgstr "无线设置"
+
+msgid "Total clients"
+msgstr "终端总数"
+
+msgid "Read-only on sub AP"
+msgstr "子路由只读"
+
+msgid "Filtered"
+msgstr "当前筛选"
+
+msgid "All"
+msgstr "全部"
+
+msgid "Real-time rate"
+msgstr "实时速率"
+
+msgid "Actions"
+msgstr "操作"
+
+msgid "Pause"
+msgstr "暂停"
+
+msgid "Resume"
+msgstr "恢复"
+
+msgid "Pausing..."
+msgstr "正在暂停..."
+
+msgid "Resuming..."
+msgstr "正在恢复..."
+
+msgid "Internet paused for this client"
+msgstr "已暂停该终端联网"
+
+msgid "Internet restored for this client"
+msgstr "已恢复该终端联网"
+
+msgid "Clients can be paused only on the main AP. This page is read-only on a sub AP."
+msgstr "暂停联网只能在主路由操作；子路由上此页面为只读。"
+
+msgid "Sort: name"
+msgstr "排序：名称"
+
+msgid "Sort: IP"
+msgstr "排序：IP"
+
+msgid "Sort: signal"
+msgstr "排序：信号"
+
+msgid "Sort: rate"
+msgstr "排序：速率"
+
+msgid "Sort: online time"
+msgstr "排序：在线时长"
+
+msgid "Sort: AP"
+msgstr "排序：所属 AP"
+
+msgid "All connections"
+msgstr "全部连接方式"
+
+msgid "Unknown vendor"
+msgstr "未知厂商"
+
+msgid "Search AP / client by name, IP or MAC"
+msgstr "搜索 AP / 终端（名称、IP、MAC）"
+
+msgid "Collapse all"
+msgstr "全部折叠"
+
+msgid "Expand all"
+msgstr "全部展开"
+
+msgid "Zoom in"
+msgstr "放大"
+
+msgid "Zoom out"
+msgstr "缩小"
+
+msgid "Reset zoom"
+msgstr "重置缩放"
+
+msgid "Pause internet"
+msgstr "暂停联网"
+
+msgid "Resume internet"
+msgstr "恢复联网"
+
+msgid "Internet paused"
+msgstr "已暂停联网"
+
+msgid "Internet restored"
+msgstr "已恢复联网"
+
+msgid "Loading app usage..."
+msgstr "正在加载应用统计..."
+
+msgid "Loading..."
+msgstr "加载中..."
+
+msgid "Only the main AP can pause clients"
+msgstr "只有主路由可以暂停终端联网"

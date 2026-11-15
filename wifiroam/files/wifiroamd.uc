@@ -69,7 +69,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 38;
+const DAEMON_VERSION = 39;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -208,6 +208,12 @@ const DPI_BLOCKLIST = "/tmp/wifiroam/dpi_blocklist";
 const DPI_DAEMON = "/usr/sbin/wifiroam-dpi";
 const DPI_PIDFILE = "/tmp/wifiroam-dpi.pid";
 
+// 终端暂停联网：仅 CAP 生效，按源 MAC 在 forward 链 drop。
+// 放在 priority 10，晚于应用统计链（-10），被暂停终端的流量仍会被计数。
+const BLOCK_PATH = ALIAS_DIR + "/blocked.json";
+const BLOCK_TABLE = "wifiroam_acl";
+const ACL_NFT_FILE = "/tmp/wifiroam-acl.nft";
+
 // ------------------------------------------------------------------ globals
 let daemon_started = time();  // 进程启动时刻，用于识别「重启后仍是旧进程」
 let ubusc;              // ubus connection
@@ -215,6 +221,10 @@ let udp_sock;           // discovery socket
 let tcp_srv;            // sync listen socket
 let active_conns = {};  // id -> conn：未认证连接超时/数量限制
 let conn_seq = 0;
+// 性能：同一秒内多个 tick/ubus 请求共享解析结果与客户端快照，
+// 避免 usage_tick / appctl_tick / status / topology 重复执行 shell 与 ubus 调用。
+let _sec_cache = {};
+let _clients_cache = { ts: 0, data: null };
 
 // 前向声明：ucode 单遍编译不提升函数声明，使用点必须晚于绑定点
 let sap_report, push_aliases_to, push_roam_to, push_backhaul_to, push_offload_to, push_wifi_to, push_guest_to, apply_result_update, apply_backhaul_result_update, apply_wifi_result_update, apply_guest_result_update, ensure_token, reconfigure, conn_close;
@@ -271,6 +281,7 @@ let state = {
 	_own_nr: {},        // ifname -> { ts, nr }：本机 hostapd 的 own Neighbor Report 缓存
 	net_names: {},      // SAP: CAP 下发的 macnorm -> { hostname, ip }（SAP 无 DHCP，名称需由 CAP 提供）
 	roster: null,       // SAP: CAP 下发的全网络 AP/SSID 概览（用于开启前检查一致展示）
+	blocked: {},        // CAP: 被暂停联网的终端 macnorm -> true
 	usage: { day: "", online: {}, ndata: {}, ndir: {} }, // CAP: 每终端每日在线秒数 / 总流量 / 上下行
 	_usage_snap: null,  // CAP: 上次 nft counter 快照 { mac: bytes }
 	_usage_station_snap: null, // CAP: 上次站点计数快照 { mac: { rx, tx } }
@@ -327,6 +338,17 @@ function cmd_output(cmd) {
 	let out = f.read("all");
 	f.close();
 	return out ?? "";
+}
+
+/* 同一秒内复用昂贵的解析结果（leases / ip neigh / bridge fdb）。
+   tick、ubus 请求和拓扑构建经常落在同一秒，缓存可显著减少 shell 调用。 */
+function cached_sec(key, fn) {
+	let now = time();
+	let e = _sec_cache[key];
+	if (e && e.ts == now) return e.data;
+	let data = fn();
+	_sec_cache[key] = { ts: now, data };
+	return data;
 }
 
 function push_event(type, mac, info, name) {
@@ -2432,7 +2454,7 @@ function freq_band(f) {
 	return "6g";
 }
 
-function parse_leases() {
+function parse_leases_raw() {
 	let out = {};
 	let data = fs.readfile("/tmp/dhcp.leases");
 	if (!data) return out;
@@ -2446,7 +2468,9 @@ function parse_leases() {
 	return out;
 }
 
-function parse_neigh() {
+function parse_leases() { return cached_sec("leases", parse_leases_raw); }
+
+function parse_neigh_raw() {
 	let out = {};
 	let data = cmd_output(`ip neigh show dev ${state.brdev} 2>/dev/null`);
 	for (let line in split(data, "\n")) {
@@ -2461,6 +2485,8 @@ function parse_neigh() {
 	}
 	return out;
 }
+
+function parse_neigh() { return cached_sec("neigh", parse_neigh_raw); }
 
 // CAP 下发的终端名称表：SAP 上没有 DHCP 服务，/tmp/dhcp.leases 为空，
 // 只能由 CAP 把租约里的主机名/IP 同步过来，子 AP 拓扑才能显示名称
@@ -2485,7 +2511,7 @@ function bridge_port_names() {
 	return map;
 }
 
-function parse_fdb() {
+function parse_fdb_raw() {
 	let out = {};
 	let data = cmd_output(`bridge fdb show br ${state.brdev} 2>/dev/null`);
 	if (data != "") {
@@ -2515,6 +2541,75 @@ function parse_fdb() {
 	}
 	return out;
 }
+
+function parse_fdb() { return cached_sec("fdb", parse_fdb_raw); }
+
+// --------------------------------------------------- client internet pause
+// 只拦主路由的 forward 链：终端仍可访问路由器本身（DHCP/DNS/管理页），
+// 但无法经主路由上网；流量先经过应用统计链计数，再在这里丢弃。
+function acl_load() {
+	try {
+		let data = json(fs.readfile(BLOCK_PATH));
+		if (type(data) == "object") {
+			state.blocked = {};
+			for (let mn, v in (data.blocked ?? {}))
+				if (v && length(mn) == 12) state.blocked[mn] = true;
+		}
+	} catch (e) { /* first boot */ }
+}
+
+function acl_save() {
+	fs.mkdir(ALIAS_DIR);
+	fs.writefile(BLOCK_PATH, sprintf("%.J", { ver: 1, blocked: state.blocked }));
+}
+
+function acl_apply() {
+	if (state.cfg.role != "cap") {
+		/* 角色切到子路由/未配置后，旧 CAP 留下的拦截表必须撤掉 */
+		cmd_output(sprintf("nft delete table inet %s 2>/dev/null", BLOCK_TABLE));
+		return false;
+	}
+
+	let mns = keys(state.blocked);
+	if (!length(mns)) {
+		cmd_output(sprintf("nft delete table inet %s 2>/dev/null", BLOCK_TABLE));
+		return false;
+	}
+
+	cmd_output(sprintf("nft add table inet %s 2>/dev/null", BLOCK_TABLE));
+	cmd_output(sprintf(
+		"nft add chain inet %s forward '{ type filter hook forward priority 10; policy accept; }' 2>/dev/null",
+		BLOCK_TABLE));
+
+	let script = sprintf("flush chain inet %s forward\n", BLOCK_TABLE);
+	for (let mn in mns)
+		script += sprintf(
+			"add rule inet %s forward ether saddr %s counter drop comment \"wr-acl:%s\"\n",
+			BLOCK_TABLE, maccolon(mn), mn);
+	fs.writefile(ACL_NFT_FILE, script);
+	cmd_output(sprintf("nft -f %s 2>/dev/null", ACL_NFT_FILE));
+	fs.unlink(ACL_NFT_FILE);
+	return true;
+}
+
+function acl_set(mn, on) {
+	if (on) {
+		state.blocked[mn] = true;
+		/* 已卸载到 flowtable 的连接会绕过 forward 链：先清掉 conntrack /
+		   fw4 flowtable，让该终端的后续报文重新经过 ACL 被丢弃。 */
+		try {
+			let ip = parse_leases()[mn]?.ip ?? parse_neigh()[mn]?.ip ?? null;
+			if (ip) cmd_output(sprintf("conntrack -D -s %s 2>/dev/null", ip));
+		} catch (e) {}
+		cmd_output("nft flush flowtable inet fw4 ft 2>/dev/null");
+	}
+	else {
+		delete state.blocked[mn];
+	}
+	acl_save();
+	acl_apply();
+}
+
 
 // 各站点的累计字节数（iw station dump）：用于由两次采样差分出实时上下行速率。
 // hostapd 的 get_clients 只给信号/协商速率，没有字节计数，故单独取一次。
@@ -2697,6 +2792,18 @@ function local_clients() {
 	return clients;
 }
 
+/* 同一秒内的客户端快照复用：sap_tick/sap_report、usage_tick、appctl_tick、
+   status 与 topology 会连续触发，共享快照可避免重复的 hostapd ubus 与 iw 调用。
+   站点评率采样本身按秒差分，秒内复用不会影响速率计算。 */
+function local_clients_cached() {
+	let now = time();
+	if (_clients_cache.data && _clients_cache.ts == now)
+		return _clients_cache.data;
+	let data = local_clients();
+	_clients_cache = { ts: now, data };
+	return data;
+}
+
 // steering 专用轻量客户端表：只走 hostapd ubus 取 RSSI/在线时长，
 // 不做 iw 字节采样、DHCP/ARP/FDB 解析；3s 采样也不会带来明显开销。
 function wifi_clients() {
@@ -2760,7 +2867,7 @@ function usage_roll_day() {
 
 function usage_track_macs(clients) {
 	let set = {};
-	for (let mn in (clients ?? local_clients())) set[mn] = true;
+	for (let mn in (clients ?? local_clients_cached())) set[mn] = true;
 	for (let pmn, p in state.peers)
 		for (let mn in (p.clients ?? {})) set[mn] = true;
 	return set;
@@ -3001,7 +3108,7 @@ function usage_tick() {
 	if (state.cfg.role != "cap") return;
 	try {
 		usage_roll_day();
-		let clients = local_clients();
+		let clients = local_clients_cached();
 		let all = usage_track_macs(clients);
 		let stations = station_usage_map(clients);
 
@@ -3045,7 +3152,7 @@ function usage_tick() {
 appctl_track_macs = function() {
 	let set = {};
 	for (let mn in state.appctl.devices) set[mn] = true;
-	let lc = local_clients();
+	let lc = local_clients_cached();
 	for (let mn in lc) set[mn] = true;
 	for (let pmn, p in state.peers)
 		for (let mn in (p.clients ?? {})) set[mn] = true;
@@ -3063,7 +3170,7 @@ online_sample = function() {
 	state._online_ts = now;
 
 	let seen = {};
-	let lc = local_clients();
+	let lc = local_clients_cached();
 	for (let mn in lc) seen[mn] = true;
 	for (let pmn, p in state.peers)
 		for (let mn in (p.clients ?? {})) seen[mn] = true;
@@ -3289,13 +3396,14 @@ function client_node(mn, c, parent) {
 			port: c.port ?? null, since: c.since ?? null,
 		},
 		icon: al?.icon ?? null, note: al?.note ?? null,
+		blocked: !!state.blocked[mn],
 	};
 }
 
 function build_topology() {
 	let nodes = [];
 	let self_mn = macnorm(state.self.mac);
-	let myclients = local_clients();
+	let myclients = local_clients_cached();
 
 	let ap_nodes = {};
 	let self_al = state.aliases.map[self_mn];
@@ -3978,7 +4086,7 @@ function sap_rx(req) {
 	}
 	case "get_client_detail": {
 		let mn = macnorm(req.args.mac);
-		let c = local_clients()[mn];
+		let c = local_clients_cached()[mn];
 		if (c)
 			req.reply({ ok: true, client: client_node(mn, c, macnorm(state.self.mac)) });
 		else
@@ -4083,7 +4191,7 @@ function sap_tick() {
 
 sap_report = function() {
 	if (state.cfg.role != "sap" || !state.link?.authed) return;
-	let clients = local_clients();
+	let clients = local_clients_cached();
 	if (state.prev_clients != null)
 		diff_events(state.prev_clients, clients, state.self.name);
 	state.prev_clients = clients;
@@ -4337,7 +4445,7 @@ function srv_rx(conn, req) {
 		p.last_seen = time();
 		if (prev != null) // 首轮 report 不产 join/leave 事件
 			diff_events(prev, p.clients, p.info?.name ?? conn.name ?? mn);
-		owner_events(local_clients()); // SAP 终端表更新后立即重算归属（含跨 AP 迁移）
+		owner_events(local_clients_cached()); // SAP 终端表更新后立即重算归属（含跨 AP 迁移）
 		if (p.alias_ver < state.aliases.ver)
 			push_aliases_to(mn);
 		/* 同 auth：先 Wi-Fi 改名，再补发漫游配置 */
@@ -4396,7 +4504,7 @@ function srv_rx(conn, req) {
 		break;
 	case "get_client_detail": {
 		let cmn = macnorm(args.mac);
-		let c = local_clients()[cmn];
+		let c = local_clients_cached()[cmn];
 		if (c)
 			req.reply({ ok: true, client: client_node(cmn, c, mn) });
 		else
@@ -4723,7 +4831,7 @@ push_offload_to = function(mn) {
 
 // ------------------------------------------------------------------ ubus API
 function find_client(mn) {
-	let local = local_clients();
+	let local = local_clients_cached();
 	if (local[mn])
 		return { node: client_node(mn, local[mn], macnorm(state.self.mac)),
 		         ap: state.self.name };
@@ -4824,7 +4932,10 @@ function factory_reset() {
 	/* 清除别名、流量统计和运行态 */
 	try { fs.unlink(ALIAS_PATH); } catch (e) {}
 	try { fs.unlink(USAGE_PATH); } catch (e) {}
+	try { fs.unlink(BLOCK_PATH); } catch (e) {}
 	state.aliases = { ver: 0, map: {} };
+	state.blocked = {};
+	acl_apply();
 	state.usage = { day: "", online: {}, ndata: {}, ndir: {} };
 	state.events = [];
 	state._usage_snap = null;
@@ -4884,7 +4995,7 @@ let api_obj = {
 				if (p.authed) online++;
 				nclients += length(keys(p.clients ?? {}));
 			}
-			nclients += length(keys(local_clients()));
+			nclients += length(keys(local_clients_cached()));
 			// SAP 以 CAP 下发的概览为准，成员 AP 计数与主AP保持一致
 			let peers_total = length(keys(state.peers));
 			if (state.cfg.role == "sap" && type(state.roster?.aps) == "array") {
@@ -4953,6 +5064,21 @@ let api_obj = {
 				return { ok: false, error: "invalid_mac" };
 			alias_broadcast();
 			return { ok: true, ver: state.aliases.ver };
+		},
+	},
+	/* 暂停/恢复某个终端的所有转发流量（仅主 AP 执行）。 */
+	set_client_block: {
+		args: { ubus_rpc_session: "", mac: "", block: false },
+		call: function(req) {
+			if (!req.args.mac) return libubus.STATUS_INVALID_ARGUMENT;
+			if (state.cfg.role != "cap")
+				return { ok: false, error: "not_cap" };
+			let mn = macnorm(req.args.mac);
+			if (length(mn) != 12) return libubus.STATUS_INVALID_ARGUMENT;
+			let on = req.args.block ? true : false;
+			acl_set(mn, on);
+			log(sprintf("client block %s -> %s", maccolon(mn), on ? "on" : "off"));
+			return { ok: true, blocked: on };
 		},
 	},
 	reset: {
@@ -5884,6 +6010,7 @@ reconfigure = function() {
 	state._bss_cache = null;
 	state._bss_sig = "";
 	state._own_nr = {};
+	acl_apply();
 	send_hello();
 };
 
@@ -5939,6 +6066,7 @@ function main() {
 		enable_relay_ap_mode();
 	alias_load();
 	usage_load();
+	acl_load();
 	detect_self();
 	ensure_token();
 	// 首次启用插件：按默认设置开启漫游（自动选中本机 SSID）
@@ -5956,6 +6084,7 @@ function main() {
 			guest_fw4_sync(null, false);
 		// 建规则要用到本机接口/网桥信息，必须放在 detect_self 之后
 		appctl_load();
+		acl_apply();
 	});
 	/* 启动后尽快下发一次 11k 邻居库，之后按 RRM_SYNC_INTERVAL 周期同步 */
 	uloop.timer(8000, rrm_sync_tick);
@@ -5974,7 +6103,7 @@ function main() {
 	uloop.interval(TICK_INTERVAL, appctl_tick);
 	uloop.interval(TICK_INTERVAL, function() {
 		if (state.cfg.role != "cap") return;
-		let cur = local_clients();
+		let cur = local_clients_cached();
 		if (state.prev_clients != null)
 			diff_events(state.prev_clients, cur, state.self.name);
 		state.prev_clients = cur;

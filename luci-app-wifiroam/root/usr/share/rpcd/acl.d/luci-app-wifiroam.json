@@ -10,7 +10,7 @@
 		},
 		"write": {
 			"ubus": {
-				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "pair", "unpair", "set_appctl", "set_app_policy", "set_offload", "set_wifi", "set_guest", "reset" ],
+				"wifiroam": [ "set_alias", "set_role", "set_roam", "set_backhaul", "pair", "unpair", "set_appctl", "set_app_policy", "set_offload", "set_wifi", "set_guest", "set_client_block", "reset" ],
 				"rc": [ "init" ]
 			}
 		}

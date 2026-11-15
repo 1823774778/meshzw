@@ -164,14 +164,14 @@ return view.extend({
 	modalOpen: false,
 	collapsed: {},
 	zoom: 1,
+	search: '',
 
 	load: function() {
 		return Promise.all([
 			safeCall('topology'),
 			safeCall('status'),
 			safeCall('roam_log', { limit: 60 }),
-			safeCall('usage_stats'),
-			safeCall('appctl_status')
+			safeCall('usage_stats')
 		]);
 	},
 
@@ -187,18 +187,21 @@ return view.extend({
 			this.status = res[1];
 			this.logs = (res[2] && res[2].events) || [];
 			this.usage = res[3] || null;
-			this.appctl = res[4] || null;
 			this.redraw();
+			this.updateSummary();
 
-			// 详情弹窗开着时同步刷新应用区块，让时长随轮询增长
-			if (this._appRedraw && document.querySelector('.wr-appctl'))
-				this._appRedraw();
+			/* 应用统计体积较大，只在详情弹窗打开时按需刷新，
+			   避免拓扑页每 10s 轮询都拉取全量应用数据 */
+			if (this._appRedraw) {
+				this.refreshAppctl().then(L.bind(function() {
+					if (this._appRedraw)
+						this._appRedraw();
+				}, this));
+			}
 			if (this._statsRedraw && document.querySelector('.wr-stats'))
 				this._statsRedraw();
 			if (this._ratesRedraw && document.querySelector('.wr-dev-rates'))
 				this._ratesRedraw();
-			if (this._statsRedraw && document.querySelector('.wr-stats'))
-				this._statsRedraw();
 
 			var ts = document.getElementById('wr-refresh-ts');
 			if (ts)
@@ -239,12 +242,93 @@ return view.extend({
 		});
 	},
 
+	/* --------------------------------------------------- overview / tools */
+	todayTraffic: function() {
+		var u = this.usage;
+		if (!u || !u.day || !u.ndata) return null;
+
+		var total = 0, any = false;
+		Object.keys(u.ndata).forEach(function(mac) {
+			var v = u.ndata[mac] && u.ndata[mac][u.day];
+			if (v) { total += +v || 0; any = true; }
+		});
+		return any ? total : 0;
+	},
+
+	updateSummary: function() {
+		var box = document.getElementById('wr-topo-summary');
+		if (!box) return;
+
+		var nodes = (this.topo && this.topo.nodes) || [];
+		var aps = [], clients = [];
+		nodes.forEach(function(n) {
+			if (n.type === 'ap') aps.push(n);
+			else if (n.type === 'client') clients.push(n);
+		});
+
+		var online = 0, wifi = 0, wired = 0, paused = 0;
+		aps.forEach(function(a) {
+			if (a.role === 'cap' || a.authed) online++;
+		});
+		clients.forEach(function(c) {
+			if (c.conn && c.conn.type === 'wifi') wifi++;
+			else wired++;
+			if (c.blocked) paused++;
+		});
+
+		var traffic = this.todayTraffic();
+
+		function card(label, value, cls) {
+			return E('div', { 'class': 'wr-card' + (cls ? ' ' + cls : '') }, [
+				E('div', { 'class': 'wr-card-value' }, value),
+				E('div', { 'class': 'wr-card-label' }, label)
+			]);
+		}
+
+		dom.content(box, [
+			card(_('APs online'), aps.length ? '%d / %d'.format(online, aps.length) : '-'),
+			card(_('Clients'), clients.length ? String(clients.length) : '-'),
+			card(_('Wireless / Wired'),
+				clients.length ? ('%d / %d'.format(wifi, wired)) : '-'),
+			card(_('Paused'), String(paused), paused ? 'wr-card-warn' : ''),
+			card(_('Traffic today'), traffic != null ? wr.fmtBytes(traffic) : '-')
+		]);
+	},
+
+	matchNode: function(n) {
+		if (!this.search) return true;
+
+		var q = this.search;
+		var hay = ((n.name || '') + ' ' + (n.mac || '') + ' ' + (n.ip || '') +
+			' ' + (n.hostname || '')).toLowerCase();
+
+		return hay.indexOf(q) >= 0;
+	},
+
+	collapseAll: function(on) {
+		var nodes = (this.topo && this.topo.nodes) || [];
+		var col = {};
+
+		if (on)
+			nodes.forEach(function(n) {
+				if (n.type === 'ap') col[n.id] = true;
+			});
+
+		this.collapsed = col;
+		this.redraw();
+	},
+
+	resetZoom: function() {
+		this.zoom = 1;
+		this.applyZoom();
+	},
+
 	/* ---------------------------------------------------------- layout */
 	layout: function() {
 		var nodes = (this.topo && this.topo.nodes) || [];
 		var aps = nodes.filter(function(n) { return n.type === 'ap'; });
 		var clients = nodes.filter(function(n) { return n.type === 'client'; });
-		var col = this.collapsed;
+		var col = this.search ? {} : this.collapsed;
 
 		var root = null;
 		aps.forEach(function(a) { if (!root && a.role === 'cap') root = a; });
@@ -865,7 +949,11 @@ return view.extend({
 		function apNode(a) {
 			var p = pos[a.id];
 			if (!p) return null;
-			var g = svg('g', { 'class': 'wr-node wr-ap', 'data-id': a.id });
+			var g = svg('g', {
+				'class': 'wr-node wr-ap' +
+					((self.search && !self.matchNode(a)) ? ' wr-dim' : ''),
+				'data-id': a.id
+			});
 			self.apIcon(g, p, a);
 
 			label(g, p.x, p.y + 44, a.name || a.mac || a.id, 'wr-label', 168);
@@ -886,19 +974,40 @@ return view.extend({
 		function clientNode(c) {
 			var p = pos[c.id];
 			if (!p) return null;
-			var g = svg('g', { 'class': 'wr-node wr-client', 'data-id': c.id });
+			var g = svg('g', {
+				'class': 'wr-node wr-client' +
+					((self.search && !self.matchNode(c)) ? ' wr-dim' : '') +
+					(c.blocked ? ' wr-client-blocked' : ''),
+				'data-id': c.id
+			});
 			var wifi = c.conn && c.conn.type === 'wifi';
 
 			g.appendChild(svg('rect', {
 				x: p.x - 17, y: p.y - 17, width: 34, height: 34, rx: 5,
 				'class': 'wr-client-box',
 				fill: '#ffffff',
-				stroke: wifi ? signalColor(c.conn.rssi) : '#cfd8dc',
+				stroke: c.blocked ? '#e53935'
+					: (wifi ? signalColor(c.conn.rssi) : '#cfd8dc'),
 				'stroke-width': 2, filter: 'url(#wrShadow)'
 			}));
 			self.glyph(g, p.x, p.y, deviceKind(c));
 			if (wifi)
 				self.sigBars(g, p.x + 24, p.y - 9, c.conn.rssi);
+
+			/* 暂停联网角标：红色圆形 + 两条暂停竖线 */
+			if (c.blocked) {
+				g.appendChild(svg('circle', {
+					cx: p.x - 17, cy: p.y - 17, r: 6,
+					fill: '#e53935', stroke: '#fff', 'stroke-width': 1.2
+				}));
+				[-1.7, 1.7].forEach(function(dx) {
+					g.appendChild(svg('rect', {
+						x: p.x - 17 + dx - 0.8, y: p.y - 20.2,
+						width: 1.6, height: 6.4, rx: 0.6,
+						fill: '#fff', stroke: 'none'
+					}));
+				});
+			}
 
 			/* 厂商徽标：按 MAC OUI 识别，品牌色圆点 + 厂商 logo（未收录品牌用首字母） */
 			var v = wr.vendorOf(c.mac);
@@ -1112,7 +1221,10 @@ return view.extend({
 	/* ---------------------------------------- 应用使用时长与访问控制 */
 	refreshAppctl: function() {
 		return safeCall('appctl_status').then((res) => {
-			if (typeof res?.ok !== 'boolean') return null;
+			if (typeof res?.ok !== 'boolean') {
+				this.appctl = { ok: false, error: 'unreachable' };
+				return this.appctl;
+			}
 			this.appctl = res;
 			return res;
 		});
@@ -1208,11 +1320,20 @@ return view.extend({
 					: null
 			]);
 
-			if (!ac || !ac.ok) {
+			if (!ac) {
 				dom.content(box, [
 					head,
 					E('div', { 'class': 'wr-muted', style: 'margin-top:0.5em' },
-						(ac && ac.error === 'not_cap')
+						_('Loading app usage...'))
+				]);
+				return;
+			}
+
+			if (!ac.ok) {
+				dom.content(box, [
+					head,
+					E('div', { 'class': 'wr-muted', style: 'margin-top:0.5em' },
+						(ac.error === 'not_cap')
 							? _('Configure app control on the main AP')
 							: _('Cannot reach wifiroamd'))
 				]);
@@ -1351,6 +1472,15 @@ return view.extend({
 
 		self._appRedraw = render;
 		render();
+
+		/* 应用统计按需加载：打开详情时再拉全量数据，不拖慢拓扑轮询 */
+		if (!self.appctl) {
+			self.refreshAppctl().then(function() {
+				if (self._appRedraw)
+					self._appRedraw(true);
+			});
+		}
+
 		return box;
 	},
 
@@ -1609,6 +1739,58 @@ return view.extend({
 			if (n.note)
 				infoLines.push(E('div', {}, _('Note') + ': ' + n.note));
 
+			var blockStatus = E('span', { 'class': 'wr-hint' });
+			var blockBtn = null;
+
+			if (n.type === 'client') {
+				blockBtn = E('button', {
+					'class': 'btn ' + (n.blocked ? 'cbi-button-positive' : 'cbi-button-negative')
+				});
+
+				var applyBlockText = function() {
+					blockBtn.textContent = n.blocked
+						? _('Resume internet') : _('Pause internet');
+					blockBtn.disabled = !(self.topo && self.topo.role === 'cap');
+				};
+				applyBlockText();
+
+				blockBtn.addEventListener('click', function() {
+					if (!self.topo || self.topo.role !== 'cap')
+						return;
+
+					var want = !n.blocked;
+					blockBtn.disabled = true;
+					blockBtn.textContent = want ? _('Pausing...') : _('Resuming...');
+					dom.content(blockStatus, wr.inlineStatus('pending',
+						want ? _('Pausing...') : _('Resuming...')));
+
+					wr.call('set_client_block', { mac: n.mac, block: want })
+						.then(function(res) {
+							if (res && res.ok) {
+								n.blocked = !!res.blocked;
+								applyBlockText();
+								dom.content(blockStatus, wr.inlineStatus('ok',
+									n.blocked ? _('Internet paused') : _('Internet restored')));
+								wr.notify('success', n.blocked
+									? _('Internet paused for this client')
+									: _('Internet restored for this client'));
+								self.updateSummary();
+								self.fetch();
+							}
+							else {
+								applyBlockText();
+								dom.content(blockStatus, wr.inlineStatus('fail',
+									'✗ ' + ((res && res.error) || _('Failed'))));
+							}
+						})
+						.catch(function() {
+							applyBlockText();
+							dom.content(blockStatus, wr.inlineStatus('fail',
+								'✗ ' + _('request rejected')));
+						});
+				});
+			}
+
 			body = E('div', { 'class': 'wr-dev' }, [
 				E('div', { 'class': 'wr-dev-head' }, [
 					iconSvg,
@@ -1623,6 +1805,9 @@ return view.extend({
 				]),
 				E('div', { 'class': 'wr-dev-info' }, infoLines),
 				nameEditRow,
+				blockBtn ? E('div', { 'class': 'wr-dev-actions' }, [
+					blockBtn, ' ', blockStatus
+				]) : null,
 				wifi ? E('div', { 'class': 'wr-dev-rates' }, [
 					/* 设备视角实时速率：↑发送=终端→AP，↓接收=AP→终端；
 					   span 引用存下来，轮询时随最新拓扑数据刷新（见 _ratesRedraw） */
@@ -1659,7 +1844,6 @@ return view.extend({
 		this.status = data[1];
 		this.logs = (data[2] && data[2].events) || [];
 		this.usage = data[3] || null;
-		this.appctl = data[4] || null;
 		this.logFilter = this.logFilter || { type: '', name: '', mac: '', info: '' };
 
 		poll.add(L.bind(this.fetch, this), 10);
@@ -1682,13 +1866,32 @@ return view.extend({
 					bad.map(function(r) { return r.name || r.ap; }).join(', '));
 		}
 
+		window.setTimeout(L.bind(this.updateSummary, this), 0);
+
 		return E('div', {}, [
 			wr.css(),
 			E('h2', {}, _('网络拓扑')),
 			E('div', { id: 'wr-status' }, wr.statusBar(this.status || {})),
+			E('div', { id: 'wr-topo-summary', 'class': 'wr-cards' }),
 			hint,
 			failed,
-			E('div', { 'class': 'wr-toolbar' }, [
+			E('div', { 'class': 'wr-toolbar wr-toolbar-wrap' }, [
+				E('input', {
+					type: 'text', 'class': 'cbi-input-text wr-search',
+					placeholder: _('Search AP / client by name, IP or MAC'),
+					input: L.bind(function(ev) {
+						this.search = ev.target.value.trim().toLowerCase();
+						this.redraw();
+					}, this)
+				}),
+				E('button', {
+					'class': 'btn',
+					click: L.bind(function() { this.collapseAll(true); }, this)
+				}, _('Collapse all')),
+				E('button', {
+					'class': 'btn',
+					click: L.bind(function() { this.collapseAll(false); }, this)
+				}, _('Expand all')),
 				E('button', {
 					'class': 'btn',
 					click: L.bind(function(ev) { this.refresh(ev.currentTarget); }, this)
@@ -1699,13 +1902,17 @@ return view.extend({
 			E('div', { 'class': 'wr-topo-outer' }, [
 				E('div', { 'class': 'wr-zoom' }, [
 					E('button', {
-						'class': 'btn', type: 'button', title: '放大',
+						'class': 'btn', type: 'button', title: _('Zoom in'),
 						click: L.bind(function() { this.zoomBy(1.25); }, this)
 					}, '+'),
 					E('button', {
-						'class': 'btn', type: 'button', title: '缩小',
+						'class': 'btn', type: 'button', title: _('Zoom out'),
 						click: L.bind(function() { this.zoomBy(0.8); }, this)
-					}, '−')
+					}, '−'),
+					E('button', {
+						'class': 'btn', type: 'button', title: _('Reset zoom'),
+						click: L.bind(function() { this.resetZoom(); }, this)
+					}, '⟲')
 				]),
 				E('div', { 'class': 'wr-topo-wrap', id: 'wr-topo' })
 			]),
