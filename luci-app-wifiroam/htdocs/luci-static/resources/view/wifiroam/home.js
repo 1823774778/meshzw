@@ -342,6 +342,10 @@ return view.extend({
 		if (sb)
 			dom.content(sb, wr.statusBar(this.st || {}));
 
+		/* 角色/运行时长随 status 变化，概览卡片同步刷新 */
+		if (document.getElementById('wr-overview'))
+			this.renderOverview();
+
 		var warn = document.getElementById('wr-home-warn');
 		if (warn)
 			warn.style.display = (this.st && this.st.role) ? 'none' : '';
