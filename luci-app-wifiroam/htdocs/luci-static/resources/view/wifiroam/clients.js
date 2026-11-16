@@ -412,6 +412,7 @@ return view.extend({
 		var blocked = !!c.blocked;
 		var v = wr.vendorOf(c.mac);
 		var editing = !!this.editing[c.id];
+		var isSap = c.device_role === 'sap';
 
 		/* 图三布局：头像 + 名称 + 在线徽标 + 编辑铅笔 */
 		var badge = E('span', {
@@ -460,13 +461,13 @@ return view.extend({
 				'class': 'btn cbi-button-positive',
 				click: function() {
 					var name = (nameIn.value || '').trim();
-					var pin = pinSel.value || '';
+					var pin = isSap ? (c.pin || '') : (pinSel.value || '');
 					var nameChanged = (name !== (c.custom_name || ''));
 					var jobs = [];
 
 					if (nameChanged)
 						jobs.push(wr.call('set_alias', { mac: c.id, name: name }));
-					if (pin !== (c.pin || ''))
+					if (!isSap && pin !== (c.pin || ''))
 						jobs.push(wr.call('set_pin', { mac: c.id, ap: pin }));
 
 					if (!jobs.length) {
@@ -514,7 +515,7 @@ return view.extend({
 
 			editPanel = E('div', { 'class': 'wr-dcard-edit' }, [
 				nameIn,
-				E('div', { 'class': 'wr-dcard-pin' }, [
+				isSap ? null : E('div', { 'class': 'wr-dcard-pin' }, [
 					E('span', { 'class': 'wr-dcard-key' }, _('Pinned AP')),
 					pinSel
 				]),
@@ -554,6 +555,16 @@ return view.extend({
 		if (self.waking[c.id])
 			wr.setBusy(wakeBtn, true, _('Sending...'));
 
+		/* 子路由快捷入口：直接打开对应 AP 的 LuCI 管理后台 */
+		var adminBtn = (isSap && online && c.ip)
+			? E('a', {
+				'class': 'btn wr-admin-btn',
+				href: 'http://' + c.ip + '/cgi-bin/luci',
+				target: '_blank',
+				rel: 'noopener'
+			}, _('Admin page'))
+			: null;
+
 		var name = (c.name && c.name !== c.mac) ? c.name : (c.hostname || c.mac);
 
 		var rows = [
@@ -588,7 +599,7 @@ return view.extend({
 							? E('span', { 'class': 'wr-dcard-wifi' }, ' · ' + conn.ssid)
 							: null
 					]),
-					(!editing && c.pin) ? E('div', { 'class': 'wr-dcard-pin-tag' },
+					(!editing && c.pin && !isSap) ? E('div', { 'class': 'wr-dcard-pin-tag' },
 						_('Pinned to %s').format(c.pin_name || c.pin)) : null
 				]),
 				roleBadge,
@@ -601,7 +612,8 @@ return view.extend({
 				blockBtn,
 				wakeBtn ? ' ' : null, wakeBtn,
 				wakeBtn ? E('span', { 'class': 'wr-hint' },
-					_('Send a magic packet to the last known MAC')) : null
+					_('Send a magic packet to the last known MAC')) : null,
+				adminBtn ? ' ' : null, adminBtn
 			])
 		]);
 	},

@@ -640,6 +640,9 @@ msgstr "运行中的 wifiroamd 版本与当前界面不一致，点击「重启�
 msgid "Version mismatch persists after repair. Please update the plugin packages."
 msgstr "自动修复后版本仍不一致，请更新插件软件包。"
 
+msgid "Admin page"
+msgstr "管理后台"
+
 msgid "App Usage & Access Control"
 msgstr "应用使用与访问控制"
 

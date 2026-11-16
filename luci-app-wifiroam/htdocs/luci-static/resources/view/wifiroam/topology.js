@@ -841,6 +841,36 @@ return view.extend({
 		g.appendChild(pg);
 	},
 
+	/* 子路由节点上的管理后台快捷入口：新标签页打开对应 AP 的 LuCI */
+	adminButton: function(g, x, y, n) {
+		if (!n.ip) return;
+		var url = 'http://' + n.ip + '/cgi-bin/luci';
+		var pg = svg('g', { 'class': 'wr-pencil wr-admin' });
+
+		pg.appendChild(svg('rect', {
+			x: x - 6.5, y: y - 6.5, width: 13, height: 13, rx: 2,
+			fill: '#fff', stroke: '#b0bec5', 'stroke-width': 1.2
+		}));
+		pg.appendChild(svg('line', {
+			x1: x - 2.6, y1: y + 2.6, x2: x + 2.2, y2: y - 2.2,
+			stroke: '#546e7a', 'stroke-width': 1.5, 'stroke-linecap': 'round'
+		}));
+		pg.appendChild(svg('line', {
+			x1: x - 0.4, y1: y - 2.5, x2: x + 2.5, y2: y - 2.5,
+			stroke: '#546e7a', 'stroke-width': 1.5, 'stroke-linecap': 'round'
+		}));
+		pg.appendChild(svg('line', {
+			x1: x + 2.5, y1: y - 2.5, x2: x + 2.5, y2: y + 0.4,
+			stroke: '#546e7a', 'stroke-width': 1.5, 'stroke-linecap': 'round'
+		}));
+		pg.appendChild(svg('title', {}, _('Admin page')));
+		pg.addEventListener('click', function(ev) {
+			ev.stopPropagation();
+			window.open(url, '_blank', 'noopener');
+		});
+		g.appendChild(pg);
+	},
+
 	toggleButton: function(g, x, y, apId, count) {
 		var self = this;
 		var isCollapsed = !!self.collapsed[apId];
@@ -1085,6 +1115,7 @@ return view.extend({
 			var isCap = a.role === 'cap';
 			var accent = isCap ? th.capStroke : th.apStroke;
 			var kids = (lay.byParent[a.id] || []).length;
+			var isSelfNode = !!(self.topo && a.id === self.topo.self);
 
 			if (th.ap === 'card') {
 				var w = 138, h = 96;
@@ -1107,6 +1138,8 @@ return view.extend({
 				if (a.ip)
 					label(g, p.x, p.y + 26, a.ip, 'wr-sub', w - 26);
 				self.pencilButton(g, p.x + w / 2 - 13, p.y - h / 2 + 13, a);
+				if (a.role === 'sap' && !isSelfNode)
+					self.adminButton(g, p.x + w / 2 - 31, p.y - h / 2 + 13, a);
 				if (kids > 0)
 					self.toggleButton(g, p.x + w / 2 - 13, p.y + h / 2 - 13, a.id, kids);
 			}
@@ -1116,6 +1149,8 @@ return view.extend({
 				if (a.ip)
 					label(g, p.x, p.y + 60, a.ip, 'wr-sub', 168);
 				self.pencilButton(g, p.x + 24, p.y - 24, a);
+				if (a.role === 'sap' && !isSelfNode)
+					self.adminButton(g, p.x + 40, p.y - 24, a);
 				if (kids > 0)
 					self.toggleButton(g, p.x, p.y + 74, a.id, kids);
 			}
