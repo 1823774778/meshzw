@@ -48,6 +48,12 @@ const STEER_TICK = 3000;    // ms：steering 采样间隔（只走 ubus，不扫
 const RRM_SYNC_INTERVAL = 15000; // ms：向 hostapd 同步 11k 邻居库的间隔
 const BACKHAUL_SECTION = "wifiroam_bh";
 const BACKHAUL_DEFAULT_SSID = "wifiroam-bh";
+/* 回程切换防抖：有线/无线路径变化要先稳定一段时间再切换，
+   避免 FDB 单次命中或 reload 瞬间的 link flap 把回程来回拆建 */
+const BH_WIRED_DEBOUNCE = 12;      // s：有线持续存在多久才暂停 STA
+const BH_WIRELESS_DEBOUNCE = 6;    // s：有线消失多久才重新启用 STA
+const BH_LOOP_CONFIRM = 4;         // s：环路连续确认时间
+const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
 
 // 访客网络：每台 AP 各自建一个独立子网 + DHCP + 防火墙隔离区，
 // 访客口统一挂到 br-guest（接口名 netifd 限制为 15 字符以内）。
@@ -72,7 +78,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 55;
+const DAEMON_VERSION = 56;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4271,6 +4277,16 @@ function pick_radio(prefer) {
 
 // 上级 AP 的 MAC 若出现在以太网口上，说明当前仍有有线回程。
 // 此时不能把 STA 桥进 br-lan，否则会形成二层环路；只暂存配置待拔线后自动启用。
+/* 有线口必须真正 forwarding 才算可用：STP 阻塞的环路端口只会在 FDB 里
+   留下主路由 MAC，不能据此判定“有线回程已恢复” */
+function wired_port_forwarding(port) {
+	let carrier = trim(fs.readfile(`/sys/class/net/${port}/carrier`) ?? "");
+	if (carrier != "" && carrier != "1") return false;
+	let st = trim(fs.readfile(`/sys/class/net/${port}/brport/state`) ?? "");
+	if (st != "" && st != "3") return false;   // 3 = forwarding
+	return true;
+}
+
 function ethernet_uplink_port() {
 	let fdb = parse_fdb();
 	for (let mn, p in state.peers) {
@@ -4278,10 +4294,98 @@ function ethernet_uplink_port() {
 		if (role != "cap") continue;
 		let port = fdb[mn];
 		if (port && index(port, "phy") != 0 && index(port, "wl") != 0 &&
-		    index(port, "vap") != 0 && index(port, "br") != 0)
+		    index(port, "vap") != 0 && index(port, "br") != 0 &&
+		    wired_port_forwarding(port))
 			return port;
 	}
 	return null;
+}
+
+/* 回程接口在 netifd 中的运行时状态（AP/STA 通用） */
+function backhaul_iface_status() {
+	let ws = ubusc.call("network.wireless", "status") ?? {};
+	for (let rname, r in ws)
+		for (let ifc in r.interfaces ?? [])
+			if (ifc.section == BACKHAUL_SECTION)
+				return { ifname: ifc.ifname, up: !!ifc.up, radio: rname };
+	return null;
+}
+
+function backhaul_uci_radio() {
+	let cur = uci.cursor();
+	cur.load("wireless");
+	return cur.get("wireless", BACKHAUL_SECTION, "device") ?? null;
+}
+
+function backhaul_wpa_cli(ifname, cmd) {
+	if (!fs.access("/usr/sbin/wpa_cli") && !fs.access("/sbin/wpa_cli") &&
+	    !fs.access("/usr/bin/wpa_cli"))
+		return false;
+	let out = cmd_output(sprintf(
+		"wpa_cli -p /var/run/wpa_supplicant -i %s %s >/dev/null 2>&1; echo RC=$?",
+		ifname, cmd));
+	return index(out, "RC=0") >= 0;
+}
+
+function backhaul_sta_set_disabled(on) {
+	let cur = uci.cursor();
+	cur.load("wireless");
+	let want = on ? "1" : "0";
+	if ((cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == want)
+		return;
+	cur.set("wireless", BACKHAUL_SECTION, "disabled", want);
+	cur.commit("wireless");
+}
+
+function backhaul_sta_radio_up(tag) {
+	let radio = backhaul_uci_radio() ?? pick_radio("");
+	if (!radio) return;
+	log("backhaul " + tag + ": wifi up " + radio);
+	uloop.process("/sbin/wifi", [ "up", radio ], null,
+		function(res) { log("backhaul " + tag + " rc=" + res); });
+}
+
+/* 暂停无线 STA：优先 wpa_cli 定向断开，避免整网/整卡 reload */
+function backhaul_sta_pause(reason) {
+	let now = time();
+	if ((state._bh_pause_ts ?? 0) > 0 && now - state._bh_pause_ts < 3)
+		return;
+	state._bh_pause_ts = now;
+	backhaul_sta_set_disabled(true);
+
+	let ifc = backhaul_iface_status();
+	if (ifc && ifc.ifname && backhaul_wpa_cli(ifc.ifname, "disconnect"))
+		log("backhaul STA paused: " + reason);
+	else
+		backhaul_sta_radio_up("pause");
+
+	push_event("backhaul_link", "", reason);
+}
+
+/* 恢复无线 STA：接口还在就 reconnect，已被 reload 移除时只拉起该射频 */
+function backhaul_sta_resume() {
+	backhaul_sta_set_disabled(false);
+	state._bh_pause_ts = 0;
+
+	let ifc = backhaul_iface_status();
+	if (ifc && ifc.ifname && backhaul_wpa_cli(ifc.ifname, "reconnect"))
+		log("backhaul STA resumed");
+	else
+		backhaul_sta_radio_up("resume");
+
+	push_event("backhaul_link", "", "cable removed, wireless backhaul enabled");
+}
+
+function backhaul_store_cfg(bh, ver) {
+	let wc = uci.cursor();
+	wc.load("wifiroam");
+	wc.set("wifiroam", "backhaul", "enabled", bh.enabled ? "1" : "0");
+	wc.set("wifiroam", "backhaul", "ssid", bh.ssid ?? BACKHAUL_DEFAULT_SSID);
+	wc.set("wifiroam", "backhaul", "key", bh.key ?? "");
+	wc.set("wifiroam", "backhaul", "device", bh.device ?? "");
+	wc.set("wifiroam", "backhaul", "config_ver", "" + ver);
+	wc.commit("wifiroam");
+	state.backhaul_ver_applied = ver;
 }
 
 function apply_backhaul_local(bh, role) {
@@ -4293,8 +4397,43 @@ function apply_backhaul_local(bh, role) {
 	if (bh.enabled && ((bh.ssid ?? "") == "" || (bh.key ?? "") == ""))
 		return { ok: false, error: "backhaul_credentials" };
 
+	let ver = bh.config_ver ?? 0;
+	let wantMode = role == "cap" ? "ap" : "sta";
+	let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
+	let curRadio = exists ? (cur.get("wireless", BACKHAUL_SECTION, "device") ?? null) : null;
+	let ifc = backhaul_iface_status();
+
+	/* 配置内容和运行时接口都没变时只更新版本号，不再 reload：
+	   同一份配置重复下发/重复保存不会再把回程和所有 AP 打断 */
+	let runtimeOk = ifc != null ||
+		(role == "sap" &&
+		 (cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "1");
+	if (bh.enabled && dev && exists && runtimeOk) {
+		let sd = cur.get_all("wireless", BACKHAUL_SECTION);
+		let same = sd != null && sd[".type"] == "wifi-iface" &&
+			cur.get("wireless", BACKHAUL_SECTION, "mode") == wantMode &&
+			cur.get("wireless", BACKHAUL_SECTION, "device") == dev &&
+			(cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") == (bh.ssid ?? "") &&
+			(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "");
+		if (role == "cap")
+			same = same &&
+				(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
+				(cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "0";
+		if (same) {
+			if (role == "cap")
+				backhaul_stp_ensure();
+			backhaul_store_cfg(bh, ver);
+			log(sprintf("backhaul unchanged ver=%d, skip reload", ver));
+			return { ok: true, ver, unchanged: true };
+		}
+	}
+	if (!bh.enabled && !exists) {
+		backhaul_store_cfg(bh, ver);
+		log(sprintf("backhaul already off ver=%d, skip reload", ver));
+		return { ok: true, ver, unchanged: true };
+	}
+
 	if (bh.enabled) {
-		let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
 		if (!dev) return { ok: false, error: "no_radio" };
 		/* CAP 侧强制重建回程 AP：旧接口可能因 netifd/NSS 未真正创建
 		   或未挂进 br-lan，只改选项再 reload 不会重新建接口 */
@@ -4332,21 +4471,25 @@ function apply_backhaul_local(bh, role) {
 	if (chk.get("wireless", BACKHAUL_SECTION) == null)
 		log("backhaul wireless section missing after commit");
 
-	let ver = bh.config_ver ?? 0;
-	let wc = uci.cursor();
-	wc.load("wifiroam");
-	wc.set("wifiroam", "backhaul", "enabled", bh.enabled ? "1" : "0");
-	wc.set("wifiroam", "backhaul", "ssid", bh.ssid ?? BACKHAUL_DEFAULT_SSID);
-	wc.set("wifiroam", "backhaul", "key", bh.key ?? "");
-	wc.set("wifiroam", "backhaul", "device", bh.device ?? "");
-	wc.set("wifiroam", "backhaul", "config_ver", "" + ver);
-	wc.commit("wifiroam");
-	state.backhaul_ver_applied = ver;
+	backhaul_store_cfg(bh, ver);
 	if (role == "cap" && bh.enabled)
 		backhaul_stp_ensure();
 
-	uloop.process("/sbin/wifi", [ "reload" ], null,
-		function(res) { log("backhaul wifi reload rc=" + res); });
+	/* 优先只重启回程所在射频；只有找不到射频时才回退整机 reload */
+	let reloadRadios = [];
+	for (let r in [ dev, curRadio ])
+		if (r && index(reloadRadios, r) < 0) push(reloadRadios, r);
+	if (length(reloadRadios)) {
+		for (let r in reloadRadios) {
+			let radioName = r;
+			uloop.process("/sbin/wifi", [ "up", radioName ], null,
+				function(res) { log("backhaul wifi up " + radioName + " rc=" + res); });
+		}
+	}
+	else {
+		uloop.process("/sbin/wifi", [ "reload" ], null,
+			function(res) { log("backhaul wifi reload rc=" + res); });
+	}
 	/* 8s 后检查 netifd 是否真的建出接口，定位“配置存在但 br-lan
 	   里没有回程接口”的情况 */
 	uloop.timer(8000, function() {
@@ -4413,7 +4556,8 @@ function backhaul_loop_port() {
 	if (length(mac) != 12) return null;
 	let port = parse_fdb()[mac];
 	if (port && index(port, "phy") != 0 && index(port, "wl") != 0 &&
-	    index(port, "vap") != 0 && index(port, "br") != 0)
+	    index(port, "vap") != 0 && index(port, "br") != 0 &&
+	    wired_port_forwarding(port))
 		return port;
 	return null;
 }
@@ -4423,7 +4567,12 @@ function backhaul_loop_port() {
 function backhaul_tick() {
 	if (state.cfg.role != "sap") return;
 	let bh = current_backhaul_cfg();
-	if (!bh.enabled) return;
+	if (!bh.enabled) {
+		state._bh_wired_since = null;
+		state._bh_wireless_since = null;
+		state._bh_loop_since = null;
+		return;
+	}
 	if ((bh.ssid ?? "") == "" || (bh.key ?? "") == "") return;
 	let cur = uci.cursor();
 	cur.load("wireless");
@@ -4447,30 +4596,61 @@ function backhaul_tick() {
 		return;
 	}
 	backhaul_stp_ensure();
-	/* 插回网线时主路由 MAC 可能仍只学到无线 STA 口，FDB 判据会漏检；
-	   若 STA 自己的 MAC 出现在有线口，说明两条路径都通，立即暂停 STA */
+
+	let now = time();
+	let ifc = backhaul_iface_status();
 	let disabled = (cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "1";
+
+	/* 环路：STA 自己的 MAC 出现在有线口，连续确认后再暂停，
+	   避免单次 FDB 抖动把回程误停 */
 	if (!disabled) {
 		let lp = backhaul_loop_port();
 		if (lp != null) {
-			log("backhaul loop detected on " + lp + ", pausing wireless STA");
-			cur.set("wireless", BACKHAUL_SECTION, "disabled", "1");
-			cur.commit("wireless");
-			push_event("backhaul_link", "", "loop detected, wireless STA paused");
-			uloop.process("/sbin/wifi", [ "reload" ], null,
-				function(res) { log("backhaul switch rc=" + res); });
-			return;
+			state._bh_loop_since ??= now;
+			if (now - state._bh_loop_since >= BH_LOOP_CONFIRM) {
+				state._bh_loop_since = null;
+				log("backhaul loop detected on " + lp + ", pausing wireless STA");
+				backhaul_sta_pause("loop detected, wireless STA paused");
+				return;
+			}
+		}
+		else {
+			state._bh_loop_since = null;
 		}
 	}
-	let want = ethernet_uplink_port() ? "1" : "0";
-	if ((cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == want) return;
-	cur.set("wireless", BACKHAUL_SECTION, "disabled", want);
-	cur.commit("wireless");
-	push_event("backhaul_link", "",
-		want == "1" ? "wired uplink detected, wireless STA paused"
-		            : "cable removed, wireless backhaul enabled");
-	uloop.process("/sbin/wifi", [ "reload" ], null,
-		function(res) { log("backhaul switch rc=" + res); });
+	else {
+		state._bh_loop_since = null;
+	}
+
+	/* 有线/无线路径防抖：持续稳定一段时间后才切换回程方式 */
+	let wired = ethernet_uplink_port() != null;
+	if (wired) {
+		state._bh_wired_since ??= now;
+		state._bh_wireless_since = null;
+	}
+	else {
+		state._bh_wireless_since ??= now;
+		state._bh_wired_since = null;
+	}
+
+	if (!disabled && wired &&
+	    now - (state._bh_wired_since ?? now) >= BH_WIRED_DEBOUNCE) {
+		backhaul_sta_pause("wired uplink detected, wireless STA paused");
+		return;
+	}
+
+	if (disabled && !wired &&
+	    now - (state._bh_wireless_since ?? now) >= BH_WIRELESS_DEBOUNCE) {
+		backhaul_sta_resume();
+		return;
+	}
+
+	/* 无线回程应启用但运行时接口被 reload 移除：只拉起对应射频重建 STA */
+	if (!disabled && !wired && ifc == null &&
+	    now - (state._bh_sta_rebuild_ts ?? 0) >= BH_STA_REBUILD_INTERVAL) {
+		state._bh_sta_rebuild_ts = now;
+		backhaul_sta_radio_up("sta rebuild");
+	}
 }
 
 // --------------------------------------------------------------- prechecks
@@ -6205,6 +6385,7 @@ let api_obj = {
 			cur.foreach("wireless", "wifi-iface", function(s) {
 				if (s.mode && s.mode != "ap") return;
 				if (s.wifiroam_guest == "1") return;
+				if (s[".name"] == BACKHAUL_SECTION) return;   // 回程密码不参与主人网络
 				let band = cur.get("wireless", s.device, "band") ?? "?";
 				let key = s.key ?? "";
 				let enc = s.encryption ?? "";
