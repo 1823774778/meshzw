@@ -1,0 +1,1000 @@
+[2026年11月16日 GMT+8 18:32:52] kern.info: [  897.692448] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 18:32:52] kern.info: [  897.692490] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 18:32:53] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:32:53] kern.info: [  898.727615] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 18:32:53] kern.info: [  898.727657] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 18:32:55] kern.info: [  900.090847] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 18:32:55] kern.info: [  900.090890] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 18:32:56] kern.info: [  901.040275] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 21 ast_idx 0 ast_hash 0x0 vdev 4
+[2026年11月16日 GMT+8 18:32:56] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 18:32:56] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 18:32:56] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:20:37:6c auth_alg=open
+[2026年11月16日 GMT+8 18:32:56] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c RADIUS: starting accounting session E4F5FC26DA638491
+[2026年11月16日 GMT+8 18:32:56] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:20:37:6c WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 18:32:56] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:20:37:6c
+[2026年11月16日 GMT+8 18:32:56] kern.info: [  901.110802] nss-wifi-drv 39000000.nss: interface 42 protects frames with 6
+[2026年11月16日 GMT+8 18:32:56] kern.info: [  901.127623] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 18:32:56] kern.info: [  901.127658] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 18:32:56] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:32:59] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:33:02] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:33:04] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: disconnected due to excessive missing ACKs
+[2026年11月16日 GMT+8 18:33:04] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:33:04] kern.info: [  909.112270] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 7 released from vdev 0
+[2026年11月16日 GMT+8 18:33:19] daemon.info: ucode[4876]: wifiroam: event ap_offline DC:D8:7C:20:37:6B - XWRT
+[2026年11月16日 GMT+8 18:33:34] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+[2026年11月16日 GMT+8 18:33:39] daemon.info: ucode[4876]: wifiroam: event client_leave A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 18:34:13] kern.info: [  978.323223] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 18:34:13] kern.info: [  978.323288] br-lan: port 3(lan3) entered blocking state
+[2026年11月16日 GMT+8 18:34:13] kern.info: [  978.329710] br-lan: port 3(lan3) entered listening state
+[2026年11月16日 GMT+8 18:34:13] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月16日 GMT+8 18:34:21] kern.info: [  986.719996] br-lan: port 3(lan3) entered learning state
+[2026年11月16日 GMT+8 18:34:30] kern.info: [  995.039936] br-lan: port 3(lan3) entered forwarding state
+[2026年11月16日 GMT+8 18:34:30] kern.info: [  995.039986] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 18:34:31] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:31] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 18:34:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:34] kern.info: [  998.785171] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 8 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月16日 GMT+8 18:34:34] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 18:34:34] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 18:34:34] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月16日 GMT+8 18:34:34] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session 94C1BC2B9CF18448
+[2026年11月16日 GMT+8 18:34:34] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 18:34:34] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:34] kern.info: [  998.892128] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月16日 GMT+8 18:34:34] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:34] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 18:34:34] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:34:34] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:34:34] daemon.info: ucode[4876]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月16日 GMT+8 18:34:34] daemon.info: ucode[4876]: wifiroam: event roam_move 10:FF:E0:E5:11:9F DESKTOP-I6EJMTF XWRT → XWRT
+[2026年11月16日 GMT+8 18:34:35] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:35] daemon.info: ucode[4876]: wifiroam: event roam_move 10:FF:E0:E5:11:9F DESKTOP-I6EJMTF XWRT → XWRT
+[2026年11月16日 GMT+8 18:34:38] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:39] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:39] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:39] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:39] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 18:34:39] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:39] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:39] daemon.info: ucode[4876]: wifiroam: event client_join A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 18:34:41] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:44] daemon.info: ucode[4876]: wifiroam: event client_leave DC:D8:7C:54:4A:1D DC:D8:7C:54:4A:1D XWRT
+[2026年11月16日 GMT+8 18:34:44] daemon.info: ucode[4876]: wifiroam: event client_leave DC:D8:7C:5B:79:70 DC:D8:7C:5B:79:70 XWRT
+[2026年11月16日 GMT+8 18:34:44] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:47] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 18:34:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:34:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:34:49] daemon.notice: hostapd: phy0-ap2: AP-STA-DISCONNECTED da:d8:7c:20:37:6c
+[2026年11月16日 GMT+8 18:34:49] kern.info: [ 1014.190016] nss-wifi-drv 39000000.nss: peer da:d8:7c:20:37:6c: id 21 released from vdev 4
+[2026年11月16日 GMT+8 18:34:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 18:34:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 18:34:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 18:34:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 18:34:50] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.110 fc:43:45:75:32:6f
+[2026年11月16日 GMT+8 18:34:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.110 fc:43:45:75:32:6f Xiaomi-15-Pro
+[2026年11月16日 GMT+8 18:34:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:34:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:34:53] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:53] kern.info: [ 1018.251031] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 8 released from vdev 0
+[2026年11月16日 GMT+8 18:34:53] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 18:34:53] kern.info: [ 1018.260859] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 9 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月16日 GMT+8 18:34:53] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 18:34:53] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月16日 GMT+8 18:34:53] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session 94C1BC2B9CF18448
+[2026年11月16日 GMT+8 18:34:53] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 18:34:53] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:53] kern.info: [ 1018.351805] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月16日 GMT+8 18:34:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:34:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 18:34:53] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:53] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:34:53] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:54] daemon.info: ucode[4876]: wifiroam: event client_leave A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 18:34:56] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:34:59] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:35:02] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:35:05] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:35:08] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:36:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:36:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:36:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:37:29] daemon.info: ucode[4876]: wifiroam: event client_leave DA:D8:7C:5B:79:71 DA:D8:7C:5B:79:71 XWRT
+[2026年11月16日 GMT+8 18:38:09] daemon.info: ucode[4876]: wifiroam: event client_leave DA:D8:7C:20:37:6C DA:D8:7C:20:37:6C XWRT
+[2026年11月16日 GMT+8 18:38:44] daemon.info: ucode[4876]: wifiroam: event client_leave FC:43:45:75:32:6F FC:43:45:75:32:6F XWRT
+[2026年11月16日 GMT+8 18:40:39] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 18:40:39] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 18:40:39] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 18:40:39] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 18:40:39] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:40:39] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:40:41] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 18:40:41] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 18:40:41] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 18:40:41] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 18:40:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:40:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:40:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:40:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:40:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:42:54] daemon.info: ucode[4876]: wifiroam: event client_leave 10:C7:53:BF:37:5A android-e7cb1c5084633aaa XWRT
+[2026年11月16日 GMT+8 18:44:16] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:44:16] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:44:16] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:44:16] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 18:44:16] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:44:16] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 18:44:24] daemon.info: ucode[4876]: wifiroam: event client_join A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 18:44:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:45:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:45:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:49:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:49:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:49:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:49:23] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 18:49:23] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: disassociated due to inactivity
+[2026年11月16日 GMT+8 18:49:23] daemon.info: ucode[4876]: wifiroam: steer_tick failed: `same.concat` is not a function, got null instead
+[2026年11月16日 GMT+8 18:49:24] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+[2026年11月16日 GMT+8 18:49:24] kern.info: [ 1889.329023] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 9 released from vdev 0
+[2026年11月16日 GMT+8 18:49:24] daemon.info: ucode[4876]: wifiroam: event roam_move A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT → XWRT
+[2026年11月16日 GMT+8 18:49:29] daemon.info: ucode[4876]: wifiroam: event client_leave A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 18:53:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:53:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:53:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:54:14] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月16日 GMT+8 18:57:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:57:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:57:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 18:57:50] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 18:57:50] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 18:57:50] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 18:57:50] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.240 10:c7:53:bf:37:5a android-fd6b1da87ba8c724
+[2026年11月16日 GMT+8 18:57:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:57:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 18:57:54] daemon.info: ucode[4876]: wifiroam: event client_join 10:C7:53:BF:37:5A android-e7cb1c5084633aaa XWRT
+[2026年11月16日 GMT+8 19:01:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:01:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:02:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:02:13] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:02:13] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:02:13] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:02:13] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.240 10:c7:53:bf:37:5a android-fd6b1da87ba8c724
+[2026年11月16日 GMT+8 19:02:13] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 19:02:13] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 19:02:31] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:02:31] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:02:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:02:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.240 10:c7:53:bf:37:5a android-fd6b1da87ba8c724
+[2026年11月16日 GMT+8 19:02:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 19:02:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 19:02:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:02:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:03:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:03:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:03:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:03:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:03:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:03:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:04:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:04:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:04:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:04:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:04:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:04:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:05:54] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月16日 GMT+8 19:06:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:06:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:06:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:06:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:06:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:06:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:06:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:06:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:06:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:07:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:07:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:07:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:07:34] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:07:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:07:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:08:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:08:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:08:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:08:34] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:08:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:08:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:09:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:09:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:09:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:09:34] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:09:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:09:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:10:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:10:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:10:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:10:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:10:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:10:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:10:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:10:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:10:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:11:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:11:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:11:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:11:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:11:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:11:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:12:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:12:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:12:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:12:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:12:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:12:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:13:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:13:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:13:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:13:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:13:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:13:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:14:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:14:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:14:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:14:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:14:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:14:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:14:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:14:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:14:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:15:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:15:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:15:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:15:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:15:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:15:54] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月16日 GMT+8 19:15:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:16:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:16:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:16:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:16:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:16:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:16:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:17:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:17:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:17:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:17:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:17:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:17:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:18:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:18:14] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月16日 GMT+8 19:18:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:18:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:18:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:18:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:18:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:18:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:18:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:18:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:19:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:19:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:19:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:19:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:19:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:19:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:20:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:20:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:20:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:20:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:20:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:20:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:21:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:21:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:21:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:21:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:21:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:21:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:22:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:22:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:22:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:22:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:22:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:22:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:22:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:22:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:23:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:23:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:23:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:23:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:23:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: api.chcatv.hismarttv.com
+[2026年11月16日 GMT+8 19:24:03] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:24:03] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:24:04] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:24:04] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.240 10:c7:53:bf:37:5a android-fd6b1da87ba8c724
+[2026年11月16日 GMT+8 19:24:04] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 19:24:04] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 19:27:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:27:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:27:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:31:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:31:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:31:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:35:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:35:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:35:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.172 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.172 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.172 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.172 56:55:c5:46:9b:85
+[2026年11月16日 GMT+8 19:38:20] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.172 56:55:c5:46:9b:85 Redmi-Note-10-Pro
+[2026年11月16日 GMT+8 19:38:20] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 19:38:20] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 19:38:24] daemon.info: ucode[4876]: wifiroam: event client_join 56:55:C5:46:9B:85 56:55:C5:46:9B:85 XWRT
+[2026年11月16日 GMT+8 19:39:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:39:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:39:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:43:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:43:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:44:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:48:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:48:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:48:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:52:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:52:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:52:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:53:11] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:53:11] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:53:11] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:53:11] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.240 10:c7:53:bf:37:5a android-fd6b1da87ba8c724
+[2026年11月16日 GMT+8 19:53:11] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 19:53:11] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 19:53:15] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:53:15] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:53:15] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.240 10:c7:53:bf:37:5a
+[2026年11月16日 GMT+8 19:53:15] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.240 10:c7:53:bf:37:5a android-fd6b1da87ba8c724
+[2026年11月16日 GMT+8 19:53:15] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 19:53:15] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 19:56:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:56:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 19:56:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:00:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:00:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:00:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:02:24] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 20:04:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:05:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:05:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:09:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:09:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:09:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:13:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:13:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:13:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:14:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:15:04] daemon.err: hostapd: phy2-ap0: nl80211: kernel reports: key addition failed
+[2026年11月16日 GMT+8 20:15:04] kern.info: [ 7028.770873] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 10 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月16日 GMT+8 20:15:04] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 20:15:04] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=ft
+[2026年11月16日 GMT+8 20:15:04] kern.info: [ 7028.828819] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月16日 GMT+8 20:15:04] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:15:04] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:15:04] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:15:04] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 20:15:04] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 20:15:04] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 20:15:04] daemon.info: ucode[4876]: wifiroam: event roam_move A2:EA:74:20:21:E5 Xiaomi-15-Pro 一楼子路由 → 三楼主路由
+[2026年11月16日 GMT+8 20:15:09] daemon.info: ucode[4876]: wifiroam: event client_join A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 20:16:13] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:16:13] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:16:13] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:16:13] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 20:16:13] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 20:16:13] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 20:17:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:17:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:18:25] daemon.info: ucode[4876]: wifiroam: event client_leave 10:FF:E0:E5:11:9F DESKTOP-I6EJMTF XWRT
+[2026年11月16日 GMT+8 20:18:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:19:35] daemon.info: ucode[4876]: wifiroam: event client_join 10:FF:E0:E5:11:9F DESKTOP-I6EJMTF XWRT
+[2026年11月16日 GMT+8 20:21:34] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 20:21:34] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: disassociated due to inactivity
+[2026年11月16日 GMT+8 20:21:35] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: deauthenticated due to inactivity (timer DEAUTH/REMOVE)
+[2026年11月16日 GMT+8 20:21:35] kern.info: [ 7419.896011] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 10 released from vdev 0
+[2026年11月16日 GMT+8 20:21:35] daemon.info: ucode[4876]: wifiroam: event roam_move A2:EA:74:20:21:E5 Xiaomi-15-Pro 三楼主路由 → 一楼子路由
+[2026年11月16日 GMT+8 20:21:39] daemon.info: ucode[4876]: wifiroam: event client_leave A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 20:21:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:21:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:22:34] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 20:23:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:25:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:25:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:26:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:28:44] daemon.info: ucode[4876]: wifiroam: event client_leave A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 20:29:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:30:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:30:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:32:34] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 20:33:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:33:54] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 20:34:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:34:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:35:02] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.181 64:31:72:42:4a:d2
+[2026年11月16日 GMT+8 20:35:02] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.181 64:31:72:42:4a:d2
+[2026年11月16日 GMT+8 20:35:02] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 20:35:02] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 20:37:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:38:34] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:38:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:42:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:42:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:42:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:45:54] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 20:46:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:46:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:47:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:50:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:51:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:51:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:54:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:55:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:55:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:58:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:59:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 20:59:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:00:34] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 21:03:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:03:04] daemon.info: ucode[4876]: wifiroam: event client_leave 10:C7:53:BF:37:5A 一楼电视 XWRT
+[2026年11月16日 GMT+8 21:03:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:03:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:07:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:08:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:08:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:11:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:12:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:12:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:15:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:16:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:16:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:19:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:20:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:20:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:24:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:24:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:24:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:26:14] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 21:27:14] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 21:28:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:29:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:29:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:32:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:33:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:33:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:36:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:37:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:37:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:40:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:41:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:41:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:45:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:45:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:46:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:49:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:50:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:50:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:53:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:54:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:54:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:55:44] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 21:55:46] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 21:55:46] kern.info: [13070.718909] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 11 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月16日 GMT+8 21:55:46] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 21:55:46] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月16日 GMT+8 21:55:46] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session 081C420239F296E7
+[2026年11月16日 GMT+8 21:55:46] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 21:55:46] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 21:55:46] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 21:55:46] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 21:55:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 21:55:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 21:55:46] kern.info: [13070.848746] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月16日 GMT+8 21:55:49] daemon.info: ucode[4876]: wifiroam: event client_join A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 21:57:34] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 21:57:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:58:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 21:58:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:01:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:02:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:02:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:06:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:06:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:07:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:10:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:10:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:11:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:11:38] kern.info: [14022.574245] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 22:11:38] kern.info: [14022.574303] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 22:11:41] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:11:41] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:11:41] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 22:11:41] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:11:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:11:41] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:11:42] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:11:42] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:11:42] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 22:11:42] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:11:42] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:11:42] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:12:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:12:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:12:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:12:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:12:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:12:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:13:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:14:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:14:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:15:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:18:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:19:04] kern.info: [14469.286225] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 22:19:04] kern.info: [14469.286277] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:19:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:19:06] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:19:06] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:19:07] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:19:07] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:19:07] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 22:19:07] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:19:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:19:07] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:19:08] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:19:08] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:19:08] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 22:19:08] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:19:08] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:19:08] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:19:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:19:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:23:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:23:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:23:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:24:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:27:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:27:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:28:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:28:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:28:24] kern.info: [15029.276476] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 22:28:24] kern.info: [15029.276520] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:28:25] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:28:25] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:28:25] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:28:27] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:28:27] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:28:27] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 22:28:27] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:28:27] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:28:27] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:28:28] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:28:28] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:28:28] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 22:28:28] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:28:28] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:28:28] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:31:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:31:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:32:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:35:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:36:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:36:39] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:39:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:40:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:40:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:40:53] kern.info: [15778.058504] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 22:40:53] kern.info: [15778.058556] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:40:53] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:40:53] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:40:58] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:40:58] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:40:58] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 22:40:58] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:40:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:40:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:40:59] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:40:59] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:40:59] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 22:40:59] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:40:59] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:40:59] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:41:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:42:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:42:42] daemon.warn: dnsmasq[3]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:43:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:44:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:44:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:44:46] kern.info: [16011.013082] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 22:44:46] kern.info: [16011.013131] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:44:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:44:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 22:44:47] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 22:44:49] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:44:49] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:44:49] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 22:44:49] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:44:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:44:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:44:50] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 22:44:50] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 22:44:50] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 22:44:50] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 22:44:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:44:50] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 22:45:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:46:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:47:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:48:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 22:48:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:48:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 22:48:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 22:48:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 22:48:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:49:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:52:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:52:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:53:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:56:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:57:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:57:43] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 22:58:28] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 22:58:28] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 23:00:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:01:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:01:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:05:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:05:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:05:55] kern.info: [17279.468079] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 23:05:55] kern.info: [17279.468125] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 23:05:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 23:05:58] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月16日 GMT+8 23:05:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月16日 GMT+8 23:05:59] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 23:05:59] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 23:05:59] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 23:05:59] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 23:05:59] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 23:05:59] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 23:06:00] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 23:06:00] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月16日 GMT+8 23:06:00] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 23:06:00] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 23:06:00] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 23:06:00] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月16日 GMT+8 23:06:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:06:54] daemon.info: ucode[4876]: wifiroam: event client_leave 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 23:09:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:09:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:09:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 23:10:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:13:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:13:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月16日 GMT+8 23:13:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月16日 GMT+8 23:13:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:13:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:13:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 23:13:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:14:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:16:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:16:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:16:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:16:24] daemon.info: ucode[4876]: wifiroam: event client_join 64:31:72:42:4A:D2 监控 XWRT
+[2026年11月16日 GMT+8 23:17:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:18:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:18:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:21:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:21:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:21:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:21:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:22:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:22:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:26:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:26:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:27:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:28:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:28:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 23:28:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:28:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月16日 GMT+8 23:30:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:30:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:31:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:33:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月16日 GMT+8 23:33:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 23:33:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:34:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:34:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:35:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:38:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:38:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 23:38:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:38:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 23:39:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:39:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:42:56] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:43:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:43:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:43:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:43:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:43:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:44:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:47:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:47:31] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:48:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:48:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:48:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:48:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月16日 GMT+8 23:51:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:51:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:52:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:55:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:55:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:56:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 23:57:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 23:57:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 23:57:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lf.bytelb.net
+[2026年11月16日 GMT+8 23:59:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:00:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:00:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:02:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月17日 GMT+8 00:02:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月17日 GMT+8 00:03:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:04:21] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:05:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:07:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月17日 GMT+8 00:07:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月17日 GMT+8 00:08:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:08:34] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:09:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:12:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.lq.bytelb.net
+[2026年11月17日 GMT+8 00:12:06] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月17日 GMT+8 00:12:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:12:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月17日 GMT+8 00:12:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月17日 GMT+8 00:12:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:13:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:16:14] daemon.info: ucode[4876]: wifiroam: event client_leave 56:55:C5:46:9B:85 Redmi-Note-10-Pro XWRT
+[2026年11月17日 GMT+8 00:16:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:16:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:17:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:20:45] daemon.info: ucode[4876]: wifiroam: event client_leave 10:FF:E0:E5:11:9F DESKTOP-I6EJMTF XWRT
+[2026年11月17日 GMT+8 00:20:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:21:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:21:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:25:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:25:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:26:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:29:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:29:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:30:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:32:35] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月17日 GMT+8 00:32:35] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月17日 GMT+8 00:32:35] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月17日 GMT+8 00:32:35] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月17日 GMT+8 00:33:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:33:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:34:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:34:49] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月17日 GMT+8 00:34:49] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月17日 GMT+8 00:34:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 00:34:49] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 00:37:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:38:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:38:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:41:51] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:42:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:42:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:46:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:46:27] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:47:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:50:16] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:50:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:51:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:54:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:54:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:55:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:58:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:59:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 00:59:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:02:52] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:03:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:03:58] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:07:04] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:07:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:08:11] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:11:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:11:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:12:23] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:15:29] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:15:55] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:16:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:19:41] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:20:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:20:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:23:53] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:24:20] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:25:00] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:28:05] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:28:32] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:29:12] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:32:18] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:32:44] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:33:24] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:36:30] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:36:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:37:36] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:40:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:41:10] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:41:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:44:54] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:45:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:46:01] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:48:12] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月17日 GMT+8 01:48:12] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月17日 GMT+8 01:48:12] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月17日 GMT+8 01:48:12] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月17日 GMT+8 01:48:12] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 01:48:12] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 01:49:07] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:49:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:50:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:53:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:53:47] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:54:26] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:57:33] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:57:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 01:58:38] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:01:45] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:02:13] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:02:46] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED a2:ea:74:20:21:e5
+[2026年11月17日 GMT+8 02:02:46] kern.info: [27890.919190] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 11 released from vdev 0
+[2026年11月17日 GMT+8 02:02:50] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:05:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:06:25] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:07:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:07:49] daemon.info: ucode[4876]: wifiroam: event client_leave A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月17日 GMT+8 02:10:09] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:10:37] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:11:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:14:22] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:14:49] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:15:28] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:18:35] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:19:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:19:40] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:20:08] kern.info: [28932.381003] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月17日 GMT+8 02:20:08] kern.info: [28932.381056] br-lan: topology change detected, sending tcn bpdu
+[2026年11月17日 GMT+8 02:20:40] kern.info: [28965.010317] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月17日 GMT+8 02:20:40] kern.info: [28965.010371] br-lan: topology change detected, sending tcn bpdu
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月17日 GMT+8 02:20:43] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月17日 GMT+8 02:20:43] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月17日 GMT+8 02:20:43] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月17日 GMT+8 02:20:45] daemon.info: ucode[4876]: wifiroam: event client_join 10:FF:E0:E5:11:9F DESKTOP-I6EJMTF XWRT
+[2026年11月17日 GMT+8 02:20:46] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月17日 GMT+8 02:20:46] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月17日 GMT+8 02:20:46] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月17日 GMT+8 02:20:46] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月17日 GMT+8 02:20:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 02:20:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 02:21:27] authpriv.info: dispatcher.uc: luci: accepted login on / for root from 192.168.10.194
+[2026年11月17日 GMT+8 02:22:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:22:50] daemon.notice: netifd: Network device 'lan1' link is down
+[2026年11月17日 GMT+8 02:22:50] kern.info: [29094.757806] br-lan: port 1(lan1) entered disabled state
+[2026年11月17日 GMT+8 02:22:50] kern.info: [29094.777132] qca-ppe 3a000000.ppe lan1: Link is Down
+[2026年11月17日 GMT+8 02:23:01] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: authenticated
+[2026年11月17日 GMT+8 02:23:01] kern.info: [29105.574681] nss-wifi-drv 39000000.nss: peer da:d8:7c:5b:79:71: id 22 ast_idx 575 ast_hash 0x23f vdev 4
+[2026年11月17日 GMT+8 02:23:01] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 IEEE 802.11: associated (aid 1)
+[2026年11月17日 GMT+8 02:23:01] daemon.notice: hostapd: phy0-ap2: AP-STA-CONNECTED da:d8:7c:5b:79:71 auth_alg=open
+[2026年11月17日 GMT+8 02:23:01] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 RADIUS: starting accounting session 5EB107DAF9074966
+[2026年11月17日 GMT+8 02:23:01] daemon.info: hostapd: phy0-ap2: STA da:d8:7c:5b:79:71 WPA: pairwise key handshake completed (RSN)
+[2026年11月17日 GMT+8 02:23:01] daemon.notice: hostapd: phy0-ap2: EAPOL-4WAY-HS-COMPLETED da:d8:7c:5b:79:71
+[2026年11月17日 GMT+8 02:23:01] kern.info: [29105.627191] nss-wifi-drv 39000000.nss: interface 42 protects frames with 6
+[2026年11月17日 GMT+8 02:23:01] kern.info: [29106.214903] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 12 ast_idx 397 ast_hash 0x18d vdev 0
+[2026年11月17日 GMT+8 02:23:01] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: authenticated
+[2026年11月17日 GMT+8 02:23:01] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 IEEE 802.11: associated (aid 1)
+[2026年11月17日 GMT+8 02:23:02] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED ac:36:1b:f3:15:d0 auth_alg=open
+[2026年11月17日 GMT+8 02:23:02] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 RADIUS: starting accounting session 43780C357B0F8D35
+[2026年11月17日 GMT+8 02:23:02] daemon.info: hostapd: phy2-ap0: STA ac:36:1b:f3:15:d0 WPA: pairwise key handshake completed (RSN)
+[2026年11月17日 GMT+8 02:23:02] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED ac:36:1b:f3:15:d0
+[2026年11月17日 GMT+8 02:23:02] kern.info: [29106.291487] nss-wifi-drv 39000000.nss: interface 39 protects frames with 6
+[2026年11月17日 GMT+8 02:23:09] daemon.info: ucode[4876]: wifiroam: event client_join DA:D8:7C:5B:79:71 DA:D8:7C:5B:79:71 XWRT
+[2026年11月17日 GMT+8 02:23:09] daemon.info: ucode[4876]: wifiroam: event client_join AC:36:1B:F3:15:D0 AC:36:1B:F3:15:D0 XWRT
+[2026年11月17日 GMT+8 02:23:09] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) ac:36:1b:f3:15:d0
+[2026年11月17日 GMT+8 02:23:09] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0
+[2026年11月17日 GMT+8 02:23:09] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月17日 GMT+8 02:23:09] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 4 names
+[2026年11月17日 GMT+8 02:23:09] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 8 names
+[2026年11月17日 GMT+8 02:23:09] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月17日 GMT+8 02:23:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 02:23:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 02:23:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0
+[2026年11月17日 GMT+8 02:23:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.149 ac:36:1b:f3:15:d0 DESKTOP-I6EJMTF
+[2026年11月17日 GMT+8 02:23:10] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月17日 GMT+8 02:23:10] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月17日 GMT+8 02:23:15] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月17日 GMT+8 02:23:19] daemon.info: ucode[4876]: wifiroam: event ap_offline DC:D8:7C:5B:79:70 - XWRT
+[2026年11月17日 GMT+8 02:23:19] daemon.info: ucode[4876]: wifiroam: event client_join 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月17日 GMT+8 02:23:19] daemon.info: ucode[4876]: wifiroam: event roam_move 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F 二楼子路由 → 三楼主路由
+[2026年11月17日 GMT+8 02:24:32] kern.info: [29196.678446] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月17日 GMT+8 02:24:32] kern.info: [29196.678515] br-lan: port 1(lan1) entered blocking state
+[2026年11月17日 GMT+8 02:24:32] kern.info: [29196.684934] br-lan: port 1(lan1) entered listening state
+[2026年11月17日 GMT+8 02:24:32] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月17日 GMT+8 02:24:40] kern.info: [29205.085194] br-lan: port 1(lan1) entered learning state
+[2026年11月17日 GMT+8 02:24:49] kern.info: [29213.395061] br-lan: port 1(lan1) entered forwarding state
+[2026年11月17日 GMT+8 02:24:49] kern.info: [29213.395110] br-lan: topology change detected, sending tcn bpdu
+[2026年11月17日 GMT+8 02:24:49] daemon.notice: hostapd: phy2-ap0: AP-STA-DISCONNECTED ac:36:1b:f3:15:d0
+[2026年11月17日 GMT+8 02:24:49] kern.info: [29213.915313] nss-wifi-drv 39000000.nss: peer ac:36:1b:f3:15:d0: id 12 released from vdev 0
+[2026年11月17日 GMT+8 02:24:50] kern.info: [29215.001364] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月17日 GMT+8 02:24:50] kern.info: [29215.001419] br-lan: topology change detected, sending tcn bpdu
+[2026年11月17日 GMT+8 02:24:52] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月17日 GMT+8 02:24:52] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月17日 GMT+8 02:24:52] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月17日 GMT+8 02:24:52] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月17日 GMT+8 02:24:52] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 02:24:52] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 172.16.10.1
+[2026年11月17日 GMT+8 02:24:55] daemon.info: ucode[4876]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
