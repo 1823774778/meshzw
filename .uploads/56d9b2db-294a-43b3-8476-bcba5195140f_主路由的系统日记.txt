@@ -1,0 +1,1000 @@
+[2026年11月15日 GMT+8 19:07:05] authpriv.info: dropbear[4587]: Not backgrounding
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: netifd: radio1 (4570): wifi-scripts: Starting
+[2026年11月15日 GMT+8 19:07:05] kern.info: [   33.300948] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月15日 GMT+8 19:07:05] kern.info: [   33.301041] br-lan: port 1(lan1) entered blocking state
+[2026年11月15日 GMT+8 19:07:05] kern.info: [   33.307435] br-lan: port 1(lan1) entered forwarding state
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: hostapd: Set new config for phy phy1:
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy1
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy1
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: hostapd: Restart interface for phy phy1
+[2026年11月15日 GMT+8 19:07:05] daemon.info: procd: - init complete -
+[2026年11月15日 GMT+8 19:07:05] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio1 (4570): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio1 (4570): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio1 (4570): wifi-scripts: Setting antenna for 'phy1' txantenna: 4294967295, rxantenna: 4294967295
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio1 (4570): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月15日 GMT+8 19:07:06] daemon.info: urandom_seed[4832]: Seed saved (/etc/urandom.seed)
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio2 (5019): wifi-scripts: Starting
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   33.763469] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   33.763517] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月15日 GMT+8 19:07:06] daemon.info: ucode[4935]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月15日 GMT+8 19:07:06] daemon.info: ucode[4935]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月15日 GMT+8 19:07:06] daemon.info: ucode[4935]: wifiroam: started role=unconfigured
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy0-ap0: interface state HT_SCAN->ENABLED
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy0-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Set new config for phy phy2:
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy2
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Configuration file: <inline> (phy phy1) --> new PHY
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.042062] nss-wifi-drv 39000000.nss: vdev 1 on radio 1 is interface 32, encap 2 decap 2
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.049939] nss-wifi-drv 39000000.nss: peer dc:d8:7c:54:4a:1f: id 3 ast_idx 47 ast_hash 0x2f vdev 1
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.051692] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.058144] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.063678] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy1-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.069518] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): Failed to send SOLICIT message to ff02::1:2 (Address not available)
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy2
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: Network device 'phy1-ap0' link is up
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.161599] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.161649] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy1-ap0: interface state COUNTRY_UPDATE->ENABLED
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy1-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Set new config for phy phy2: /var/run/hostapd-phy2.conf
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Restart interface for phy phy2
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Configuration file: <inline> (phy phy2) --> new PHY
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio2 (5019): wifi-scripts: Setting country code to CN
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio2 (5019): wifi-scripts: Configuring 'phy2' distance: 0
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio2 (5019): wifi-scripts: Setting antenna for 'phy2' txantenna: 4294967295, rxantenna: 4294967295
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: radio2 (5019): wifi-scripts: Preparing interface: phy2-ap0
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.343748] nss-wifi-drv 39000000.nss: vdev 0 on radio 0 is interface 33, encap 2 decap 2
+[2026年11月15日 GMT+8 19:07:06] user.notice: nss-wifi: failed to apply firewall bridge scope
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.370391] nss-wifi-drv 39000000.nss: peer dc:d8:7c:54:4a:20: id 1 ast_idx 389 ast_hash 0x185 vdev 0
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.372615] br-lan: port 7(phy2-ap0) entered blocking state
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.378643] br-lan: port 7(phy2-ap0) entered disabled state
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.384022] ath11k_pci 0000:01:00.0 phy2-ap0: entered allmulticast mode
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: netifd: wan6 (4464): wan: error connecting LLA socket
+[2026年11月15日 GMT+8 19:07:06] kern.info: [   34.389841] ath11k_pci 0000:01:00.0 phy2-ap0: entered promiscuous mode
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy2-ap0: interface state UNINITIALIZED->COUNTRY_UPDATE
+[2026年11月15日 GMT+8 19:07:06] daemon.notice: hostapd: phy2-ap0: interface state COUNTRY_UPDATE->HT_SCAN
+[2026年11月15日 GMT+8 19:07:07] daemon.notice: hostapd: phy2-ap0: interface state HT_SCAN->DFS
+[2026年11月15日 GMT+8 19:07:07] daemon.notice: hostapd: phy2-ap0: DFS-CAC-START freq=5180 chan=36 sec_chan=1, width=2, seg0=50, seg1=0, cac_time=60s
+[2026年11月15日 GMT+8 19:07:08] daemon.notice: netifd: wan (4397): udhcpc: broadcasting discover
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq: jail (2241) exited with exit: 0
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 192.168.10.100 -- 192.168.10.249, lease time 12h
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 19:07:09] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:07:09] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:07:11] daemon.notice: netifd: wan (4397): udhcpc: broadcasting discover
+[2026年11月15日 GMT+8 19:07:13] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:6f
+[2026年11月15日 GMT+8 19:07:13] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.111 dc:d8:7c:5b:79:6f
+[2026年11月15日 GMT+8 19:07:13] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:07:13] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:07:13] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:07:13] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:07:13] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:13] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6a
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.173 dc:d8:7c:20:37:6a
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:6f
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.111 dc:d8:7c:5b:79:6f
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.111 dc:d8:7c:5b:79:6f
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.111 dc:d8:7c:5b:79:6f XWRT
+[2026年11月15日 GMT+8 19:07:16] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.111 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:16] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.111 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6a
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.173 dc:d8:7c:20:37:6a
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.111 dc:d8:7c:5b:79:6f
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.111 dc:d8:7c:5b:79:6f XWRT
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.173 dc:d8:7c:20:37:6a
+[2026年11月15日 GMT+8 19:07:16] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.173 dc:d8:7c:20:37:6a XWRT
+[2026年11月15日 GMT+8 19:07:16] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.173 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:16] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.173 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:16] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:17] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:19] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:19] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:19] daemon.info: dnsmasq-dhcp[1]: DHCPRELEASE(br-lan) 192.168.10.173 dc:d8:7c:20:37:6a
+[2026年11月15日 GMT+8 19:07:21] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:23] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 19:07:23] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 19:07:23] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:23] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:25] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:25] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 19:07:27] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:27] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:27] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:27] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:27] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:29] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:29] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f LiteMod11
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f
+[2026年11月15日 GMT+8 19:07:31] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.194 10:ff:e0:e5:11:9f LiteMod11
+[2026年11月15日 GMT+8 19:07:31] daemon.info: ucode[4935]: wifiroam: discovery: DC:D8:7C:5B:79:70 at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:31] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:07:35] daemon.info: ucode[4935]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.1 name=XWRT
+[2026年11月15日 GMT+8 19:07:36] daemon.info: ucode[4935]: wifiroam: discovery: DC:D8:7C:5B:79:70 at 192.168.10.112 name=XWRT
+[2026年11月15日 GMT+8 19:07:40] daemon.info: ucode[4935]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.174 name=XWRT
+[2026年11月15日 GMT+8 19:08:02] authpriv.info: dispatcher.uc: luci: accepted login on /admin/system/xwrt-ota for root from 192.168.10.194
+[2026年11月15日 GMT+8 19:08:07] daemon.notice: hostapd: phy2-ap0: DFS-CAC-COMPLETED success=1 freq=5180 ht_enabled=0 chan_offset=0 chan_width=5 cf1=5250 cf2=0 radar_detected=0
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5180 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5200 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5220 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5240 MHz
+[2026年11月15日 GMT+8 19:08:07] kern.info: [   95.397193] br-lan: port 7(phy2-ap0) entered blocking state
+[2026年11月15日 GMT+8 19:08:07] kern.info: [   95.397244] br-lan: port 7(phy2-ap0) entered forwarding state
+[2026年11月15日 GMT+8 19:08:07] daemon.notice: netifd: Network device 'phy2-ap0' link is up
+[2026年11月15日 GMT+8 19:08:07] daemon.notice: hostapd: phy2-ap0: interface state DFS->ENABLED
+[2026年11月15日 GMT+8 19:08:07] daemon.notice: hostapd: phy2-ap0: AP-ENABLED
+[2026年11月15日 GMT+8 19:08:07] daemon.notice: hostapd: phy2-ap0: DFS-CAC-COMPLETED success=1 freq=5180 ht_enabled=0 chan_offset=0 chan_width=5 cf1=5250 cf2=0 radar_detected=0
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5180 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5200 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5220 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5240 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.notice: hostapd: phy0-ap0: DFS-CAC-COMPLETED success=1 freq=5180 ht_enabled=0 chan_offset=0 chan_width=5 cf1=5250 cf2=0 radar_detected=0
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5180 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5200 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5220 MHz
+[2026年11月15日 GMT+8 19:08:07] daemon.warn: hostapd: Can't set DFS state for freq 5240 MHz
+[2026年11月15日 GMT+8 19:08:18] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:08:18] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:08:18] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:08:18] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:08:18] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:18] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan6' is now down
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan6' has link connectivity loss
+[2026年11月15日 GMT+8 19:08:19] daemon.info: router-tool[6207]: Configuration mode: main; LAN protocol: static; LAN IPv4: "192.168.10.1/24"
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: wan (4397): udhcpc: received SIGTERM
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: wan (4397): udhcpc: entering released state
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: wan (4397): Command failed: ubus call network.interface notify_proto { "action": 0, "link-up": false, "keep": false, "interface": "wan" } (Permission denied)
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' is now down
+[2026年11月15日 GMT+8 19:08:19] kern.info: [  106.957584] qca-ppe 3a000000.ppe wan: Link is Down
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' is disabled
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' has link connectivity loss
+[2026年11月15日 GMT+8 19:08:19] kern.info: [  106.969254] qca-ppe 3a000000.ppe wan: configuring for phy/sgmii link mode
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' is enabled
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' has link connectivity
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' is setting up now
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Network device 'wan' link is down
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' has link connectivity loss
+[2026年11月15日 GMT+8 19:08:19] daemon.notice: netifd: Interface 'wan' is now down
+[2026年11月15日 GMT+8 19:08:20] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:08:20] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:08:20] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:08:20] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:08:20] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:08:20] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:20] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:22] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月15日 GMT+8 19:08:22] daemon.notice: netifd: Interface 'wan' has link connectivity
+[2026年11月15日 GMT+8 19:08:22] daemon.notice: netifd: Interface 'wan' is setting up now
+[2026年11月15日 GMT+8 19:08:22] kern.info: [  110.251493] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control off
+[2026年11月15日 GMT+8 19:08:22] daemon.info: pppd[6878]: PPPoE plugin from pppd 2.5.5
+[2026年11月15日 GMT+8 19:08:22] daemon.notice: pppd[6878]: pppd 2.5.5 started by ppp, uid 454
+[2026年11月15日 GMT+8 19:08:28] daemon.info: pppd[6878]: PPP session is 44995
+[2026年11月15日 GMT+8 19:08:28] daemon.warn: pppd[6878]: Connected to 08:19:A6:3E:C4:2F via interface wan
+[2026年11月15日 GMT+8 19:08:28] daemon.info: pppd[6878]: Using interface pppoe-wan
+[2026年11月15日 GMT+8 19:08:28] daemon.notice: pppd[6878]: Connect: pppoe-wan <--> wan
+[2026年11月15日 GMT+8 19:08:31] daemon.info: pppd[6878]: syncppp not active
+[2026年11月15日 GMT+8 19:08:31] daemon.info: pppd[6878]: CHAP authentication succeeded: Authentication success,Welcome!
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: CHAP authentication succeeded
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: peer from calling number 08:19:A6:3E:C4:2F authorized
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: local  LL address fe80::c8ae:023e:5aac:a95a
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: remote LL address fe80::0a19:a6ff:fe3e:c42f
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: netifd: Network device 'pppoe-wan' link is up
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: netifd: Network alias 'pppoe-wan' link is up
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: netifd: Interface 'wan6' has link connectivity
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: netifd: Interface 'wan6' is setting up now
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: netifd: Interface 'wan' is now up
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: local  IP address 100.78.40.70
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: remote IP address 100.78.0.1
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: primary   DNS address 221.7.128.68
+[2026年11月15日 GMT+8 19:08:31] daemon.notice: pppd[6878]: secondary DNS address 221.7.136.68
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using nameserver 221.7.128.68#53
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using nameserver 221.7.136.68#53
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 19:08:31] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 19:08:32] user.notice: firewall: Reloading firewall due to ifup of wan (pppoe-wan)
+[2026年11月15日 GMT+8 19:08:32] user.notice: firewall: Reloading firewall due to ifupdate of wan (pppoe-wan)
+[2026年11月15日 GMT+8 19:08:32] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:08:33] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:33] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq: jail (5358) exited with exit: 0
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 192.168.10.100 -- 192.168.10.249, lease time 12h
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using nameserver 221.7.128.68#53
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using nameserver 221.7.136.68#53
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:08:33] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:08:33] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:33] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:46] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月15日 GMT+8 19:08:46] user.notice: firewall: Reloading firewall due to ifup of wan6 (pppoe-wan)
+[2026年11月15日 GMT+8 19:08:47] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:08:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq: jail (7563) exited with exit: 0
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 192.168.10.100 -- 192.168.10.249, lease time 12h
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using nameserver 221.7.128.68#53
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using nameserver 221.7.136.68#53
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月15日 GMT+8 19:08:47] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月15日 GMT+8 19:08:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:47] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月15日 GMT+8 19:08:48] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 13:58:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 13:58:07] daemon.notice: netifd: Interface 'wan6' has lost the connection
+[2026年11月16日 GMT+8 13:58:07] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using nameserver 221.7.128.68#53
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using nameserver 221.7.136.68#53
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using nameserver 2408:8001:4000:9000:221:7:128:68#53
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using nameserver 2408:8001:4010:9000:221:7:136:68#53
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月16日 GMT+8 13:58:07] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月16日 GMT+8 13:58:07] user.notice: firewall: Reloading firewall due to ifup of wan6 (pppoe-wan)
+[2026年11月16日 GMT+8 13:58:08] daemon.warn: odhcpd[3430]: rfc9096: br-lan: piofile updated
+[2026年11月16日 GMT+8 13:58:08] kern.warn: [  147.209819] qca-edma 3ab00000.edma: tx error 0x90000017
+[2026年11月16日 GMT+8 13:58:09] cron.err: crond[3570]: time disparity of 1130 minutes detected
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 2 names
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 13:58:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 13:58:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 4 names
+[2026年11月16日 GMT+8 13:58:09] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 13:58:11] user.notice: nss-wifi: bring-up survived; NSS data plane ready
+[2026年11月16日 GMT+8 13:58:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 13:58:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 13:58:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 13:58:42] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 13:58:57] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 13:59:03] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 13:59:23] daemon.info: ucode[9694]: wifiroam: self: DC:D8:7C:54:4A:1D 192.168.10.1 XWRT bcast=192.168.10.255
+[2026年11月16日 GMT+8 13:59:23] daemon.info: ucode[9694]: wifiroam: discovery udp 50607 bcast=192.168.10.255
+[2026年11月16日 GMT+8 13:59:23] daemon.info: ucode[9694]: wifiroam: started role=unconfigured
+[2026年11月16日 GMT+8 13:59:23] daemon.info: ucode[9694]: wifiroam: discovery: DC:D8:7C:5B:79:70 at 192.168.10.112 name=XWRT
+[2026年11月16日 GMT+8 13:59:24] daemon.info: ucode[9694]: wifiroam: discovery: DC:D8:7C:20:37:6B at 192.168.10.174 name=XWRT
+[2026年11月16日 GMT+8 14:00:39] daemon.info: ucode[9694]: wifiroam: generated new network token
+[2026年11月16日 GMT+8 14:00:39] daemon.info: ucode[9694]: wifiroam: event roam_apply  - ver=1 ssids=3
+[2026年11月16日 GMT+8 14:00:39] daemon.info: ucode[9694]: wifiroam: roam defaults enabled for 3 SSID(s)
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:00:40] daemon.info: ucode[9694]: wifiroam: wifi reload rc=0
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: netifd: radio0 (11527): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy0
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: hostapd: bss phy0-ap0 changed in wpa_key_mgmt, bss_transition, rrm_neighbor_report, rrm_beacon_report, mobility_domain, ft_psk_generate_local, ft_over_ds, reassociation_deadline, ft_iface, replacing it
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: hostapd: Reload config for bss 'phy0-ap0' on phy 'phy0'
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月16日 GMT+8 14:00:40] kern.info: [  299.803979] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:00:40] kern.info: [  299.919896] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:00:40] kern.info: [  299.919950] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:00:40] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio0 (11527): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio0 (11527): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio0 (11527): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio1 (11534): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy1
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: bss phy1-ap0 changed in wpa_key_mgmt, bss_transition, rrm_neighbor_report, rrm_beacon_report, mobility_domain, ft_psk_generate_local, ft_over_ds, reassociation_deadline, ft_iface, replacing it
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Reload config for bss 'phy1-ap0' on phy 'phy1'
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio1 (11534): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio1 (11534): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio1 (11534): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio2 (11542): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy2
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Set new config for phy phy2: /var/run/hostapd-phy2.conf
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: bss phy2-ap0 changed in wpa_key_mgmt, bss_transition, rrm_neighbor_report, rrm_beacon_report, mobility_domain, ft_psk_generate_local, ft_over_ds, reassociation_deadline, ft_iface, replacing it
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Reload config for bss 'phy2-ap0' on phy 'phy2'
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: hostapd: Reloaded settings for phy phy2
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio2 (11542): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio2 (11542): wifi-scripts: Configuring 'phy2' distance: 0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: netifd: radio2 (11542): wifi-scripts: Preparing interface: phy2-ap0
+[2026年11月16日 GMT+8 14:00:41] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月16日 GMT+8 14:00:46] daemon.info: ucode[9694]: wifiroam: event paired DC:D8:7C:5B:79:70 - 192.168.10.112
+[2026年11月16日 GMT+8 14:00:46] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 14:00:47] daemon.info: ucode[9694]: wifiroam: event paired DC:D8:7C:20:37:6B - 192.168.10.174
+[2026年11月16日 GMT+8 14:00:49] daemon.info: ucode[9694]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月16日 GMT+8 14:00:49] daemon.info: ucode[9694]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月16日 GMT+8 14:01:02] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 14:01:08] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: radio0 (13323): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy0
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: bss phy0-ap0 changed in ssid2, wpa_passphrase, replacing it
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Reload config for bss 'phy0-ap0' on phy 'phy0'
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月16日 GMT+8 14:01:43] kern.info: [  362.275568] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:01:43] kern.info: [  362.389239] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:01:43] kern.info: [  362.389295] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月16日 GMT+8 14:01:43] user.notice: nss-wifi: failed to apply firewall bridge scope
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: radio0 (13323): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: radio0 (13323): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: radio0 (13323): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: netifd: radio1 (13343): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy1
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: bss phy1-ap0 changed in ssid2, wpa_passphrase, replacing it
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Reload config for bss 'phy1-ap0' on phy 'phy1'
+[2026年11月16日 GMT+8 14:01:43] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio1 (13343): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio1 (13343): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio1 (13343): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio2 (13358): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy2
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: hostapd: Set new config for phy phy2: /var/run/hostapd-phy2.conf
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: hostapd: bss phy2-ap0 changed in ssid2, wpa_passphrase, replacing it
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: hostapd: Reload config for bss 'phy2-ap0' on phy 'phy2'
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: Network device 'phy2-ap0' link is down
+[2026年11月16日 GMT+8 14:01:44] kern.info: [  363.281655] br-lan: port 7(phy2-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: Network device 'phy2-ap0' link is up
+[2026年11月16日 GMT+8 14:01:44] kern.info: [  363.335348] br-lan: port 7(phy2-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:01:44] kern.info: [  363.335397] br-lan: port 7(phy2-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: hostapd: Reloaded settings for phy phy2
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio2 (13358): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio2 (13358): wifi-scripts: Configuring 'phy2' distance: 0
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: netifd: radio2 (13358): wifi-scripts: Preparing interface: phy2-ap0
+[2026年11月16日 GMT+8 14:01:44] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月16日 GMT+8 14:01:55] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:55] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:55] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:55] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.137 e8:4a:54:2c:34:69 xiaomi-airc-h09r00_mibt3469
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.137 e8:4a:54:2c:34:69 xiaomi-airc-h09r00_mibt3469
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.137 e8:4a:54:2c:34:69
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.137 e8:4a:54:2c:34:69 xiaomi-airc-h09r00_mibt3469
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e
+[2026年11月16日 GMT+8 14:01:58] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.207 cc:4d:75:34:6b:9e xiaomi-airc-h09h00_mibt6B9E
+[2026年11月16日 GMT+8 14:01:58] daemon.info: ucode[9694]: wifiroam: event roam_apply  - ver=2 ssids=3
+[2026年11月16日 GMT+8 14:01:59] daemon.info: ucode[9694]: wifiroam: event client_join E8:4A:54:2C:34:69 E8:4A:54:2C:34:69 XWRT
+[2026年11月16日 GMT+8 14:01:59] daemon.info: ucode[9694]: wifiroam: event client_join CC:4D:75:34:6B:9E CC:4D:75:34:6B:9E XWRT
+[2026年11月16日 GMT+8 14:01:59] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:01:59] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:01:59] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:01:59] daemon.info: ucode[9694]: wifiroam: wifi reload rc=0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio0 (13498): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: bss phy0-ap0 changed in mobility_domain, replacing it
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Reload config for bss 'phy0-ap0' on phy 'phy0'
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:02:00] kern.info: [  379.117981] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月16日 GMT+8 14:02:00] kern.info: [  379.198854] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:00] kern.info: [  379.198906] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio0 (13498): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio0 (13498): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio0 (13498): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio1 (13507): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy1
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: bss phy1-ap0 changed in mobility_domain, replacing it
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Reload config for bss 'phy1-ap0' on phy 'phy1'
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio1 (13507): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio1 (13507): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio1 (13507): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: netifd: radio2 (13524): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy2
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Set new config for phy phy2: /var/run/hostapd-phy2.conf
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: bss phy2-ap0 changed in mobility_domain, replacing it
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Reload config for bss 'phy2-ap0' on phy 'phy2'
+[2026年11月16日 GMT+8 14:02:00] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:02:01] daemon.notice: hostapd: Reloaded settings for phy phy2
+[2026年11月16日 GMT+8 14:02:01] daemon.notice: netifd: radio2 (13524): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:02:01] daemon.notice: netifd: radio2 (13524): wifi-scripts: Configuring 'phy2' distance: 0
+[2026年11月16日 GMT+8 14:02:01] daemon.notice: netifd: radio2 (13524): wifi-scripts: Preparing interface: phy2-ap0
+[2026年11月16日 GMT+8 14:02:01] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月16日 GMT+8 14:02:04] daemon.info: ucode[9694]: wifiroam: event backhaul_apply  - ver=1 wireless
+[2026年11月16日 GMT+8 14:02:04] daemon.notice: netifd: Interface 'lan' is now down
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.361149] br-lan: port 7(phy2-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.361304] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.365681] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.371164] br-lan: port 3(lan3) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.376766] br-lan: port 2(lan2) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.381939] br-lan: port 1(lan1) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] daemon.warn: odhcpd[3430]: rfc9096: br-lan: stale 2408:825c:6c60:f045::1/64
+[2026年11月16日 GMT+8 14:02:04] daemon.warn: odhcpd[3430]: No default route present, setting ra_lifetime to 0!
+[2026年11月16日 GMT+8 14:02:04] daemon.err: odhcpd[3430]: Failed to send to ff02::1%lan@br-lan (Invalid argument)
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.406566] qca-ppe 3a000000.ppe lan1: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.406613] qca-ppe 3a000000.ppe lan1: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.411654] br-lan: port 1(lan1) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.451562] qca-ppe 3a000000.ppe lan1: Link is Down
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.453659] qca-ppe 3a000000.ppe lan2: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.455330] qca-ppe 3a000000.ppe lan2: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.461479] br-lan: port 2(lan2) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.491573] qca-ppe 3a000000.ppe lan2: Link is Down
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.493537] qca-ppe 3a000000.ppe lan3: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.495454] qca-ppe 3a000000.ppe lan3: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.501783] br-lan: port 3(lan3) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.521576] qca-ppe 3a000000.ppe lan3: Link is Down
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.523669] qca-ppe 3a000000.ppe lan4: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.525310] qca-edma 3ab00000.edma eth0: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.531234] qca-ppe 3a000000.ppe lan4: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.537277] br-lan: port 4(lan4) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.545780] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.547769] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.554161] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.560825] ath11k c000000.wifi phy1-ap0: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.565308] ath11k c000000.wifi phy1-ap0: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.571793] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.578206] ath11k_pci 0000:01:00.0 phy2-ap0: left allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.582688] ath11k_pci 0000:01:00.0 phy2-ap0: left promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.589342] br-lan: port 7(phy2-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] daemon.notice: netifd: Interface 'lan' is disabled
+[2026年11月16日 GMT+8 14:02:04] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:02:04] daemon.notice: netifd: bridge 'br-lan' link is down
+[2026年11月16日 GMT+8 14:02:04] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.701298] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[2026年11月16日 GMT+8 14:02:04] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.862311] br-lan: port 1(lan1) entered blocking state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.862352] br-lan: port 1(lan1) entered disabled state
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.866422] qca-ppe 3a000000.ppe lan1: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.871656] qca-edma 3ab00000.edma eth0: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.878434] qca-ppe 3a000000.ppe lan1: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:04] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:04] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:04] kern.info: [  383.885724] qca-ppe 3a000000.ppe lan2: configuring for phy/psgmii link mode
+[2026年11月16日 GMT+8 14:02:05] daemon.warn: dnsmasq-dhcp[1]: Error sending DHCP packet to 192.168.10.135: No such device
+[2026年11月16日 GMT+8 14:02:05] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:05] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:05] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月16日 GMT+8 14:02:05] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.042422] br-lan: port 2(lan2) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.042469] br-lan: port 2(lan2) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.046527] qca-ppe 3a000000.ppe lan2: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.052311] qca-ppe 3a000000.ppe lan2: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.059760] qca-ppe 3a000000.ppe lan3: configuring for phy/psgmii link mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.232346] br-lan: port 3(lan3) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.232390] br-lan: port 3(lan3) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.236429] qca-ppe 3a000000.ppe lan3: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.242526] qca-ppe 3a000000.ppe lan3: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.250468] qca-ppe 3a000000.ppe lan4: configuring for phy/psgmii link mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.412223] br-lan: port 4(lan4) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.412260] br-lan: port 4(lan4) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.416281] qca-ppe 3a000000.ppe lan4: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.421975] qca-ppe 3a000000.ppe lan4: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.430107] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.433425] br-lan: port 5(phy0-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.438950] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.444796] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.453226] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.456971] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.462517] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.468291] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.476105] br-lan: port 7(phy2-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.480522] br-lan: port 7(phy2-ap0) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.486053] ath11k_pci 0000:01:00.0 phy2-ap0: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.492509] ath11k_pci 0000:01:00.0 phy2-ap0: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.499865] br-lan: port 7(phy2-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.504731] br-lan: port 7(phy2-ap0) entered listening state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.510237] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.516097] br-lan: port 6(phy1-ap0) entered listening state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.521425] br-lan: port 5(phy0-ap0) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.527297] br-lan: port 5(phy0-ap0) entered listening state
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Interface 'lan' is enabled
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Interface 'lan' is setting up now
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Interface 'lan' is now up
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Network device 'lan1' link is down
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Network device 'lan2' link is down
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Network device 'lan3' link is down
+[2026年11月16日 GMT+8 14:02:05] daemon.info: ucode[9694]: wifiroam: backhaul wifi reload rc=0
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: radio0 (13708): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:02:05] user.notice: firewall: Reloading firewall due to ifup of lan (br-lan)
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy0
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: hostapd: Add bss phy0-ap1 on phy phy0
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: hostapd: Configuration file: Reading configuration file '<inline>'
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.793508] br-lan: port 8(phy0-ap1) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.793558] br-lan: port 8(phy0-ap1) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.797938] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.807112] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.813554] nss-wifi-drv 39000000.nss: vdev 2 on radio 0 is interface 34, encap 2 decap 2
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.821963] nss-wifi-drv 39000000.nss: peer de:d8:7c:54:4a:1e: id 5 ast_idx 576 ast_hash 0x240 vdev 2
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.825290] br-lan: port 8(phy0-ap1) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.833472] br-lan: port 8(phy0-ap1) entered listening state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.840528] br-lan: port 8(phy0-ap1) entered disabled state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.856501] br-lan: port 8(phy0-ap1) entered blocking state
+[2026年11月16日 GMT+8 14:02:05] kern.info: [  384.856545] br-lan: port 8(phy0-ap1) entered listening state
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: Network device 'phy0-ap1' link is up
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: radio0 (13708): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: radio0 (13708): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: radio0 (13708): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月16日 GMT+8 14:02:05] daemon.notice: netifd: radio0 (13708): wifi-scripts: Preparing interface: phy0-ap1
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio1 (13949): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:02:06] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:06] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:06] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月16日 GMT+8 14:02:06] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy1
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio1 (13949): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio1 (13949): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio1 (13949): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio2 (14027): wifi-scripts: Starting
+[2026年11月16日 GMT+8 14:02:06] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: wpa_supplicant[3062]: Set new config for phy phy2
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: hostapd: Set new config for phy phy2: /var/run/hostapd-phy2.conf
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: hostapd: Reloaded settings for phy phy2
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio2 (14027): wifi-scripts: Setting country code to CN
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio2 (14027): wifi-scripts: Configuring 'phy2' distance: 0
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: netifd: radio2 (14027): wifi-scripts: Preparing interface: phy2-ap0
+[2026年11月16日 GMT+8 14:02:06] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月16日 GMT+8 14:02:06] authpriv.info: dropbear[4587]: Early exit: Terminated by signal
+[2026年11月16日 GMT+8 14:02:06] user.info: : Binding to interface 'br-lan'
+[2026年11月16日 GMT+8 14:02:06] authpriv.info: dropbear[14199]: Not backgrounding
+[2026年11月16日 GMT+8 14:02:07] kern.info: [  385.924657] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 14:02:07] kern.info: [  385.924724] br-lan: port 1(lan1) entered blocking state
+[2026年11月16日 GMT+8 14:02:07] kern.info: [  385.931144] br-lan: port 1(lan1) entered listening state
+[2026年11月16日 GMT+8 14:02:07] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月16日 GMT+8 14:02:07] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:07] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:07] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月16日 GMT+8 14:02:07] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:07] kern.info: [  386.324929] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 14:02:07] kern.info: [  386.324994] br-lan: port 3(lan3) entered blocking state
+[2026年11月16日 GMT+8 14:02:07] kern.info: [  386.331423] br-lan: port 3(lan3) entered listening state
+[2026年11月16日 GMT+8 14:02:07] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月16日 GMT+8 14:02:07] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月16日 GMT+8 14:02:08] daemon.notice: netifd: Network device 'lan1' link is down
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  386.962227] br-lan: port 1(lan1) entered disabled state
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  386.981677] qca-ppe 3a000000.ppe lan1: Link is Down
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  387.204785] qca-ppe 3a000000.ppe lan2: Link is Up - 100Mbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  387.204853] br-lan: port 2(lan2) entered blocking state
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  387.211635] br-lan: port 2(lan2) entered listening state
+[2026年11月16日 GMT+8 14:02:08] daemon.notice: netifd: Network device 'lan2' link is up
+[2026年11月16日 GMT+8 14:02:08] daemon.notice: netifd: Network device 'lan3' link is down
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  387.362230] br-lan: port 3(lan3) entered disabled state
+[2026年11月16日 GMT+8 14:02:08] kern.info: [  387.381561] qca-ppe 3a000000.ppe lan3: Link is Down
+[2026年11月16日 GMT+8 14:02:10] kern.info: [  389.054609] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 14:02:10] kern.info: [  389.054679] br-lan: port 1(lan1) entered blocking state
+[2026年11月16日 GMT+8 14:02:10] kern.info: [  389.061094] br-lan: port 1(lan1) entered listening state
+[2026年11月16日 GMT+8 14:02:10] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月16日 GMT+8 14:02:10] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 14:02:10] kern.info: [  389.752665] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 6 ast_idx 350 ast_hash 0x15e vdev 2
+[2026年11月16日 GMT+8 14:02:10] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 14:02:10] daemon.notice: hostapd: phy0-ap1: AP-STA-CONNECTED de:d8:7c:5b:79:71 auth_alg=open
+[2026年11月16日 GMT+8 14:02:10] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 RADIUS: starting accounting session 294ECF90B64F497B
+[2026年11月16日 GMT+8 14:02:10] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 14:02:10] daemon.notice: hostapd: phy0-ap1: EAPOL-4WAY-HS-COMPLETED de:d8:7c:5b:79:71
+[2026年11月16日 GMT+8 14:02:10] kern.info: [  389.851900] nss-wifi-drv 39000000.nss: interface 34 protects frames with 6
+[2026年11月16日 GMT+8 14:02:11] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 14:02:11] kern.info: [  390.298354] nss-wifi-drv 39000000.nss: peer de:d8:7c:20:37:6c: id 7 ast_idx 865 ast_hash 0x361 vdev 2
+[2026年11月16日 GMT+8 14:02:11] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c IEEE 802.11: associated (aid 2)
+[2026年11月16日 GMT+8 14:02:11] daemon.notice: hostapd: phy0-ap1: AP-STA-CONNECTED de:d8:7c:20:37:6c auth_alg=open
+[2026年11月16日 GMT+8 14:02:11] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c RADIUS: starting accounting session 9B17616D043076EA
+[2026年11月16日 GMT+8 14:02:11] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 14:02:11] daemon.notice: hostapd: phy0-ap1: EAPOL-4WAY-HS-COMPLETED de:d8:7c:20:37:6c
+[2026年11月16日 GMT+8 14:02:11] kern.info: [  390.371953] nss-wifi-drv 39000000.nss: interface 34 protects frames with 6
+[2026年11月16日 GMT+8 14:02:11] kern.info: [  390.484726] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 14:02:11] kern.info: [  390.484790] br-lan: port 3(lan3) entered blocking state
+[2026年11月16日 GMT+8 14:02:11] kern.info: [  390.491207] br-lan: port 3(lan3) entered listening state
+[2026年11月16日 GMT+8 14:02:11] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月16日 GMT+8 14:02:12] daemon.info: ucode[9694]: wifiroam: backhaul iface: ifname=phy0-ap1 up=0 mode=ap
+[2026年11月16日 GMT+8 14:02:13] kern.info: [  392.801586] br-lan: port 5(phy0-ap0) entered learning state
+[2026年11月16日 GMT+8 14:02:13] kern.info: [  392.801730] br-lan: port 6(phy1-ap0) entered learning state
+[2026年11月16日 GMT+8 14:02:13] kern.info: [  392.806031] br-lan: port 7(phy2-ap0) entered learning state
+[2026年11月16日 GMT+8 14:02:13] daemon.info: ucode[9694]: wifiroam: event client_join DE:D8:7C:20:37:6C DE:D8:7C:20:37:6C XWRT
+[2026年11月16日 GMT+8 14:02:13] daemon.info: ucode[9694]: wifiroam: event client_join DE:D8:7C:5B:79:71 DE:D8:7C:5B:79:71 XWRT
+[2026年11月16日 GMT+8 14:02:14] kern.info: [  393.441580] br-lan: port 8(phy0-ap1) entered learning state
+[2026年11月16日 GMT+8 14:02:16] kern.info: [  395.361598] br-lan: port 2(lan2) entered learning state
+[2026年11月16日 GMT+8 14:02:18] kern.info: [  397.281625] br-lan: port 1(lan1) entered learning state
+[2026年11月16日 GMT+8 14:02:19] kern.info: [  398.561619] br-lan: port 3(lan3) entered learning state
+[2026年11月16日 GMT+8 14:02:22] daemon.notice: netifd: bridge 'br-lan' link is up
+[2026年11月16日 GMT+8 14:02:22] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.121634] br-lan: port 7(phy2-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.121690] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.126491] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.131796] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.137576] br-lan: port 5(phy0-ap0) entered forwarding state
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.142892] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.761642] br-lan: port 8(phy0-ap1) entered forwarding state
+[2026年11月16日 GMT+8 14:02:22] kern.info: [  401.761700] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:23] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月16日 GMT+8 14:02:23] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:23] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:23] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月16日 GMT+8 14:02:23] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:24] kern.info: [  403.681657] br-lan: port 2(lan2) entered forwarding state
+[2026年11月16日 GMT+8 14:02:24] kern.info: [  403.681705] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:26] kern.info: [  405.601676] br-lan: port 1(lan1) entered forwarding state
+[2026年11月16日 GMT+8 14:02:26] kern.info: [  405.601729] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:27] kern.info: [  406.082189] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 14:02:27] kern.info: [  406.082235] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:27] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:27] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:27] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 2 names
+[2026年11月16日 GMT+8 14:02:27] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:27] kern.info: [  406.881678] br-lan: port 3(lan3) entered forwarding state
+[2026年11月16日 GMT+8 14:02:27] kern.info: [  406.881720] br-lan: topology change detected, propagating
+[2026年11月16日 GMT+8 14:02:29] daemon.notice: hostapd: phy0-ap1: AP-STA-DISCONNECTED de:d8:7c:5b:79:71
+[2026年11月16日 GMT+8 14:02:29] kern.info: [  408.451859] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 6 released from vdev 2
+[2026年11月16日 GMT+8 14:02:29] daemon.notice: hostapd: phy0-ap1: AP-STA-DISCONNECTED de:d8:7c:20:37:6c
+[2026年11月16日 GMT+8 14:02:30] kern.info: [  408.971994] nss-wifi-drv 39000000.nss: peer de:d8:7c:20:37:6c: id 7 released from vdev 2
+[2026年11月16日 GMT+8 14:02:32] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:32] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:32] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:32] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:32] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 14:02:32] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event ap_offline DC:D8:7C:20:37:6B - XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_join 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_join CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_join CC:4D:75:FD:E8:06 CC:4D:75:FD:E8:06 XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_join DC:D8:7C:20:37:6A DC:D8:7C:20:37:6A XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_join DC:D8:7C:20:37:6B DC:D8:7C:20:37:6B XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_leave DE:D8:7C:20:37:6C DE:D8:7C:20:37:6C XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event client_leave DE:D8:7C:5B:79:71 DE:D8:7C:5B:79:71 XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event roam_move 64:31:72:42:4A:D2 64:31:72:42:4A:D2 DC:D8:7C:20:37:6B → XWRT
+[2026年11月16日 GMT+8 14:02:33] daemon.info: ucode[9694]: wifiroam: event roam_move CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E DC:D8:7C:20:37:6B → XWRT
+[2026年11月16日 GMT+8 14:02:35] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:35] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:35] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:35] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:35] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 14:02:35] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 6 names
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:02:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月16日 GMT+8 14:02:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.135 cc:4d:75:fd:e8:06 midjd-fridge-bs41l_mibtE806
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:38] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:38] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:39] daemon.info: ucode[9694]: wifiroam: event client_leave 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月16日 GMT+8 14:02:39] daemon.info: ucode[9694]: wifiroam: event client_join 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:40] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:40] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:40] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:43] kern.info: [  422.239808] nss-wifi-drv 39000000.nss: peer de:d8:7c:20:37:6c: id 8 ast_idx 865 ast_hash 0x361 vdev 2
+[2026年11月16日 GMT+8 14:02:43] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 14:02:43] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 14:02:43] daemon.notice: hostapd: phy0-ap1: AP-STA-CONNECTED de:d8:7c:20:37:6c auth_alg=open
+[2026年11月16日 GMT+8 14:02:43] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c RADIUS: starting accounting session 34F9697EE16DB02C
+[2026年11月16日 GMT+8 14:02:43] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:20:37:6c WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 14:02:43] daemon.notice: hostapd: phy0-ap1: EAPOL-4WAY-HS-COMPLETED de:d8:7c:20:37:6c
+[2026年11月16日 GMT+8 14:02:43] kern.info: [  422.292127] nss-wifi-drv 39000000.nss: interface 34 protects frames with 6
+[2026年11月16日 GMT+8 14:02:43] daemon.info: ucode[9694]: wifiroam: event client_join DE:D8:7C:20:37:6C DE:D8:7C:20:37:6C XWRT
+[2026年11月16日 GMT+8 14:02:43] daemon.info: ucode[9694]: wifiroam: event client_leave 64:31:72:42:4A:D2 64:31:72:42:4A:D2 XWRT
+[2026年11月16日 GMT+8 14:02:43] daemon.info: ucode[9694]: wifiroam: event client_leave CC:4D:75:FD:E8:06 CC:4D:75:FD:E8:06 XWRT
+[2026年11月16日 GMT+8 14:02:43] daemon.info: ucode[9694]: wifiroam: event client_leave DC:D8:7C:20:37:6A DC:D8:7C:20:37:6A XWRT
+[2026年11月16日 GMT+8 14:02:43] daemon.info: ucode[9694]: wifiroam: event client_leave DC:D8:7C:20:37:6B DC:D8:7C:20:37:6B XWRT
+[2026年11月16日 GMT+8 14:02:45] daemon.notice: hostapd: phy0-ap1: AP-STA-DISCONNECTED de:d8:7c:20:37:6c
+[2026年11月16日 GMT+8 14:02:45] kern.info: [  424.882088] nss-wifi-drv 39000000.nss: peer de:d8:7c:20:37:6c: id 8 released from vdev 2
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:46] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b
+[2026年11月16日 GMT+8 14:02:46] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.174 dc:d8:7c:20:37:6b XWRT
+[2026年11月16日 GMT+8 14:02:47] kern.info: [  426.492549] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 14:02:47] kern.info: [  426.492603] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 14:02:49] daemon.info: ucode[9694]: wifiroam: event ap_online DC:D8:7C:20:37:6B - XWRT
+[2026年11月16日 GMT+8 14:02:49] daemon.info: ucode[9694]: wifiroam: event roam_move CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT → XWRT
+[2026年11月16日 GMT+8 14:03:02] daemon.info: ucode[9694]: wifiroam: event backhaul_apply  - ver=2 wireless
+[2026年11月16日 GMT+8 14:03:02] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:03:02] daemon.notice: wpa_supplicant[3062]: Set MLD config: [ ]
+[2026年11月16日 GMT+8 14:03:02] daemon.notice: wpa_supplicant[3062]: Start pending MLD interfaces
+[2026年11月16日 GMT+8 14:03:02] daemon.info: ucode[9694]: wifiroam: backhaul wifi reload rc=0
+[2026年11月16日 GMT+8 14:03:10] daemon.info: ucode[9694]: wifiroam: backhaul iface: ifname=phy0-ap1 up=0 mode=ap
+[2026年11月16日 GMT+8 14:03:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.fe-tiktok-og-sgcentral-rowttp.my.tiktok-row.net
+[2026年11月16日 GMT+8 14:03:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 14:03:19] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: inner-all.toutiao-internal-all2-v3.hl.bytelb.net
+[2026年11月16日 GMT+8 14:03:23] daemon.info: ucode[9694]: wifiroam: event client_leave CC:4D:75:34:6B:9E xiaomi-airc-h09h00_mibt6B9E XWRT
+[2026年11月16日 GMT+8 14:04:54] kern.info: [  553.361383] br-lan: port 1(lan1) entered disabled state
+[2026年11月16日 GMT+8 14:04:54] daemon.notice: netifd: Network device 'lan1' link is down
+[2026年11月16日 GMT+8 14:04:54] kern.info: [  553.380724] qca-ppe 3a000000.ppe lan1: Link is Down
+[2026年11月16日 GMT+8 14:04:58] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 14:04:58] kern.info: [  557.537307] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 9 ast_idx 350 ast_hash 0x15e vdev 2
+[2026年11月16日 GMT+8 14:04:58] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 14:04:58] daemon.notice: hostapd: phy0-ap1: AP-STA-CONNECTED de:d8:7c:5b:79:71 auth_alg=open
+[2026年11月16日 GMT+8 14:04:58] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 RADIUS: starting accounting session 27BDE024C0156086
+[2026年11月16日 GMT+8 14:04:58] daemon.info: hostapd: phy0-ap1: STA de:d8:7c:5b:79:71 WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 14:04:58] daemon.notice: hostapd: phy0-ap1: EAPOL-4WAY-HS-COMPLETED de:d8:7c:5b:79:71
+[2026年11月16日 GMT+8 14:04:58] kern.info: [  557.601104] nss-wifi-drv 39000000.nss: interface 34 protects frames with 6
+[2026年11月16日 GMT+8 14:04:59] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 14:05:03] daemon.info: ucode[9694]: wifiroam: event client_join DE:D8:7C:5B:79:71 DE:D8:7C:5B:79:71 XWRT
+[2026年11月16日 GMT+8 14:05:05] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: authenticated
+[2026年11月16日 GMT+8 14:05:05] kern.info: [  564.773309] nss-wifi-drv 39000000.nss: peer a2:ea:74:20:21:e5: id 2 ast_idx 70 ast_hash 0x46 vdev 0
+[2026年11月16日 GMT+8 14:05:05] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 IEEE 802.11: associated (aid 1)
+[2026年11月16日 GMT+8 14:05:05] daemon.notice: hostapd: phy2-ap0: AP-STA-CONNECTED a2:ea:74:20:21:e5 auth_alg=open
+[2026年11月16日 GMT+8 14:05:05] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 RADIUS: starting accounting session D78E8486AAF4E89E
+[2026年11月16日 GMT+8 14:05:05] daemon.info: hostapd: phy2-ap0: STA a2:ea:74:20:21:e5 WPA: pairwise key handshake completed (RSN)
+[2026年11月16日 GMT+8 14:05:05] daemon.notice: hostapd: phy2-ap0: EAPOL-4WAY-HS-COMPLETED a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 14:05:05] kern.info: [  564.894358] nss-wifi-drv 39000000.nss: interface 33 protects frames with 6
+[2026年11月16日 GMT+8 14:05:05] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.229 a2:ea:74:20:21:e5
+[2026年11月16日 GMT+8 14:05:05] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.229 a2:ea:74:20:21:e5 Xiaomi-15-Pro
+[2026年11月16日 GMT+8 14:05:05] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:05:05] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.174 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:05:10] authpriv.info: dispatcher.uc: luci: accepted login on /admin/mesh/management/settings for root from 192.168.10.229
+[2026年11月16日 GMT+8 14:05:13] daemon.info: ucode[9694]: wifiroam: event client_join A2:EA:74:20:21:E5 Xiaomi-15-Pro XWRT
+[2026年11月16日 GMT+8 14:05:14] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: cn.ntp.org.cn
+[2026年11月16日 GMT+8 14:05:23] daemon.info: ucode[9694]: wifiroam: event ap_offline DC:D8:7C:5B:79:70 - XWRT
+[2026年11月16日 GMT+8 14:06:44] kern.info: [  663.603549] qca-ppe 3a000000.ppe lan1: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月16日 GMT+8 14:06:44] kern.info: [  663.603618] br-lan: port 1(lan1) entered blocking state
+[2026年11月16日 GMT+8 14:06:44] kern.info: [  663.610034] br-lan: port 1(lan1) entered listening state
+[2026年11月16日 GMT+8 14:06:44] daemon.notice: netifd: Network device 'lan1' link is up
+[2026年11月16日 GMT+8 14:06:52] kern.info: [  671.840182] br-lan: port 1(lan1) entered learning state
+[2026年11月16日 GMT+8 14:07:01] kern.info: [  680.160143] br-lan: port 1(lan1) entered forwarding state
+[2026年11月16日 GMT+8 14:07:01] kern.info: [  680.160208] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 14:07:02] kern.info: [  681.040441] br-lan: port 1(lan1) received tcn bpdu
+[2026年11月16日 GMT+8 14:07:02] kern.info: [  681.040494] br-lan: topology change detected, sending tcn bpdu
+[2026年11月16日 GMT+8 14:07:03] daemon.info: ucode[9694]: wifiroam: event client_join 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月16日 GMT+8 14:07:03] daemon.info: ucode[9694]: wifiroam: event client_join DC:D8:7C:5B:79:6F DC:D8:7C:5B:79:6F XWRT
+[2026年11月16日 GMT+8 14:07:03] daemon.info: ucode[9694]: wifiroam: event client_join E8:4A:54:2C:34:69 xiaomi-airc-h09r00_mibt3469 XWRT
+[2026年11月16日 GMT+8 14:07:04] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:04] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:04] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:04] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:07:04] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:07:04] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:07:05] daemon.warn: dnsmasq[3]: possible DNS-rebind attack detected: dns.msftncsi.com
+[2026年11月16日 GMT+8 14:07:09] daemon.info: ucode[9694]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - XWRT
+[2026年11月16日 GMT+8 14:07:09] daemon.info: ucode[9694]: wifiroam: event roam_move E8:4A:54:2C:34:69 xiaomi-airc-h09r00_mibt3469 XWRT → XWRT
+[2026年11月16日 GMT+8 14:07:09] daemon.info: ucode[9694]: wifiroam: event roam_move 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT → XWRT
+[2026年11月16日 GMT+8 14:07:09] daemon.notice: hostapd: phy0-ap1: AP-STA-DISCONNECTED de:d8:7c:5b:79:71
+[2026年11月16日 GMT+8 14:07:09] kern.info: [  688.330615] nss-wifi-drv 39000000.nss: peer de:d8:7c:5b:79:71: id 9 released from vdev 2
+[2026年11月16日 GMT+8 14:07:09] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:09] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:07:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:07:09] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:07:10] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT.lan to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:07:10] daemon.warn: dnsmasq-dhcp[1]: not giving name XWRT to the DHCP lease of 192.168.10.112 because the name exists in /tmp/hosts/dhcp.cfg01411c with address 192.168.10.1
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70
+[2026年11月16日 GMT+8 14:07:10] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 192.168.10.112 dc:d8:7c:5b:79:70 XWRT
+[2026年11月16日 GMT+8 14:07:13] daemon.info: ucode[9694]: wifiroam: event client_leave 10:FF:E0:E5:11:9F 10:FF:E0:E5:11:9F XWRT
+[2026年11月16日 GMT+8 14:07:13] daemon.info: ucode[9694]: wifiroam: event client_leave DC:D8:7C:5B:79:6F DC:D8:7C:5B:79:6F XWRT
+[2026年11月16日 GMT+8 14:07:13] daemon.info: ucode[9694]: wifiroam: event client_leave E8:4A:54:2C:34:69 xiaomi-airc-h09r00_mibt3469 XWRT
+[2026年11月16日 GMT+8 14:07:17] daemon.warn: dnsmasq[1]: possible DNS-rebind attack detected: dns.msftncsi.com
