@@ -425,19 +425,52 @@ return view.extend({
 		};
 	},
 
-	/* 鼠标或手指按住画布即可上下左右拖动；超过阈值后抑制节点点击。 */
+	/* 鼠标拖动平移、滚轮缩放；触屏单指拖动、双指缩放。 */
 	enablePan: function(box) {
 		if (!box || box._wrPanBound) return;
 		box._wrPanBound = true;
 
 		var self = this;
 		var sx = 0, sy = 0, px0 = 0, py0 = 0, active = false, moved = false;
+		var pts = {}, pinching = false, pinchDist = 0, pinchZoom = 1;
+
+		function points() {
+			var ids = Object.keys(pts);
+			if (ids.length < 2) return null;
+			return [ pts[ids[0]], pts[ids[1]] ];
+		}
+		function dist(a, b) {
+			var dx = a.x - b.x, dy = a.y - b.y;
+			return Math.sqrt(dx * dx + dy * dy) || 1;
+		}
+		function capture(ev) {
+			if (box.setPointerCapture) {
+				try { box.setPointerCapture(ev.pointerId); } catch (e) {}
+			}
+		}
 
 		box.addEventListener('pointerdown', function(ev) {
 			if (ev.button != null && ev.button !== 0 && ev.pointerType !== 'touch')
 				return;
 			if (ev.target.closest && ev.target.closest('.wr-pencil, button, a, select'))
 				return;
+
+			pts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+
+			var pair = points();
+			if (pair) {
+				/* 双指：进入缩放，停止单指平移 */
+				pinching = true;
+				active = false;
+				moved = true;
+				pinchDist = dist(pair[0], pair[1]);
+				pinchZoom = self.zoom || 1;
+				capture(ev);
+				box.classList.add('wr-dragging');
+				return;
+			}
+
+			if (pinching) return;
 
 			active = true;
 			moved = false;
@@ -447,6 +480,18 @@ return view.extend({
 		});
 
 		box.addEventListener('pointermove', function(ev) {
+			if (pts[ev.pointerId])
+				pts[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+
+			if (pinching) {
+				var pair = points();
+				if (!pair) return;
+				var z = pinchZoom * (dist(pair[0], pair[1]) / pinchDist);
+				self.zoom = Math.min(3, Math.max(0.5, Math.round(z * 100) / 100));
+				self.applyZoom();
+				return;
+			}
+
 			if (!active) return;
 
 			var dx = ev.clientX - sx, dy = ev.clientY - sy;
@@ -454,9 +499,8 @@ return view.extend({
 				return;
 
 			/* 确认是拖动后再捕获指针，避免影响普通点击/节点详情 */
-			if (!moved && box.setPointerCapture) {
-				try { box.setPointerCapture(ev.pointerId); } catch (e) {}
-			}
+			if (!moved)
+				capture(ev);
 			moved = true;
 
 			var vw = (self._view && self._view.w) || 1;
@@ -470,7 +514,14 @@ return view.extend({
 			self.applyZoom();
 		});
 
-		/* 拖动画布后不触发节点详情；下一次正常点击不受影响 */
+		/* 电脑滚轮缩放 */
+		box.addEventListener('wheel', function(ev) {
+			if (ev.deltaY === 0) return;
+			ev.preventDefault();
+			self.zoomBy(ev.deltaY < 0 ? 1.12 : 1 / 1.12);
+		}, { passive: false });
+
+		/* 拖动画布/缩放后不触发节点详情；下一次正常点击不受影响 */
 		box.addEventListener('click', function(ev) {
 			if (!moved) return;
 			moved = false;
@@ -481,13 +532,22 @@ return view.extend({
 		box.addEventListener('dragstart', function(ev) { ev.preventDefault(); });
 
 		function stop(ev) {
+			if (ev.pointerId != null)
+				delete pts[ev.pointerId];
+
+			if (pinching && Object.keys(pts).length < 2) {
+				pinching = false;
+				box.classList.remove('wr-dragging');
+				window.setTimeout(function() { moved = false; }, 300);
+			}
+
+			if (ev.pointerId != null && box.releasePointerCapture) {
+				try { box.releasePointerCapture(ev.pointerId); } catch (e) {}
+			}
+
 			if (!active) return;
 			active = false;
 			box.classList.remove('wr-dragging');
-
-			if (box.releasePointerCapture && ev && ev.pointerId != null) {
-				try { box.releasePointerCapture(ev.pointerId); } catch (e) {}
-			}
 			if (moved)
 				window.setTimeout(function() { moved = false; }, 300);
 		}
@@ -2242,14 +2302,6 @@ return view.extend({
 			E('div', { 'class': 'wr-topo-outer' }, [
 				E('div', { 'class': 'wr-zoom' }, [
 					E('button', {
-						'class': 'btn', type: 'button', title: _('Zoom in'),
-						click: L.bind(function() { this.zoomBy(1.25); }, this)
-					}, '+'),
-					E('button', {
-						'class': 'btn', type: 'button', title: _('Zoom out'),
-						click: L.bind(function() { this.zoomBy(0.8); }, this)
-					}, '−'),
-					E('button', {
 						'class': 'btn', type: 'button', title: _('Reset zoom'),
 						click: L.bind(function() { this.resetZoom(); }, this)
 					}, '⟲')
@@ -2262,7 +2314,7 @@ return view.extend({
 				E('span', { 'class': 'wr-lg-good' }, _('Signal good')),
 				E('span', { 'class': 'wr-lg-mid' }, _('Signal fair')),
 				E('span', { 'class': 'wr-lg-bad' }, _('Signal weak')),
-				E('div', { 'class': 'wr-hint' }, _('Drag or scroll to pan the topology'))
+				E('div', { 'class': 'wr-hint' }, _('Drag to pan, scroll or pinch to zoom'))
 			]),
 			E('div', { 'class': 'cbi-section', style: 'margin-top:1em' }, [
 				E('h3', {}, _('Roaming Event Log')),

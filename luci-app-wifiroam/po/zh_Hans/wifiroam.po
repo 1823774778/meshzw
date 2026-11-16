@@ -91,6 +91,9 @@ msgstr "信号弱"
 msgid "Drag or scroll to pan the topology"
 msgstr "按住拖动或滑动查看拓扑图"
 
+msgid "Drag to pan, scroll or pinch to zoom"
+msgstr "拖动平移，滚轮或双指缩放"
+
 msgid "This device is a sub AP. Visit the main AP to see the full network topology."
 msgstr "本设备为子路由，请访问主路由查看完整网络拓扑。"
 

@@ -72,7 +72,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 53;
+const DAEMON_VERSION = 54;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -1483,6 +1483,7 @@ function wifi_ifaces() {
 		if (s.mode && s.mode != "ap") return;
 		if (s.disabled == "1") return;
 		if (s.wifiroam_guest == "1") return;   // 访客口不算主人网络
+		if (s[".name"] == BACKHAUL_SECTION) return;   // 回程口由插件维护
 		push(out, {
 			ssid: s.ssid ?? "",
 			encryption: s.encryption ?? "none",
@@ -1653,6 +1654,7 @@ function wifi_summary() {
 	cur.foreach("wireless", "wifi-iface", function(s) {
 		if (s.mode && s.mode != "ap") return;
 		if (s.wifiroam_guest == "1") return;   // 访客网络有独立面板，不参与多频合一判断
+		if (s[".name"] == BACKHAUL_SECTION) return;   // 无线回程口不在主人网络里显示
 		let ssid = s.ssid ?? "";
 		let key = s.key ?? "";
 		push(ifaces, {
@@ -1731,6 +1733,7 @@ function apply_wifi_local(ssids) {
 	cur.foreach("wireless", "wifi-iface", function(s) {
 		if (s.mode && s.mode != "ap") return;
 		if (s.wifiroam_guest == "1") return;   // 访客口由访客面板单独管理
+		if (s[".name"] == BACKHAUL_SECTION) return;   // 保存主人网络时跳过无线回程口
 		let band = cur.get("wireless", s.device, "band") ?? "?";
 		let want = null;
 		for (let it in ssids)
