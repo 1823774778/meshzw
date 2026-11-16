@@ -126,6 +126,7 @@ return view.extend({
 			if (!d) return;
 
 			this.data = d;
+			wr.checkRole(d.role);
 
 			if (Object.keys(this.blocking).length ||
 			    this.hasFocusInTable())
@@ -607,6 +608,7 @@ return view.extend({
 
 	render: function(data) {
 		this.data = data;
+		wr.checkRole(data && data.role);
 		poll.add(L.bind(this.refresh, this), 15);
 
 		var self = this;

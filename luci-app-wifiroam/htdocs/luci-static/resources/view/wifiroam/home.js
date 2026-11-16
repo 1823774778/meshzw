@@ -346,6 +346,9 @@ return view.extend({
 	},
 
 	updateStatusDom: function() {
+		/* 主路由重置/重新配对后角色会变化，子路由页面需要整页刷新 */
+		wr.checkRole(this.st && this.st.role);
+
 		/* 状态条已合并进概览卡片，这里只刷新概览 */
 		if (document.getElementById('wr-overview'))
 			this.renderOverview();
