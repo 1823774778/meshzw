@@ -51,8 +51,9 @@ const BACKHAUL_DEFAULT_SSID = "wifiroam-bh";
 /* 回程切换防抖：有线/无线路径变化要先稳定一段时间再切换，
    避免 FDB 单次命中或 reload 瞬间的 link flap 把回程来回拆建 */
 const BH_WIRED_DEBOUNCE = 12;      // s：有线持续存在多久才暂停 STA
-const BH_WIRELESS_DEBOUNCE = 6;    // s：有线消失多久才重新启用 STA
+const BH_WIRELESS_DEBOUNCE = 10;   // s：有线消失多久才重新启用 STA
 const BH_LOOP_CONFIRM = 4;         // s：环路连续确认时间
+const BH_WIRED_HOLD = 30;          // s：有线口最后确认后，载波仍在则继续视为有线
 const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
 const BH_DHCP_RETRY = 20;          // s：切到无线回程后重启 LAN DHCP 的间隔
 const BH_DHCP_MAX_TRIES = 3;       // 次：最多重启几次 LAN DHCP
@@ -80,7 +81,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 59;
+const DAEMON_VERSION = 60;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4508,7 +4509,17 @@ function apply_backhaul_local(bh, role) {
 			cur.set("wireless", BACKHAUL_SECTION, "disabled", "0");
 		} else {
 			cur.delete("wireless", BACKHAUL_SECTION, "hidden");
-			staDeferred = ethernet_uplink_port() != null;
+			let upPort = ethernet_uplink_port();
+			staDeferred = upPort != null;
+			/* 首次下发后主路由会重启射频，可能让有线口瞬断 1-3 秒；
+			   这里先记住有线状态，tick 里用载波兜底，避免误判拔线 */
+			if (staDeferred) {
+				state._bh_was_wired = true;
+				state._bh_wired_port = upPort;
+				state._bh_wired_seen = time();
+				state._bh_wired_since = time();
+				state._bh_wireless_since = null;
+			}
 			cur.set("wireless", BACKHAUL_SECTION, "disabled",
 				staDeferred ? "1" : "0");
 		}
@@ -4711,11 +4722,14 @@ function backhaul_tick() {
 	/* 有线/无线路径防抖：持续稳定一段时间后才切换回程方式 */
 	let upPort = ethernet_uplink_port();
 	let wired = upPort != null;
-	if (wired)
+	if (wired) {
+		state._bh_wired_seen = now;
 		state._bh_wired_port = upPort;
-	/* 射频重启/桥抖动会短暂清空 FDB：原端口载波仍在就维持有线判定，
-	   避免误触发“拔线→启用 STA”的连锁重启 */
-	if (!wired && state._bh_was_wired &&
+	}
+	/* 射频重启/桥抖动会短暂清空 FDB，甚至让有线口瞬断 1-3 秒：
+	   原端口载波仍在且在保护期内就维持有线判定，避免误触发启用 STA */
+	if (!wired && state._bh_wired_port &&
+	    now - (state._bh_wired_seen ?? 0) <= BH_WIRED_HOLD &&
 	    wired_port_carrier(state._bh_wired_port))
 		wired = true;
 	if (wired) {
