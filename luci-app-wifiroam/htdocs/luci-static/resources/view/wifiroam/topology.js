@@ -935,6 +935,22 @@ return view.extend({
 			v.x + ' ' + v.y + ' ' + v.w + ' ' + v.h);
 	},
 
+	/* 有线连线加一层流光：复制实线并覆盖短亮虚线，看起来像数据包
+	   沿线路流动；无线虚线本身已有 dash 流动，不再叠加 */
+	flowOverlay: function(root) {
+		var links = root.querySelectorAll('.wr-link');
+		for (var i = 0; i < links.length; i++) {
+			var el = links[i];
+			if (el.classList.contains('wr-flow') ||
+			    el.classList.contains('wr-wireless'))
+				continue;
+			var c = el.cloneNode(true);
+			c.classList.add('wr-flow');
+			c.setAttribute('aria-hidden', 'true');
+			el.parentNode.insertBefore(c, el.nextSibling);
+		}
+	},
+
 	redraw: function() {
 		var box = document.getElementById('wr-topo');
 		if (!box || this.modalOpen) return;
@@ -1102,6 +1118,9 @@ return view.extend({
 				});
 			});
 		}
+
+		/* 有线连线叠加流光（必须在节点之前插入，保持连线在节点下方） */
+		self.flowOverlay(root);
 
 		/* AP 节点 */
 		function apNode(a) {

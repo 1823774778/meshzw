@@ -122,7 +122,8 @@
 .wr-theme-minimal .wr-link { stroke-width: 1.3; opacity: 0.7; }
 .wr-theme-minimal .wr-link.wr-aplink { stroke-width: 1.8; opacity: 0.65; }
 .wr-theme-minimal .wr-link.wr-clink { stroke-width: 1.3; }
-.wr-theme-minimal .wr-link.wr-wireless { animation: none; }
+.wr-theme-minimal .wr-link.wr-wireless { animation: wr-dashflow 2.2s linear infinite; }
+.wr-theme-minimal .wr-link.wr-flow { opacity: 0.5; animation-duration: 2.4s; }
 .wr-theme-minimal .wr-client .wr-cl-card { filter: none; }
 .wr-ap-photo { pointer-events: none; }
 
@@ -168,11 +169,23 @@
 .wr-link.wr-sig-mid { stroke: #fb8c00; }
 .wr-link.wr-sig-bad { stroke: #e53935; }
 
+/* 有线连线流光：短亮段沿实线移动，视觉上像数据包在线内传输；
+   与无线虚线一样在 prefers-reduced-motion 下关闭 */
+.wr-link.wr-flow {
+	stroke: var(--wr-link);
+	stroke-dasharray: 5 25;
+	opacity: 0.9;
+	animation: wr-flow 1.6s linear infinite;
+	pointer-events: none;
+}
+
 @keyframes wr-dashflow { to { stroke-dashoffset: -18; } }
+@keyframes wr-flow { to { stroke-dashoffset: -60; } }
 
 /* 尊重系统的“减少动画”偏好 */
 @media (prefers-reduced-motion: reduce) {
 	.wr-link.wr-wireless { animation: none; }
+	.wr-link.wr-flow { display: none; }
 }
 
 .wr-legend {
