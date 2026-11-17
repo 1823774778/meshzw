@@ -1,35 +1,35 @@
 {
-	"admin/system/wifiroam": {
+	"admin/wifiroam": {
 		"title": "无线组网",
-		"order": 15,
+		"order": 25,
 		"action": { "type": "firstchild", "preferred": "home" },
 		"depends": { "acl": [ "luci-app-wifiroam" ] }
 	},
-	"admin/system/wifiroam/home": {
+	"admin/wifiroam/home": {
 		"title": "首页",
 		"order": 10,
 		"action": { "type": "view", "path": "wifiroam/home" },
 		"depends": { "acl": [ "luci-app-wifiroam" ] }
 	},
-	"admin/system/wifiroam/topology": {
+	"admin/wifiroam/topology": {
 		"title": "拓扑",
 		"order": 20,
 		"action": { "type": "view", "path": "wifiroam/topology" },
 		"depends": { "acl": [ "luci-app-wifiroam" ] }
 	},
-	"admin/system/wifiroam/clients": {
+	"admin/wifiroam/clients": {
 		"title": "终端",
 		"order": 30,
 		"action": { "type": "view", "path": "wifiroam/clients" },
 		"depends": { "acl": [ "luci-app-wifiroam" ] }
 	},
-	"admin/system/wifiroam/settings": {
+	"admin/wifiroam/settings": {
 		"title": "无线设置",
 		"order": 40,
 		"action": { "type": "view", "path": "wifiroam/settings" },
 		"depends": { "acl": [ "luci-app-wifiroam" ] }
 	},
-	"admin/system/wifiroam/advanced": {
+	"admin/wifiroam/advanced": {
 		"title": "高级设置",
 		"order": 50,
 		"action": { "type": "view", "path": "wifiroam/advanced" },
