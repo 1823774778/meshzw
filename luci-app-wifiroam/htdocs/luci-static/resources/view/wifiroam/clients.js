@@ -534,11 +534,15 @@ return view.extend({
 			}
 		};
 		if (self.blocking[c.mac]) blockAttrs.disabled = true;
-		var blockBtn = E('button', blockAttrs,
-			blocked ? _('Resume') : _('Pause'));
+		/* 子路由本身是回程节点，禁用会直接切断它和下属终端，不提供暂停按钮 */
+		var blockBtn = null;
+		if (!isSap) {
+			blockBtn = E('button', blockAttrs,
+				blocked ? _('Resume') : _('Pause'));
 
-		if (self.blocking[c.mac])
-			wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
+			if (self.blocking[c.mac])
+				wr.setBusy(blockBtn, true, blocked ? _('Resuming...') : _('Pausing...'));
+		}
 
 		var wakeBtn = null;
 		if (!online) {
@@ -566,6 +570,20 @@ return view.extend({
 			: null;
 
 		var name = (c.name && c.name !== c.mac) ? c.name : (c.hostname || c.mac);
+
+		var actions = [];
+		if (blockBtn)
+			actions.push(blockBtn);
+		if (wakeBtn) {
+			if (actions.length) actions.push(' ');
+			actions.push(wakeBtn,
+				E('span', { 'class': 'wr-hint' },
+					_('Send a magic packet to the last known MAC')));
+		}
+		if (adminBtn) {
+			if (actions.length) actions.push(' ');
+			actions.push(adminBtn);
+		}
 
 		var rows = [
 			this.cardRow(_('IP Address'), c.ip || '-'),
@@ -608,13 +626,9 @@ return view.extend({
 			]),
 			editPanel,
 			E('div', { 'class': 'wr-dcard-rows' }, rows),
-			E('div', { 'class': 'wr-dcard-actions' }, [
-				blockBtn,
-				wakeBtn ? ' ' : null, wakeBtn,
-				wakeBtn ? E('span', { 'class': 'wr-hint' },
-					_('Send a magic packet to the last known MAC')) : null,
-				adminBtn ? ' ' : null, adminBtn
-			])
+			actions.length
+				? E('div', { 'class': 'wr-dcard-actions' }, actions)
+				: null
 		]);
 	},
 
