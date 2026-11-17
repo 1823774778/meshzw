@@ -80,7 +80,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 57;
+const DAEMON_VERSION = 58;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4601,9 +4601,37 @@ function backhaul_loop_port() {
 	return null;
 }
 
+/* CAP 侧的 wifiroam_bh AP 可能被旧版本的“保存无线设置”覆盖成主人网络的
+   SSID/密码，或配置被手工改过；与 wifiroam.backhaul 不一致时自动重建，
+   否则 SAP 会一直 4-way handshake 失败（WRONG_KEY）。 */
+function backhaul_cap_reconcile() {
+	let bh = current_backhaul_cfg();
+	if (!bh.enabled) return;
+	let cur = uci.cursor();
+	cur.load("wireless");
+	let sec = cur.get("wireless", BACKHAUL_SECTION);
+	let sd = sec != null ? cur.get_all("wireless", BACKHAUL_SECTION) : null;
+	let ifc = backhaul_iface_status();
+	let ok = sd != null && sd[".type"] == "wifi-iface" && ifc != null &&
+		(cur.get("wireless", BACKHAUL_SECTION, "mode") ?? "") == "ap" &&
+		(cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") == (bh.ssid ?? "") &&
+		(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "") &&
+		(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
+		(cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "0";
+	if (ok) return;
+	if (time() - (state._bh_rebuild_ts ?? 0) < 60) return;
+	state._bh_rebuild_ts = time();
+	log("backhaul AP config drift, re-applying on CAP");
+	apply_backhaul_local(bh, "cap");
+}
+
 // SAP 侧：有线/无线回程互斥。网线在位时 STA 保持 disabled，拔线后自动启用；
 // 重新插回网线则暂停 STA，避免二层环路。
 function backhaul_tick() {
+	if (state.cfg.role == "cap") {
+		backhaul_cap_reconcile();
+		return;
+	}
 	if (state.cfg.role != "sap") return;
 	let bh = current_backhaul_cfg();
 	if (!bh.enabled) {
@@ -5295,8 +5323,9 @@ function srv_rx(conn, req) {
 				push_roam_to(mn);
 			}
 			let bh = current_backhaul_cfg();
-			let bh_push = state.cfg.role == "cap" && bh.enabled &&
-			    (args.backhaul_ver ?? -1) < bh.config_ver;
+			/* 每次都补发：SAP 侧内容一致会跳过 reload；这样主 AP 的回程
+			   SSID/密码被改过时，SAP 也能自动纠正，不会再 WRONG_KEY */
+			let bh_push = state.cfg.role == "cap" && bh.enabled;
 			if (bh_push) {
 				if (state.last_backhaul)
 					last_result_mark_pending(state.last_backhaul.results, mn,
@@ -5352,7 +5381,8 @@ function srv_rx(conn, req) {
 		    (p.roam_sig != "" && !roam_sig_ok(p.roam_sig, roam)))
 			push_roam_to(mn);
 		let bh = current_backhaul_cfg();
-		if (bh.enabled && p.backhaul_ver < bh.config_ver)
+		/* 与 hello 一样每次都补发，SAP 内容一致时会跳过 reload */
+		if (bh.enabled)
 			push_backhaul_to(mn);
 		let ga = guest_cfg();
 		if (state.cfg.role == "cap" && p.guest_ver >= ga.ver)
@@ -6916,7 +6946,9 @@ function steer_neighbors(c, all, owner_mn) {
 		if (channel_band_key(b.band) == band) push(same, b);
 		else push(cross, b);
 	}
-	let out = same.concat(cross);
+	let out = [];
+	for (let b in same) push(out, b);
+	for (let b in cross) push(out, b);
 	return slice(out, 0, 4);
 }
 
