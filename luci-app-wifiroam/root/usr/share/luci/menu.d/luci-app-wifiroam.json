@@ -1,6 +1,6 @@
 {
 	"admin/wifiroam": {
-		"title": "无线组网",
+		"title": "组网",
 		"order": 25,
 		"action": { "type": "firstchild", "preferred": "home" },
 		"depends": { "acl": [ "luci-app-wifiroam" ] }
