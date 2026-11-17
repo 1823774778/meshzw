@@ -25,9 +25,6 @@ msgstr "终端设备"
 msgid "Roaming Settings"
 msgstr "漫游设置"
 
-msgid "Mesh Setup"
-msgstr "组网管理"
-
 msgid "Main AP"
 msgstr "主路由"
 
