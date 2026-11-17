@@ -55,8 +55,8 @@ const BH_WIRELESS_DEBOUNCE = 10;   // s：有线消失多久才重新启用 STA
 const BH_LOOP_CONFIRM = 4;         // s：环路连续确认时间
 const BH_WIRED_HOLD = 30;          // s：有线口最后确认后，载波仍在则继续视为有线
 const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
-const BH_DHCP_RETRY = 20;          // s：切到无线回程后重启 LAN DHCP 的间隔
-const BH_DHCP_MAX_TRIES = 3;       // 次：最多重启几次 LAN DHCP
+const BH_DHCP_RETRY = 10;          // s：切到无线回程后 renew LAN DHCP 的间隔
+const BH_DHCP_MAX_TRIES = 3;       // 次：最多 renew 几次
 
 // 访客网络：每台 AP 各自建一个独立子网 + DHCP + 防火墙隔离区，
 // 访客口统一挂到 br-guest（接口名 netifd 限制为 15 字符以内）。
@@ -81,7 +81,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 60;
+const DAEMON_VERSION = 61;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4328,11 +4328,14 @@ function backhaul_uci_radio() {
 	return cur.get("wireless", BACKHAUL_SECTION, "device") ?? null;
 }
 
-function backhaul_sta_link_up() {
+function backhaul_sta_forwarding() {
 	let ifc = backhaul_iface_status();
 	if (!ifc || !ifc.ifname) return false;
-	let st = trim(fs.readfile(`/sys/class/net/${ifc.ifname}/operstate`) ?? "");
-	return st == "up";
+	let st = trim(fs.readfile(`/sys/class/net/${ifc.ifname}/brport/state`) ?? "");
+	/* 3=forwarding；没有 brport 状态时退回 operstate */
+	if (st != "")
+		return st == "3";
+	return trim(fs.readfile(`/sys/class/net/${ifc.ifname}/operstate`) ?? "") == "up";
 }
 
 function backhaul_lan_ipv4() {
@@ -4340,14 +4343,14 @@ function backhaul_lan_ipv4() {
 	return length(st["ipv4-address"] ?? []) > 0;
 }
 
-/* 有线切无线后 LAN 常保留旧租约，netifd 不会重新跑 udhcpc；
-   在 STA 已关联时重启一次 LAN（不重载无线，STA 不会掉线），强制重新 DHCP */
+/* 有线切无线后 LAN 常保留旧租约、udhcpc 不再重试。
+   只发 renew 信号让现有 udhcpc 重新协商，绝不做 lan down/up：
+   STA 绑定在 lan 网络上，down 会直接把刚建好的无线回程拆掉。 */
 function backhaul_dhcp_restart() {
 	let tries = state._bh_dhcp_tries ?? 0;
-	state._bh_dhcp_tries = tries + 1;
 	state._bh_dhcp_ts = time();
 
-	if (tries > 0 && backhaul_lan_ipv4()) {
+	if (backhaul_lan_ipv4()) {
 		state._bh_dhcp_pending = false;
 		state._bh_dhcp_tries = 0;
 		log("backhaul: LAN DHCP recovered");
@@ -4355,14 +4358,13 @@ function backhaul_dhcp_restart() {
 	}
 	if (tries >= BH_DHCP_MAX_TRIES) {
 		state._bh_dhcp_pending = false;
+		log("backhaul: LAN still has no IPv4 after DHCP renews");
 		return;
 	}
 
-	log(sprintf("backhaul: restart LAN DHCP for wireless uplink (try %d)", tries + 1));
-	ubusc.call("network.interface.lan", "down");
-	uloop.timer(1000, function() {
-		ubusc.call("network.interface.lan", "up");
-	});
+	state._bh_dhcp_tries = tries + 1;
+	log(sprintf("backhaul: renew LAN DHCP for wireless uplink (try %d)", tries + 1));
+	ubusc.call("network.interface.lan", "renew");
 }
 
 function backhaul_wpa_cli(ifname, cmd) {
@@ -4762,10 +4764,10 @@ function backhaul_tick() {
 		return;
 	}
 
-	/* 有线切无线后 LAN 常保留旧租约、udhcpc 不再重试；
-	   STA 关联后强制重启一次 LAN 的 DHCP，让子路由重新拿到地址 */
+	/* 有线切无线后 LAN 可能保留旧租约、udhcpc 不再重试；
+	   STA forwarding 后发 renew 让 udhcpc 重新协商（不拆 LAN/STA） */
 	if (state._bh_dhcp_pending && !wired && !disabled &&
-	    backhaul_sta_link_up() &&
+	    backhaul_sta_forwarding() &&
 	    now - (state._bh_dhcp_ts ?? 0) >= BH_DHCP_RETRY)
 		backhaul_dhcp_restart();
 
