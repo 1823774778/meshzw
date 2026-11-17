@@ -1,0 +1,802 @@
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x51af8014]
+[    0.000000] Linux version 6.18.60 (runner@ip-10-0-130-81) (aarch64-openwrt-linux-musl-gcc (OpenWrt GCC 14.4.0 toolchain-0336f60730) 14.4.0, GNU ld (GNU Binutils) 2.46.1) #0 SMP Mon Nov 16 17:47:35 2026
+[    0.000000] Machine model: JDCloud RE-SS-01
+[    0.000000] OF: reserved mem: 0x0000000000060000..0x0000000000065fff (24 KiB) nomap non-reusable rpm_msg_ram@60000
+[    0.000000] OF: reserved mem: 0x0000000040000000..0x0000000040ffffff (16384 KiB) nomap non-reusable nss@40000000
+[    0.000000] OF: reserved mem: 0x000000004a100000..0x000000004a4fffff (4096 KiB) nomap non-reusable bootloader@4a100000
+[    0.000000] OF: reserved mem: 0x000000004a600000..0x000000004a9fffff (4096 KiB) nomap non-reusable tz@4a600000
+[    0.000000] OF: reserved mem: 0x000000004aa00000..0x000000004aafffff (1024 KiB) nomap non-reusable smem@4aa00000
+[    0.000000] OF: reserved mem: 0x000000004ab00000..0x000000004eafffff (65536 KiB) nomap non-reusable q6@4ab00000
+[    0.000000] OF: reserved mem: 0x000000004eb00000..0x000000004ebfffff (1024 KiB) nomap non-reusable q6_etr@4eb00000
+[    0.000000] OF: reserved mem: 0x000000004ec00000..0x000000004ecfffff (1024 KiB) nomap non-reusable m3_dump@4ec00000
+[    0.000000] OF: reserved mem: 0x000000004ed00000..0x000000004edfffff (1024 KiB) nomap non-reusable ramoops@4ed00000
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x000000005fffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x0000000040ffffff]
+[    0.000000]   node   0: [mem 0x0000000041000000-0x000000004a0fffff]
+[    0.000000]   node   0: [mem 0x000000004a100000-0x000000004a4fffff]
+[    0.000000]   node   0: [mem 0x000000004a500000-0x000000004a5fffff]
+[    0.000000]   node   0: [mem 0x000000004a600000-0x000000004edfffff]
+[    0.000000]   node   0: [mem 0x000000004ee00000-0x000000005fffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x000000005fffffff]
+[    0.000000] cma: Reserved 51 MiB at 0x000000005c000000
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.0 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
+[    0.000000] psci: SMC Calling Convention v1.0
+[    0.000000] percpu: Embedded 20 pages/cpu s44184 r8192 d29544 u81920
+[    0.000000] pcpu-alloc: s44184 r8192 d29544 u81920 alloc=20*4096
+[    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3 
+[    0.000000] Detected VIPT I-cache on CPU0
+[    0.000000] CPU features: detected: Spectre-v4
+[    0.000000] alternatives: applying boot alternatives
+[    0.000000] Kernel command line: console=ttyMSM0,115200n8 root=PARTUUID=487fa66f-4663-5be5-62f8-c4f63317f9b3 gpt rootwait
+[    0.000000] printk: log buffer data + meta data: 131072 + 458752 = 589824 bytes
+[    0.000000] Dentry cache hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size adjusted to 0MB
+[    0.000000] software IO TLB: area num 4.
+[    0.000000] software IO TLB: SWIOTLB bounce buffer size roundup to 1MB
+[    0.000000] software IO TLB: mapped [mem 0x000000005f4c0000-0x000000005f5c0000] (1MB)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 131072
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] 	Tracing variant of Tasks RCU enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[    0.000000] RCU Tasks Trace: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+[    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
+[    0.000000] Root IRQ handler: gic_handle_irq
+[    0.000000] GICv2m: range[mem 0x0b00a000-0x0b00affc], SPI[448:479]
+[    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.000000] arch_timer: cp15 timer running at 24.00MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[    0.000000] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[    0.000140] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
+[    0.000153] pid_max: default: 32768 minimum: 301
+[    0.004296] Mount-cache hash table entries: 1024 (order: 1, 8192 bytes, linear)
+[    0.004309] Mountpoint-cache hash table entries: 1024 (order: 1, 8192 bytes, linear)
+[    0.014027] rcu: Hierarchical SRCU implementation.
+[    0.014036] rcu: 	Max phase no-delay instances is 1000.
+[    0.014387] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+[    0.014796] smp: Bringing up secondary CPUs ...
+[    0.015490] Detected VIPT I-cache on CPU1
+[    0.015632] CPU1: Booted secondary processor 0x0000000001 [0x51af8014]
+[    0.016390] Detected VIPT I-cache on CPU2
+[    0.016503] CPU2: Booted secondary processor 0x0000000002 [0x51af8014]
+[    0.017224] Detected VIPT I-cache on CPU3
+[    0.017330] CPU3: Booted secondary processor 0x0000000003 [0x51af8014]
+[    0.017407] smp: Brought up 1 node, 4 CPUs
+[    0.017416] SMP: Total of 4 processors activated.
+[    0.017420] CPU: All CPU(s) started at EL1
+[    0.017424] CPU features: detected: 32-bit EL0 Support
+[    0.017429] CPU features: detected: CRC32 instructions
+[    0.017475] alternatives: applying system-wide alternatives
+[    0.017697] CPU features: emulated: Privileged Access Never (PAN) using TTBR0_EL1 switching
+[    0.017957] Memory: 348732K/524288K available (9408K kernel code, 920K rwdata, 3072K rodata, 960K init, 289K bss, 120444K reserved, 53248K cma-reserved)
+[    0.024217] posixtimers hash table entries: 2048 (order: 3, 32768 bytes, linear)
+[    0.024305] futex hash table entries: 1024 (65536 bytes on 1 NUMA nodes, total 64 KiB, linear).
+[    0.025156] 29056 pages in range for non-PLT usage
+[    0.025169] 520576 pages in range for PLT usage
+[    0.027588] pinctrl core: initialized pinctrl subsystem
+[    0.029875] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    0.031416] DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+[    0.031813] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    0.032218] DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    0.032785] thermal_sys: Registered thermal governor 'step_wise'
+[    0.032847] cpuidle: using governor menu
+[    0.033066] ASID allocator initialised with 65536 entries
+[    0.037965] /soc@0/ssphy@78000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.037999] /soc@0/phy@84000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.038035] /soc@0/clock-controller@9b000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.038090] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/phy@84000
+[    0.038104] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ssphy@78000
+[    0.038117] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/clock-controller@9b000
+[    0.038131] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ethernet-pcs@7a00000
+[    0.038252] /soc@0/interrupt-controller@b000000: Fixed dependency cycle(s) with /soc@0/interrupt-controller@b000000
+[    0.038321] /soc@0/ethernet-pcs@7a00000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.038555] /soc@0/ssphy@78000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.038860] /soc@0/phy@84000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.039191] /soc@0/clock-controller@9b000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.042655] /soc@0/clock-controller@9b000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.042801] /soc@0/phy@84000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.042941] /soc@0/ssphy@78000: Fixed dependency cycle(s) with /soc@0/clock-controller@1800000
+[    0.043023] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/phy@84000
+[    0.043104] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ssphy@78000
+[    0.043195] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/clock-controller@9b000
+[    0.043262] /soc@0/clock-controller@1800000: Fixed dependency cycle(s) with /soc@0/ethernet-pcs@7a00000
+[    0.089241] SCSI subsystem initialized
+[    0.089452] usbcore: registered new interface driver usbfs
+[    0.089506] usbcore: registered new interface driver hub
+[    0.089546] usbcore: registered new device driver usb
+[    0.089868] qcom_scm: convention: smc arm 64
+[    0.092041] clocksource: Switched to clocksource arch_sys_counter
+[    0.096238] NET: Registered PF_INET protocol family
+[    0.096389] IP idents hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    0.098357] tcp_listen_portaddr_hash hash table entries: 256 (order: 0, 4096 bytes, linear)
+[    0.098376] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.098398] TCP established hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    0.098446] TCP bind hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[    0.098590] TCP: Hash tables configured (established 4096 bind 4096)
+[    0.098926] MPTCP token hash table entries: 512 (order: 2, 12288 bytes, linear)
+[    0.099097] UDP hash table entries: 256 (order: 2, 16384 bytes, linear)
+[    0.099131] UDP-Lite hash table entries: 256 (order: 2, 16384 bytes, linear)
+[    0.099689] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    0.099727] PCI: CLS 0 bytes, default 64
+[    0.101214] workingset: timestamp_bits=46 max_order=17 bucket_order=0
+[    0.101956] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.101963] jffs2: version 2.2 (NAND) (SUMMARY) (LZMA) (RTIME) (CMODE_PRIORITY) (c) 2001-2006 Red Hat, Inc.
+[    0.108571] qcom-qmp-usb-phy 78000.ssphy: supply vdda-phy not found, using dummy regulator
+[    0.108719] qcom-qmp-usb-phy 78000.ssphy: supply vdda-pll not found, using dummy regulator
+[    0.109882] qcom-qusb2-phy 79000.qusb: supply vdd not found, using dummy regulator
+[    0.110046] qcom-qusb2-phy 79000.qusb: supply vdda-pll not found, using dummy regulator
+[    0.110086] qcom-qusb2-phy 79000.qusb: supply vdda-phy-dpdm not found, using dummy regulator
+[    0.118987] Serial: 8250/16550 driver, 2 ports, IRQ sharing disabled
+[    0.119970] msm_serial 78b1000.serial: msm_serial: detected port #0
+[    0.120050] msm_serial 78b1000.serial: uartclk = 1843199
+[    0.120499] 78b1000.serial: ttyMSM0 at MMIO 0x78b1000 (irq = 19, base_baud = 115199) is a MSM
+[    0.120583] msm_serial: console setup on port #0
+[    0.120638] printk: legacy console [ttyMSM0] enabled
+[    1.101115] msm_serial: driver initialized
+[    1.111362] loop: module loaded
+[    1.114624] spi_qup 78b5000.spi: IN:block:16, fifo:64, OUT:block:16, fifo:64
+[    1.463693] i2c_dev: i2c /dev entries driver
+[    1.471800] sdhci: Secure Digital Host Controller Interface driver
+[    1.471846] sdhci: Copyright(c) Pierre Ossman
+[    1.476916] sdhci-pltfm: SDHCI platform and OF driver helper
+[    1.481584] qcom_rng e3000.qrng: TRNG support not detected
+[    1.487882] clocksource: arch_mmio_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[    1.492377] arch-timer-mmio b120000.timer: mmio timer running at 24.00MHz (virt)
+[    1.505640] remoteproc remoteproc0: releasing wcnss
+[    1.513050] NET: Registered PF_INET6 protocol family
+[    1.516880] Segment Routing with IPv6
+[    1.518481] mmc0: SDHCI controller on 7804000.mmc [7804000.mmc] using ADMA 64-bit
+[    1.520617] In-situ OAM (IOAM) with IPv6
+[    1.531671] NET: Registered PF_PACKET protocol family
+[    1.535932] 8021q: 802.1Q VLAN Support v1.8
+[    1.676494] mmc0: new HS200 MMC card at address 0001
+[    1.677442] mmcblk0: mmc0:0001 SLD64G 57.1 GiB
+[    1.709416] GPT:Primary header alternate_lba != Alt. header my_lba
+[    1.709449] GPT:8683519 != 119783423
+[    1.714653] GPT:last_usable_lbas don't match.
+[    1.718217] GPT:8683486 != 119783390
+[    1.722481] GPT:partition_entry_array_crc32 values don't match: 0x77537fc8 != 0xf8366546
+[    1.726124] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[    1.734206] GPT:8683519 != 119783423
+[    1.741566] GPT: Use GNU Parted to correct GPT errors.
+[    1.745221]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20 p21 p22 p23 p24 p25 p26
+[    1.753011] mmcblk0boot0: mmc0:0001 SLD64G 4.00 MiB
+[    1.762940] mmcblk0boot1: mmc0:0001 SLD64G 4.00 MiB
+[    1.766440] mmcblk0rpmb: mmc0:0001 SLD64G 4.00 MiB, chardev (246:0)
+[    1.974478] cpufreq: cpufreq_policy_online: CPU0: Running at unlisted initial frequency: 799999 kHz, changing to: 864000 kHz
+[    1.976536] remoteproc remoteproc0: wcnss is available
+[    2.642560] qca-ppe 3a000000.ppe: configuring for fixed/internal link mode
+[    2.642629] qca-ppe 3a000000.ppe: Link is Up - 1Gbps/Full - flow control off
+[    2.823009] qca-ppe 3a000000.ppe lan1 (uninitialized): PHY [90000.mdio-1:01] driver [Qualcomm QCA8075] (irq=POLL)
+[    2.912580] qca-ppe 3a000000.ppe lan2 (uninitialized): PHY [90000.mdio-1:02] driver [Qualcomm QCA8075] (irq=POLL)
+[    2.982590] qca-ppe 3a000000.ppe lan3 (uninitialized): PHY [90000.mdio-1:03] driver [Qualcomm QCA8075] (irq=POLL)
+[    3.052608] qca-ppe 3a000000.ppe wan (uninitialized): PHY [90000.mdio-1:04] driver [Qualcomm QCA8075] (irq=POLL)
+[    3.054963] qca-edma 3ab00000.edma eth0: entered promiscuous mode
+[    3.061901] DSA: tree 0 setup
+[    3.068487] clk: Disabling unused clocks
+[    3.071359] check access for rdinit=/init failed: -2, ignoring
+[    3.073622] VFS: Mounted root (squashfs filesystem) readonly on device 179:18.
+[    3.076570] Freeing unused kernel memory: 960K
+[    3.083414] Run /sbin/init as init process
+[    3.087704]   with arguments:
+[    3.087708]     /sbin/init
+[    3.087713]   with environment:
+[    3.087716]     HOME=/
+[    3.087720]     TERM=linux
+[    3.305270] init: Console is alive
+[    3.305403] init: - watchdog -
+[    4.040174] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[    4.079419] raid6: skipped pq benchmark and selected neonx8
+[    4.079457] raid6: using neon recovery algorithm
+[    4.085127] xor: measuring software checksum speed
+[    4.089663]    8regs           :  3278 MB/sec
+[    4.094282]    32regs          :  3287 MB/sec
+[    4.098782]    arm64_neon      :  2996 MB/sec
+[    4.102034] xor: using function: 32regs (3287 MB/sec)
+[    4.181452] Btrfs loaded, zoned=no, fsverity=no
+[    4.212559] gpio_button_hotplug: loading out-of-tree module taints kernel.
+[    4.229805] xhci-hcd xhci-hcd.1.auto: xHCI Host Controller
+[    4.229858] xhci-hcd xhci-hcd.1.auto: new USB bus registered, assigned bus number 1
+[    4.235168] xhci-hcd xhci-hcd.1.auto: hcc params 0x0220fe65 hci version 0x110 quirks 0x0000808000000010
+[    4.241783] xhci-hcd xhci-hcd.1.auto: irq 41, io mem 0x08a00000
+[    4.251285] xhci-hcd xhci-hcd.1.auto: xHCI Host Controller
+[    4.257045] xhci-hcd xhci-hcd.1.auto: new USB bus registered, assigned bus number 2
+[    4.262601] xhci-hcd xhci-hcd.1.auto: Host supports USB 3.0 SuperSpeed
+[    4.270514] hub 1-0:1.0: USB hub found
+[    4.277166] hub 1-0:1.0: 1 port detected
+[    4.280742] usb usb2: We don't know the algorithms for LPM for this host, disabling LPM.
+[    4.284884] hub 2-0:1.0: USB hub found
+[    4.292635] hub 2-0:1.0: 1 port detected
+[    4.302471] usbcore: registered new interface driver usb-storage
+[    4.303798] usbcore: registered new interface driver uas
+[    4.307885] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[    4.315882] init: - preinit -
+[   10.552039] random: crng init done
+[   11.004393] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[   15.786469] mount_root: loading kmods from internal overlay
+[   15.804761] kmodloader: loading kernel modules from /etc/modules-boot.d/*
+[   15.808473] kmodloader: done loading kernel modules from /etc/modules-boot.d/*
+[   16.040419] block: no fstab configuration found, skipping
+[   16.041425] loop0: detected capacity change from 0 to 4194304
+[   16.102097] loop0: detected capacity change from 4194304 to 4153984
+[   16.163279] F2FS-fs (loop0): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+[   16.164647] F2FS-fs (loop0): do_recover_data: start to recover dnode
+[   16.170470] F2FS-fs (loop0): recover_inode: ino = 8b, name = .wifiroam.uci-JEOljO, inline = b
+[   16.176967] F2FS-fs (loop0): recover_dentry: ino = 8b, name = .wifiroam.uci-JEOljO, dir = 10, err = 0
+[   16.185288] F2FS-fs (loop0): recover_data: ino = 8b, nid = 8b (i_size: recover), range (0, 0), recovered = 0, err = 0
+[   16.194470] F2FS-fs (loop0): do_recover_data: dnode: (recoverable: 1, fsynced: 1, total: 1), recovered: (inode: 1, dentry: 1, dnode: 1), err: 0
+[   16.207610] F2FS-fs (loop0): checkpoint: version = 428fa256
+[   16.217840] F2FS-fs (loop0): Mounted with checkpoint version = 428fa256
+[   16.223689] block: attempting to load /tmp/f2fs_cfg/upper/etc/config/fstab
+[   16.230129] block: extroot: not configured
+[   16.327427] loop0: detected capacity change from 0 to 4194304
+[   16.372060] loop0: detected capacity change from 4194304 to 4153984
+[   16.377587] F2FS-fs (loop0): f2fs_recover_fsync_data: recovery fsync data, check_only: 0
+[   16.377851] F2FS-fs (loop0): Mounted with checkpoint version = 428fa258
+[   16.385911] mount_root: loading kmods from internal overlay
+[   16.411132] kmodloader: loading kernel modules from /tmp/overlay/upper/etc/modules-boot.d/*
+[   16.411700] kmodloader: done loading kernel modules from /tmp/overlay/upper/etc/modules-boot.d/*
+[   16.587688] block: attempting to load /tmp/overlay/upper/etc/config/fstab
+[   16.588076] block: extroot: not configured
+[   16.594787] block: attempting to load /tmp/f2fs_cfg/upper/etc/config/fstab
+[   16.597736] block: extroot: not configured
+[   16.605377] mount_root: switching to f2fs overlay
+[   16.611327] overlayfs: null uuid detected in lower fs '/', falling back to xino=off,index=off,nfs_export=off.
+[   16.615241] urandom-seed: Seeding with /etc/urandom.seed
+[   16.691343] procd: - early -
+[   16.691454] procd: - watchdog -
+[   17.242597] procd: - watchdog -
+[   17.280042] procd: - ubus -
+[   17.431653] procd: - init -
+[   17.918597] kmodloader: loading kernel modules from /etc/modules.d/*
+[   17.950821] urngd: v1.0.2 started.
+[   18.098062] tun: Universal TUN/TAP device driver, 1.6
+[   18.110457] GACT probability on
+[   18.111660] Mirror/redirect action on
+[   18.119750] u32 classifier
+[   18.119780]     input device check on
+[   18.121349]     Actions configured
+[   18.134473] fuse: init (API version 7.45)
+[   18.164765] NET: Registered PF_QIPCRTR protocol family
+[   18.170401] usbcore: registered new interface driver ums-alauda
+[   18.171308] usbcore: registered new interface driver ums-cypress
+[   18.176221] usbcore: registered new interface driver ums-datafab
+[   18.182348] usbcore: registered new interface driver ums-freecom
+[   18.188356] usbcore: registered new interface driver ums-isd200
+[   18.194461] usbcore: registered new interface driver ums-jumpshot
+[   18.200238] usbcore: registered new interface driver ums-karma
+[   18.207444] usbcore: registered new interface driver ums-sddr09
+[   18.212110] usbcore: registered new interface driver ums-sddr55
+[   18.217919] usbcore: registered new interface driver ums-usbat
+[   18.224617] usbcore: registered new interface driver usbserial_generic
+[   18.228674] usbserial: USB Serial support registered for generic
+[   18.263777] PPP generic driver version 2.4.2
+[   18.264814] PPP MPPE Compression module registered
+[   18.268011] NET: Registered PF_PPPOX protocol family
+[   18.281563] usbcore: registered new interface driver qcserial
+[   18.281653] usbserial: USB Serial support registered for Qualcomm USB modem
+[   18.286698] kmodloader: done loading kernel modules from /etc/modules.d/*
+[   21.005035] Loading modules backported from Linux version v7.2-0-g8d3ae59288f1
+[   21.005081] Backport generated by backports.git v5.15.58-1-198-g2580fa90cb79
+[   21.180771] ath11k c000000.wifi: ipq6018 hw1.0
+[   21.180810] ath11k c000000.wifi: FW memory mode: 1
+[   21.188475] remoteproc remoteproc0: powering up wcnss
+[   21.202436] remoteproc remoteproc0: Booting fw image IPQ6018/q6_fw.mdt, size 7340
+[   21.970361] remoteproc remoteproc0: remote processor wcnss is now up
+[   22.022437] ath11k c000000.wifi: chip_id 0x0 chip_family 0x4 board_id 0xff soc_id 0xffffffff
+[   22.022491] ath11k c000000.wifi: fw_version 0x2c0205b4 fw_build_timestamp 2024-10-04 16:15 fw_build_id WLAN.HK.2.12-01460-QCAHKSWPL_SILICONZ-1
+[   22.263541] nss-wifi-drv: radio 0 rxdma id 128 base 0x5c620000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[   22.310064] nss-wifi-drv: radio 1 rxdma id 143 base 0x5c810000 x4096 hw 0xc000000/0xc000000 swdesc 12288
+[   23.074296] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[   23.233314] br-lan: port 1(lan1) entered blocking state
+[   23.233357] br-lan: port 1(lan1) entered disabled state
+[   23.237389] qca-ppe 3a000000.ppe lan1: entered allmulticast mode
+[   23.242624] qca-edma 3ab00000.edma eth0: entered allmulticast mode
+[   23.249207] qca-ppe 3a000000.ppe lan1: entered promiscuous mode
+[   23.262103] qca-ppe 3a000000.ppe lan2: configuring for phy/psgmii link mode
+[   23.422800] br-lan: port 2(lan2) entered blocking state
+[   23.422851] br-lan: port 2(lan2) entered disabled state
+[   23.426876] qca-ppe 3a000000.ppe lan2: entered allmulticast mode
+[   23.432529] qca-ppe 3a000000.ppe lan2: entered promiscuous mode
+[   23.441479] qca-ppe 3a000000.ppe lan3: configuring for phy/psgmii link mode
+[   23.605320] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[   23.605487] br-lan: port 3(lan3) entered blocking state
+[   23.611799] br-lan: port 3(lan3) entered disabled state
+[   23.617147] qca-ppe 3a000000.ppe lan3: entered allmulticast mode
+[   23.622700] qca-ppe 3a000000.ppe lan3: entered promiscuous mode
+[   23.628993] br-lan: port 3(lan3) entered blocking state
+[   23.634131] br-lan: port 3(lan3) entered listening state
+[   23.642609] qca-ppe 3a000000.ppe wan: configuring for phy/psgmii link mode
+[   23.805076] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[   23.805152] br-lan: port 4(wan) entered blocking state
+[   23.811581] br-lan: port 4(wan) entered disabled state
+[   23.816762] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[   23.822339] qca-ppe 3a000000.ppe wan: entered promiscuous mode
+[   23.828231] br-lan: port 4(wan) entered blocking state
+[   23.833542] br-lan: port 4(wan) entered listening state
+[   24.575470] br-lan: port 5(phy0-ap0) entered blocking state
+[   24.575517] br-lan: port 5(phy0-ap0) entered disabled state
+[   24.579916] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[   24.585725] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[   24.604517] br-lan: port 5(phy0-ap0) entered blocking state
+[   24.604567] br-lan: port 5(phy0-ap0) entered listening state
+[   24.614769] br-lan: port 5(phy0-ap0) entered disabled state
+[   25.211788] br-lan: port 5(phy0-ap0) entered blocking state
+[   25.211834] br-lan: port 5(phy0-ap0) entered listening state
+[   25.581423] br-guest: port 1(phy0-ap1) entered blocking state
+[   25.581467] br-guest: port 1(phy0-ap1) entered disabled state
+[   25.586262] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[   25.592074] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[   25.599330] br-guest: port 1(phy0-ap1) entered blocking state
+[   25.604254] br-guest: port 1(phy0-ap1) entered forwarding state
+[   25.610583] br-guest: port 1(phy0-ap1) entered disabled state
+[   25.618376] br-guest: port 1(phy0-ap1) entered blocking state
+[   25.621665] br-guest: port 1(phy0-ap1) entered forwarding state
+[   25.782828] br-lan: port 6(phy1-ap0) entered blocking state
+[   25.782878] br-lan: port 6(phy1-ap0) entered disabled state
+[   25.787428] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[   25.793209] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[   25.808614] br-lan: port 6(phy1-ap0) entered blocking state
+[   25.808661] br-lan: port 6(phy1-ap0) entered listening state
+[   25.815997] br-lan: port 6(phy1-ap0) entered disabled state
+[   25.959276] br-lan: port 6(phy1-ap0) entered blocking state
+[   25.959329] br-lan: port 6(phy1-ap0) entered listening state
+[   26.046761] br-guest: port 2(phy1-ap1) entered blocking state
+[   26.046803] br-guest: port 2(phy1-ap1) entered disabled state
+[   26.051521] ath11k c000000.wifi phy1-ap1: entered allmulticast mode
+[   26.057559] ath11k c000000.wifi phy1-ap1: entered promiscuous mode
+[   26.064973] br-guest: port 2(phy1-ap1) entered blocking state
+[   26.069554] br-guest: port 2(phy1-ap1) entered forwarding state
+[   26.076672] br-guest: port 2(phy1-ap1) entered disabled state
+[   26.082955] br-guest: port 2(phy1-ap1) entered blocking state
+[   26.086999] br-guest: port 2(phy1-ap1) entered forwarding state
+[   31.832063] br-lan: port 3(lan3) entered learning state
+[   32.472051] br-lan: port 4(wan) entered learning state
+[   33.762090] br-lan: port 5(phy0-ap0) entered learning state
+[   33.764535] br-guest: port 1(phy0-ap1) entered disabled state
+[   33.802501] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[   33.802548] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[   33.808974] br-guest: port 1(phy0-ap1) entered disabled state
+[   34.092229] br-lan: port 5(phy0-ap0) entered disabled state
+[   34.092687] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[   34.096625] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[   34.102955] br-lan: port 5(phy0-ap0) entered disabled state
+[   34.392096] br-lan: port 6(phy1-ap0) entered learning state
+[   34.713247] br-lan: port 5(phy0-sta0) entered blocking state
+[   34.713296] br-lan: port 5(phy0-sta0) entered disabled state
+[   34.718041] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[   34.723984] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[   34.796811] br-lan: port 7(phy0-ap0) entered blocking state
+[   34.796860] br-lan: port 7(phy0-ap0) entered disabled state
+[   34.801243] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[   34.807068] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[   34.815999] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[   34.819269] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[   34.825675] br-lan: port 7(phy0-ap0) entered disabled state
+[   34.982304] br-lan: port 5(phy0-sta0) entered disabled state
+[   35.022584] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[   35.022637] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[   35.029081] br-lan: port 5(phy0-sta0) entered disabled state
+[   35.230997] br-lan: port 5(phy0-ap0) entered blocking state
+[   35.231045] br-lan: port 5(phy0-ap0) entered disabled state
+[   35.235571] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[   35.241222] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[   35.247583] br-lan: port 5(phy0-ap0) entered blocking state
+[   35.253498] br-lan: port 5(phy0-ap0) entered listening state
+[   35.333904] br-lan: port 5(phy0-ap0) entered disabled state
+[   35.376548] br-guest: port 1(phy0-ap1) entered blocking state
+[   35.376595] br-guest: port 1(phy0-ap1) entered disabled state
+[   35.381331] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[   35.387334] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[   35.394994] ath11k c000000.wifi phy0-ap1: left allmulticast mode
+[   35.399350] ath11k c000000.wifi phy0-ap1: left promiscuous mode
+[   35.405664] br-guest: port 1(phy0-ap1) entered disabled state
+[   35.415954] br-guest: port 1(phy0-ap1) entered blocking state
+[   35.417053] br-guest: port 1(phy0-ap1) entered disabled state
+[   35.422855] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[   35.428766] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[   35.440336] br-lan: port 7(phy0-sta0) entered blocking state
+[   35.440839] br-lan: port 7(phy0-sta0) entered disabled state
+[   35.446811] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[   35.452654] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[   37.959351] phy0-sta0: authenticate with da:d8:7c:54:4a:1f (local address=da:d8:7c:5b:79:71)
+[   37.959406] phy0-sta0: send auth to da:d8:7c:54:4a:1f (try 1/3)
+[   37.973047] phy0-sta0: authenticated
+[   37.982085] phy0-sta0: associate with da:d8:7c:54:4a:1f (try 1/3)
+[   37.985059] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1f (capab=0x11 status=0 aid=1)
+[   37.988948] phy0-sta0: associated
+[   40.152040] br-lan: port 3(lan3) entered forwarding state
+[   40.152098] br-lan: topology change detected, sending tcn bpdu
+[   40.792040] br-lan: port 4(wan) entered forwarding state
+[   40.792099] br-lan: topology change detected, sending tcn bpdu
+[   41.087295] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1f (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[   42.712047] br-lan: port 6(phy1-ap0) entered forwarding state
+[   42.712094] br-lan: topology change detected, sending tcn bpdu
+[   47.744403] br-guest: port 1(phy0-ap1) entered disabled state
+[   47.792502] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[   47.792550] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[   47.799066] br-guest: port 1(phy0-ap1) entered disabled state
+[   47.972275] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[   47.972338] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[   47.977503] br-lan: port 5(phy0-ap0) entered disabled state
+[   48.382359] br-lan: port 7(phy0-sta0) entered disabled state
+[   48.442518] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[   48.442567] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[   48.449012] br-lan: port 7(phy0-sta0) entered disabled state
+[   48.966332] br-lan: port 5(phy0-ap0) entered blocking state
+[   48.966377] br-lan: port 5(phy0-ap0) entered disabled state
+[   48.971001] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[   48.976638] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[   48.988407] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[   48.988784] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[   48.995183] br-lan: port 5(phy0-ap0) entered disabled state
+[   49.024235] br-lan: port 5(phy0-ap0) entered blocking state
+[   49.024282] br-lan: port 5(phy0-ap0) entered disabled state
+[   49.028808] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[   49.034626] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[   49.573984] br-lan: port 5(phy0-ap0) entered blocking state
+[   49.574045] br-lan: port 5(phy0-ap0) entered listening state
+[   49.667630] br-guest: port 1(phy0-ap1) entered blocking state
+[   49.667683] br-guest: port 1(phy0-ap1) entered disabled state
+[   49.672617] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[   49.678605] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[   49.686375] br-guest: port 1(phy0-ap1) entered blocking state
+[   49.690442] br-guest: port 1(phy0-ap1) entered forwarding state
+[   58.072041] br-lan: port 5(phy0-ap0) entered learning state
+[   66.392039] br-lan: port 5(phy0-ap0) entered forwarding state
+[   66.392088] br-lan: topology change detected, sending tcn bpdu
+[  167.352911] br-lan: port 4(wan) entered disabled state
+[  167.353116] br-lan: topology change detected, propagating
+[  167.372250] qca-ppe 3a000000.ppe wan: Link is Down
+[  173.714403] br-guest: port 1(phy0-ap1) entered disabled state
+[  173.772771] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[  173.772818] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[  173.779257] br-guest: port 1(phy0-ap1) entered disabled state
+[  173.952519] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  173.952582] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  173.957840] br-lan: port 5(phy0-ap0) entered disabled state
+[  174.643066] br-lan: port 5(phy0-sta0) entered blocking state
+[  174.643120] br-lan: port 5(phy0-sta0) entered disabled state
+[  174.647927] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[  174.653855] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[  174.723886] br-lan: port 7(phy0-ap0) entered blocking state
+[  174.723936] br-lan: port 7(phy0-ap0) entered disabled state
+[  174.728403] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  174.734198] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  174.743717] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  174.746347] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  174.752826] br-lan: port 7(phy0-ap0) entered disabled state
+[  174.862710] br-lan: port 5(phy0-sta0) entered disabled state
+[  174.892800] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[  174.892851] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[  174.899295] br-lan: port 5(phy0-sta0) entered disabled state
+[  175.099566] br-lan: port 5(phy0-ap0) entered blocking state
+[  175.099608] br-lan: port 5(phy0-ap0) entered disabled state
+[  175.104024] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  175.109736] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  175.116265] br-lan: port 5(phy0-ap0) entered blocking state
+[  175.122009] br-lan: port 5(phy0-ap0) entered listening state
+[  175.176656] br-lan: port 5(phy0-ap0) entered disabled state
+[  175.263548] br-lan: port 7(phy0-sta0) entered blocking state
+[  175.263602] br-lan: port 7(phy0-sta0) entered disabled state
+[  175.268415] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[  175.274269] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[  175.282695] br-guest: port 1(phy0-ap1) entered blocking state
+[  175.286265] br-guest: port 1(phy0-ap1) entered disabled state
+[  175.292206] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  175.298231] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  175.306304] br-guest: port 1(phy0-ap1) entered blocking state
+[  175.310235] br-guest: port 1(phy0-ap1) entered forwarding state
+[  175.318746] br-guest: port 1(phy0-ap1) entered disabled state
+[  176.799737] phy0-sta0: authenticate with da:d8:7c:54:4a:1f (local address=da:d8:7c:5b:79:71)
+[  176.799806] phy0-sta0: send auth to da:d8:7c:54:4a:1f (try 1/3)
+[  176.813229] phy0-sta0: authenticated
+[  176.822350] phy0-sta0: associate with da:d8:7c:54:4a:1f (try 1/3)
+[  176.825254] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1f (capab=0x11 status=0 aid=1)
+[  176.829286] phy0-sta0: associated
+[  179.927531] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1f (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[  190.553406] phy0-sta0: authenticate with da:d8:7c:54:4a:1f (local address=da:d8:7c:5b:79:71)
+[  190.553459] phy0-sta0: send auth to da:d8:7c:54:4a:1f (try 1/3)
+[  190.567068] phy0-sta0: authenticated
+[  190.572522] phy0-sta0: associate with da:d8:7c:54:4a:1f (try 1/3)
+[  190.575390] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1f (capab=0x11 status=0 aid=1)
+[  190.579461] phy0-sta0: associated
+[  191.275638] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[  191.275707] br-lan: port 4(wan) entered blocking state
+[  191.282119] br-lan: port 4(wan) entered listening state
+[  193.677670] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1f (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[  199.512582] br-lan: port 4(wan) entered learning state
+[  207.832645] br-lan: port 4(wan) entered forwarding state
+[  207.832694] br-lan: topology change detected, propagating
+[  214.353771] phy0-sta0: authenticate with da:d8:7c:54:4a:1f (local address=da:d8:7c:5b:79:71)
+[  214.353895] phy0-sta0: send auth to da:d8:7c:54:4a:1f (try 1/3)
+[  214.367454] phy0-sta0: authenticated
+[  214.372415] phy0-sta0: associate with da:d8:7c:54:4a:1f (try 1/3)
+[  214.375293] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1f (capab=0x11 status=0 aid=1)
+[  214.379283] phy0-sta0: associated
+[  217.477508] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1f (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[  221.784253] br-guest: port 1(phy0-ap1) entered disabled state
+[  221.852335] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[  221.852385] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[  221.858825] br-guest: port 1(phy0-ap1) entered disabled state
+[  222.082096] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  222.082157] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  222.087315] br-lan: port 5(phy0-ap0) entered disabled state
+[  222.392080] br-lan: port 7(phy0-sta0) entered disabled state
+[  222.452303] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[  222.452354] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[  222.458808] br-lan: port 7(phy0-sta0) entered disabled state
+[  223.068277] br-lan: port 5(phy0-ap0) entered blocking state
+[  223.068329] br-lan: port 5(phy0-ap0) entered disabled state
+[  223.072778] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  223.078562] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  223.095893] br-lan: port 5(phy0-ap0) entered blocking state
+[  223.095940] br-lan: port 5(phy0-ap0) entered listening state
+[  223.100821] br-lan: port 5(phy0-ap0) entered disabled state
+[  223.593473] br-lan: port 5(phy0-ap0) entered blocking state
+[  223.593524] br-lan: port 5(phy0-ap0) entered listening state
+[  223.679031] br-guest: port 1(phy0-ap1) entered blocking state
+[  223.679076] br-guest: port 1(phy0-ap1) entered disabled state
+[  223.683854] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  223.689791] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  223.697500] ath11k c000000.wifi phy0-ap1: left allmulticast mode
+[  223.702031] ath11k c000000.wifi phy0-ap1: left promiscuous mode
+[  223.708122] br-guest: port 1(phy0-ap1) entered disabled state
+[  223.717690] br-guest: port 1(phy0-ap1) entered blocking state
+[  223.719595] br-guest: port 1(phy0-ap1) entered disabled state
+[  223.725489] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  223.731414] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  223.737574] br-guest: port 1(phy0-ap1) entered blocking state
+[  223.743345] br-guest: port 1(phy0-ap1) entered forwarding state
+[  232.151248] br-lan: port 5(phy0-ap0) entered learning state
+[  240.470854] br-lan: port 5(phy0-ap0) entered forwarding state
+[  240.470905] br-lan: topology change detected, sending tcn bpdu
+[  671.750469] br-lan: port 4(wan) entered disabled state
+[  671.750643] br-lan: topology change detected, propagating
+[  671.769806] qca-ppe 3a000000.ppe wan: Link is Down
+[  672.792933] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[  672.793000] br-lan: port 4(wan) entered blocking state
+[  672.799413] br-lan: port 4(wan) entered listening state
+[  679.802068] br-guest: port 1(phy0-ap1) entered disabled state
+[  679.850178] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[  679.850230] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[  679.856680] br-guest: port 1(phy0-ap1) entered disabled state
+[  680.179923] br-lan: port 5(phy0-ap0) entered disabled state
+[  680.180416] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  680.184321] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  680.190693] br-lan: port 5(phy0-ap0) entered disabled state
+[  680.787222] br-lan: port 5(phy0-sta0) entered blocking state
+[  680.787270] br-lan: port 5(phy0-sta0) entered disabled state
+[  680.792071] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[  680.797924] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[  680.866781] br-lan: port 7(phy0-ap0) entered blocking state
+[  680.866833] br-lan: port 7(phy0-ap0) entered disabled state
+[  680.871337] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  680.877041] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  680.886557] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  680.889244] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  680.895675] br-lan: port 7(phy0-ap0) entered disabled state
+[  681.020018] br-lan: port 5(phy0-sta0) entered disabled state
+[  681.060556] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[  681.060606] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[  681.067106] br-lan: port 5(phy0-sta0) entered disabled state
+[  681.266975] br-lan: port 5(phy0-ap0) entered blocking state
+[  681.267024] br-lan: port 5(phy0-ap0) entered disabled state
+[  681.271606] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  681.277287] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  681.283508] br-lan: port 5(phy0-ap0) entered blocking state
+[  681.289436] br-lan: port 5(phy0-ap0) entered listening state
+[  681.310009] br-lan: port 5(phy0-ap0) entered disabled state
+[  681.415025] br-lan: port 7(phy0-sta0) entered blocking state
+[  681.415074] br-lan: port 7(phy0-sta0) entered disabled state
+[  681.419943] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[  681.425751] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[  681.431810] br-lan: port 4(wan) entered learning state
+[  681.461326] br-guest: port 1(phy0-ap1) entered blocking state
+[  681.461368] br-guest: port 1(phy0-ap1) entered disabled state
+[  681.466116] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  681.472154] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  681.480035] br-guest: port 1(phy0-ap1) entered blocking state
+[  681.484123] br-guest: port 1(phy0-ap1) entered forwarding state
+[  681.491272] br-guest: port 1(phy0-ap1) entered disabled state
+[  683.190336] br-lan: port 4(wan) entered disabled state
+[  683.209687] qca-ppe 3a000000.ppe wan: Link is Down
+[  686.312796] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[  686.312864] br-lan: port 4(wan) entered blocking state
+[  686.319282] br-lan: port 4(wan) entered listening state
+[  694.869546] br-lan: port 4(wan) entered learning state
+[  703.189461] br-lan: port 4(wan) entered forwarding state
+[  703.189509] br-lan: topology change detected, propagating
+[  703.990126] br-lan: port 4(wan) entered disabled state
+[  704.009471] qca-ppe 3a000000.ppe wan: Link is Down
+[  721.682439] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[  721.682509] br-lan: port 4(wan) entered blocking state
+[  721.688920] br-lan: port 4(wan) entered listening state
+[  725.506043] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[  725.506098] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[  725.519671] phy0-sta0: authenticated
+[  725.529280] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[  725.532955] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[  725.536115] phy0-sta0: associated
+[  728.676969] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[  730.069228] br-lan: port 4(wan) entered learning state
+[  738.389142] br-lan: port 4(wan) entered forwarding state
+[  738.389191] br-lan: topology change detected, propagating
+[  739.329950] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[  739.330005] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[  739.344754] phy0-sta0: authenticated
+[  739.349159] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[  739.352072] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[  739.356050] phy0-sta0: associated
+[  742.454427] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[  764.109899] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[  764.109953] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[  764.122841] phy0-sta0: authenticated
+[  764.128969] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[  764.131824] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[  764.135780] phy0-sta0: associated
+[  767.234081] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[  795.870985] br-guest: port 1(phy0-ap1) entered disabled state
+[  795.929190] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[  795.929240] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[  795.935677] br-guest: port 1(phy0-ap1) entered disabled state
+[  796.098930] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  796.098994] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  796.104155] br-lan: port 5(phy0-ap0) entered disabled state
+[  796.529032] br-lan: port 7(phy0-sta0) entered disabled state
+[  796.589334] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[  796.589384] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[  796.595944] br-lan: port 7(phy0-sta0) entered disabled state
+[  797.104266] br-lan: port 5(phy0-ap0) entered blocking state
+[  797.104316] br-lan: port 5(phy0-ap0) entered disabled state
+[  797.108768] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  797.114497] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  797.133033] br-lan: port 5(phy0-ap0) entered blocking state
+[  797.133083] br-lan: port 5(phy0-ap0) entered listening state
+[  797.137720] br-lan: port 5(phy0-ap0) entered disabled state
+[  797.690986] br-lan: port 5(phy0-ap0) entered blocking state
+[  797.691047] br-lan: port 5(phy0-ap0) entered listening state
+[  797.780395] br-guest: port 1(phy0-ap1) entered blocking state
+[  797.780439] br-guest: port 1(phy0-ap1) entered disabled state
+[  797.785224] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  797.791191] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  797.799496] br-guest: port 1(phy0-ap1) entered blocking state
+[  797.803189] br-guest: port 1(phy0-ap1) entered forwarding state
+[  797.809403] ath11k c000000.wifi phy0-ap1: left allmulticast mode
+[  797.814753] ath11k c000000.wifi phy0-ap1: left promiscuous mode
+[  797.821223] br-guest: port 1(phy0-ap1) entered disabled state
+[  797.829133] br-guest: port 1(phy0-ap1) entered blocking state
+[  797.832530] br-guest: port 1(phy0-ap1) entered disabled state
+[  797.838352] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  797.844302] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  797.851887] br-guest: port 1(phy0-ap1) entered blocking state
+[  797.856315] br-guest: port 1(phy0-ap1) entered forwarding state
+[  806.228709] br-lan: port 5(phy0-ap0) entered learning state
+[  814.548728] br-lan: port 5(phy0-ap0) entered forwarding state
+[  814.548777] br-lan: topology change detected, sending tcn bpdu
+[  982.708226] br-lan: port 4(wan) entered disabled state
+[  982.708428] br-lan: topology change detected, propagating
+[  982.727567] qca-ppe 3a000000.ppe wan: Link is Down
+[  989.779757] br-guest: port 1(phy0-ap1) entered disabled state
+[  989.827848] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[  989.827899] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[  989.834376] br-guest: port 1(phy0-ap1) entered disabled state
+[  990.107588] br-lan: port 5(phy0-ap0) entered disabled state
+[  990.108068] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  990.111986] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  990.118355] br-lan: port 5(phy0-ap0) entered disabled state
+[  990.789043] br-lan: port 5(phy0-sta0) entered blocking state
+[  990.789091] br-lan: port 5(phy0-sta0) entered disabled state
+[  990.793874] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[  990.800066] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[  990.875308] br-lan: port 7(phy0-ap0) entered blocking state
+[  990.875355] br-lan: port 7(phy0-ap0) entered disabled state
+[  990.879854] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  990.885561] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  990.895156] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[  990.897825] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[  990.904044] br-lan: port 7(phy0-ap0) entered disabled state
+[  991.047648] br-lan: port 5(phy0-sta0) entered disabled state
+[  991.107863] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[  991.107917] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[  991.114374] br-lan: port 5(phy0-sta0) entered disabled state
+[  991.314476] br-lan: port 5(phy0-ap0) entered blocking state
+[  991.314527] br-lan: port 5(phy0-ap0) entered disabled state
+[  991.319039] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[  991.324691] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[  991.331204] br-lan: port 5(phy0-ap0) entered blocking state
+[  991.336929] br-lan: port 5(phy0-ap0) entered listening state
+[  991.390863] br-lan: port 5(phy0-ap0) entered disabled state
+[  991.488137] br-guest: port 1(phy0-ap1) entered blocking state
+[  991.488184] br-guest: port 1(phy0-ap1) entered disabled state
+[  991.492916] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[  991.498909] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[  991.506259] br-lan: port 7(phy0-sta0) entered blocking state
+[  991.511064] br-lan: port 7(phy0-sta0) entered disabled state
+[  991.516785] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[  991.522697] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[  991.530527] br-guest: port 1(phy0-ap1) entered blocking state
+[  991.534732] br-guest: port 1(phy0-ap1) entered forwarding state
+[  991.547619] br-guest: port 1(phy0-ap1) entered disabled state
+[  994.034789] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[  994.034844] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[  994.048238] phy0-sta0: authenticated
+[  994.057280] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[  994.060133] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[  994.064173] phy0-sta0: associated
+[  997.162343] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[ 1008.827763] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[ 1008.827818] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[ 1008.840901] phy0-sta0: authenticated
+[ 1008.846938] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[ 1008.849799] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[ 1008.853876] phy0-sta0: associated
+[ 1011.952066] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[ 1033.627630] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[ 1033.627684] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[ 1033.640862] phy0-sta0: authenticated
+[ 1033.646400] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[ 1033.649328] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[ 1033.653282] phy0-sta0: associated
+[ 1036.751471] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[ 1067.456327] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[ 1067.456379] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[ 1067.469648] phy0-sta0: authenticated
+[ 1067.475739] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[ 1067.478713] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[ 1067.482601] phy0-sta0: associated
+[ 1070.580927] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[ 1131.265699] phy0-sta0: authenticate with da:d8:7c:54:4a:1e (local address=da:d8:7c:5b:79:71)
+[ 1131.265764] phy0-sta0: send auth to da:d8:7c:54:4a:1e (try 1/3)
+[ 1131.279159] phy0-sta0: authenticated
+[ 1131.284677] phy0-sta0: associate with da:d8:7c:54:4a:1e (try 1/3)
+[ 1131.287541] phy0-sta0: RX AssocResp from da:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[ 1131.291508] phy0-sta0: associated
+[ 1134.389709] phy0-sta0: deauthenticated from da:d8:7c:54:4a:1e (Reason: 15=4WAY_HANDSHAKE_TIMEOUT)
+[ 1147.027651] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[ 1147.027719] br-lan: port 4(wan) entered blocking state
+[ 1147.034133] br-lan: port 4(wan) entered listening state
+[ 1155.674353] br-lan: port 4(wan) entered learning state
+[ 1163.984211] br-lan: port 4(wan) entered forwarding state
+[ 1163.984268] br-lan: topology change detected, propagating
+[ 1179.746429] br-guest: port 1(phy0-ap1) entered disabled state
+[ 1179.794531] ath11k c000000.wifi phy0-ap1 (unregistering): left allmulticast mode
+[ 1179.794585] ath11k c000000.wifi phy0-ap1 (unregistering): left promiscuous mode
+[ 1179.801028] br-guest: port 1(phy0-ap1) entered disabled state
+[ 1179.984237] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[ 1179.984303] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[ 1179.989467] br-lan: port 5(phy0-ap0) entered disabled state
+[ 1180.344281] br-lan: port 7(phy0-sta0) entered disabled state
+[ 1180.404475] ath11k c000000.wifi phy0-sta0 (unregistering): left allmulticast mode
+[ 1180.404527] ath11k c000000.wifi phy0-sta0 (unregistering): left promiscuous mode
+[ 1180.411030] br-lan: port 7(phy0-sta0) entered disabled state
+[ 1181.004767] br-lan: port 5(phy0-ap0) entered blocking state
+[ 1181.004817] br-lan: port 5(phy0-ap0) entered disabled state
+[ 1181.009261] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[ 1181.015071] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[ 1181.031305] br-lan: port 5(phy0-ap0) entered blocking state
+[ 1181.031353] br-lan: port 5(phy0-ap0) entered listening state
+[ 1181.036918] br-lan: port 5(phy0-ap0) entered disabled state
+[ 1181.535892] br-lan: port 5(phy0-ap0) entered blocking state
+[ 1181.535949] br-lan: port 5(phy0-ap0) entered listening state
+[ 1181.600059] br-guest: port 1(phy0-ap1) entered blocking state
+[ 1181.600103] br-guest: port 1(phy0-ap1) entered disabled state
+[ 1181.604893] ath11k c000000.wifi phy0-ap1: entered allmulticast mode
+[ 1181.610788] ath11k c000000.wifi phy0-ap1: entered promiscuous mode
+[ 1181.618939] br-guest: port 1(phy0-ap1) entered blocking state
+[ 1181.622868] br-guest: port 1(phy0-ap1) entered forwarding state
+[ 1181.629648] br-guest: port 1(phy0-ap1) entered disabled state
+[ 1181.636824] br-guest: port 1(phy0-ap1) entered blocking state
+[ 1181.640303] br-guest: port 1(phy0-ap1) entered forwarding state
+[ 1189.583935] br-lan: port 5(phy0-ap0) entered learning state
