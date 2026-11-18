@@ -75,8 +75,8 @@ jobs:
       - name: List IPK packages
         run: |
           ls -lh "$GITHUB_WORKSPACE/artifacts"
-          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'wifiroam-*.ipk' -print -quit)"
-          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'luci-app-wifiroam-*.ipk' -print -quit)"
+          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'wifiroam_*.ipk' -print -quit)"
+          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'luci-app-wifiroam_*.ipk' -print -quit)"
 
       - name: Upload IPK packages
         uses: actions/upload-artifact@v4
