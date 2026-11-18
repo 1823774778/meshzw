@@ -81,7 +81,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 61;
+const DAEMON_VERSION = 62;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4350,7 +4350,9 @@ function backhaul_dhcp_restart() {
 	let tries = state._bh_dhcp_tries ?? 0;
 	state._bh_dhcp_ts = time();
 
-	if (backhaul_lan_ipv4()) {
+	/* 首次无条件 renew：切到无线后即使还留着有线时的旧地址，
+	   也要让 udhcpc 在新路径上重新确认租约和网关 */
+	if (tries > 0 && backhaul_lan_ipv4()) {
 		state._bh_dhcp_pending = false;
 		state._bh_dhcp_tries = 0;
 		log("backhaul: LAN DHCP recovered");
