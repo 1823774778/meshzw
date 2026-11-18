@@ -1,0 +1,1000 @@
+[2026年11月18日 GMT+8 08:40:09] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq: jail (6931) exited with exit: 0
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:40:17] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8307.590778] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:18] daemon.debug: router-tool[22607]: WAN status is unavailable; LAN subnet check awaits the next interface event
+[2026年11月18日 GMT+8 08:40:18] daemon.info: router-tool[22607]: Applying configuration updates: router-tool
+[2026年11月18日 GMT+8 08:40:18] daemon.info: router-tool[22607]: Committed configuration: router-tool
+[2026年11月18日 GMT+8 08:40:18] daemon.info: router-tool[22607]: Configuration mode: sub; LAN protocol: static; LAN IPv4: "10.10.10.1/24"
+[2026年11月18日 GMT+8 08:40:18] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:40:18] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:40:18] daemon.notice: netifd: Interface 'wan' is enabled
+[2026年11月18日 GMT+8 08:40:18] daemon.notice: netifd: Interface 'wan' has link connectivity
+[2026年11月18日 GMT+8 08:40:18] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8307.961573] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8307.961627] qca-ppe 3a000000.ppe wan: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8307.966727] br-lan: port 5(wan) entered disabled state
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8307.971762] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:40:18] daemon.notice: netifd: Interface 'wan' is disabled
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8308.000655] qca-ppe 3a000000.ppe wan: Link is Down
+[2026年11月18日 GMT+8 08:40:18] kern.info: [ 8308.003885] qca-ppe 3a000000.ppe wan: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'wan' is enabled
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'wan' is setting up now
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: wpa_supplicant[3197]: Start pending MLD interfaces
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Network device 'wan' link is down
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'wan' has link connectivity loss
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: lan (25974): udhcpc: received SIGTERM
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: lan (25974): udhcpc: unicasting a release of 10.10.10.112 to 10.10.10.1
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: lan (25974): udhcpc: sending release
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: lan (25974): udhcpc: entering released state
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'wan6' is now down
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'wan6' has link connectivity loss
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: lan (25974): Command failed: ubus call network.interface notify_proto { "action": 0, "link-up": false, "keep": false, "interface": "lan" } (Permission denied)
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'lan' is now down
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.198363] br-lan: port 7(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.198493] br-lan: port 6(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.202844] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.208729] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.220025] qca-ppe 3a000000.ppe lan1: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.220081] qca-ppe 3a000000.ppe lan1: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.225536] br-lan: port 1(lan1) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: Failed to send to ff02::2%wan6@br-lan (Network unreachable)
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.234792] qca-ppe 3a000000.ppe lan2: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.235753] qca-ppe 3a000000.ppe lan2: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.241999] br-lan: port 2(lan2) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.271107] qca-ppe 3a000000.ppe lan3: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.271156] qca-edma 3ab00000.edma eth0: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.275854] qca-ppe 3a000000.ppe lan3: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.282065] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: Failed to send to ff05::1:3%wan6@br-lan (Network unreachable)
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: Failed to recvmsg 19 (Network is down)
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.330805] qca-ppe 3a000000.ppe lan3: Link is Down
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.332251] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.334614] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.341105] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.350259] ath11k c000000.wifi phy0-sta0: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.352087] ath11k c000000.wifi phy0-sta0: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.358556] br-lan: port 6(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.366015] ath11k c000000.wifi phy1-ap0: left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.370052] ath11k c000000.wifi phy1-ap0: left promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.376142] br-lan: port 7(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: setsockopt(SO_BINDTODEVICE): No such device
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: Failed to send to ff02::2%wan6@br-lan (No such device)
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: setsockopt(SO_BINDTODEVICE): No such device
+[2026年11月18日 GMT+8 08:40:19] daemon.err: odhcpd[3549]: Failed to recvmsg -1 (Bad file descriptor)
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.392612] br-lan (unregistering): left allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'lan' is disabled
+[2026年11月18日 GMT+8 08:40:19] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.495191] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.651541] br-lan: port 1(lan1) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.651586] br-lan: port 1(lan1) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.655770] qca-ppe 3a000000.ppe lan1: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.660981] qca-edma 3ab00000.edma eth0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.667741] qca-ppe 3a000000.ppe lan1: entered promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.674981] qca-ppe 3a000000.ppe lan2: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.831455] br-lan: port 2(lan2) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.831502] br-lan: port 2(lan2) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.835654] qca-ppe 3a000000.ppe lan2: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.841246] qca-ppe 3a000000.ppe lan2: entered promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8308.849112] qca-ppe 3a000000.ppe lan3: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.011471] br-lan: port 3(lan3) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.011522] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.015642] qca-ppe 3a000000.ppe lan3: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.021360] qca-ppe 3a000000.ppe lan3: entered promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.029783] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.032700] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.038315] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.043975] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.052479] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.056269] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.062143] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.067906] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.076279] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.080014] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.085641] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.091332] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.099362] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.103639] br-lan: port 6(phy1-ap0) entered listening state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.109145] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:40:19] kern.info: [ 8309.115015] br-lan: port 5(phy0-sta0) entered listening state
+[2026年11月18日 GMT+8 08:40:20] kern.info: [ 8309.120685] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:40:20] kern.info: [ 8309.126283] br-lan: port 4(phy0-ap0) entered listening state
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Interface 'lan' is enabled
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Interface 'lan' is setting up now
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Interface 'lan' is now up
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: bridge 'br-lan' link is down
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Interface 'wan' is now down
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: Network device 'lan3' link is down
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio0 (22968): wifi-scripts: Starting
+[2026年11月18日 GMT+8 08:40:20] daemon.info: ucode[18633]: wifiroam: self ip updated: 10.10.10.1
+[2026年11月18日 GMT+8 08:40:20] daemon.info: ucode[18633]: wifiroam: backhaul: wired uplink lost, will restart LAN DHCP when STA is up
+[2026年11月18日 GMT+8 08:40:20] user.notice: firewall: Reloading firewall due to ifup of lan (br-lan)
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio0 (22968): wifi-scripts: Setting country code to US
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio0 (22968): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio0 (22968): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio0 (22968): wifi-scripts: Preparing interface: phy0-sta0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio1 (23106): wifi-scripts: Starting
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy1
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio1 (23106): wifi-scripts: Setting country code to US
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio1 (23106): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: netifd: radio1 (23106): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月18日 GMT+8 08:40:20] daemon.notice: wpa_supplicant[3197]: Start pending MLD interfaces
+[2026年11月18日 GMT+8 08:40:21] kern.info: [ 8310.263717] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: Interface 'wan' has link connectivity
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: Interface 'wan' is setting up now
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: Interface 'wan6' has link connectivity
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: Interface 'wan6' is setting up now
+[2026年11月18日 GMT+8 08:40:21] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: wan (23453): udhcpc: started, v1.38.0
+[2026年11月18日 GMT+8 08:40:21] authpriv.info: dropbear[27231]: Early exit: Terminated by signal
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: wan (23453): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:40:21] user.info: : Binding to interface 'br-lan'
+[2026年11月18日 GMT+8 08:40:21] authpriv.info: dropbear[23467]: Not backgrounding
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: wan6 (23517): Failed to send RS (Address not available)
+[2026年11月18日 GMT+8 08:40:21] daemon.notice: netifd: wan6 (23517): wan: error connecting LLA socket
+[2026年11月18日 GMT+8 08:40:22] daemon.notice: netifd: wan6 (23517): Failed to send SOLICIT message to ff02::1:2 (Address not available)
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq: jail (22440) exited with exit: 0
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 10.10.10.100 -- 10.10.10.249, lease time 12h
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:40:22] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:40:22] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:40:22] kern.info: [ 8312.103721] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月18日 GMT+8 08:40:22] kern.info: [ 8312.103788] br-lan: port 3(lan3) entered blocking state
+[2026年11月18日 GMT+8 08:40:22] kern.info: [ 8312.110207] br-lan: port 3(lan3) entered listening state
+[2026年11月18日 GMT+8 08:40:22] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月18日 GMT+8 08:40:24] daemon.notice: netifd: wan (23453): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:40:27] daemon.notice: netifd: wan (23453): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:40:28] kern.info: [ 8317.220553] br-lan: port 4(phy0-ap0) entered learning state
+[2026年11月18日 GMT+8 08:40:28] kern.info: [ 8317.220712] br-lan: port 5(phy0-sta0) entered learning state
+[2026年11月18日 GMT+8 08:40:28] kern.info: [ 8317.225023] br-lan: port 6(phy1-ap0) entered learning state
+[2026年11月18日 GMT+8 08:40:31] kern.info: [ 8320.420538] br-lan: port 3(lan3) entered learning state
+[2026年11月18日 GMT+8 08:40:33] kern.info: [ 8322.333838] phy0-sta0: deauthenticating from de:d8:7c:54:4a:1e by local choice (Reason: 3=DEAUTH_LEAVING)
+[2026年11月18日 GMT+8 08:40:33] kern.info: [ 8322.334116] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:40:33] daemon.notice: netifd: Network device 'phy0-sta0' link is down
+[2026年11月18日 GMT+8 08:40:33] daemon.notice: wpa_supplicant[3197]: phy0-sta0: CTRL-EVENT-DISCONNECTED bssid=de:d8:7c:54:4a:1e reason=3 locally_generated=1
+[2026年11月18日 GMT+8 08:40:33] daemon.notice: wpa_supplicant[3197]: phy0-sta0: CTRL-EVENT-DSCP-POLICY clear_all
+[2026年11月18日 GMT+8 08:40:33] daemon.info: ucode[18633]: wifiroam: backhaul STA paused: wired uplink detected, wireless STA paused
+[2026年11月18日 GMT+8 08:40:33] daemon.info: ucode[18633]: wifiroam: event backhaul_link  - wired uplink detected, wireless STA paused
+[2026年11月18日 GMT+8 08:40:34] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月18日 GMT+8 08:40:34] kern.info: [ 8323.380668] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:40:36] kern.info: [ 8325.540509] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月18日 GMT+8 08:40:36] kern.info: [ 8325.540574] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:40:36] daemon.notice: netifd: bridge 'br-lan' link is up
+[2026年11月18日 GMT+8 08:40:36] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月18日 GMT+8 08:40:36] daemon.err: odhcpd[3549]: Failed to send to ff02::2%wan6@br-lan (Address not available)
+[2026年11月18日 GMT+8 08:40:36] kern.info: [ 8325.560547] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:40:39] kern.info: [ 8328.750493] br-lan: port 3(lan3) entered forwarding state
+[2026年11月18日 GMT+8 08:40:39] kern.info: [ 8328.750542] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:40:42] daemon.notice: netifd: wan (23453): udhcpc: broadcasting select for 10.10.10.111, server 10.10.10.1
+[2026年11月18日 GMT+8 08:40:42] daemon.notice: netifd: wan (23453): udhcpc: lease of 10.10.10.111 obtained from 10.10.10.1, lease time 43200
+[2026年11月18日 GMT+8 08:40:42] daemon.notice: netifd: Interface 'wan' is now up
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:40:42] daemon.warn: dnsmasq[1]: ignoring nameserver 10.10.10.1 - local interface
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:40:42] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:40:42] user.notice: firewall: Reloading firewall due to ifup of wan (wan)
+[2026年11月18日 GMT+8 08:40:43] authpriv.info: dispatcher.uc: luci: accepted login on /admin/network/qca-ppe-qos for root from 10.10.10.194
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq: jail (23839) exited with exit: 0
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 10.10.10.100 -- 10.10.10.249, lease time 12h
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:40:43] daemon.warn: dnsmasq[1]: ignoring nameserver 10.10.10.1 - local interface
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:40:43] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:40:49] daemon.info: ucode[18633]: wifiroam: event ap_offline DC:D8:7C:54:4A:1D - YkingWrt
+[2026年11月18日 GMT+8 08:40:49] daemon.info: ucode[18633]: wifiroam: event ap_offline DC:D8:7C:20:37:6B - YkingWrt
+[2026年11月18日 GMT+8 08:40:49] daemon.info: ucode[18633]: wifiroam: backhaul: wired uplink lost, will restart LAN DHCP when STA is up
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:40:50] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f
+[2026年11月18日 GMT+8 08:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f
+[2026年11月18日 GMT+8 08:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f
+[2026年11月18日 GMT+8 08:40:53] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: backhaul STA resumed
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: event backhaul_link  - cable removed, wireless backhaul enabled
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: event ap_online DC:D8:7C:5B:79:70 - YkingWrt
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: event cap_connected  - 10.10.10.1
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: link to CAP established
+[2026年11月18日 GMT+8 08:40:59] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: wpa_supplicant[3197]: phy0-sta0: SME: Trying to authenticate with de:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.605074] phy0-sta0: authenticate with de:d8:7c:54:4a:1e (local address=de:d8:7c:5b:79:71)
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.605132] phy0-sta0: send auth to de:d8:7c:54:4a:1e (try 1/3)
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: wpa_supplicant[3197]: phy0-sta0: Trying to associate with de:d8:7c:54:4a:1e (SSID='wifiroam-bh' freq=5745 MHz)
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.618668] phy0-sta0: authenticated
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.620642] phy0-sta0: associate with de:d8:7c:54:4a:1e (try 1/3)
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.624950] phy0-sta0: RX AssocResp from de:d8:7c:54:4a:1e (capab=0x11 status=0 aid=1)
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.629848] phy0-sta0: associated
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: netifd: Network device 'phy0-sta0' link is up
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: wpa_supplicant[3197]: phy0-sta0: Associated with de:d8:7c:54:4a:1e
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: wpa_supplicant[3197]: phy0-sta0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: wpa_supplicant[3197]: phy0-sta0: WPA: Key negotiation completed with de:d8:7c:54:4a:1e [PTK=CCMP GTK=CCMP]
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: wpa_supplicant[3197]: phy0-sta0: CTRL-EVENT-CONNECTED - Connection to de:d8:7c:54:4a:1e completed [id=6 id_str=]
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.711410] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.711463] br-lan: port 5(phy0-sta0) entered listening state
+[2026年11月18日 GMT+8 08:41:02] daemon.notice: netifd: Network device 'phy0-ap0' link is up
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.723469] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:41:02] kern.info: [ 8351.723521] br-lan: port 4(phy0-ap0) entered listening state
+[2026年11月18日 GMT+8 08:41:05] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:41:05] daemon.warn: dnsmasq[1]: ignoring nameserver 10.10.10.1 - local interface
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:41:05] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:41:05] user.notice: firewall: Reloading firewall due to ifup of wan6 (wan)
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq: jail (24385) exited with exit: 0
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq-dhcp[1]: DHCP, IP range 10.10.10.100 -- 10.10.10.249, lease time 12h
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:41:06] daemon.warn: dnsmasq[1]: ignoring nameserver 10.10.10.1 - local interface
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:41:06] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:41:09] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:41:10] kern.info: [ 8360.100299] br-lan: port 4(phy0-ap0) entered learning state
+[2026年11月18日 GMT+8 08:41:10] kern.info: [ 8360.100465] br-lan: port 5(phy0-sta0) entered learning state
+[2026年11月18日 GMT+8 08:41:19] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:41:19] kern.info: [ 8368.420252] br-lan: port 5(phy0-sta0) entered forwarding state
+[2026年11月18日 GMT+8 08:41:19] kern.info: [ 8368.420303] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:41:19] kern.info: [ 8368.425111] br-lan: port 4(phy0-ap0) entered forwarding state
+[2026年11月18日 GMT+8 08:41:19] kern.info: [ 8368.430478] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:41:21] daemon.info: ucode[18633]: wifiroam: backhaul: LAN DHCP recovered
+[2026年11月18日 GMT+8 08:41:24] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:41:24] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:41:24] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:41:24] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:41:24] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:41:24] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:41:24] daemon.notice: netifd: Interface 'lan' is now down
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.897544] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.897691] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.902076] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.907948] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] daemon.warn: odhcpd[3549]: No default route present, setting ra_lifetime to 0!
+[2026年11月18日 GMT+8 08:41:24] daemon.err: odhcpd[3549]: Failed to send to ff02::1%lan@br-lan (Network unreachable)
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.920978] qca-ppe 3a000000.ppe lan1: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.921032] qca-ppe 3a000000.ppe lan1: left promiscuous mode
+[2026年11月18日 GMT+8 08:41:24] daemon.err: dnsmasq[1]: failed to send packet: Bad file descriptor
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.926067] br-lan: port 1(lan1) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.935281] qca-ppe 3a000000.ppe lan2: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.936409] qca-ppe 3a000000.ppe lan2: left promiscuous mode
+[2026年11月18日 GMT+8 08:41:24] daemon.err: odhcpd[3549]: Failed to recvmsg 23 (Network is down)
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.942919] br-lan: port 2(lan2) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.952438] qca-ppe 3a000000.ppe lan3: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.952979] qca-edma 3ab00000.edma eth0: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.958884] qca-ppe 3a000000.ppe lan3: left promiscuous mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.965034] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.990268] qca-ppe 3a000000.ppe lan3: Link is Down
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.993308] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8373.993986] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.000464] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.006535] ath11k c000000.wifi phy0-sta0: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.011508] ath11k c000000.wifi phy0-sta0: left promiscuous mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.017809] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.024718] ath11k c000000.wifi phy1-ap0: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.029448] ath11k c000000.wifi phy1-ap0: left promiscuous mode
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.035566] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.043086] br-lan (unregistering): left allmulticast mode
+[2026年11月18日 GMT+8 08:41:24] daemon.notice: netifd: Interface 'lan' is disabled
+[2026年11月18日 GMT+8 08:41:24] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月18日 GMT+8 08:41:24] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月18日 GMT+8 08:41:24] kern.info: [ 8374.093962] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.251128] br-lan: port 1(lan1) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.251171] br-lan: port 1(lan1) entered disabled state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.255203] qca-ppe 3a000000.ppe lan1: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.260425] qca-edma 3ab00000.edma eth0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.267199] qca-ppe 3a000000.ppe lan1: entered promiscuous mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.274882] qca-ppe 3a000000.ppe lan2: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.431087] br-lan: port 2(lan2) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.431133] br-lan: port 2(lan2) entered disabled state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.435167] qca-ppe 3a000000.ppe lan2: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.440900] qca-ppe 3a000000.ppe lan2: entered promiscuous mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.448704] qca-ppe 3a000000.ppe lan3: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.611112] br-lan: port 3(lan3) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.611160] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.615188] qca-ppe 3a000000.ppe lan3: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.620896] qca-ppe 3a000000.ppe lan3: entered promiscuous mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.630564] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.632258] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.638095] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.643667] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.653786] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.656003] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.661919] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.667552] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.677823] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.679653] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.685355] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.690978] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.698824] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.703276] br-lan: port 6(phy1-ap0) entered listening state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.708799] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.714656] br-lan: port 5(phy0-sta0) entered listening state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.720326] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:41:25] kern.info: [ 8374.725918] br-lan: port 4(phy0-ap0) entered listening state
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: Interface 'lan' is enabled
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: bridge 'br-lan' link is down
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: Interface 'lan' is setting up now
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: Interface 'lan' is now up
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: Network device 'lan3' link is down
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: Failed to send to ff02::2%wan6@wan (No such device)
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: bind(): No such device
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: radio0 (25859): wifi-scripts: Starting
+[2026年11月18日 GMT+8 08:41:25] daemon.info: router-tool[25903]: Configuration mode: sub; LAN protocol: static; LAN IPv4: "10.10.10.2/24"
+[2026年11月18日 GMT+8 08:41:25] user.notice: firewall: Reloading firewall due to ifup of lan (br-lan)
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: Failed to send to ff02::2%wan6@wan (No such device)
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:41:25] daemon.err: odhcpd[3549]: bind(): No such device
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy0
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy0
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: radio0 (25859): wifi-scripts: Setting country code to US
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: radio0 (25859): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: radio0 (25859): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: radio0 (25859): wifi-scripts: Preparing interface: phy0-sta0
+[2026年11月18日 GMT+8 08:41:25] daemon.notice: netifd: radio1 (25977): wifi-scripts: Starting
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy1
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: netifd: radio1 (25977): wifi-scripts: Setting country code to US
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: netifd: radio1 (25977): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: netifd: radio1 (25977): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月18日 GMT+8 08:41:26] daemon.notice: wpa_supplicant[3197]: Start pending MLD interfaces
+[2026年11月18日 GMT+8 08:41:27] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:41:27] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:41:27] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:41:27] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:41:27] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月18日 GMT+8 08:41:27] authpriv.info: dropbear[23467]: Early exit: Terminated by signal
+[2026年11月18日 GMT+8 08:41:27] kern.info: [ 8376.663448] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月18日 GMT+8 08:41:27] kern.info: [ 8376.663521] br-lan: port 3(lan3) entered blocking state
+[2026年11月18日 GMT+8 08:41:27] kern.info: [ 8376.669959] br-lan: port 3(lan3) entered listening state
+[2026年11月18日 GMT+8 08:41:27] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月18日 GMT+8 08:41:27] user.info: : Binding to interface 'br-lan'
+[2026年11月18日 GMT+8 08:41:27] authpriv.info: dropbear[26447]: Not backgrounding
+[2026年11月18日 GMT+8 08:41:29] daemon.info: ucode[18633]: wifiroam: self ip updated: 10.10.10.2
+[2026年11月18日 GMT+8 08:41:34] kern.info: [ 8383.140161] br-lan: port 4(phy0-ap0) entered learning state
+[2026年11月18日 GMT+8 08:41:34] kern.info: [ 8383.140321] br-lan: port 5(phy0-sta0) entered learning state
+[2026年11月18日 GMT+8 08:41:34] kern.info: [ 8383.144621] br-lan: port 6(phy1-ap0) entered learning state
+[2026年11月18日 GMT+8 08:41:35] kern.info: [ 8385.060151] br-lan: port 3(lan3) entered learning state
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.460115] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.460173] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.464978] br-lan: port 5(phy0-sta0) entered forwarding state
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.470255] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:41:42] daemon.notice: netifd: bridge 'br-lan' link is up
+[2026年11月18日 GMT+8 08:41:42] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.476026] br-lan: port 4(phy0-ap0) entered forwarding state
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.481450] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.510149] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.513484] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:41:42] daemon.err: odhcpd[3549]: Failed to send to ff02::2%wan6@wan (No such device)
+[2026年11月18日 GMT+8 08:41:42] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:41:42] daemon.err: odhcpd[3549]: setsockopt(IPV6_ADD_MEMBERSHIP): No such device
+[2026年11月18日 GMT+8 08:41:42] daemon.err: odhcpd[3549]: bind(): No such device
+[2026年11月18日 GMT+8 08:41:42] kern.info: [ 8391.620135] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:41:43] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月18日 GMT+8 08:41:44] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:41:44] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 2 names
+[2026年11月18日 GMT+8 08:41:44] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:41:44] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:41:44] kern.info: [ 8393.380113] br-lan: port 3(lan3) entered forwarding state
+[2026年11月18日 GMT+8 08:41:44] kern.info: [ 8393.380165] br-lan: topology change detected, propagating
+[2026年11月18日 GMT+8 08:41:59] daemon.info: dnsmasq-dhcp[1]: DHCPDISCOVER(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f
+[2026年11月18日 GMT+8 08:41:59] daemon.info: dnsmasq-dhcp[1]: DHCPOFFER(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f
+[2026年11月18日 GMT+8 08:41:59] daemon.info: dnsmasq-dhcp[1]: DHCPREQUEST(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f
+[2026年11月18日 GMT+8 08:41:59] daemon.info: dnsmasq-dhcp[1]: DHCPACK(br-lan) 10.10.10.194 10:ff:e0:e5:11:9f DESKTOP-I6EJMTF
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: CAP link report failed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:41:59] daemon.info: ucode[18633]: wifiroam: event ap_offline DC:D8:7C:5B:79:70 - YkingWrt
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: Network device 'wan' link is down
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: Interface 'wan' has link connectivity loss
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: Interface 'wan6' has link connectivity loss
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: wan6 (23517): Command failed: ubus call network.interface notify_proto { "action": 0, "link-up": false, "keep": false, "interface": "wan6" } (Permission denied)
+[2026年11月18日 GMT+8 08:42:02] kern.info: [ 8411.160059] qca-ppe 3a000000.ppe wan: Link is Down
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: wan (23453): udhcpc: received SIGTERM
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: wan (23453): udhcpc: unicasting a release of 10.10.10.111 to 10.10.10.1
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: wan (23453): udhcpc: sending release
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: wan (23453): udhcpc: entering released state
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: Interface 'wan6' is now down
+[2026年11月18日 GMT+8 08:42:02] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: wan (23453): Command failed: ubus call network.interface notify_proto { "action": 0, "link-up": false, "keep": false, "interface": "wan" } (Permission denied)
+[2026年11月18日 GMT+8 08:42:02] daemon.notice: netifd: Interface 'wan' is now down
+[2026年11月18日 GMT+8 08:42:02] kern.info: [ 8411.191591] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:42:02] kern.info: [ 8411.310069] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:42:06] authpriv.info: dispatcher.uc: luci: accepted login on / for root from 10.10.10.194
+[2026年11月18日 GMT+8 08:42:09] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:42:12] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:42:19] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:42:22] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:42:29] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:42:32] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:42:39] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:42:42] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:42:49] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:42:52] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:42:59] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:43:02] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:43:09] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:43:12] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:43:19] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:43:22] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:43:29] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:43:32] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:43:39] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:43:42] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:43:49] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:43:52] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:43:59] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:44:02] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:44:09] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:44:12] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:44:19] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:44:22] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:44:29] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:44:32] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:44:39] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:44:42] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:44:49] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:44:52] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:44:59] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:45:02] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:45:09] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:45:12] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:45:19] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:45:22] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: Network device 'wan' link is up
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: Interface 'wan' has link connectivity
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: Interface 'wan' is setting up now
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: Interface 'wan6' has link connectivity
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: Interface 'wan6' is setting up now
+[2026年11月18日 GMT+8 08:45:25] kern.info: [ 8614.981989] qca-ppe 3a000000.ppe wan: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月18日 GMT+8 08:45:25] kern.info: [ 8615.018897] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: wan (29530): udhcpc: started, v1.38.0
+[2026年11月18日 GMT+8 08:45:25] daemon.notice: netifd: wan (29530): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:45:29] daemon.notice: netifd: wan (29530): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:45:29] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:45:32] daemon.notice: netifd: wan (29530): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:45:32] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:45:39] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:45:42] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:45:44] daemon.notice: netifd: wan (29530): udhcpc: broadcasting select for 10.10.10.111, server 10.10.10.1
+[2026年11月18日 GMT+8 08:45:44] daemon.notice: netifd: wan (29530): udhcpc: lease of 10.10.10.111 obtained from 10.10.10.1, lease time 43200
+[2026年11月18日 GMT+8 08:45:44] daemon.notice: netifd: Interface 'wan' is now up
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:45:44] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:45:45] user.notice: firewall: Reloading firewall due to ifup of wan (wan)
+[2026年11月18日 GMT+8 08:45:49] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:45:51] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:45:52] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.297828] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.408870] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.409382] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] user.notice: firewall: Reloading firewall due to ifup of wan6 (wan)
+[2026年11月18日 GMT+8 08:45:52] daemon.notice: netifd: Interface 'wan6' has lost the connection
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:45:52] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.538822] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.542382] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.658737] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.659245] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:52] daemon.warn: dnsmasq[1]: ignoring query from non-local network 2408:825c:6c61:9c9:3052:7317:8f5c:ff88 (logged only once)
+[2026年11月18日 GMT+8 08:45:52] kern.info: [ 8641.788747] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.499589] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] daemon.notice: netifd: Interface 'wan6' has lost the connection
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.608738] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.609350] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] user.notice: firewall: Reloading firewall due to ifup of wan6 (wan)
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.668776] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.672445] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:45:53] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.758741] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.759323] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.878733] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.882053] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.978856] br-lan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8642.979493] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:45:53] kern.info: [ 8643.068742] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:45:54] user.notice: firewall: Reloading firewall due to ifup of wan6 (wan)
+[2026年11月18日 GMT+8 08:45:59] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:46:02] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:46:09] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq-dhcp[1]: read /etc/ethers - 0 addresses
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq: jail (25126) exited with exit: 0
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:11] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:11] daemon.warn: odhcpd[3549]: No default route present, setting ra_lifetime to 0!
+[2026年11月18日 GMT+8 08:46:11] kern.info: [ 8661.075632] br-lan: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:11] daemon.warn: odhcpd[3549]: No default route present, setting ra_lifetime to 0!
+[2026年11月18日 GMT+8 08:46:11] kern.info: [ 8661.109381] qca-ppe 3a000000.ppe wan: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] daemon.info: router-tool[31614]: Configuration mode: ap; LAN protocol: dhcp; LAN IPv4: null
+[2026年11月18日 GMT+8 08:46:12] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:46:12] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:46:12] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:46:12] daemon.notice: netifd: Interface 'lan' is now down
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.444881] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.445043] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.449379] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.455275] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.466427] qca-ppe 3a000000.ppe lan1: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.466481] qca-ppe 3a000000.ppe lan1: left promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.472083] br-lan: port 1(lan1) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.481312] qca-ppe 3a000000.ppe lan2: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.482271] qca-ppe 3a000000.ppe lan2: left promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.488505] br-lan: port 2(lan2) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.498103] qca-ppe 3a000000.ppe lan3: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.498891] qca-edma 3ab00000.edma eth0: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.504749] qca-ppe 3a000000.ppe lan3: left promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.510903] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.528670] qca-ppe 3a000000.ppe lan3: Link is Down
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.531524] ath11k c000000.wifi phy0-ap0: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.532448] ath11k c000000.wifi phy0-ap0: left promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.539208] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.545899] ath11k c000000.wifi phy0-sta0: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.549984] ath11k c000000.wifi phy0-sta0: left promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.556341] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.563336] ath11k c000000.wifi phy1-ap0: left allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.567859] ath11k c000000.wifi phy1-ap0: left promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.574143] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] daemon.notice: netifd: Interface 'lan' is disabled
+[2026年11月18日 GMT+8 08:46:12] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月18日 GMT+8 08:46:12] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.662290] qca-ppe 3a000000.ppe lan1: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.819402] br-lan: port 1(lan1) entered blocking state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.819443] br-lan: port 1(lan1) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.823491] qca-ppe 3a000000.ppe lan1: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.828705] qca-edma 3ab00000.edma eth0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.835526] qca-ppe 3a000000.ppe lan1: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.843802] qca-ppe 3a000000.ppe lan2: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.999427] br-lan: port 2(lan2) entered blocking state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8661.999472] br-lan: port 2(lan2) entered disabled state
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8662.003508] qca-ppe 3a000000.ppe lan2: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8662.009189] qca-ppe 3a000000.ppe lan2: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:12] kern.info: [ 8662.016718] qca-ppe 3a000000.ppe lan3: configuring for phy/psgmii link mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.179422] br-lan: port 3(lan3) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.179468] br-lan: port 3(lan3) entered disabled state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.183592] qca-ppe 3a000000.ppe lan3: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.189336] qca-ppe 3a000000.ppe lan3: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.198897] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.200568] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.206267] ath11k c000000.wifi phy0-ap0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.211985] ath11k c000000.wifi phy0-ap0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.221362] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.224178] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.230118] ath11k c000000.wifi phy0-sta0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.235923] ath11k c000000.wifi phy0-sta0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.243922] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.247967] br-lan: port 6(phy1-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.253599] ath11k c000000.wifi phy1-ap0: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.259293] ath11k c000000.wifi phy1-ap0: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.268353] br-lan: port 6(phy1-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.271597] br-lan: port 6(phy1-ap0) entered listening state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.277105] br-lan: port 5(phy0-sta0) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.282960] br-lan: port 5(phy0-sta0) entered listening state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.288655] br-lan: port 4(phy0-ap0) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.294232] br-lan: port 4(phy0-ap0) entered listening state
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Interface 'lan' is enabled
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.302146] br-lan: port 7(wan) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.305530] br-lan: port 7(wan) entered disabled state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.310549] qca-ppe 3a000000.ppe wan: entered allmulticast mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.316222] qca-ppe 3a000000.ppe wan: entered promiscuous mode
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.322195] br-lan: port 7(wan) entered blocking state
+[2026年11月18日 GMT+8 08:46:13] kern.info: [ 8662.327314] br-lan: port 7(wan) entered listening state
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: bridge 'br-lan' link is down
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Interface 'lan' has link connectivity loss
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Network device 'lan3' link is down
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Interface 'wan6' is now down
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Interface 'wan6' has link connectivity loss
+[2026年11月18日 GMT+8 08:46:13] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: wan (29530): udhcpc: received SIGTERM
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: wan (29530): udhcpc: unicasting a release of 10.10.10.111 to 10.10.10.1
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: wan (29530): udhcpc: sending release
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: wan (29530): udhcpc: entering released state
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: wan (29530): Command failed: ubus call network.interface notify_proto { "action": 0, "link-up": false, "keep": false, "interface": "wan" } (Permission denied)
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Interface 'wan' is now down
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: Interface 'wan' has link connectivity loss
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio0 (31813): wifi-scripts: Starting
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: hostapd: Set new config for phy phy0: /var/run/hostapd-phy0.conf
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: hostapd: Reloaded settings for phy phy0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio0 (31813): wifi-scripts: Setting country code to US
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio0 (31813): wifi-scripts: Configuring 'phy0' distance: 0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio0 (31813): wifi-scripts: Preparing interface: phy0-ap0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio0 (31813): wifi-scripts: Preparing interface: phy0-sta0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio1 (32025): wifi-scripts: Starting
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Set new config for phy phy1
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: hostapd: Set new config for phy phy1: /var/run/hostapd-phy1.conf
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: hostapd: Reloaded settings for phy phy1
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio1 (32025): wifi-scripts: Setting country code to US
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio1 (32025): wifi-scripts: Configuring 'phy1' distance: 0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: netifd: radio1 (32025): wifi-scripts: Preparing interface: phy1-ap0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Start pending MLD interfaces
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:46:13] daemon.info: dnsmasq: jail (31441) exited with exit: 0
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: hostapd: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Set MLD config: [ ]
+[2026年11月18日 GMT+8 08:46:13] daemon.notice: wpa_supplicant[3197]: Start pending MLD interfaces
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:14] daemon.warn: dnsmasq[1]: no servers found in /tmp/resolv.conf.d/resolv.conf.auto, will retry
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:14] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:14] daemon.crit: dropbear: Network interface 'lan' is not available!
+[2026年11月18日 GMT+8 08:46:14] authpriv.info: dropbear[26447]: Early exit: Terminated by signal
+[2026年11月18日 GMT+8 08:46:15] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:15] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:15] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:16] kern.info: [ 8665.301711] qca-ppe 3a000000.ppe lan3: Link is Up - 1Gbps/Full - flow control rx/tx
+[2026年11月18日 GMT+8 08:46:16] kern.info: [ 8665.301781] br-lan: port 3(lan3) entered blocking state
+[2026年11月18日 GMT+8 08:46:16] kern.info: [ 8665.308195] br-lan: port 3(lan3) entered listening state
+[2026年11月18日 GMT+8 08:46:16] daemon.notice: netifd: Network device 'lan3' link is up
+[2026年11月18日 GMT+8 08:46:19] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:46:19] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:46:21] kern.info: [ 8670.498500] br-lan: port 7(wan) entered learning state
+[2026年11月18日 GMT+8 08:46:21] kern.info: [ 8670.498631] br-lan: port 4(phy0-ap0) entered learning state
+[2026年11月18日 GMT+8 08:46:21] kern.info: [ 8670.502588] br-lan: port 5(phy0-sta0) entered learning state
+[2026年11月18日 GMT+8 08:46:21] kern.info: [ 8670.508056] br-lan: port 6(phy1-ap0) entered learning state
+[2026年11月18日 GMT+8 08:46:24] kern.info: [ 8673.698485] br-lan: port 3(lan3) entered learning state
+[2026年11月18日 GMT+8 08:46:29] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:46:29] daemon.info: ucode[18633]: wifiroam: link to CAP closed
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: bridge 'br-lan' link is up
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: Interface 'lan' has link connectivity
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: Interface 'lan' is setting up now
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: Interface 'wan6' has link connectivity
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: Interface 'wan6' is setting up now
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.818452] br-lan: port 6(phy1-ap0) entered forwarding state
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.818505] br-lan: topology change detected, sending tcn bpdu
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.823318] br-lan: port 5(phy0-sta0) entered forwarding state
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.828959] br-lan: topology change detected, sending tcn bpdu
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.834861] br-lan: port 4(phy0-ap0) entered forwarding state
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.840590] br-lan: topology change detected, sending tcn bpdu
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.846469] br-lan: port 7(wan) entered forwarding state
+[2026年11月18日 GMT+8 08:46:29] kern.info: [ 8678.852135] br-lan: topology change detected, sending tcn bpdu
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: lan (349): udhcpc: started, v1.38.0
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: lan (349): udhcpc: broadcasting discover
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: wan6 (359): Failed to send RS (Address not available)
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: wan6 (359): br-lan: error connecting LLA socket
+[2026年11月18日 GMT+8 08:46:29] daemon.notice: netifd: lan (349): udhcpc: broadcasting select for 10.10.10.112, server 10.10.10.1
+[2026年11月18日 GMT+8 08:46:30] daemon.notice: netifd: lan (349): udhcpc: lease of 10.10.10.112 obtained from 10.10.10.1, lease time 43200
+[2026年11月18日 GMT+8 08:46:30] daemon.notice: netifd: Interface 'lan' is now up
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:30] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:30] user.notice: firewall: Reloading firewall due to ifup of lan (br-lan)
+[2026年11月18日 GMT+8 08:46:30] daemon.notice: netifd: wan6 (359): Failed to send SOLICIT message to ff02::1:2 (Address not available)
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq: jail (32225) exited with exit: 0
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:31] daemon.info: dropbear: Using network interface 'lan' (network device 'br-lan') for direct binding
+[2026年11月18日 GMT+8 08:46:31] user.info: : Binding to interface 'br-lan'
+[2026年11月18日 GMT+8 08:46:31] authpriv.info: dropbear[869]: Not backgrounding
+[2026年11月18日 GMT+8 08:46:32] kern.info: [ 8682.018438] br-lan: port 3(lan3) entered forwarding state
+[2026年11月18日 GMT+8 08:46:32] kern.info: [ 8682.018486] br-lan: topology change detected, sending tcn bpdu
+[2026年11月18日 GMT+8 08:46:39] daemon.info: ucode[18633]: wifiroam: connecting to CAP 10.10.10.1
+[2026年11月18日 GMT+8 08:46:39] daemon.info: ucode[18633]: wifiroam: self ip updated: 10.10.10.112
+[2026年11月18日 GMT+8 08:46:39] daemon.info: ucode[18633]: wifiroam: event cap_connected  - 10.10.10.1
+[2026年11月18日 GMT+8 08:46:39] daemon.info: ucode[18633]: wifiroam: link to CAP established
+[2026年11月18日 GMT+8 08:46:39] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:46:43] kern.info: [ 8692.332700] phy0-sta0: deauthenticating from de:d8:7c:54:4a:1e by local choice (Reason: 3=DEAUTH_LEAVING)
+[2026年11月18日 GMT+8 08:46:43] kern.info: [ 8692.332861] br-lan: port 5(phy0-sta0) entered disabled state
+[2026年11月18日 GMT+8 08:46:43] daemon.notice: netifd: Network device 'phy0-sta0' link is down
+[2026年11月18日 GMT+8 08:46:43] daemon.notice: wpa_supplicant[3197]: phy0-sta0: CTRL-EVENT-DISCONNECTED bssid=de:d8:7c:54:4a:1e reason=3 locally_generated=1
+[2026年11月18日 GMT+8 08:46:43] daemon.notice: wpa_supplicant[3197]: phy0-sta0: CTRL-EVENT-DSCP-POLICY clear_all
+[2026年11月18日 GMT+8 08:46:43] daemon.info: ucode[18633]: wifiroam: backhaul STA paused: wired uplink detected, wireless STA paused
+[2026年11月18日 GMT+8 08:46:43] daemon.info: ucode[18633]: wifiroam: event backhaul_link  - wired uplink detected, wireless STA paused
+[2026年11月18日 GMT+8 08:46:44] daemon.notice: netifd: Network device 'phy0-ap0' link is down
+[2026年11月18日 GMT+8 08:46:44] kern.info: [ 8693.378523] br-lan: port 4(phy0-ap0) entered disabled state
+[2026年11月18日 GMT+8 08:46:45] daemon.notice: netifd: Interface 'wan6' is now up
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:45] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:45] user.notice: firewall: Reloading firewall due to ifup of wan6 (br-lan)
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: exiting on receipt of SIGTERM
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq: jail (733) exited with exit: 0
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: started, version 2.93 cachesize 8000
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: DNS service limited to local subnets
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: compile time options: IPv6 GNU-getopt no-DBus UBus no-i18n no-IDN DHCP DHCPv6 no-Lua TFTP conntrack no-ipset nftset auth DNSSEC no-ID loop-detect inotify dumpfile
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: UBus support enabled: connected to system bus
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: reading /tmp/resolv.conf.d/resolv.conf.auto
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using nameserver 10.10.10.1#53
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using nameserver 2408:825c:6c61:9c9::1#53
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for test
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for onion
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for localhost
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for local
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for invalid
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for bind
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: using only locally-known addresses for lan
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: read /etc/hosts - 12 names
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: read /tmp/hosts/dhcp.cfg01411c - 0 names
+[2026年11月18日 GMT+8 08:46:46] daemon.info: dnsmasq[1]: read /tmp/hosts/odhcpd.hosts.lan - 0 names
+[2026年11月18日 GMT+8 08:46:49] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:46:59] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:47:09] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:47:19] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:47:29] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
+[2026年11月18日 GMT+8 08:47:39] daemon.info: ucode[18633]: wifiroam: backhaul unchanged ver=3, skip reload
