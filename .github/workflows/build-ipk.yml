@@ -1,0 +1,86 @@
+name: Build OpenWrt IPK packages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'feat/**'
+    paths:
+      - 'wifiroam/**'
+      - 'luci-app-wifiroam/**'
+      - '.github/workflows/build-ipk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # ARM64 Cortex-A53 (qualcommax/ipq807x), last IPK-based release.
+          - name: arm64-cortex-a53-24.10
+            image: ghcr.io/openwrt/sdk:qualcommax-ipq807x-24.10.4
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build IPK packages in the OpenWrt SDK container
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/artifacts"
+          chmod 0777 "$GITHUB_WORKSPACE/artifacts"
+
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/feed:ro" \
+            --volume "$GITHUB_WORKSPACE/artifacts:/artifacts" \
+            --env GIT_CONFIG_COUNT=1 \
+            --env GIT_CONFIG_KEY_0=safe.directory \
+            --env GIT_CONFIG_VALUE_0='*' \
+            "${{ matrix.image }}" \
+            bash -lc '
+              set -euo pipefail
+
+              # Release images normally ship the SDK unpacked; snapshots use setup.sh.
+              if [ ! -d ./scripts ]; then
+                bash setup.sh
+              fi
+
+              # Use GitHub mirrors first; git.openwrt.org can be slow/unstable on runners.
+              sed -i \
+                -e "s#https://git.openwrt.org/feed/#https://github.com/openwrt/#" \
+                -e "s#https://git.openwrt.org/openwrt/#https://github.com/openwrt/#" \
+                -e "s#https://git.openwrt.org/project/#https://github.com/openwrt/#" \
+                feeds.conf.default
+              echo "src-link meshzw /feed" >> feeds.conf.default
+              cat feeds.conf.default
+
+              ./scripts/feeds update -a
+              ./scripts/feeds install -a
+              make defconfig
+
+              make package/wifiroam/compile V=s -j"$(nproc)"
+              make package/luci-app-wifiroam/compile V=s -j"$(nproc)"
+
+              find bin/packages -type f -name "*.ipk" \
+                \( -path "*/meshzw/*" -o -name "ucode-mod-socket-*.ipk" \) \
+                -exec cp -v {} /artifacts/ \;
+            '
+
+      - name: List IPK packages
+        run: |
+          ls -lh "$GITHUB_WORKSPACE/artifacts"
+          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'wifiroam-*.ipk' -print -quit)"
+          test -n "$(find "$GITHUB_WORKSPACE/artifacts" -name 'luci-app-wifiroam-*.ipk' -print -quit)"
+
+      - name: Upload IPK packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: wifiroam-ipk-${{ matrix.name }}
+          path: artifacts/*.ipk
+          if-no-files-found: error
