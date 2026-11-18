@@ -81,7 +81,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 62;
+const DAEMON_VERSION = 63;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4469,7 +4469,12 @@ function apply_backhaul_local(bh, role) {
 			cur.get("wireless", BACKHAUL_SECTION, "mode") == wantMode &&
 			cur.get("wireless", BACKHAUL_SECTION, "device") == dev &&
 			(cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") == (bh.ssid ?? "") &&
-			(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "");
+			(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "") &&
+			/* WDS/4 地址帧和 LAN 桥接是回程能透传终端 MAC 的关键，
+			   旧配置缺这两项时必须重建，否则表现就是能关联但拿不到 IP */
+			(cur.get("wireless", BACKHAUL_SECTION, "network") ?? "") == "lan" &&
+			(cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "") == "1" &&
+			(cur.get("wireless", BACKHAUL_SECTION, "encryption") ?? "") == "psk2+ccmp";
 		if (role == "cap")
 			same = same &&
 				(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
@@ -4649,6 +4654,9 @@ function backhaul_cap_reconcile() {
 		(cur.get("wireless", BACKHAUL_SECTION, "mode") ?? "") == "ap" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") == (bh.ssid ?? "") &&
 		(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "") &&
+		(cur.get("wireless", BACKHAUL_SECTION, "network") ?? "") == "lan" &&
+		(cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "") == "1" &&
+		(cur.get("wireless", BACKHAUL_SECTION, "encryption") ?? "") == "psk2+ccmp" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "0";
 	if (ok) return;
