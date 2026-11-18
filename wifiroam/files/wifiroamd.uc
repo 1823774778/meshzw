@@ -80,7 +80,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 64;
+const DAEMON_VERSION = 65;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4743,6 +4743,14 @@ function backhaul_cap_reconcile() {
 		(cur.get("wireless", BACKHAUL_SECTION, "encryption") ?? "") == "psk2+ccmp" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "0";
+	/* hostapd 可以接受 STA 关联，但 AP 没挂进 br-lan 时 DHCP/ARP 都进不了
+	   主路由 LAN；旧版 network 选项缺失就会留下这种“能连上、拿不到 IP”的状态 */
+	if (ifc != null && !fs.access(sprintf("/sys/class/net/%s/brif/%s",
+	    state.brdev, ifc.ifname))) {
+		log(sprintf("backhaul AP %s missing from %s, adding",
+			ifc.ifname, state.brdev));
+		cmd_output(sprintf("brctl addif %s %s 2>&1", state.brdev, ifc.ifname));
+	}
 	if (ok) return;
 	if (time() - (state._bh_rebuild_ts ?? 0) < 60) return;
 	state._bh_rebuild_ts = time();
