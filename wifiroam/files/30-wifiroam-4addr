@@ -1,0 +1,31 @@
+#!/bin/sh
+# Force 4-address (WDS) mode on the wifiroam backhaul STA as soon as netifd
+# creates it, before wpa_supplicant associates.
+#
+# Some netifd/mac80211 builds ignore the `wds` option for STA interfaces and
+# leave the STA in 3-address mode. Broadcast frames (DHCPDISCOVER) still pass,
+# but the unicast DHCPOFFER addressed to the SAP's LAN/WAN MAC is dropped by
+# the STA interface, so udhcpc never gets an IPv4 lease.
+#
+# Only touch the interface belonging to the wifiroam_bh radio; other STA
+# interfaces (travelmate, upstream, etc.) are left alone.
+
+[ "$ACTION" = "add" ] || exit 0
+
+case "$INTERFACE" in
+	phy*-sta*) ;;
+	*) exit 0 ;;
+esac
+
+dev="$(uci -q get wireless.wifiroam_bh.device)" || exit 0
+[ -n "$dev" ] || exit 0
+
+phy="$(echo "$dev" | sed 's/^radio/phy/')"
+case "$INTERFACE" in
+	"$phy"-sta*) ;;
+	*) exit 0 ;;
+esac
+
+iw dev "$INTERFACE" set 4addr on 2>/dev/null
+
+exit 0

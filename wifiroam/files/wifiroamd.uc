@@ -80,7 +80,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 65;
+const DAEMON_VERSION = 66;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4501,6 +4501,10 @@ function backhaul_sta_resume() {
 	state._bh_pause_ts = 0;
 
 	let ifc = backhaul_iface_status();
+	/* 确保 STA 处于 4 地址/WDS 模式：3 地址下广播 DHCPDISCOVER 能过去，
+	   但单播 DHCPOFFER 会被 STA 网卡丢弃，表现就是一直拿不到 IPv4 */
+	if (ifc && ifc.ifname)
+		cmd_output(sprintf("iw dev %s set 4addr on 2>/dev/null", ifc.ifname));
 	/* STA 仍有关联：不 reconnect 也不整射频 reload，避免拆掉正在工作的回程 */
 	if (ifc && ifc.up)
 		log("backhaul STA already up, skip reload");
