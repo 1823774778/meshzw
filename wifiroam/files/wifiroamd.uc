@@ -80,7 +80,7 @@ const FW4_TEMPLATE = "/usr/share/firewall4/templates/ruleset.uc";
 const FW4_FLOW_RULE = "meta l4proto { tcp, udp } flow offload @ft;";
 const FW4_GUEST_FLOW_RULE = `iifname != "${GUEST_BRIDGE}" oifname != "${GUEST_BRIDGE}" ` + FW4_FLOW_RULE;
 // 协议/行为版本：LuCI 侧要求一致，不一致时「重启」会自动 stop+start 修复
-const DAEMON_VERSION = 63;
+const DAEMON_VERSION = 64;
 
 const ROAM_FT_KEYS = [
 	"ieee80211r", "mobility_domain", "ft_over_ds", "ft_psk_generate_local",
@@ -4162,7 +4162,81 @@ write_roam_iface = function(cur, s, roam, members, selected) {
 	cur.set("wireless", sid, "bss_transition", roam.v_bss_transition ? "1" : "0");
 };
 
+function hostapd_cli_path() {
+	for (let p in [ "/usr/sbin/hostapd_cli", "/usr/bin/hostapd_cli", "/sbin/hostapd_cli" ])
+		if (fs.access(p)) return p;
+	return null;
+}
+
+/* 通过 hostapd_cli 在运行时改 k/v/r，不重启射频：
+   无线回程 STA 和已连终端都不会掉线。显式 FT（r0kh/r1kh）需要重建 BSS，
+   这里返回 false，让调用方回退到 wifi reload。 */
+function roam_rt_apply(roam) {
+	if (roam.r_fast && roam.ft_mode == "explicit") return false;
+	let cli = hostapd_cli_path();
+	if (!cli) return false;
+	let ws = ubusc.call("network.wireless", "status") ?? {};
+	let done = 0;
+	for (let rname, r in ws) {
+		for (let ifc in r.interfaces ?? []) {
+			let cfg = ifc.config ?? {};
+			if (cfg.mode != "ap" || cfg.disabled == "1") continue;
+			if (cfg.wifiroam_guest == "1") continue;
+			if (cfg.wds == "1") continue;   // 回程 AP 不参与漫游
+			if (!ifc.ifname) continue;
+			let sel = index(roam.ssids ?? [], cfg.ssid) >= 0;
+			let sets = [];
+			if (!sel) {
+				push(sets, [ "ieee80211k", "0" ]);
+				push(sets, [ "ieee80211v", "0" ]);
+				push(sets, [ "ieee80211r", "0" ]);
+			}
+			else {
+				push(sets, [ "ieee80211k", "1" ]);
+				push(sets, [ "rrm_neighbor_report", roam.k_neighbor ? "1" : "0" ]);
+				push(sets, [ "rrm_beacon_report", roam.k_beacon ? "1" : "0" ]);
+				push(sets, [ "ieee80211v", "1" ]);
+				push(sets, [ "bss_transition", roam.v_bss_transition ? "1" : "0" ]);
+				if (roam.r_fast) {
+					push(sets, [ "ieee80211r", "1" ]);
+					push(sets, [ "mobility_domain", roam_md(cfg.ssid) ]);
+					push(sets, [ "ft_over_ds", roam.ft_over_ds ? "1" : "0" ]);
+					push(sets, [ "reassociation_deadline", "1000" ]);
+					push(sets, [ "ft_psk_generate_local", "1" ]);
+				}
+				else {
+					push(sets, [ "ieee80211r", "0" ]);
+				}
+			}
+			for (let kv in sets) {
+				let out = cmd_output(sprintf("%s -i %s set %s %s 2>&1",
+					cli, ifc.ifname, kv[0], kv[1]));
+				if (index(out, "FAIL") >= 0 || index(out, "Unknown command") >= 0) {
+					log(sprintf("roam runtime set %s %s failed: %s",
+						ifc.ifname, kv[0], trim(out)));
+					return false;
+				}
+			}
+			done++;
+		}
+	}
+	return done > 0;
+}
+
 function apply_roam_local(roam, members) {
+	/* 同一份漫游配置重复下发（主 AP 重推/多次保存）只落盘版本号，
+	   不再重复 reload，避免子路由和终端被连续打断 */
+	let msig = [];
+	for (let m in (members ?? []))
+		push(msig, macnorm(m.mac));
+	let sig = roam_sig(roam) + "|" + join(",", msig);
+	if (state._roam_apply_sig == sig) {
+		state.roam_ver_applied = roam.config_ver ?? state.roam_ver_applied;
+		log("roam unchanged, skip reload");
+		return { ok: true, unchanged: true, ver: state.roam_ver_applied };
+	}
+	state._roam_apply_sig = sig;
+
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let touched = [];
@@ -4217,18 +4291,31 @@ function apply_roam_local(roam, members) {
 		}
 	}
 	if (dirty) wc.commit("wifiroam");
-	/* 延迟重启无线：先让 ubus 响应和向成员 AP 的配置推送发出去，
-	   否则首次保存时管理连接会先被 wifi reload 打断，页面误以为服务停止 */
 	state._own_nr = {};
 	state._bss_cache = null;
-	uloop.timer(1000, function() {
-		uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
-			log("wifi reload rc=" + res);
-			guest_tc_apply(guest_cfg());
-			/* hostapd 重启后邻居库是空的，稍后重新下发 11k 邻居 */
-			uloop.timer(5000, rrm_sync_tick);
+	/* 优先用 hostapd_cli 运行时改 k/v/r：不重启射频，无线回程 STA
+	   和已连终端都不会掉线；只有显式 FT 或运行时设置失败才回退 reload */
+	if (roam_rt_apply(roam)) {
+		if (state._roam_reload_timer) {
+			if (type(state._roam_reload_timer.cancel) == "function")
+				state._roam_reload_timer.cancel();
+			state._roam_reload_timer = null;
+		}
+		log("roam runtime applied via hostapd_cli, no wifi reload");
+		uloop.timer(3000, rrm_sync_tick);
+	}
+	else if (!state._roam_reload_timer) {
+		/* 多次保存/多次下发在 1.5s 内合并成一次 reload */
+		state._roam_reload_timer = uloop.timer(1500, function() {
+			state._roam_reload_timer = null;
+			uloop.process("/sbin/wifi", [ "reload" ], null, function(res) {
+				log("wifi reload rc=" + res);
+				guest_tc_apply(guest_cfg());
+				/* hostapd 重启后邻居库是空的，稍后重新下发 11k 邻居 */
+				uloop.timer(5000, rrm_sync_tick);
+			});
 		});
-	});
+	}
 	push_event("roam_apply", "",
 		sprintf("ver=%d ssids=%d", roam.config_ver ?? 0, length(touched)));
 	return { ok: true, touched, ver: state.roam_ver_applied };
