@@ -55,8 +55,7 @@ const BH_WIRELESS_DEBOUNCE = 10;   // s：有线消失多久才重新启用 STA
 const BH_LOOP_CONFIRM = 4;         // s：环路连续确认时间
 const BH_WIRED_HOLD = 30;          // s：有线口最后确认后，载波仍在则继续视为有线
 const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
-const BH_DHCP_RETRY = 10;          // s：切到无线回程后 renew LAN DHCP 的间隔
-const BH_DHCP_MAX_TRIES = 3;       // 次：最多 renew 几次
+const BH_DHCP_RETRY = 8;           // s：切到无线回程后重启 LAN DHCP 客户端的间隔，重试直到拿到租约
 
 // 访客网络：每台 AP 各自建一个独立子网 + DHCP + 防火墙隔离区，
 // 访客口统一挂到 br-guest（接口名 netifd 限制为 15 字符以内）。
@@ -4343,30 +4342,25 @@ function backhaul_lan_ipv4() {
 	return length(st["ipv4-address"] ?? []) > 0;
 }
 
-/* 有线切无线后 LAN 常保留旧租约、udhcpc 不再重试。
-   只发 renew 信号让现有 udhcpc 重新协商，绝不做 lan down/up：
-   STA 绑定在 lan 网络上，down 会直接把刚建好的无线回程拆掉。 */
+/* 有线切无线后 LAN 常保留旧租约、或 udhcpc 重试失败后退避静默，
+   无租约/lan down 时 renew 是空操作。这里用 ubus up 重启 dhcp proto：
+   只重建 udhcpc（立即重新广播 discover），不做 lan down/up ——
+   STA 绑定在 lan 网络上，down 会直接把刚建好的无线回程拆掉。
+   调用方按 BH_DHCP_RETRY 周期重试直到拿到租约（插回有线/关回程才清 pending）。 */
 function backhaul_dhcp_restart() {
 	let tries = state._bh_dhcp_tries ?? 0;
 	state._bh_dhcp_ts = time();
 
-	/* 首次无条件 renew：切到无线后即使还留着有线时的旧地址，
-	   也要让 udhcpc 在新路径上重新确认租约和网关 */
 	if (tries > 0 && backhaul_lan_ipv4()) {
 		state._bh_dhcp_pending = false;
 		state._bh_dhcp_tries = 0;
 		log("backhaul: LAN DHCP recovered");
 		return;
 	}
-	if (tries >= BH_DHCP_MAX_TRIES) {
-		state._bh_dhcp_pending = false;
-		log("backhaul: LAN still has no IPv4 after DHCP renews");
-		return;
-	}
 
 	state._bh_dhcp_tries = tries + 1;
-	log(sprintf("backhaul: renew LAN DHCP for wireless uplink (try %d)", tries + 1));
-	ubusc.call("network.interface.lan", "renew");
+	log(sprintf("backhaul: restart LAN DHCP client for wireless uplink (try %d)", tries + 1));
+	ubusc.call("network.interface.lan", "up");
 }
 
 function backhaul_wpa_cli(ifname, cmd) {
@@ -4420,7 +4414,10 @@ function backhaul_sta_resume() {
 	state._bh_pause_ts = 0;
 
 	let ifc = backhaul_iface_status();
-	if (ifc && ifc.ifname && backhaul_wpa_cli(ifc.ifname, "reconnect"))
+	/* STA 仍有关联：不 reconnect 也不整射频 reload，避免拆掉正在工作的回程 */
+	if (ifc && ifc.up)
+		log("backhaul STA already up, skip reload");
+	else if (ifc && ifc.ifname && backhaul_wpa_cli(ifc.ifname, "reconnect"))
 		log("backhaul STA resumed");
 	else
 		backhaul_sta_radio_up("resume");
@@ -4774,8 +4771,8 @@ function backhaul_tick() {
 		return;
 	}
 
-	/* 有线切无线后 LAN 可能保留旧租约、udhcpc 不再重试；
-	   STA forwarding 后发 renew 让 udhcpc 重新协商（不拆 LAN/STA） */
+	/* 有线切无线后 LAN 可能保留旧租约、udhcpc 退避静默；
+	   STA forwarding 后重启 dhcp 客户端（不拆 LAN/STA），重试直到拿到租约 */
 	if (state._bh_dhcp_pending && !wired && !disabled &&
 	    backhaul_sta_forwarding() &&
 	    now - (state._bh_dhcp_ts ?? 0) >= BH_DHCP_RETRY)
