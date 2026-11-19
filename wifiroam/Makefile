@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wifiroam
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=130
+PKG_RELEASE:=131
 PKG_LICENSE:=GPL-2.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
@@ -46,6 +46,8 @@ define Package/wifiroam/install
 	$(INSTALL_CONF) ./files/aliases.json $(1)/etc/wifiroam/aliases.json
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/net
 	$(INSTALL_BIN) ./files/30-wifiroam-4addr $(1)/etc/hotplug.d/net/30-wifiroam-4addr
+	$(INSTALL_DIR) $(1)/etc/udhcpc.user.d
+	$(INSTALL_DATA) ./files/90-wifiroam-dhcp-lease $(1)/etc/udhcpc.user.d/90-wifiroam-dhcp-lease
 endef
 
 define Package/wifiroam/postinst

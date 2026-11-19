@@ -55,7 +55,9 @@ const BH_WIRELESS_DEBOUNCE = 10;   // s：有线消失多久才重新启用 STA
 const BH_LOOP_CONFIRM = 4;         // s：环路连续确认时间
 const BH_WIRED_HOLD = 30;          // s：有线口最后确认后，载波仍在则继续视为有线
 const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
-const BH_DHCP_RETRY = 8;           // s：切到无线回程后重启 LAN DHCP 客户端的间隔，重试直到拿到租约
+const BH_DHCP_RETRY = 8;           // s：重试启动未运行的 DHCP 客户端或未提交的请求
+const BH_DHCP_RENEW_HOLD = 35;     // s：STA 短暂抖动时，让上次主动续租完成
+const BH_DHCP_WARN = 45;           // s：未确认新租约时告警，客户端继续自行取址
 
 // 访客网络：每台 AP 各自建一个独立子网 + DHCP + 防火墙隔离区，
 // 访客口统一挂到 br-guest（接口名 netifd 限制为 15 字符以内）。
@@ -4414,40 +4416,76 @@ function backhaul_uci_radio() {
 	return cur.get("wireless", BACKHAUL_SECTION, "device") ?? null;
 }
 
-function backhaul_sta_forwarding() {
-	let ifc = backhaul_iface_status();
-	if (!ifc || !ifc.ifname) return false;
-	let st = trim(fs.readfile(`/sys/class/net/${ifc.ifname}/brport/state`) ?? "");
-	/* 3=forwarding；没有 brport 状态时退回 operstate */
-	if (st != "")
-		return st == "3";
-	return trim(fs.readfile(`/sys/class/net/${ifc.ifname}/operstate`) ?? "") == "up";
+function backhaul_sta_forwarding(ifname, brdev) {
+	if (!ifname || !brdev || !fs.access(`/sys/class/net/${brdev}/brif/${ifname}`))
+		return false;
+	let base = `/sys/class/net/${ifname}`;
+	return trim(fs.readfile(base + "/carrier") ?? "") == "1" &&
+	       trim(fs.readfile(base + "/brport/state") ?? "") == "3";
 }
 
-function backhaul_lan_ipv4() {
-	let st = ubusc.call("network.interface.lan", "status") ?? {};
-	return length(st["ipv4-address"] ?? []) > 0;
+function backhaul_dhcp_lease(_event, data) {
+	let recovery = state._bh_dhcp;
+	if (recovery?.bridge && data?.device == recovery.bridge && data.address &&
+	    backhaul_sta_forwarding(recovery.sta, recovery.bridge))
+		recovery.lease = data.address;
 }
 
-/* 有线切无线后 LAN 常保留旧租约、或 udhcpc 重试失败后退避静默，
-   无租约/lan down 时 renew 是空操作。这里用 ubus up 重启 dhcp proto：
-   只重建 udhcpc（立即重新广播 discover），不做 lan down/up ——
-   STA 绑定在 lan 网络上，down 会直接把刚建好的无线回程拆掉。
-   调用方按 BH_DHCP_RETRY 周期重试直到拿到租约（插回有线/关回程才清 pending）。 */
-function backhaul_dhcp_restart() {
-	let tries = state._bh_dhcp_tries ?? 0;
-	state._bh_dhcp_ts = time();
-
-	if (tries > 0 && backhaul_lan_ipv4()) {
-		state._bh_dhcp_pending = false;
-		state._bh_dhcp_tries = 0;
-		log("backhaul: LAN DHCP recovered");
+function backhaul_dhcp_tick(ifc, now) {
+	let recovery = state._bh_dhcp;
+	let st = ubusc.call("network.interface.lan", "status");
+	if (!st?.proto) return;
+	if (st.proto != "dhcp" || !st.autostart) {
+		state._bh_dhcp = null;
 		return;
 	}
 
-	state._bh_dhcp_tries = tries + 1;
-	log(sprintf("backhaul: restart LAN DHCP client for wireless uplink (try %d)", tries + 1));
-	ubusc.call("network.interface.lan", "up");
+	let brdev = st.device ?? st.l3_device ?? state.brdev;
+	let sta = ifc?.ifname;
+	let forwarding = backhaul_sta_forwarding(sta, brdev);
+	if (!forwarding || recovery.bridge != brdev || recovery.sta != sta) {
+		recovery.bridge = brdev;
+		recovery.sta = sta;
+		recovery.lease = null;
+		recovery.since = null;
+		recovery.active = false;
+		recovery.warned = false;
+	}
+	if (!forwarding) return;
+	recovery.since ??= now;
+
+	/* 同一 IP 也可以是新租约：需收到 bound/renew 事件，且该地址已经生效。 */
+	if (recovery.lease && st.up) {
+		for (let a in st["ipv4-address"] ?? []) {
+			if (a.address != recovery.lease) continue;
+			state._bh_dhcp = null;
+			log("backhaul: LAN DHCP lease confirmed: " + a.address);
+			return;
+		}
+	}
+
+	/* 已在取址时不打断 DHCP；不要用可能重载整个 LAN 的 restart。 */
+	if (st.pending)
+		recovery.active = true;
+
+	let renew = st.up && !recovery.active && now >= (recovery.renew_after ?? 0);
+	let start = !st.up && !st.pending && st.available && now >= (recovery.start_after ?? 0);
+	let method = renew ? "renew" : (start ? "up" : null);
+	if (method) {
+		ubusc.call("network.interface.lan", method);
+		let err = libubus.error();
+		if (renew)
+			recovery.renew_after = now + (err ? BH_DHCP_RETRY : BH_DHCP_RENEW_HOLD);
+		else
+			recovery.start_after = now + BH_DHCP_RETRY;
+		if (!err) recovery.active = true;
+		log("backhaul: LAN DHCP " + method + (err ? " failed: " + err : " requested"));
+	}
+
+	if (!recovery.warned && now - recovery.since >= BH_DHCP_WARN) {
+		recovery.warned = true;
+		log("backhaul: no LAN DHCP lease confirmed after wireless failover");
+	}
 }
 
 function backhaul_wpa_cli(ifname, cmd) {
@@ -4775,7 +4813,8 @@ function backhaul_tick() {
 		state._bh_wired_since = null;
 		state._bh_wireless_since = null;
 		state._bh_loop_since = null;
-		state._bh_dhcp_pending = false;
+		state._bh_was_wired = false;
+		state._bh_dhcp = null;
 		return;
 	}
 	if ((bh.ssid ?? "") == "" || (bh.key ?? "") == "") return;
@@ -4842,17 +4881,15 @@ function backhaul_tick() {
 		wired = true;
 	if (wired) {
 		state._bh_was_wired = true;
-		state._bh_dhcp_pending = false;
+		state._bh_dhcp = null;
 		state._bh_wired_since ??= now;
 		state._bh_wireless_since = null;
 	}
 	else {
 		if (state._bh_was_wired) {
 			state._bh_was_wired = false;
-			state._bh_dhcp_pending = true;
-			state._bh_dhcp_tries = 0;
-			state._bh_dhcp_ts = 0;
-			log("backhaul: wired uplink lost, will restart LAN DHCP when STA is up");
+			state._bh_dhcp = {};
+			log("backhaul: wired uplink lost, waiting for STA forwarding before LAN DHCP check");
 		}
 		state._bh_wireless_since ??= now;
 		state._bh_wired_since = null;
@@ -4870,12 +4907,8 @@ function backhaul_tick() {
 		return;
 	}
 
-	/* 有线切无线后 LAN 可能保留旧租约、udhcpc 退避静默；
-	   STA forwarding 后重启 dhcp 客户端（不拆 LAN/STA），重试直到拿到租约 */
-	if (state._bh_dhcp_pending && !wired && !disabled &&
-	    backhaul_sta_forwarding() &&
-	    now - (state._bh_dhcp_ts ?? 0) >= BH_DHCP_RETRY)
-		backhaul_dhcp_restart();
+	if (state._bh_dhcp && !wired && !disabled)
+		backhaul_dhcp_tick(ifc, now);
 
 	/* 无线回程应启用但运行时接口被 reload 移除：只拉起对应射频重建 STA */
 	if (!disabled && !wired && ifc == null &&
@@ -7492,6 +7525,9 @@ function main() {
 	setup_udp();
 	setup_tcp();
 	ubusc.publish("wifiroam", api_obj);
+	let dhcp_lease_listener = ubusc.listener("wifiroam.dhcp_lease", backhaul_dhcp_lease);
+	if (!dhcp_lease_listener)
+		log("backhaul: could not subscribe to LAN DHCP lease events");
 
 	/* 先让 ubus/状态接口可用，再把耗时的防火墙同步放到事件循环，
 	   缩短服务启动、重启以及首页读取状态时的等待 */
