@@ -4600,6 +4600,11 @@ function backhaul_relay_keep(ifname, want) {
 			state._bh_fw_ts = time();
 			backhaul_relay_fw_apply(state.brdev, ifname);
 		}
+		/* 网关 /32 也补：STA 起来那一刻默认路由可能还没下发，那一次就白做了 */
+		if (time() - (state._bh_route_ts ?? 0) >= BH_FW_PROBE) {
+			state._bh_route_ts = time();
+			backhaul_relay_route(ifname);
+		}
 		return;
 	}
 	if (time() - (state._bh_relay_ts ?? 0) < BH_RELAY_PROBE) return;
