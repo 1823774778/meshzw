@@ -1444,9 +1444,14 @@ function detect_self() {
    旧的 lan 静态 IP。 */
 function refresh_self_ip() {
 	/* relay 模式下本机地址在 STA 接口上，LAN 已退化成纯二层；取址顺序要与之一致，
-	   否则自报地址会是一直不来的 LAN 租约，对端永远连不回本机。 */
-	let order = backhaul_mode(current_backhaul_cfg().mode) == "relay"
-		? [ BH_STA_SECTION, "lan" ] : [ "lan" ];
+	   否则自报地址会是一直不来的 LAN 租约，对端永远连不回本机。
+	   有线在场时 STA 被停用，它的旧租约不能再用，否则自报地址会在两个租约
+	   之间来回跳，对端每轮都把连接当成身份不符断开。 */
+	/* relayd 在跑才说明无线伪桥是活动上行（这个判断在函数定义之前就能用，
+	   此处不能引用后面才定义的 backhaul_* 辅助函数） */
+	let order = [ "lan" ];
+	if (backhaul_mode(current_backhaul_cfg().mode) == "relay" && state._bh_relay_pid)
+		order = [ BH_STA_SECTION, "lan" ];
 	let a = null;
 	for (let name in order) {
 		let st = ubusc.call("network.interface." + name, "status");
