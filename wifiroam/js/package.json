@@ -1,0 +1,1 @@
+{"description":"wifiroam daemon JS rewrite (Node 22.23.4 target, zero npm dependencies)","engines":{"node":">=22.23.4"},"name":"wifiroam-js","private":true,"scripts":{"test":"node --test tests/*.test.mjs"},"type":"module","version":"0.1.0"}

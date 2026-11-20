@@ -1,0 +1,15 @@
+# 交给路由器的 shell/配置脚本必须是 LF：CRLF 会让 busybox sh 直接报
+# `syntax error: unexpected word (expecting "in")`（真机上踩过一次）。
+wifiroam/files/wifiroam.init         text eol=lf
+wifiroam/files/wifiroam.config       text eol=lf
+wifiroam/files/30-wifiroam-4addr     text eol=lf
+wifiroam/files/90-wifiroam-dhcp-lease text eol=lf
+wifiroam/js/**                       text eol=lf
+*.js                                 text eol=lf
+*.json                               text eol=lf
+*.css                                text eol=lf
+*.md                                 text eol=lf
+*.png                                binary
+*.jpg                                binary
+*.ico                                binary
+*.gz                                 binary

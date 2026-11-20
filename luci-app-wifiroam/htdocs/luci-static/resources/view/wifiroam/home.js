@@ -17,8 +17,8 @@ var callRcInit = rpc.declare({
 	object: 'rc', method: 'init', params: [ 'name', 'action' ],
 });
 
-/* Keep in sync with DAEMON_VERSION in wifiroamd.uc */
-var REQUIRED_VERSION = 66;
+/* Keep in sync with DAEMON_VERSION in js/daemon/core.mjs */
+var REQUIRED_VERSION = 5;
 
 return view.extend({
 	st: null,

@@ -1,19 +1,45 @@
 #!/bin/sh /etc/rc.common
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 START=99
 STOP=10
 USE_PROCD=1
 
+# 守护进程是 Node ESM 程序：feed 里的 lang/node 是 PKG_HOST_ONLY，目标机上
+# 不一定存在 node，因此这里按常见安装位置查找，找不到就明确报错，而不是
+# 让 procd 反复重启一个不可能起来的实例。
+find_node() {
+	local c
+	for c in /usr/bin/node /usr/bin/nodejs /usr/libexec/node \
+		/usr/lib/node/bin/node /opt/node/bin/node; do
+		[ -x "$c" ] && { echo "$c"; return 0; }
+	done
+	command -v node 2>/dev/null
+}
+
 start_service() {
-	local enabled
+	local enabled node
 	config_load wifiroam
 	config_get_bool enabled core enabled 1
 	[ "$enabled" -eq 1 ] || return 0
 
+	node="$(find_node)"
+	if [ -z "$node" ]; then
+		logger -t wifiroam 'node runtime not found: install a target node binary first'
+		echo "wifiroam: node runtime not found, see /usr/share/wifiroam/README.md" >&2
+		return 1
+	fi
+
 	procd_open_instance wifiroam
-	procd_set_param command /usr/bin/ucode /usr/share/wifiroam/wifiroamd.uc
-	procd_set_param respawn 3600 2 5
+	procd_set_param command "$node" /usr/share/wifiroam/wifiroamd.mjs
+	# 无线回程切换会被 10-12s 防抖、重启射频短时阻塞，respawn 不能太急
+	procd_set_param respawn 3600 5 5
 	procd_set_param stdout 1
 	procd_set_param stderr 1
+	procd_set_param limits core="unlimited"
 	procd_close_instance
+}
+
+service_triggers() {
+	procd_add_reload_trigger wifiroam
 }

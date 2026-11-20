@@ -1,12 +1,21 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# netifd sources this in a subshell with jshn loaded after updating the lease.
+# netifd sources this in a subshell after updating the lease: $1=event,
+# $INTERFACE=逻辑接口 (lan / wifiroam_sta), $interface=设备, $ip=地址
+#
+# 回程守护进程是纯 Node 进程，没有 ubus 方法可发事件，改成往日志追加一行
+# `<epoch> <逻辑接口> <设备> <地址> <事件>`，daemon 每轮 tick 读末尾几十行。
+# 只认 bound/renew：deconfig/释放在回程里等同于“还没有地址”。
 case "$1" in
 	bound|renew) ;;
 	*) return 0 ;;
 esac
-[ "${INTERFACE:-}" = lan ] && [ -n "${interface:-}" ] && [ -n "${ip:-}" ] || return 0
+[ -n "${INTERFACE:-}" ] && [ -n "${interface:-}" ] && [ -n "${ip:-}" ] || return 0
 
-json_init
-json_add_string device "$interface"
-json_add_string address "$ip"
-ubus -t 1 send wifiroam.dhcp_lease "$(json_dump)" >/dev/null 2>&1 || :
+DIR=/tmp/wifiroam
+LOG="$DIR/dhcp-leases.log"
+mkdir -p "$DIR" 2>/dev/null
+# 长时间运行后会无限增长；超过 64KB 只保留最后 200 行
+if [ -f "$LOG" ] && [ "$(wc -c < "$LOG" 2>/dev/null || echo 0)" -gt 65536 ]; then
+	tail -n 200 "$LOG" > "$LOG.tmp" 2>/dev/null && mv "$LOG.tmp" "$LOG"
+fi
+echo "$(date +%s) $INTERFACE $interface $ip $1" >> "$LOG"
