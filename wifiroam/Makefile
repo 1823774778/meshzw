@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wifiroam
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=132
+PKG_RELEASE:=133
 PKG_LICENSE:=GPL-2.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
@@ -54,7 +54,7 @@ define Package/wifiroam/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 	/etc/init.d/wifiroam enable 2>/dev/null
-	# 升级场景进程已在跑，start 是空操作会导致旧代码常驻，必须 restart
+	# 升级场景进程已在跑，start 是空操作会导致旧代码常驻，必�?restart
 	/etc/init.d/wifiroam restart 2>/dev/null
 	if [ "$$(uci -q get wifiroam.core.enabled 2>/dev/null)" != "0" ]; then
 		for attempt in 1 2 3 4 5; do

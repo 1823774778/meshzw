@@ -52,6 +52,7 @@ const BACKHAUL_DEFAULT_SSID = "wifiroam-bh";
    避免 FDB 单次命中或 reload 瞬间的 link flap 把回程来回拆建 */
 const BH_WIRED_DEBOUNCE = 12;      // s：有线持续存在多久才暂停 STA
 const BH_WIRELESS_DEBOUNCE = 10;   // s：有线消失多久才重新启用 STA
+const BH_STA_REARM = 60;           // s：STA 已启用却不转发多久后重新拉起（整射颢 reload 很重）
 const BH_LOOP_CONFIRM = 4;         // s：环路连续确认时间
 const BH_WIRED_HOLD = 30;          // s：有线口最后确认后，载波仍在则继续视为有线
 const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
@@ -4613,6 +4614,9 @@ function backhaul_dhcp_iface() {
 function backhaul_dhcp_lease(_event, data) {
 	let recovery = state._bh_dhcp;
 	if (!data?.device || !data.address) return;
+	/* tick 在别的接口上会把 state 置空（LAN 同样是 dhcp，事件照样会来），
+	   没有恢复记录就没有可确认的对象；tick 自己的地址变化兜底会接住 */
+	if (!recovery) return;
 	/* 事件可能先于第一轮 tick 到达：此时 dev/sta 还没填，按当前 STA 补上，
 	   否则这次租约会被当成"不是本接口的"丢掉 */
 	if (recovery.dev && recovery.dev != data.device) return;
@@ -4711,6 +4715,25 @@ function backhaul_wpa_cli(ifname, cmd) {
 	return index(out, "RC=0") >= 0;
 }
 
+/* 该接口当前是否仍由 supplicant 管理：wifi down 之后 netdev 还在、
+   IFF_UP 也可能还挂着，只有 wpa_state 能说明 supplicant 到底有没有在跑 */
+function backhaul_sta_supplicant_ok(ifname) {
+	if (!ifname) return false;
+	return backhaul_wpa_cli(ifname, "status") &&
+		index(cmd_output(sprintf(
+			"wpa_cli -p /var/run/wpa_supplicant -i %s status 2>/dev/null", ifname)),
+			"wpa_state=") >= 0;
+}
+
+/* 内核里该接口是否 IFF_UP：收到 LOWER_UP 才算真链路，这里只看管理位，
+   用来区分「还关联着」和「已被 wifi down 掉」 */
+function iface_admin_up(ifname) {
+	if (!ifname) return false;
+	let out = cmd_output(sprintf("ip -o link show dev %s 2>/dev/null", ifname));
+	let m = match(out, /<([^>]*)>/);
+	return m != null && index("," + m[1] + ",", ",UP,") >= 0;
+}
+
 /* SAP 的 STA 在 relay 模式下独占一个 netifd 接口（不挂 br-lan），
    由 relayd 在 br-lan 与 STA 之间代理；wds 模式下才需要把 STA 桥进 LAN */
 function backhaul_sta_ifname(dev) {
@@ -4797,15 +4820,19 @@ function backhaul_sta_resume() {
 	state._bh_pause_ts = 0;
 
 	let ifc = backhaul_iface_status();
+	let ifname = ifc?.ifname;
 	/* wds 模式必须确保 4 地址：3 地址下广播 DHCPDISCOVER 能过去，
 	   但单播 DHCPOFFER 会被 STA 网卡丢弃，表现就是一直拿不到 IPv4；
 	   relay 模式走普通三段地址，由 relayd 代理，绝不能开 4addr */
-	if (ifc && ifc.ifname && current_backhaul_cfg().mode == "wds")
-		cmd_output(sprintf("iw dev %s set 4addr on 2>/dev/null", ifc.ifname));
-	/* STA 仍有关联：不 reconnect 也不整射频 reload，避免拆掉正在工作的回程 */
-	if (ifc && ifc.up)
-		log("backhaul STA already up, skip reload");
-	else if (ifc && ifc.ifname && backhaul_wpa_cli(ifc.ifname, "reconnect"))
+	if (ifname && current_backhaul_cfg().mode == "wds")
+		cmd_output(sprintf("iw dev %s set 4addr on 2>/dev/null", ifname));
+	/* STA 仍有关联：不 reconnect 也不整射频 reload，避免拆掉正在工作的回程。
+	   注意 ifc.up 是 netifd 的配置态，接口被 wifi down 之后它仍可能为真，
+	   所以还要看内核里是否真的 IFF_UP，否则 reconnect 只是对着死接口喊话 */
+	if (ifname && backhaul_sta_forwarding(ifname, state.brdev))
+		log("backhaul STA already forwarding, skip reload");
+	else if (ifname && backhaul_sta_supplicant_ok(ifname) &&
+	         backhaul_wpa_cli(ifname, "reconnect"))
 		log("backhaul STA resumed");
 	else
 		backhaul_sta_radio_up("resume");
@@ -5214,6 +5241,24 @@ function backhaul_tick() {
 	    now - (state._bh_wireless_since ?? now) >= BH_WIRELESS_DEBOUNCE) {
 		backhaul_sta_resume();
 		return;
+	}
+
+	/* 有线判定靠 FDB 里的 CAP MAC，CAP 链路断了就永远是“无线”，
+	   而 disabled 可能还是 0：此时既不走 pause 也不走 resume，STA 会一直瘫着。
+	   已启用却迟迟不转发就重新拉起，兜住这个死点。 */
+	let staNow = ifc?.ifname;
+	let fwdNow = !disabled && backhaul_sta_forwarding(staNow, state.brdev);
+	if (!disabled && !wired && !fwdNow) {
+		state._bh_sta_idle_since ??= now;
+		if (now - state._bh_sta_idle_since >= BH_STA_REARM) {
+			state._bh_sta_idle_since = null;
+			log("backhaul: STA enabled but not forwarding, re-arming");
+			backhaul_sta_resume();
+			return;
+		}
+	}
+	else {
+		state._bh_sta_idle_since = null;
 	}
 
 	/* relay 伪桥必须在 DHCP 之前就位：它才是把 DHCP/ARP 送过无线的那一层 */
