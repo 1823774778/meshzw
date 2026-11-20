@@ -4401,9 +4401,10 @@ function pick_radio(prefer) {
    留下主路由 MAC，不能据此判定“有线回程已恢复” */
 function wired_port_forwarding(port) {
 	let carrier = trim(fs.readfile(`/sys/class/net/${port}/carrier`) ?? "");
-	if (carrier != "" && carrier != "1") return false;
+	if (carrier != "1") return false;
 	let st = trim(fs.readfile(`/sys/class/net/${port}/brport/state`) ?? "");
 	if (st != "" && st != "3") return false;   // 3 = forwarding
+	return trim(fs.readfile(`/sys/class/net/${port}/operstate`) ?? "") == "up";
 	return true;
 }
 
@@ -5127,6 +5128,35 @@ function backhaul_cap_reconcile() {
 			ifc.ifname, state.brdev));
 		cmd_output(sprintf("brctl addif %s %s 2>&1", state.brdev, ifc.ifname));
 	}
+	/* 这台固件的 NSS 数据面会在该 vif 上烂掉：站能关联，但 EAPOL 再也
+	   上不来（内核成对打印 `interface ... refused: 26` 与 `peer ...: delete
+	   failed: -71, record kept`），只有整机重启能清。两种表现都要抓：
+	   关联后一直不授权，或者反复关联又被 hostapd 本地踢掉。这里只喊。 */
+	if (ifc != null && ifc.ifname) {
+		let now = time();
+		let dump = cmd_output(sprintf("iw dev %s station dump 2>/dev/null", ifc.ifname));
+		let stas = 0;
+		let authed = 0;
+		for (let line in split(dump, "\n")) {
+			if (index(line, "Station ") == 0) stas++;
+			else if (index(line, "authorized: yes") >= 0) authed++;
+		}
+		if (stas > 0 && authed > 0) state._bh_wedge_since = null;
+		else if (stas > 0) state._bh_wedge_since ??= now;
+		let stuck = stas > 0 && authed == 0 && now - state._bh_wedge_since >= 30;
+		/* 踢掉之后的空表只能靠日志判：一分钟最多查一次 */
+		if (!stuck && stas == 0 && now - (state._bh_wedge_probe ?? 0) >= 60) {
+			state._bh_wedge_probe = now;
+			let n = cmd_output(sprintf(
+				"logread -l 200 2>/dev/null | grep -c '%s: STA.*local deauth request'",
+				ifc.ifname));
+			stuck = ((n ?? "0") + 0) >= 3;
+		}
+		if (stuck && now - (state._bh_wedge_ts ?? 0) >= 300) {
+			state._bh_wedge_ts = now;
+			log(sprintf("backhaul AP %s wedged: station(s) associate but never authorize — reboot the router to clear the NSS peer table", ifc.ifname));
+		}
+	}
 	if (ok) return;
 	if (time() - (state._bh_rebuild_ts ?? 0) < 60) return;
 	state._bh_rebuild_ts = time();
@@ -5187,14 +5217,21 @@ function backhaul_tick() {
 	let disabled = (cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "1";
 
 	/* 环路：STA 自己的 MAC 出现在有线口，连续确认后再暂停，
-	   避免单次 FDB 抖动把回程误停 */
-	if (!disabled) {
+	   避免单次 FDB 抖动把回程误停。relay 模式下 STA 不在桥里，它的 MAC
+	   本来就是桥的本地表项（brctl 会挂在 port 1），这条判据只剩误报，
+	   有线在场与否交给下面的 CAP-MAC 判定。 */
+	if (!disabled && backhaul_mode(current_backhaul_cfg().mode) != "relay") {
 		let lp = backhaul_loop_port();
 		if (lp != null) {
 			state._bh_loop_since ??= now;
 			if (now - state._bh_loop_since >= BH_LOOP_CONFIRM) {
 				state._bh_loop_since = null;
 				log("backhaul loop detected on " + lp + ", pausing wireless STA");
+				/* 环路说明有线已经通到对端：按有线记账，并清掉无线计时，
+				   否则下一轮 !wired 会拿着旧时间戳立刻恢复 STA，来回打摆 */
+				state._bh_was_wired = true;
+				state._bh_wireless_since = null;
+				state._bh_dhcp = null;
 				backhaul_sta_pause("loop detected, wireless STA paused");
 				return;
 			}
@@ -5243,7 +5280,8 @@ function backhaul_tick() {
 	}
 
 	if (disabled && !wired &&
-	    now - (state._bh_wireless_since ?? now) >= BH_WIRELESS_DEBOUNCE) {
+	    now - (state._bh_wireless_since ?? now) >= BH_WIRELESS_DEBOUNCE &&
+	    now - (state._bh_pause_ts ?? 0) >= BH_WIRELESS_DEBOUNCE) {
 		backhaul_sta_resume();
 		return;
 	}
