@@ -42,10 +42,8 @@ define Package/wifiroam/install
 	$(INSTALL_DIR) $(1)/usr/share/wifiroam/daemon
 	$(INSTALL_DIR) $(1)/usr/share/wifiroam/lib
 	$(INSTALL_DATA) ./js/wifiroamd.mjs $(1)/usr/share/wifiroam/wifiroamd.mjs
-	for f in ./js/daemon/*.mjs; do \
-		$(INSTALL_DATA) $$f $(1)/usr/share/wifiroam/daemon/; done
-	for f in ./js/lib/*.js; do \
-		$(INSTALL_DATA) $$f $(1)/usr/share/wifiroam/lib/; done
+	$(INSTALL_DATA) $(wildcard ./js/daemon/*.mjs) $(1)/usr/share/wifiroam/daemon/
+	$(INSTALL_DATA) $(wildcard ./js/lib/*.js) $(1)/usr/share/wifiroam/lib/
 	$(INSTALL_DATA) ./js/README.md $(1)/usr/share/wifiroam/README.md
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/wifiroam-dpi $(1)/usr/sbin/wifiroam-dpi
