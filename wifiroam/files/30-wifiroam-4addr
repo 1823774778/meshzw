@@ -17,6 +17,10 @@ case "$INTERFACE" in
 	*) exit 0 ;;
 esac
 
+# relay 模式（默认）用普通三段地址 STA + relayd 伪桥：开 4addr 反而会让
+# AP 侧按 WDS 站点处理并尝试建 AP_VLAN，这台固件上会直接卡死 4 次握手
+mode="$(uci -q get wifiroam.backhaul.mode)"
+[ "$mode" = "wds" ] || exit 0
 dev="$(uci -q get wireless.wifiroam_bh.device)" || exit 0
 [ -n "$dev" ] || exit 0
 

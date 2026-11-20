@@ -58,6 +58,14 @@ const BH_STA_REBUILD_INTERVAL = 30; // s：STA 接口缺失时的重建间隔
 const BH_DHCP_RETRY = 8;           // s：重试启动未运行的 DHCP 客户端或未提交的请求
 const BH_DHCP_RENEW_HOLD = 35;     // s：STA 短暂抖动时，让上次主动续租完成
 const BH_DHCP_WARN = 45;           // s：未确认新租约时告警，客户端继续自行取址
+/* relay 模式下 STA 不加入 br-lan，而是单独一个 netifd 接口，
+   由 relayd 在 br-lan 与 STA 之间代理 ARP/NDP/DHCP（伪桥）。 */
+const BH_STA_SECTION = "wifiroam_sta";
+const BH_RELAYD = "/usr/sbin/relayd";
+const BH_RELAY_PROBE = 5;          // s：relayd 缺失重新拉起的检查间隔
+const BH_NFT = "/usr/sbin/nft";
+const BH_FW_MARK = "wifiroam-relay";
+const BH_FW_PROBE = 30;            // s：防火墙放行规则缺失后补回的检查间隔
 
 // 访客网络：每台 AP 各自建一个独立子网 + DHCP + 防火墙隔离区，
 // 访客口统一挂到 br-guest（接口名 netifd 限制为 15 字符以内）。
@@ -535,6 +543,12 @@ function roam_sig_ok(peer, r) {
 	return peer == sha256(base) || peer == sha256(base + "|guest");
 }
 
+/* relay（默认）：普通三段地址 STA + relayd 伪桥，不依赖驱动的 4addr/WDS；
+   wds：旧的四地址桥接方式，需要 hostapd 端 wds_sta 与 AP_VLAN 正常工作 */
+function backhaul_mode(raw) {
+	return (raw ?? "") == "wds" ? "wds" : "relay";
+}
+
 function current_backhaul_cfg() {
 	let cur = uci.cursor();
 	cur.load("wifiroam");
@@ -543,6 +557,7 @@ function current_backhaul_cfg() {
 		ssid: cur.get("wifiroam", "backhaul", "ssid") ?? BACKHAUL_DEFAULT_SSID,
 		key: cur.get("wifiroam", "backhaul", "key") ?? "",
 		device: cur.get("wifiroam", "backhaul", "device") ?? "",
+		mode: backhaul_mode(cur.get("wifiroam", "backhaul", "mode") ?? ""),
 		config_ver: int(cur.get("wifiroam", "backhaul", "config_ver") ?? "0"),
 	};
 }
@@ -1428,8 +1443,16 @@ function detect_self() {
    还没拿到，运行中也可能重新获取；周期性刷新上报地址，避免一直显示
    旧的 lan 静态 IP。 */
 function refresh_self_ip() {
-	let st = ubusc.call("network.interface.lan", "status");
-	let a = st?.["ipv4-address"]?.[0];
+	/* relay 模式下本机地址在 STA 接口上，LAN 已退化成纯二层；取址顺序要与之一致，
+	   否则自报地址会是一直不来的 LAN 租约，对端永远连不回本机。 */
+	let order = backhaul_mode(current_backhaul_cfg().mode) == "relay"
+		? [ BH_STA_SECTION, "lan" ] : [ "lan" ];
+	let a = null;
+	for (let name in order) {
+		let st = ubusc.call("network.interface." + name, "status");
+		a = st?.["ipv4-address"]?.[0];
+		if (a?.address) break;
+	}
 	if (!a?.address || a.address == state.self.ip)
 		return false;
 	state.self.ip = a.address;
@@ -4417,34 +4440,196 @@ function backhaul_uci_radio() {
 }
 
 function backhaul_sta_forwarding(ifname, brdev) {
-	if (!ifname || !brdev || !fs.access(`/sys/class/net/${brdev}/brif/${ifname}`))
-		return false;
+	if (!ifname) return false;
 	let base = `/sys/class/net/${ifname}`;
+	/* relay 模式下 STA 是独立接口，不在网桥里：只看链路与运营状态，
+	   真正能否透传由 relayd 决定 */
+	if (current_backhaul_cfg().mode == "relay")
+		return trim(fs.readfile(base + "/carrier") ?? "") == "1" &&
+		       trim(fs.readfile(base + "/operstate") ?? "") == "up";
+	if (!brdev || !fs.access(`/sys/class/net/${brdev}/brif/${ifname}`))
+		return false;
 	return trim(fs.readfile(base + "/carrier") ?? "") == "1" &&
 	       trim(fs.readfile(base + "/brport/state") ?? "") == "3";
 }
 
+/* relayd 伪桥依赖内核的代理 ARP：网桥侧替上行主机应答 ARP，
+   上行侧同时打开 IP 转发，才能把帧真正送到对端。 */
+function backhaul_relay_sysctl(_br, ifname) {
+	for (let kv in [ [ "net.ipv4.ip_forward", "1" ],
+	                 [ "net.ipv4.conf.all.proxy_arp", "1" ],
+	                 [ "net.ipv4.conf." + _br + ".proxy_arp", "1" ],
+	                 [ "net.ipv4.conf." + ifname + ".proxy_arp", "1" ],
+	                 [ "net.ipv4.conf." + _br + ".proxy_arp_pvlan", "1" ] ])
+		cmd_output(sprintf("sysctl -q -w %s=%s 2>/dev/null", kv[0], kv[1]));
+}
+
+/* 伪桥要放行 STA 侧的入站与双向转发。fw4 的 forward 链里先 jump forward_lan
+   再 jump handle_reject，追加的规则永远不会命中，必须 insert 到链首；
+   规则带 comment 标记，便于在 fw4 reload 之后重新补齐。 */
+function backhaul_relay_fw_clear() {
+	if (!fs.access(BH_NFT)) return;
+	for (let ch in [ "forward", "input" ]) {
+		let out = cmd_output(sprintf("nft -a list chain inet fw4 %s 2>/dev/null", ch)) ?? "";
+		for (let line in split(out, "\n")) {
+			if (index(line, BH_FW_MARK) < 0) continue;
+			let h = match(line, /handle ([0-9]+)/);
+			if (h) cmd_output(sprintf("nft delete rule inet fw4 %s handle %s 2>/dev/null", ch, h[1]));
+		}
+	}
+}
+
+function backhaul_relay_fw_apply(_br, ifname) {
+	if (!fs.access(BH_NFT)) return;
+	backhaul_relay_fw_clear();
+	for (let r in [ [ "forward", "iifname \"%s\" oifname \"%s\"", _br, ifname ],
+	                [ "forward", "iifname \"%s\" oifname \"%s\"", ifname, _br ],
+	                [ "input", "iifname \"%s\"", ifname ] ])
+		cmd_output(sprintf("nft insert rule inet fw4 %s %s counter accept comment %s 2>/dev/null",
+			r[0], sprintf(r[1], r[2], r[3]), BH_FW_MARK));
+}
+
+function backhaul_relay_fw_ok() {
+	if (!fs.access(BH_NFT)) return true;
+	let out = cmd_output("nft list chain inet fw4 forward 2>/dev/null") ?? "";
+	return index(out, BH_FW_MARK) >= 0;
+}
+
+/* 伪桥模式下不能保留本机 LAN DHCP：地址由上游发放，本机 dnsmasq
+   再用自己的池子发出去会给出错误的网关。 */
+function backhaul_relay_dhcp_ignore() {
+	let dc = uci.cursor();
+	dc.load("dhcp");
+	if ((dc.get("dhcp", "lan", "ignore") ?? "") == "1") return;
+	dc.set("dhcp", "lan", "ignore", "1");
+	if (!dc.commit("dhcp"))
+		log("backhaul relay dhcp commit failed");
+	uloop.process("/etc/init.d/dnsmasq", [ "reload" ], null, function() {});
+}
+
+/* 伪桥里 br-lan 与上行同网段：网关必须有一条走 STA 的 /32 路由，
+   否则内核按 on-link 把包交给 br-lan，proxy_arp 再替上游应答，
+   报文被本机吞掉（表现为 "Destination port unreachable"）。 */
+function backhaul_relay_route(ifname) {
+	if (!ifname) return;
+	let out = cmd_output(sprintf("ip route show default dev %s 2>/dev/null", ifname)) ?? "";
+	let gw = match(out, /via ([0-9.]+)/);
+	if (!gw) return;
+	state._bh_gw = gw[1];
+	cmd_output(sprintf("ip route replace %s/32 dev %s scope link 2>/dev/null", gw[1], ifname));
+}
+
+/* relayd 进程是否在跑；pid 失效时清空状态 */
+function backhaul_relay_pid() {
+	let pid = state._bh_relay_pid;
+	if (pid && fs.access("/proc/" + pid)) return pid;
+	state._bh_relay_pid = null;
+	return null;
+}
+
+function backhaul_relay_stop(reason) {
+	let pid = backhaul_relay_pid();
+	state._bh_relay_pid = null;
+	/* 伪桥停下后必须撤回代理 ARP，否则网桥会继续替上行主机应答，
+	   本机到这些地址的流量会被自己"吃"掉（表现为 port unreachable） */
+	let br = state.brdev, ifn = state._bh_relay_ifname;
+	state._bh_relay_ifname = null;
+	if (br || ifn) {
+		for (let k in [ br, ifn ])
+			if (k) {
+				cmd_output(sprintf("sysctl -q -w net.ipv4.conf.%s.proxy_arp=0 2>/dev/null", k));
+				cmd_output(sprintf("sysctl -q -w net.ipv4.conf.%s.proxy_arp_pvlan=0 2>/dev/null", k));
+			}
+	}
+	if (ifn && state._bh_gw) {
+		cmd_output(sprintf("ip route del %s/32 dev %s 2>/dev/null", state._bh_gw, ifn));
+		state._bh_gw = null;
+	}
+	backhaul_relay_fw_clear();
+	if (!pid) return;
+	cmd_output("kill " + pid + " 2>/dev/null");
+	log("backhaul: relayd stopped" + (reason ? " (" + reason + ")" : ""));
+}
+
+/* relayd 伪桥：-i 侧暴露 br-lan（Linux 侧负责 ARP/NDP 与 DHCP 转发），
+   -I 侧是无线 STA 上行，辅以 -B 广播转发、-D DHCP 转发 */
+function backhaul_relay_start(ifname) {
+	if (backhaul_mode(current_backhaul_cfg().mode) != "relay") return;
+	if (backhaul_relay_pid()) return;
+	if (!fs.access(BH_RELAYD)) return;
+	let br = state.brdev;
+	if (!br || !ifname) return;
+	/* relayd 区分两侧：-i 是客户端所在网桥（ARP/NDP 与 DHCP 都从这里进来），
+	   -I 是上行接口。两侧都传 -I 时 DHCP 转发不生效。 */
+	backhaul_relay_sysctl(br, ifname);
+	backhaul_relay_dhcp_ignore();
+	backhaul_relay_fw_apply(br, ifname);
+	backhaul_relay_route(ifname);
+	let out = trim(cmd_output(sprintf(
+		"setsid %s -D -B -i %s -I %s >/dev/null 2>&1 </dev/null & echo $!",
+		BH_RELAYD, br, ifname)) ?? "");
+	if (!match(out, /^[0-9]+$/)) {
+		log("backhaul: relayd start failed");
+		return;
+	}
+	state._bh_relay_pid = out;
+	state._bh_relay_ifname = ifname;
+	state._bh_relay_ts = time();
+	log(sprintf("backhaul: relayd started on %s + %s (pid %s)", br, ifname, out));
+}
+
+/* 需要伪桥时保持 relayd 存活；不需要时确保退出，避免残留进程抢占 DHCP */
+function backhaul_relay_keep(ifname, want) {
+	if (backhaul_mode(current_backhaul_cfg().mode) != "relay") {
+		backhaul_relay_stop("mode is not relay");
+		return;
+	}
+	if (!want) {
+		backhaul_relay_stop();
+		return;
+	}
+	if (backhaul_relay_pid()) {
+		/* fw4 reload 会清掉标记规则，周期性补回，否则伪桥流量会被 handle_reject 丢弃 */
+		if (time() - (state._bh_fw_ts ?? 0) >= BH_FW_PROBE && !backhaul_relay_fw_ok()) {
+			state._bh_fw_ts = time();
+			backhaul_relay_fw_apply(state.brdev, ifname);
+		}
+		return;
+	}
+	if (time() - (state._bh_relay_ts ?? 0) < BH_RELAY_PROBE) return;
+	backhaul_relay_start(ifname);
+}
+
+/* relay 模式下 SAP 自己的地址取自 STA 接口，wds 模式下取自 LAN */
+function backhaul_dhcp_iface() {
+	return backhaul_mode(current_backhaul_cfg().mode) == "relay" ? BH_STA_SECTION : "lan";
+}
+
 function backhaul_dhcp_lease(_event, data) {
 	let recovery = state._bh_dhcp;
-	if (recovery?.bridge && data?.device == recovery.bridge && data.address &&
-	    backhaul_sta_forwarding(recovery.sta, recovery.bridge))
+	if (recovery?.dev && data?.device == recovery.dev && data.address &&
+	    backhaul_sta_forwarding(recovery.sta, recovery.brdev))
 		recovery.lease = data.address;
 }
 
 function backhaul_dhcp_tick(ifc, now) {
 	let recovery = state._bh_dhcp;
-	let st = ubusc.call("network.interface.lan", "status");
+	let ifname = backhaul_dhcp_iface();
+	let st = ubusc.call("network.interface." + ifname, "status");
 	if (!st?.proto) return;
 	if (st.proto != "dhcp" || !st.autostart) {
 		state._bh_dhcp = null;
 		return;
 	}
 
-	let brdev = st.device ?? st.l3_device ?? state.brdev;
+	/* dev 是取址设备，brdev 是伪桥的本地网桥（仅用于代理与日志） */
+	let brdev = state.brdev;
+	let dev = st.device ?? st.l3_device ?? brdev;
 	let sta = ifc?.ifname;
 	let forwarding = backhaul_sta_forwarding(sta, brdev);
-	if (!forwarding || recovery.bridge != brdev || recovery.sta != sta) {
-		recovery.bridge = brdev;
+	if (!forwarding || recovery.dev != dev || recovery.sta != sta) {
+		recovery.dev = dev;
+		recovery.brdev = brdev;
 		recovery.sta = sta;
 		recovery.lease = null;
 		recovery.since = null;
@@ -4452,6 +4637,8 @@ function backhaul_dhcp_tick(ifc, now) {
 		recovery.warned = false;
 	}
 	if (!forwarding) return;
+	/* 每轮幂等补一次网关 /32：起链时还没有默认路由，只靠事件会漏 */
+	if (backhaul_mode(current_backhaul_cfg().mode) == "relay") backhaul_relay_route(sta);
 	recovery.since ??= now;
 
 	/* 同一 IP 也可以是新租约：需收到 bound/renew 事件，且该地址已经生效。 */
@@ -4459,12 +4646,13 @@ function backhaul_dhcp_tick(ifc, now) {
 		for (let a in st["ipv4-address"] ?? []) {
 			if (a.address != recovery.lease) continue;
 			state._bh_dhcp = null;
-			log("backhaul: LAN DHCP lease confirmed: " + a.address);
+			if (backhaul_mode(current_backhaul_cfg().mode) == "relay") backhaul_relay_route(sta);
+			log("backhaul: " + ifname + " DHCP lease confirmed: " + a.address);
 			return;
 		}
 	}
 
-	/* 已在取址时不打断 DHCP；不要用可能重载整个 LAN 的 restart。 */
+	/* 已在取址时不打断 DHCP；不要用可能重载整个接口的 restart。 */
 	if (st.pending)
 		recovery.active = true;
 
@@ -4472,19 +4660,19 @@ function backhaul_dhcp_tick(ifc, now) {
 	let start = !st.up && !st.pending && st.available && now >= (recovery.start_after ?? 0);
 	let method = renew ? "renew" : (start ? "up" : null);
 	if (method) {
-		ubusc.call("network.interface.lan", method);
+		ubusc.call("network.interface." + ifname, method);
 		let err = libubus.error();
 		if (renew)
 			recovery.renew_after = now + (err ? BH_DHCP_RETRY : BH_DHCP_RENEW_HOLD);
 		else
 			recovery.start_after = now + BH_DHCP_RETRY;
 		if (!err) recovery.active = true;
-		log("backhaul: LAN DHCP " + method + (err ? " failed: " + err : " requested"));
+		log("backhaul: " + ifname + " DHCP " + method + (err ? " failed: " + err : " requested"));
 	}
 
 	if (!recovery.warned && now - recovery.since >= BH_DHCP_WARN) {
 		recovery.warned = true;
-		log("backhaul: no LAN DHCP lease confirmed after wireless failover");
+		log("backhaul: no " + ifname + " DHCP lease confirmed after wireless failover");
 	}
 }
 
@@ -4498,7 +4686,52 @@ function backhaul_wpa_cli(ifname, cmd) {
 	return index(out, "RC=0") >= 0;
 }
 
+/* SAP 的 STA 在 relay 模式下独占一个 netifd 接口（不挂 br-lan），
+   由 relayd 在 br-lan 与 STA 之间代理；wds 模式下才需要把 STA 桥进 LAN */
+function backhaul_sta_ifname(dev) {
+	let ifc = backhaul_iface_status();
+	if (ifc && ifc.ifname) return ifc.ifname;
+	let phy = dev ?? backhaul_uci_radio() ?? "";
+	if (match(phy, /^radio[0-9]+$/))
+		phy = "phy" + substr(phy, 5);
+	if (!match(phy, /^phy[0-9]+$/)) phy = "phy0";
+	return phy + "-sta0";
+}
+
+function backhaul_relay_netif_ensure(ifname) {
+	let nc = uci.cursor();
+	nc.load("network");
+	let sd = nc.get_all("network", BH_STA_SECTION);
+	let chg = false;
+	if (sd == null || sd[".type"] != "interface") {
+		if (sd != null) nc.delete("network", BH_STA_SECTION);
+		nc.set("network", BH_STA_SECTION, "interface");
+		chg = true;
+	}
+	/* proto dhcp：STA 接口自己向上游取址。SAP 本机的 DHCP 报文是本机生成的，
+	   不经过 relayd 的嗅探口，所以 LAN 上的 udhcpc 在伪桥里永远等不到 OFFER。 */
+	for (let kv in [ [ "proto", "dhcp" ], [ "device", ifname ], [ "auto", "1" ] ])
+		if ((nc.get("network", BH_STA_SECTION, kv[0]) ?? "") != kv[1]) {
+			nc.set("network", BH_STA_SECTION, kv[0], kv[1]);
+			chg = true;
+		}
+	if (chg && !nc.commit("network"))
+		log("backhaul relay netif commit failed");
+	return chg;
+}
+
+function backhaul_relay_netif_remove() {
+	let nc = uci.cursor();
+	nc.load("network");
+	if (nc.get("network", BH_STA_SECTION) == null) return;
+	nc.delete("network", BH_STA_SECTION);
+	if (!nc.commit("network"))
+		log("backhaul relay netif delete failed");
+}
+
+/* 回程 STA 暂停：先收掉伪桥，避免 relayd 在断链状态继续代理 DHCP */
 function backhaul_sta_set_disabled(on) {
+	if (on) backhaul_relay_stop("STA disabled");
 	let cur = uci.cursor();
 	cur.load("wireless");
 	let want = on ? "1" : "0";
@@ -4539,9 +4772,10 @@ function backhaul_sta_resume() {
 	state._bh_pause_ts = 0;
 
 	let ifc = backhaul_iface_status();
-	/* 确保 STA 处于 4 地址/WDS 模式：3 地址下广播 DHCPDISCOVER 能过去，
-	   但单播 DHCPOFFER 会被 STA 网卡丢弃，表现就是一直拿不到 IPv4 */
-	if (ifc && ifc.ifname)
+	/* wds 模式必须确保 4 地址：3 地址下广播 DHCPDISCOVER 能过去，
+	   但单播 DHCPOFFER 会被 STA 网卡丢弃，表现就是一直拿不到 IPv4；
+	   relay 模式走普通三段地址，由 relayd 代理，绝不能开 4addr */
+	if (ifc && ifc.ifname && current_backhaul_cfg().mode == "wds")
 		cmd_output(sprintf("iw dev %s set 4addr on 2>/dev/null", ifc.ifname));
 	/* STA 仍有关联：不 reconnect 也不整射频 reload，避免拆掉正在工作的回程 */
 	if (ifc && ifc.up)
@@ -4554,13 +4788,14 @@ function backhaul_sta_resume() {
 	push_event("backhaul_link", "", "cable removed, wireless backhaul enabled");
 }
 
-function backhaul_store_cfg(bh, ver) {
+function backhaul_store_cfg(bh, ver, mode) {
 	let wc = uci.cursor();
 	wc.load("wifiroam");
 	wc.set("wifiroam", "backhaul", "enabled", bh.enabled ? "1" : "0");
 	wc.set("wifiroam", "backhaul", "ssid", bh.ssid ?? BACKHAUL_DEFAULT_SSID);
 	wc.set("wifiroam", "backhaul", "key", bh.key ?? "");
 	wc.set("wifiroam", "backhaul", "device", bh.device ?? "");
+	wc.set("wifiroam", "backhaul", "mode", mode ?? backhaul_mode(bh.mode ?? ""));
 	wc.set("wifiroam", "backhaul", "config_ver", "" + ver);
 	wc.commit("wifiroam");
 	state.backhaul_ver_applied = ver;
@@ -4576,6 +4811,8 @@ function apply_backhaul_local(bh, role) {
 		return { ok: false, error: "backhaul_credentials" };
 
 	let ver = bh.config_ver ?? 0;
+	/* 对端可能还是旧版本、载荷里没有 mode：统一在此归一化 */
+	let bhMode = backhaul_mode(bh.mode ?? "");
 	let wantMode = role == "cap" ? "ap" : "sta";
 	let dev = pick_radio(role == "cap" ? (bh.device ?? "") : "");
 	let curRadio = exists ? (cur.get("wireless", BACKHAUL_SECTION, "device") ?? null) : null;
@@ -4591,16 +4828,24 @@ function apply_backhaul_local(bh, role) {
 		 (cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "1");
 	if (bh.enabled && dev && exists && runtimeOk) {
 		let sd = cur.get_all("wireless", BACKHAUL_SECTION);
+		let wantNet = role == "cap" || bhMode == "wds" ? "lan" : BH_STA_SECTION;
+		let wantWds = bhMode == "wds" ? "1" : "0";
 		let same = sd != null && sd[".type"] == "wifi-iface" &&
 			cur.get("wireless", BACKHAUL_SECTION, "mode") == wantMode &&
 			cur.get("wireless", BACKHAUL_SECTION, "device") == dev &&
 			(cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") == (bh.ssid ?? "") &&
 			(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "") &&
-			/* WDS/4 地址帧和 LAN 桥接是回程能透传终端 MAC 的关键，
-			   旧配置缺这两项时必须重建，否则表现就是能关联但拿不到 IP */
-			(cur.get("wireless", BACKHAUL_SECTION, "network") ?? "") == "lan" &&
-			(cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "") == "1" &&
+			/* 回程的转发方式（relay 伪桥 / wds 四地址桥接）必须与配置一致，
+			   旧配置缺 network/wds 时必须重建，否则表现就是能关联但拿不到 IP */
+			(cur.get("wireless", BACKHAUL_SECTION, "network") ?? "") == wantNet &&
+			(cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "0") == wantWds &&
 			(cur.get("wireless", BACKHAUL_SECTION, "encryption") ?? "") == "psk2+ccmp";
+		if (role != "cap" && bhMode == "relay") {
+			/* 段内配置一致还不够：STA 接口没建出来就永远拿不到地址 */
+			let nc = uci.cursor();
+			nc.load("network");
+			same = same && nc.get("network", BH_STA_SECTION) != null;
+		}
 		if (role == "cap")
 			same = same &&
 				(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
@@ -4608,13 +4853,13 @@ function apply_backhaul_local(bh, role) {
 		if (same) {
 			if (role == "cap")
 				backhaul_stp_ensure();
-			backhaul_store_cfg(bh, ver);
+			backhaul_store_cfg(bh, ver, bhMode);
 			log(sprintf("backhaul unchanged ver=%d, skip reload", ver));
 			return { ok: true, ver, unchanged: true };
 		}
 	}
 	if (!bh.enabled && !exists) {
-		backhaul_store_cfg(bh, ver);
+		backhaul_store_cfg(bh, ver, bhMode);
 		log(sprintf("backhaul already off ver=%d, skip reload", ver));
 		return { ok: true, ver, unchanged: true };
 	}
@@ -4637,8 +4882,18 @@ function apply_backhaul_local(bh, role) {
 		cur.set("wireless", BACKHAUL_SECTION, "ssid", bh.ssid);
 		cur.set("wireless", BACKHAUL_SECTION, "encryption", "psk2+ccmp");
 		cur.set("wireless", BACKHAUL_SECTION, "key", bh.key);
-		cur.set("wireless", BACKHAUL_SECTION, "network", "lan");
-		cur.set("wireless", BACKHAUL_SECTION, "wds", "1");
+		/* relay：SAP 的 STA 独占 wifiroam_sta 接口、由 relayd 代理，
+		   AP 保持普通三段地址；wds：两边都走四地址桥接 */
+		if (bhMode == "wds") {
+			cur.set("wireless", BACKHAUL_SECTION, "network", "lan");
+			cur.set("wireless", BACKHAUL_SECTION, "wds", "1");
+		} else {
+			cur.set("wireless", BACKHAUL_SECTION, "wds", "0");
+			if (role == "cap")
+				cur.set("wireless", BACKHAUL_SECTION, "network", "lan");
+			else
+				cur.set("wireless", BACKHAUL_SECTION, "network", BH_STA_SECTION);
+		}
 		if (role == "cap") {
 			cur.set("wireless", BACKHAUL_SECTION, "hidden", "1");
 			cur.set("wireless", BACKHAUL_SECTION, "disabled", "0");
@@ -4668,7 +4923,28 @@ function apply_backhaul_local(bh, role) {
 	if (chk.get("wireless", BACKHAUL_SECTION) == null)
 		log("backhaul wireless section missing after commit");
 
-	backhaul_store_cfg(bh, ver);
+	/* relay 模式要有配套的 STA 接口；切回 wds/关闭时要清理，避免残留
+	   一个永远没有设备的 netifd 接口 */
+	let netChg = false;
+	if (bh.enabled && role != "cap" && bhMode == "relay")
+		netChg = backhaul_relay_netif_ensure(backhaul_sta_ifname(dev));
+	else if (bhMode != "relay" || role == "cap" || !bh.enabled) {
+		let had = uci.cursor();
+		had.load("network");
+		netChg = had.get("network", BH_STA_SECTION) != null;
+		if (netChg) backhaul_relay_netif_remove();
+	}
+	if (netChg) {
+		/* 新接口必须让 netifd 重新读配置才会建出来；
+		   wds 模式下 STA 挂在 lan 上，由下面的无线重启一起生效 */
+		let ubusBin = fs.access("/bin/ubus") ? "/bin/ubus"
+			: (fs.access("/sbin/ubus") ? "/sbin/ubus" : null);
+		if (ubusBin)
+			uloop.process(ubusBin, [ "call", "network", "reload" ], null,
+				function(res) { log("backhaul network reload rc=" + res); });
+	}
+
+	backhaul_store_cfg(bh, ver, bhMode);
 	if (role == "cap" && bh.enabled)
 		backhaul_stp_ensure();
 
@@ -4776,12 +5052,13 @@ function backhaul_cap_reconcile() {
 	let sec = cur.get("wireless", BACKHAUL_SECTION);
 	let sd = sec != null ? cur.get_all("wireless", BACKHAUL_SECTION) : null;
 	let ifc = backhaul_iface_status();
+	let wantWds = bh.mode == "wds" ? "1" : "0";
 	let ok = sd != null && sd[".type"] == "wifi-iface" && ifc != null &&
 		(cur.get("wireless", BACKHAUL_SECTION, "mode") ?? "") == "ap" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "") == (bh.ssid ?? "") &&
 		(cur.get("wireless", BACKHAUL_SECTION, "key") ?? "") == (bh.key ?? "") &&
 		(cur.get("wireless", BACKHAUL_SECTION, "network") ?? "") == "lan" &&
-		(cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "") == "1" &&
+		(cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "0") == wantWds &&
 		(cur.get("wireless", BACKHAUL_SECTION, "encryption") ?? "") == "psk2+ccmp" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "hidden") ?? "0") == "1" &&
 		(cur.get("wireless", BACKHAUL_SECTION, "disabled") ?? "0") == "0";
@@ -4810,6 +5087,7 @@ function backhaul_tick() {
 	if (state.cfg.role != "sap") return;
 	let bh = current_backhaul_cfg();
 	if (!bh.enabled) {
+		backhaul_relay_stop("backhaul disabled");
 		state._bh_wired_since = null;
 		state._bh_wireless_since = null;
 		state._bh_loop_since = null;
@@ -4826,16 +5104,22 @@ function backhaul_tick() {
 	let wmode = cur.get("wireless", BACKHAUL_SECTION, "mode");
 	let wssid = cur.get("wireless", BACKHAUL_SECTION, "ssid") ?? "";
 	let wkey = cur.get("wireless", BACKHAUL_SECTION, "key") ?? "";
+	/* 回程转发方式也必须与配置一致：r131 及更早的配置是 network=lan + wds=1，
+	   relay 模式下这种旧段无法透传，必须重建才能完成迁移 */
+	let wantNet = bh.mode == "wds" ? "lan" : BH_STA_SECTION;
+	let wnet = cur.get("wireless", BACKHAUL_SECTION, "network") ?? "";
+	let wwds = cur.get("wireless", BACKHAUL_SECTION, "wds") ?? "0";
 	/* 回程已启用但 STA 段丢失/被改坏时自动重建，否则拔掉网线后
 	   没有可启用的无线回程接口，表现就是一直不走无线 */
 	if (sec == null || wtype != "wifi-iface" || wmode != "sta" ||
-	    wssid != bh.ssid || wkey != bh.key) {
+	    wssid != bh.ssid || wkey != bh.key ||
+	    wnet != wantNet || wwds != (bh.mode == "wds" ? "1" : "0")) {
 		/* 重建会重载无线，最多 60s 一次，避免配置异常时每 10s 打断 Wi-Fi */
 		if (time() - (state._bh_rebuild_ts ?? 0) < 60) return;
 		state._bh_rebuild_ts = time();
-		log(sprintf("backhaul STA stale: sec=%s type=%s mode=%s ssid=%s/%s keylen=%d/%d ver=%d",
+		log(sprintf("backhaul STA stale: sec=%s type=%s mode=%s ssid=%s/%s keylen=%d/%d net=%s/%s ver=%d",
 			sec ?? "null", wtype ?? "null", wmode ?? "null", wssid, bh.ssid,
-			length(wkey), length(bh.key ?? ""), bh.config_ver ?? 0));
+			length(wkey), length(bh.key ?? ""), wnet, wantNet, bh.config_ver ?? 0));
 		apply_backhaul_local(bh, "sap");
 		return;
 	}
@@ -4906,6 +5190,12 @@ function backhaul_tick() {
 		backhaul_sta_resume();
 		return;
 	}
+
+	/* relay 伪桥必须在 DHCP 之前就位：它才是把 DHCP/ARP 送过无线的那一层 */
+	let sta = ifc?.ifname;
+	let fwd = !disabled && !wired && sta != null &&
+		backhaul_sta_forwarding(sta, state.brdev);
+	backhaul_relay_keep(sta, fwd);
 
 	if (state._bh_dhcp && !wired && !disabled)
 		backhaul_dhcp_tick(ifc, now);
@@ -6798,7 +7088,7 @@ let api_obj = {
 	set_backhaul: {
 		args: {
 			ubus_rpc_session: "", enabled: false,
-			ssid: "", key: "", device: "",
+			ssid: "", key: "", device: "", mode: "",
 		},
 		call: function(req) {
 			let a = req.args;
@@ -6809,6 +7099,7 @@ let api_obj = {
 			let key = a.key ?? "";
 			if (key == "" && a.enabled)
 				key = prev.key != "" ? prev.key : randhex(16);
+			let mode = backhaul_mode((a.mode ?? "") != "" ? a.mode : prev.mode);
 			let ver = (prev.config_ver ?? 0) + 1;
 
 			let cur = uci.cursor();
@@ -6817,6 +7108,7 @@ let api_obj = {
 			cur.set("wifiroam", "backhaul", "ssid", ssid);
 			cur.set("wifiroam", "backhaul", "key", key);
 			cur.set("wifiroam", "backhaul", "device", a.device ?? "");
+			cur.set("wifiroam", "backhaul", "mode", mode);
 			cur.set("wifiroam", "backhaul", "config_ver", "" + ver);
 			cur.commit("wifiroam");
 
