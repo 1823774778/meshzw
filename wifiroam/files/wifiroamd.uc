@@ -4607,9 +4607,15 @@ function backhaul_dhcp_iface() {
 
 function backhaul_dhcp_lease(_event, data) {
 	let recovery = state._bh_dhcp;
-	if (recovery?.dev && data?.device == recovery.dev && data.address &&
-	    backhaul_sta_forwarding(recovery.sta, recovery.brdev))
-		recovery.lease = data.address;
+	if (!data?.device || !data.address) return;
+	/* 事件可能先于第一轮 tick 到达：此时 dev/sta 还没填，按当前 STA 补上，
+	   否则这次租约会被当成"不是本接口的"丢掉 */
+	if (recovery.dev && recovery.dev != data.device) return;
+	if (!recovery.sta) recovery.sta = backhaul_iface_status()?.ifname;
+	if (!recovery.brdev) recovery.brdev = state.brdev;
+	if (!backhaul_sta_forwarding(recovery.sta, recovery.brdev)) return;
+	recovery.dev = data.device;
+	recovery.lease = data.address;
 }
 
 function backhaul_dhcp_tick(ifc, now) {
@@ -4627,10 +4633,14 @@ function backhaul_dhcp_tick(ifc, now) {
 	let dev = st.device ?? st.l3_device ?? brdev;
 	let sta = ifc?.ifname;
 	let forwarding = backhaul_sta_forwarding(sta, brdev);
+	let cur = null;
+	for (let a in st["ipv4-address"] ?? [])
+		if (a.address) { cur = a.address; break; }
 	if (!forwarding || recovery.dev != dev || recovery.sta != sta) {
 		recovery.dev = dev;
 		recovery.brdev = brdev;
 		recovery.sta = sta;
+		recovery.addr0 = cur;
 		recovery.lease = null;
 		recovery.since = null;
 		recovery.active = false;
@@ -4640,6 +4650,16 @@ function backhaul_dhcp_tick(ifc, now) {
 	/* 每轮幂等补一次网关 /32：起链时还没有默认路由，只靠事件会漏 */
 	if (backhaul_mode(current_backhaul_cfg().mode) == "relay") backhaul_relay_route(sta);
 	recovery.since ??= now;
+
+	/* 事件可能丢失（钩子未安装、报文被吞）：地址从不存到有、或换成了别的
+	   地址，同样是拿到了新租约。恢复开始时就在的旧地址本身不算——那正是
+	   r131 误判的来源。 */
+	if (st.up && cur && cur != (recovery.addr0 ?? null)) {
+		state._bh_dhcp = null;
+		if (backhaul_mode(current_backhaul_cfg().mode) == "relay") backhaul_relay_route(sta);
+		log("backhaul: " + ifname + " DHCP lease confirmed: " + cur);
+		return;
+	}
 
 	/* 同一 IP 也可以是新租约：需收到 bound/renew 事件，且该地址已经生效。 */
 	if (recovery.lease && st.up) {
